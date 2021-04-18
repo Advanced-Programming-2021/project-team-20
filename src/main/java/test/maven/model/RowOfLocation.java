@@ -1,0 +1,10 @@
+package test.maven.model;
+
+public enum RowOfLocation {
+ALLY_MONSTER_ZONE,
+OPPONENT_MONSTER_ZONE,
+ALLY_SPELL_ZONE,
+OPPONENT_SPELL_ZONE,
+ALLY_HAND,
+OPPONENT_HAND
+}
