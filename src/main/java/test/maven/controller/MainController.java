@@ -1,7 +1,11 @@
 package test.maven.controller;
 
+import test.maven.controller.deckCommands.DeckCommands;
 import test.maven.controller.duel.GameManager;
 import test.maven.controller.loginMenu.LoginMenu;
+import test.maven.controller.profile.Profile;
+import test.maven.controller.scoreboard.Scoreboard;
+import test.maven.controller.shop.Shop;
 
 
 public class MainController {

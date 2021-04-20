@@ -59,4 +59,9 @@ public class User {
         this.score = score;
     }
 
+    public String toString() {
+        return "[name: " + name + ", nickname: " + nickname + ", password: " + password + ", score:" + score
+                + ", money:" + money;
+    }
+
 }
