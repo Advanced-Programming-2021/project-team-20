@@ -12,7 +12,7 @@ public class Storage {
 
     private ArrayList<User> allUsers = new ArrayList<>();
     private ArrayList<Card> allCards = new ArrayList<>();
-    private String addressOfStorage = "E:\\programing\\JavaVSCode\\test.maven\\src\\main\\java\\test\\maven\\Resourses\\";
+    private String addressOfStorage = "Resourses\\";
 
     public void Engine() {
 
@@ -22,22 +22,42 @@ public class Storage {
         for (File f : contents) {
             filenames.add(f.getName() + "\\");
         }
+        try {
+            addUsersToArrayList(filenames);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
-    private void addUsersToArrayList(ArrayList<String> filenames) throws FileNotFoundException {
+    private void addUsersToArrayList(ArrayList<String> filenames) throws IOException {
+
         for (int i = 0; i < filenames.size(); i++) {
 
             FileReader fileReader = new FileReader(addressOfStorage + filenames.get(i) + ".json");
             Scanner myReader = new Scanner(fileReader);
-            
+
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             String informationOfUser = gson.toJson(myReader.nextLine());
-           
+
             JsonParser parser = new JsonParser();
             JsonElement rootNode = parser.parse(informationOfUser);
             myReader.close();
+            fileReader.close();
+
+            if (rootNode.isJsonObject()) {
+
+                JsonObject details = rootNode.getAsJsonObject();
+                User user = new User(details.get("name").getAsString(), details.get("nickname").getAsString(),
+                        details.get("password").getAsString());
+
+                user.setScore(details.get("score").getAsInt());
+                user.setMoney(details.get("money").getAsInt());
+
+                allUsers.add(user);
+            }
         }
     }
 }

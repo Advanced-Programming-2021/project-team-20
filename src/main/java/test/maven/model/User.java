@@ -11,8 +11,14 @@ public class User {
     private int money;
     private ArrayList<Deck> decks;
 
-    public User(String username, String password, String nickname) {
+    public User(String username, String nickname, String password) {
+        this.name = username;
+        this.nickname = nickname;
+        this.password = password;
 
+    }
+
+    public User() {
     }
 
     public ArrayList<Deck> getDecks() {

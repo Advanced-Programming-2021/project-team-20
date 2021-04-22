@@ -9,18 +9,22 @@ public class View {
     private static String currentMenu;
 
     public void infiniteLoop() {
+       
         MainController mainController = new MainController();
         Scanner input = new Scanner(System.in);
         String commands = new String();
 
         while (!commands.matches("user logout")) {
+       
             commands = input.nextLine();
             if (isInputForCurrentMenu(commands)) {
-                mainController.getClass();
+                mainController.switchCaseInput(commands);
             } else {
                 System.out.println("menu navigation is not possible");
             }
+       
         }
+        input.close();
     }
 
     public static void setCurrentMenu(String currentMenu) {
