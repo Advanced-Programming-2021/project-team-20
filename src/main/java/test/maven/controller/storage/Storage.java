@@ -14,7 +14,7 @@ public class Storage {
     private ArrayList<Card> allCards = new ArrayList<>();
     private String addressOfStorage = "Resourses\\";
 
-    public void Engine() {
+    public void startProgram() {
 
         ArrayList<String> filenames = new ArrayList<>();
         File directory = new File(addressOfStorage);
@@ -29,6 +29,26 @@ public class Storage {
             e.printStackTrace();
         }
 
+    }
+
+    public void endProgram() {
+       
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            File file = new File(addressOfStorage + allUsers.get(i).getName());
+            file.mkdir();
+
+            try {
+                FileWriter fileWriter = new FileWriter(addressOfStorage + allUsers.get(i).getName() + "\\user.json");
+                fileWriter.write(gson.toJson(allUsers.get(i)));
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void addUsersToArrayList(ArrayList<String> filenames) throws IOException {
@@ -60,4 +80,9 @@ public class Storage {
             }
         }
     }
+
+    public void addUserToAllUsers(User newUser) {
+        allUsers.add(newUser);
+    }
+
 }
