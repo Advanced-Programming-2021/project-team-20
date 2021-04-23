@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.*;
 
 public class LoginMenuPatterns {
-    //test11
+    //test112
 
     private Pattern createUserPattern1 = Pattern.compile("user create --u \\S+ --nickname \\S+ --password \\S+");
     private Pattern createUserPattern2 = Pattern.compile("user create --nickname \\S+ --username \\S+ --password \\S+");
