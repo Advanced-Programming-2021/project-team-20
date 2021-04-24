@@ -10,7 +10,7 @@ import test.maven.model.card.Card;
 
 public class Storage {
 
-    private ArrayList<User> allUsers = new ArrayList<>();
+    private static ArrayList<User> allUsers = new ArrayList<>();
     private ArrayList<Card> allCards = new ArrayList<>();
     private String addressOfStorage = "Resourses\\";
 
@@ -32,7 +32,7 @@ public class Storage {
     }
 
     public void endProgram() {
-       
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
@@ -83,6 +83,10 @@ public class Storage {
 
     public void addUserToAllUsers(User newUser) {
         allUsers.add(newUser);
+    }
+
+    public static ArrayList<User> getAllUsers() {
+        return allUsers;
     }
 
 }

@@ -1,12 +1,10 @@
 package test.maven.controller.profile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.*;
 
 public class ProfilePatterns {
 
-    ArrayList<Pattern> allPatterns = new ArrayList<>();
 
     private Pattern changeNickname = Pattern.compile("profile change --(n|nickname) (\\S+)");
     private Pattern changePassword1 = Pattern
@@ -16,7 +14,7 @@ public class ProfilePatterns {
 
     public HashMap<String, String> findCommands(String command) {
         HashMap<String, String> output = new HashMap<>();
-        Matcher matcher ;
+        Matcher matcher;
         matcher = changeNickname.matcher(command);
         if (matcher.find()) {
             output.put("nickname", matcher.group(2));

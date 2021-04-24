@@ -4,11 +4,10 @@ import java.util.HashMap;
 
 public class LoginMenu {
 
-    public HashMap<String, String> findCommand(String command) {
+    public String findCommand(String command) {
         //find command from login menu patterns
-        HashMap<String ,String> x = new HashMap<>();   
-        x.put("logined", "dsa");
-        return x;
+       
+        return "";
     }
 
     private String createUser() {
