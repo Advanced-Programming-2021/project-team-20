@@ -1,6 +1,7 @@
 package test.maven.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User {
 
@@ -9,19 +10,20 @@ public class User {
     private String password;
     private int score;
     private int money;
-    private ArrayList<Deck> decks;
+    private HashMap<String, Deck> decks = new HashMap<>();
+    private ArrayList<String> allUselessCards = new ArrayList<>();
 
     public User(String username, String nickname, String password) {
         this.name = username;
         this.nickname = nickname;
         this.password = password;
-
+        this.money = 100000;
     }
 
     public User() {
     }
 
-    public ArrayList<Deck> getDecks() {
+    public HashMap<String, Deck> getDecks() {
         return decks;
     }
 
@@ -45,7 +47,11 @@ public class User {
         return score;
     }
 
-    public void setDecks(ArrayList<Deck> decks) {
+    public ArrayList<String> getAllUselessCards() {
+        return allUselessCards;
+    }
+
+    public void setDecks(HashMap<String, Deck> decks) {
         this.decks = decks;
     }
 
@@ -65,9 +71,26 @@ public class User {
         this.score = score;
     }
 
-    public String toString() {
-        return "[name: " + name + ", nickname: " + nickname + ", password: " + password + ", score:" + score
-                + ", money:" + money;
+    public void addDeckToAllDecks(String deckname, Deck deck) {
+        decks.put(deckname, deck);
     }
 
+    public void deleteDeck(String deckname) {
+        Deck deck = decks.get(deckname);
+        allUselessCards.addAll(deck.getMainDeck());
+        allUselessCards.addAll(deck.getSideDeck());
+        decks.remove(deckname);
+    }
+
+    public boolean doesCardExistsInUselessCards(String cardName) {
+        return allUselessCards.contains(cardName);
+    }
+
+    public void deleteCardFromAllUselessCards(String cardname) {
+        allUselessCards.remove(cardname);
+    }
+
+    public void addCardToAllUselessCards(String cardname) {
+        allUselessCards.add(cardname);
+    }
 }

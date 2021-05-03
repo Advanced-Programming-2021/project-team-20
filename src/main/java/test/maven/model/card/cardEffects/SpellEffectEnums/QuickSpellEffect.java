@@ -1,0 +1,7 @@
+package test.maven.model.card.cardEffects.SpellEffectEnums;
+
+public enum QuickSpellEffect {
+    DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY,
+    TARGET_1_SPELL_CARD_AND_DESTROY,
+    TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0,
+}

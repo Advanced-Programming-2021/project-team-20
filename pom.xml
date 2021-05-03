@@ -22,8 +22,13 @@
     <jacoco.unit-tests.limit.class-complexity>20</jacoco.unit-tests.limit.class-complexity>
     <jacoco.unit-tests.limit.method-complexity>5</jacoco.unit-tests.limit.method-complexity>
   </properties>
-  <dependencies>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>4.1</version>
+    </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
@@ -48,6 +53,16 @@
     </dependency>
   </dependencies>
   <build>
+<!--      <pluginManagement>-->
+<!--        <plugins>-->
+<!--          <plugin>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            <version>2.3.0.RELEASE</version>-->
+<!--          </plugin>-->
+<!--        </plugins>-->
+<!--      </pluginManagement>-->
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

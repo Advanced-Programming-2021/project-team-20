@@ -1,34 +1,87 @@
 package test.maven.controller.loginMenu;
 
-import java.util.HashMap;
+import test.maven.controller.storage.Storage;
+import test.maven.model.User;
+
+import java.util.ArrayList;
 
 public class LoginMenu {
 
     public String findCommand(String command) {
         //find command from login menu patterns
-       
-        return "";
+        if (LoginMenuPatterns.isItCreateUserPattern(command)) {
+            System.out.println("username:  " + LoginMenuPatterns.findUsernameCreateUser(command));
+            System.out.println("nickname:  " + LoginMenuPatterns.findNicknameCreateUser(command));
+            System.out.println("password:  " + LoginMenuPatterns.findPasswordCreateUser(command));
+            if (doesUserWithThisUsernameAlreadyExistsCreateMenu(command)) {
+                return "user with username already exists";
+            }
+            if (doesUserWithThisNicknameAlreadyExists(command)) {
+                return "user with nickname <nickname> already exists";
+            }
+            return createUser(command);
+        }
+        if (LoginMenuPatterns.isItLoginUserPattern(command)) {
+            System.out.println("username:  " + LoginMenuPatterns.findUsernameLoginUser(command));
+            System.out.println("password:  " + LoginMenuPatterns.findPasswordLoginUser(command));
+            if (!doesUserWithThisUsernameAlreadyExistsLoginMenu(command)) {
+                System.out.println("1");
+                return "Username and password didn't match!";
+            }
+            if (!doesPasswordAndUsernameMatch(command)) {
+                System.out.println("2");
+                return "Username and password didn't match!";
+            }
+            return loginUser();
+        }
+        return "invalid command";
     }
 
-    private String createUser() {
+    private boolean doesUserWithThisUsernameAlreadyExistsCreateMenu(String command) {
+        String username = LoginMenuPatterns.findUsernameCreateUser(command);
+        System.out.println(username);
+        if (Storage.getUserByName(username) == null) return false;
+        return true;
+    }
+
+    private String createUser(String command) {
         // CALL FUNCTION in Storage and add user to arrayListOfUsers
-        return null;
+        String username = LoginMenuPatterns.findUsernameCreateUser(command);
+        String password = LoginMenuPatterns.findPasswordCreateUser(command);
+        String nickname = LoginMenuPatterns.findNicknameCreateUser(command);
+        Storage.addUserToAllUsers(new User(username, nickname, password));
+        return "user created successfully!";
     }
 
-    private boolean doesUserWithThisUsernameAlreadyExists() {
+    private boolean doesUserWithThisUsernameAlreadyExistsLoginMenu(String command) {
+        String username = LoginMenuPatterns.findUsernameLoginUser(command);
+        System.out.println(username);
+        if (Storage.getUserByName(username) == null) return false;
         return true;
     }
 
-    private boolean doesUserWithThisNicknameAlreadyExists() {
-        return true;
+    private boolean doesUserWithThisNicknameAlreadyExists(String command) {
+        String nickname = LoginMenuPatterns.findNicknameCreateUser(command);
+        ArrayList<User> allUsers = Storage.getAllUsers();
+        for (int i = 0; i < allUsers.size(); i++) {
+            if (allUsers.get(i).getNickname().equals(nickname)) return true;
+        }
+        return false;
     }
 
     private String loginUser() {
-        return null;
+        return "user logged in successfully!";
     }
 
-    private boolean doPasswordAndUsernameMatch() {
-        return true;
+    private boolean doesPasswordAndUsernameMatch(String command) {
+        String username = LoginMenuPatterns.findUsernameLoginUser(command);
+        String password = LoginMenuPatterns.findPasswordLoginUser(command);
+        System.out.println(username);
+        System.out.println(password);
+        User user = Storage.getUserByName(username);
+        String correctPassword = user.getPassword();
+        System.out.println(correctPassword);
+        return correctPassword.equals(password);
     }
 
 }

@@ -1,9 +1,10 @@
 package test.maven.view;
 
-import java.util.Scanner;
-import java.util.regex.*;
-
 import test.maven.controller.MainController;
+
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class View {
 

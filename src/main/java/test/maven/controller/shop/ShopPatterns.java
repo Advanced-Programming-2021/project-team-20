@@ -1,27 +1,19 @@
 package test.maven.controller.shop;
 
-import java.util.HashMap;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ShopPatterns {
-    private Pattern buyCard = Pattern.compile("shop buy (\\S+)");
-    private Pattern shopShowAll = Pattern.compile("shop show --all");
 
-    public HashMap<String, String> findCommand(String command) {
-        HashMap<String, String> output = new HashMap<>();
-        Matcher matcher;
-        matcher = buyCard.matcher(command);
-        if (matcher.find()) {
-            output.put("buy card", matcher.group(1));
-            return output;
-        }
+    public static boolean isItBuyPattern(String command) {
+        Pattern pattern = Pattern.compile("shop buy \\S+");
+        Matcher matcher = pattern.matcher(command);
+        return matcher.find();
+    }
 
-        matcher = shopShowAll.matcher(command);
-        if (matcher.find()) {
-            output.put("show", "all");
-            return output;
-        }
-
-        return null;
+    public static boolean isItShowAllPattern(String command) {
+        Pattern pattern = Pattern.compile("^shop show --all$");
+        Matcher matcher = pattern.matcher(command);
+        return matcher.find();
     }
 }

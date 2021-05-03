@@ -19,6 +19,7 @@ public class MainController {
     private boolean isInGameManager;
 
     private LoginMenu loginMenu = new LoginMenu();
+    private LoginMenuPatterns loginPattern = new LoginMenuPatterns();
     private DeckCommands deckCommands = new DeckCommands();
     private Profile profile = new Profile();
     private Scoreboard scoreboard = new Scoreboard();
@@ -26,7 +27,7 @@ public class MainController {
     private GameManager gameManager = new GameManager();
 
     public String switchCaseInput(String command) {
-       
+
         if (isInLoginMenu) {
             return loginMenu.findCommand(command);
         }
@@ -37,7 +38,7 @@ public class MainController {
         } else if (isInScoreBoard) {
             return scoreboard.findCommands(command);
         } else if (isInShop) {
-            shop.getClass();
+            return shop.findCommand(command);
         } else if (isInGameManager) {
             gameManager.getClass();
         }
