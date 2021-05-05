@@ -1,17 +1,30 @@
 package controller.main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import controller.addefectstocards.AddEfectsToCards;
+import com.google.gson.*;
+
 import controller.storage.Storage;
-import model.cardData.MonsterCardData.MonsterCardAttribute;
-import model.cardData.MonsterCardData.MonsterCardFamily;
 import view.View;
 
 public class Main {
   public static void main(String[] args) throws Exception {
-
+    // HashMap<String, ArrayList<String>> a = new HashMap<>();
+    // JsonObject moh = new JsonObject();
+    // JsonArray jsonArray = new JsonArray();
+    // moh.add("ContinuousSpellCardEffect", jsonArray);
+    // moh.add("EquipSpellEffect", jsonArray);
+    // moh.add("FieldSpellEffect", jsonArray);
+    // moh.add("LogicalActivationRequirement", jsonArray);
+    // moh.add("NormalSpellCardEffect", jsonArray);
+    // moh.add("QuickSpellEffect", jsonArray);
+    // moh.add("RitualSpellEffect", jsonArray);
+    // moh.add("SentToGraveyardEffect", jsonArray);
+    // moh.add("UserReplyForActivation", jsonArray);
+    // JsonObject jsonObject = new JsonObject();
+    // jsonObject.add("command knight", moh);
+    // System.out.println(moh);
     Storage storage = new Storage();
     storage.startProgram();
     View view = new View();
@@ -20,31 +33,4 @@ public class Main {
 
   }
 
-  // public static void x() {
-  // // MonsterCardAttribute[] monsterCardAttributes =
-  // MonsterCardAttribute.values();
-  // // for (int i = 0; i < monsterCardAttributes.length; i++) {
-  // //
-  // System.out.println(monsterCardAttributes[i].equals(MonsterCardFamily.AQUA));
-  // // }
-  // AddEfectsToCards addEfectsToCards = new AddEfectsToCards();
-
-  // Map<String, Enum<?>[]> a = new HashMap<>();//
-  // addEfectsToCards.getMonsterEffects("Command Knight");
-  // // MonsterCardAttribute b = (MonsterCardAttribute) a.get("1");
-  // // System.out.println(b);
-
-  // // MonsterCardAttribute monsterCardAttribute = MonsterCardAttribute.DARK;
-  // Enum[] B = { MonsterCardFamily.AQUA, MonsterCardFamily.AQUA};
-
-  // a.put("das", B);
-  // // //a.put("da", MonsterCardFamily.AQUA);
-  // Enum[] c = a.get("das");
-
-  // for (int i = 0; i < a.get("das").length; i++) {
-  // MonsterCardFamily monsterCardFamily = (MonsterCardFamily) c[i];
-  // System.out.println(monsterCardFamily);
-  // }
-
-  // // // System.out.println(monsterCardFamily);
 }

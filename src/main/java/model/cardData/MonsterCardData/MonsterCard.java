@@ -1,6 +1,8 @@
 package model.cardData.MonsterCardData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import controller.duel.CardEffects.MonsterEffectEnums.AttackerEffect;
 import controller.duel.CardEffects.MonsterEffectEnums.BeingAttackedEffect;
@@ -33,20 +35,21 @@ public class MonsterCard extends Card {
     private MonsterCardAttribute monsterCardAttribute;
     private MonsterCardFamily monsterCardFamily;
     private MonsterCardValue monsterCardValue;
-    private ArrayList<SummoningRequirement> summoningRequirements;
-    private ArrayList<UponSummoningEffect> uponSummoningEffects;
-    private ArrayList<AttackerEffect> attackerEffects;
-    private ArrayList<BeingAttackedEffect> beingAttackedEffects;
-    private ArrayList<ContinuousMonsterEffect> continuousMonsterEffects;
-    private ArrayList<FlipEffect> flipEffects;
-    private ArrayList<OptionalMonsterEffect> optionalMonsterEffects;
-    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;
-    private ArrayList<EquipSpellEffect> equipSpellEffects;
-    private ArrayList<FieldSpellEffect> fieldSpellEffects;
+    private ArrayList<SummoningRequirement> summoningRequirements = new ArrayList<>();
+    private ArrayList<UponSummoningEffect> uponSummoningEffects = new ArrayList<>();
+    private ArrayList<AttackerEffect> attackerEffects = new ArrayList<>();
+    private ArrayList<BeingAttackedEffect> beingAttackedEffects = new ArrayList<>();
+    private ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = new ArrayList<>();
+    private ArrayList<FlipEffect> flipEffects = new ArrayList<>();
+    private ArrayList<OptionalMonsterEffect> optionalMonsterEffects = new ArrayList<>();
+    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects = new ArrayList<>();
+    private ArrayList<EquipSpellEffect> equipSpellEffects = new ArrayList<>();
+    private ArrayList<FieldSpellEffect> fieldSpellEffects = new ArrayList<>();
 
     public MonsterCard(int attackPower, int defensePower, int level, MonsterCardAttribute attribute,
             MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
-            String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice) {
+            String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice,
+            HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.MONSTER, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
         this.attackPower = attackPower;
         this.defensePower = defensePower;
@@ -59,7 +62,6 @@ public class MonsterCard extends Card {
         this.monsterCardAttribute = attribute;
         this.monsterCardFamily = monsterCardFamily;
         this.monsterCardValue = monsterCardValue;
-        summoningRequirements = new ArrayList<>();
         summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
         if (level == 5 || level == 6) {
             summoningRequirements.add(SummoningRequirement.TRIBUTE_1_MONSTER);
@@ -68,15 +70,33 @@ public class MonsterCard extends Card {
         } else if (level >= 9) {
             summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
         }
-        uponSummoningEffects = new ArrayList<>();
-        attackerEffects = new ArrayList<>();
-        beingAttackedEffects = new ArrayList<>();
-        continuousMonsterEffects = new ArrayList<>();
-        flipEffects = new ArrayList<>();
-        optionalMonsterEffects = new ArrayList<>();
-        sentToGraveyardEffects = new ArrayList<>();
-        equipSpellEffects = new ArrayList<>();
-        fieldSpellEffects = new ArrayList<>();
+        setEnumValues(enumValues);
+    }
+
+    public MonsterCard(MonsterCard monster) {
+        super(monster.getCardName(), CardType.MONSTER, monster.getCardDescription(), null,
+                monster.getNumberOfAllowedUsages(), monster.getCardPrice());
+        this.attackPower = monster.getAttackPower();
+        this.defensePower = monster.getDefensePower();
+        this.attackPowerConsideringEffects = 0;
+        this.defensePowerConsideringEffects = 0;
+        this.level = monster.getLevel();
+        this.oncePerTurnCardEffectUsed = monster.isOncePerTurnCardEffectUsed();
+        this.cardPositionChanged = false;
+        this.cardAttacked = false;
+        this.monsterCardAttribute = monster.getMonsterCardAttribute();
+        this.monsterCardFamily = monster.getMonsterCardFamily();
+        this.monsterCardValue = monster.getMonsterCardValue();
+        this.summoningRequirements = monster.getSummoningRequirements();
+        this.uponSummoningEffects = monster.getUponSummoningEffects();
+        this.attackerEffects = monster.getAttackerEffects();
+        this.beingAttackedEffects = monster.getBeingAttackedEffects();
+        this.continuousMonsterEffects = monster.getContinuousMonsterEffects();
+        this.flipEffects = monster.getFlipEffects();
+        this.optionalMonsterEffects = monster.getOptionalMonsterEffects();
+        this.sentToGraveyardEffects = monster.getSentToGraveyardEffects();
+        this.equipSpellEffects = monster.getEquipSpellEffects();
+        this.fieldSpellEffects = monster.getFieldSpellEffects();
     }
 
     public MonsterCardValue getMonsterCardValue() {
@@ -191,8 +211,45 @@ public class MonsterCard extends Card {
         this.fieldSpellEffects.remove(fieldSpellEffect);
     }
 
+    private void setEnumValues(HashMap<String, List<String>> enumValues) {
+
+        for (int i = 1; i < enumValues.get("AttackerEffect").size(); i++) {
+            attackerEffects.add(AttackerEffect.valueOf(enumValues.get("AttackerEffects").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("BeingAttackedEffect").size(); i++) {
+            beingAttackedEffects.add(BeingAttackedEffect.valueOf(enumValues.get("BeingAttackedEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("ContinuousMonsterEffect").size(); i++) {
+            continuousMonsterEffects
+                    .add(ContinuousMonsterEffect.valueOf(enumValues.get("ContinuousMonsterEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("FlipEffect").size(); i++) {
+            flipEffects.add(FlipEffect.valueOf(enumValues.get("FlipEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("OptionalMonsterEffect").size(); i++) {
+            optionalMonsterEffects.add(OptionalMonsterEffect.valueOf(enumValues.get("OptionalMonsterEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("SentToGraveyardEffect").size(); i++) {
+            sentToGraveyardEffects.add(SentToGraveyardEffect.valueOf(enumValues.get("SentToGraveyardEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("SummoningRequirement").size(); i++) {
+            summoningRequirements.add(SummoningRequirement.valueOf(enumValues.get("SummoningRequirement").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("UponSummoningEffect").size(); i++) {
+            uponSummoningEffects.add(UponSummoningEffect.valueOf(enumValues.get("UponSummoningEffect").get(i)));
+        }
+
+    }
+
     public static int giveATKDEFConsideringEffects(String string, CardLocation cardLocation, int index) {
-        
+
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(cardLocation);
         int finalAttackPower = monsterCard.getAttackPower();
@@ -328,8 +385,8 @@ public class MonsterCard extends Card {
     }
 
     @Override
-    protected Object clone(){
-        return new MonsterCard(attackPower, defensePower, level, monsterCardAttribute, monsterCardFamily, monsterCardValue, cardName, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
+    protected Object clone() {
+        return new MonsterCard(this);
     }
 
 }

@@ -1,5 +1,8 @@
 package model.cardData.SpellCardData;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
 import controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
@@ -19,40 +22,44 @@ public class SpellCard extends Card {
     private int numberOfTurnsForActivation;
     private SpellCardValue spellCardValue;
     private boolean isAlreadyActivated;
-    private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects;
-    private ArrayList<EquipSpellEffect> equipSpellEffects;
-    private ArrayList<FieldSpellEffect> fieldSpellEffects;
-    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;
-    private ArrayList<NormalSpellCardEffect> normalSpellCardEffects;
-    private ArrayList<QuickSpellEffect> quickSpellEffects;
-    private ArrayList<RitualSpellEffect> ritualSpellEffects;
-    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;
-    private ArrayList<UserReplyForActivation> userReplyForActivations;
+    private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = new ArrayList<>();
+    private ArrayList<EquipSpellEffect> equipSpellEffects = new ArrayList<>();
+    private ArrayList<FieldSpellEffect> fieldSpellEffects = new ArrayList<>();
+    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements = new ArrayList<>();
+    private ArrayList<NormalSpellCardEffect> normalSpellCardEffects = new ArrayList<>();
+    private ArrayList<QuickSpellEffect> quickSpellEffects = new ArrayList<>();
+    private ArrayList<RitualSpellEffect> ritualSpellEffects = new ArrayList<>();
+    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects = new ArrayList<>();
+    private ArrayList<UserReplyForActivation> userReplyForActivations = new ArrayList<>();
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
-            int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice) {
+            int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
+            HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
         this.isCardActivated = false;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
-        this.continuousSpellCardEffects = new ArrayList<>();
-        this.equipSpellEffects = new ArrayList<>();
-        this.fieldSpellEffects = new ArrayList<>();
-        this.logicalActivationRequirements = new ArrayList<>();
-        this.normalSpellCardEffects = new ArrayList<>();
-        this.quickSpellEffects = new ArrayList<>();
-        this.ritualSpellEffects = new ArrayList<>();
-        this.sentToGraveyardEffects = new ArrayList<>();
-        this.userReplyForActivations = new ArrayList<>();
-        if (cardDescription.equals("a")){
-            normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD);
-        } else if (cardDescription.equals("b")){
-            normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS);
-        } else if (cardDescription.equals("c")){
-            normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS);
-        }
+        this.spellCardValue = spellCardValue;
+        setEnumValues(enumValues);
     }
 
-   public boolean isCardActivated() {
+    public SpellCard(SpellCard spellCard) {
+        super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), null,
+                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
+        this.isCardActivated = false;
+        this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
+        this.spellCardValue = spellCard.getSpellCardValue();
+        this.continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
+        this.equipSpellEffects = spellCard.getEquipSpellEffects();
+        this.fieldSpellEffects = spellCard.getFieldSpellEffects();
+        this.logicalActivationRequirements = spellCard.getLogicalActivationRequirements();
+        this.normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
+        this.quickSpellEffects = spellCard.getQuickSpellEffects();
+        this.ritualSpellEffects = spellCard.getRitualSpellEffects();
+        this.sentToGraveyardEffects = spellCard.getSentToGraveyardEffects();
+        this.userReplyForActivations = spellCard.getUserReplyForActivations();
+    }
+
+    public boolean isCardActivated() {
         return isCardActivated;
     }
 
@@ -107,8 +114,51 @@ public class SpellCard extends Card {
     public void setAlreadyActivated(boolean alreadyActivated) {
         isAlreadyActivated = alreadyActivated;
     }
+
+    private void setEnumValues(HashMap<String, List<String>> enumValues) {
+
+        for (int i = 1; i < enumValues.get("ContinuousSpellCardEffect").size(); i++) {
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.valueOf(enumValues.get("ContinuousSpellCardEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("EquipSpellEffect").size(); i++) {
+            equipSpellEffects.add(EquipSpellEffect.valueOf(enumValues.get("EquipSpellEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("FieldSpellEffect").size(); i++) {
+            fieldSpellEffects.add(FieldSpellEffect.valueOf(enumValues.get("FieldSpellEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("LogicalActivationRequirement").size(); i++) {
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.valueOf(enumValues.get("LogicalActivationRequirement").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("NormalSpellCardEffect").size(); i++) {
+            normalSpellCardEffects.add(NormalSpellCardEffect.valueOf(enumValues.get("NormalSpellCardEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("SentToGraveyardEffect").size(); i++) {
+            sentToGraveyardEffects.add(SentToGraveyardEffect.valueOf(enumValues.get("SentToGraveyardEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("QuickSpellEffect").size(); i++) {
+            quickSpellEffects.add(QuickSpellEffect.valueOf(enumValues.get("QuickSpellEffect").get(i)));
+        }
+
+        for (int i = 1; i < enumValues.get("RitualSpellEffect").size(); i++) {
+            ritualSpellEffects.add(RitualSpellEffect.valueOf(enumValues.get("RitualSpellEffect").get(i)));
+        }
+        for (int i = 1; i < enumValues.get("UserReplyForActivation").size(); i++) {
+            userReplyForActivations
+                    .add(UserReplyForActivation.valueOf(enumValues.get("UserReplyForActivation").get(i)));
+        }
+
+    }
+
     @Override
-    protected Object clone(){
-        return new SpellCard(cardName, cardDescription, spellCardValue, cardPosition, numberOfAllowedUsages, numberOfTurnsForActivation, cardPrice);
+    protected Object clone() {
+        return new SpellCard(this);
     }
 }

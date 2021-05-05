@@ -94,7 +94,7 @@ public class ImportAndExport {
         int defensePower = detailsOfCards.get("Defence Power").getAsInt();
         new MonsterCard(attackPower, defensePower, level, MonsterCardAttribute.valueOf(attribute),
                 MonsterCardFamily.valueOf(formatterStringToEnum(monsterType)),
-                MonsterCardValue.valueOf(cardType.toUpperCase()), cardName, cardDescription, null, 3, cardPrice);
+                MonsterCardValue.valueOf(cardType.toUpperCase()), cardName, cardDescription, null, 3, cardPrice , null);
     }
 
     private String formatterStringToEnum(String string) {
@@ -114,10 +114,10 @@ public class ImportAndExport {
         String status = detailsOfCards.get("Status").getAsString();
         if (cardType.equals("Trap")) {
             new TrapCard(cardName, cardDescription, TrapCardValue.valueOf(cardProperty.toUpperCase()), null,
-                    status.equals("Unlimited") ? 3 : 1, 0, cardPrice);
+                    status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
         } else {
             new SpellCard(cardName, cardDescription, SpellCardValue.valueOf(cardProperty), null,
-                    status.equals("Unlimited") ? 3 : 1, 0, cardPrice);
+                    status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
         }
     }
 
