@@ -1,4 +1,4 @@
-package controller.storage;
+package controller.non_duel.storage;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package controller.shop;
+package controller.non_duel.shop;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package controller.deckCommands;
+package controller.non_duel.deckCommands;
 
 import java.util.ArrayList;
 import java.util.HashMap;

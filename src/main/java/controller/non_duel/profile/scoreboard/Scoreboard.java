@@ -1,11 +1,11 @@
-package controller.scoreboard;
+package controller.non_duel.profile.scoreboard;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import controller.storage.Storage;
+import controller.non_duel.storage.Storage;
 import model.User;
 
 public class Scoreboard {

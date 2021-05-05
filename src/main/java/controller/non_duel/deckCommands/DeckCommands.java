@@ -1,4 +1,4 @@
-package controller.deckCommands;
+package controller.non_duel.deckCommands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import controller.profile.Profile;
-import controller.storage.Storage;
+import controller.non_duel.profile.Profile;
+import controller.non_duel.storage.Storage;
 import model.Deck;
 import model.cardData.General.Card;
 

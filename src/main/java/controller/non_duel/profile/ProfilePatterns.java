@@ -1,4 +1,4 @@
-package controller.profile;
+package controller.non_duel.profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;

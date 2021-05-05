@@ -1,12 +1,12 @@
-package controller.mainController;
+package controller.non_duel.mainController;
 
-import controller.deckCommands.DeckCommands;
 import controller.duel.PreliminaryPackage.GameManager;
-import controller.importAndExport.ImportAndExport;
-import controller.loginMenu.LoginMenu;
-import controller.profile.Profile;
-import controller.scoreboard.Scoreboard;
-import controller.shop.Shop;
+import controller.non_duel.deckCommands.DeckCommands;
+import controller.non_duel.importAndExport.ImportAndExport;
+import controller.non_duel.loginMenu.LoginMenu;
+import controller.non_duel.profile.Profile;
+import controller.non_duel.profile.scoreboard.Scoreboard;
+import controller.non_duel.shop.Shop;
 import view.View;
 
 public class MainController {

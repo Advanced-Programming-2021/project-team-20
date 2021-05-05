@@ -1,4 +1,4 @@
-package controller.loginMenu;
+package controller.non_duel.loginMenu;
 
 import java.util.regex.*;
 

@@ -1,7 +1,7 @@
-package controller.loginMenu;
+package controller.non_duel.loginMenu;
 
-import controller.profile.Profile;
-import controller.storage.Storage;
+import controller.non_duel.profile.Profile;
+import controller.non_duel.storage.Storage;
 import model.User;
 
 public class LoginMenu {

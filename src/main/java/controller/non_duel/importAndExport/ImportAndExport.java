@@ -1,4 +1,4 @@
-package controller.importAndExport;
+package controller.non_duel.importAndExport;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import controller.storage.Storage;
+import controller.non_duel.storage.Storage;
 import model.cardData.General.Card;
 import model.cardData.General.CardType;
 import model.cardData.MonsterCardData.MonsterCard;

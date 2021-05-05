@@ -1,4 +1,4 @@
-package controller.shop;
+package controller.non_duel.shop;
 
 public class Shop {
 

@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import controller.mainController.MainController;
+import controller.non_duel.mainController.MainController;
 
 public class View {
 

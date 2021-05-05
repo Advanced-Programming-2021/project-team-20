@@ -1,9 +1,9 @@
-package controller.profile;
+package controller.non_duel.profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import controller.storage.Storage;
+import controller.non_duel.storage.Storage;
 import model.User;
 
 public class Profile {

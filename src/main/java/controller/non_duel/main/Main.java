@@ -1,11 +1,11 @@
-package controller.main;
+package controller.non_duel.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.google.gson.*;
 
-import controller.storage.Storage;
+import controller.non_duel.storage.Storage;
 import view.View;
 
 public class Main {
