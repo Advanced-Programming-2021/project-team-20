@@ -2,6 +2,7 @@ package controller.mainController;
 
 import controller.deckCommands.DeckCommands;
 import controller.duel.PreliminaryPackage.GameManager;
+import controller.importAndExport.ImportAndExport;
 import controller.loginMenu.LoginMenu;
 import controller.profile.Profile;
 import controller.scoreboard.Scoreboard;
@@ -16,6 +17,7 @@ public class MainController {
     private boolean isInScoreBoard;
     private boolean isInShop;
     private boolean isInProfile;
+    private boolean isInImportAndExport;
     private boolean isInGameManager;
 
     private LoginMenu loginMenu = new LoginMenu();
@@ -23,6 +25,7 @@ public class MainController {
     private Profile profile = new Profile();
     private Scoreboard scoreboard = new Scoreboard();
     private Shop shop = new Shop();
+    private ImportAndExport importAndExport = new ImportAndExport();
     private GameManager gameManager = new GameManager();
 
     public String switchCaseInput(String command) {
@@ -45,6 +48,8 @@ public class MainController {
             return shop.findCommand(command);
         } else if (isInGameManager) {
             gameManager.getClass();
+        } else if (isInImportAndExport) {
+            return importAndExport.findCommand(command);
         }
 
         return "invalid commend!";
@@ -68,6 +73,8 @@ public class MainController {
             isInScoreBoard = false;
         } else if (isInGameManager) {
             isInGameManager = false;
+        } else if (isInImportAndExport) {
+            isInImportAndExport = false;
         }
 
         isInMainMenu = true;
@@ -100,6 +107,11 @@ public class MainController {
         } else if (menuname.equals("Duel")) {
             isInGameManager = true;
             isInMainMenu = false;
+            View.setCurrentMenu(menuname);
+            return true;
+        } else if (menuname.equals("ImportAndExport")) {
+            isInImportAndExport = true;
+            isInLoginMenu = false;
             View.setCurrentMenu(menuname);
             return true;
         }
