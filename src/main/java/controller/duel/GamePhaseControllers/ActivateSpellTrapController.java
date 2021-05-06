@@ -94,8 +94,6 @@ public class ActivateSpellTrapController extends ChainController {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();
         int fakeTurn = duelController.getFakeTurn();
-        ArrayList<Action> actions = GameManager.getActionsByIndex(index);
-        Action action = actions.get(actions.size() - 1);
         String resultOfChecking;
         if (turn == fakeTurn) {
             resultOfChecking = Utility.areWeInMainPhase(index);
@@ -136,10 +134,15 @@ public class ActivateSpellTrapController extends ChainController {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
+        if (card == null) {
+            System.out.println("WHOOPS!");
+        } else {
+            System.out.println("CARD NAME IS " + card.getCardName());
+        }
         int fakeTurn = duelController.getFakeTurn();
         RowOfCardLocation rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_ZONE;
         if (fakeTurn == 1) {
-            if (card instanceof SpellCard && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
+            if (Card.isCardASpell(card) && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 rowOfCardLocation = RowOfCardLocation.ALLY_SPELL_FIELD_ZONE;
             } else {
                 rowOfCardLocation = RowOfCardLocation.ALLY_SPELL_ZONE;
@@ -151,23 +154,27 @@ public class ActivateSpellTrapController extends ChainController {
                 rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_ZONE;
             }
         }
-        if (duelBoard.isZoneFull(rowOfCardLocation)) {
+        if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))) {
+            return "spell zone is full";
+        } else if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))) {
             return "spell field zone is full";
         } else {
             String output = arePreparationsCompleteForSpellTrapActivation(index);
-            if (output.startsWith("pre")){
+            System.out.println("SUCH A THING THAT IS SUPPOSED TO GIVE THINGS NEEDED OR SAY PREPARATIONS ARE NOT OK IS SAYING\n"+output);
+            if (output.startsWith("pre")) {
                 return output;
-            } else if (output.equals("nothing needed")){
+            } else if (output.equals("nothing needed")) {
                 createActionForActivatingSpellTrap(index);
                 selectCardController.resetSelectedCardLocationList();
+                String finalOutput = Action.conductUninterruptedAction(index);
                 String canChainingOccur = canChainingOccur(index);
                 //duelController.changeFakeTurn();
                 //used to give fakeTurn as input
                 if (canChainingOccur.equals("")) {
-                    return Action.conductUninterruptedAction(index) + Action.conductAllActions(index);
+                    return finalOutput + "\n" + Action.conductAllActions(index);
                 }
                 //activateSpellTrapController.setGoingToChangeTurnsForChaining(true);
-                return Action.conductUninterruptedAction(index) + "\n" + canChainingOccur;
+                return finalOutput + "\n" + canChainingOccur;
             } else {
                 areWeLookingForFurtherInputToActivateSpellTrap = true;
                 return output;
@@ -231,13 +238,6 @@ public class ActivateSpellTrapController extends ChainController {
                     cardsToBeChosenToApplyEquipSpellTo.add(cardLocation);
                     selectCardController.resetSelectedCardLocationList();
                     createActionForActivatingSpellTrap(index);
-                    /*
-                    if (isRedirectInputBeingProcessesInChain) {
-                        duelController.changeFakeTurn();
-                        isRedirectInputBeingProcessesInChain = false;
-                    }
-
-                     */
                     output = Action.conductUninterruptedAction(0);
                     canChainingOccur = canChainingOccur(index);
                     //used to give fakeTurn as input
@@ -255,13 +255,6 @@ public class ActivateSpellTrapController extends ChainController {
                 cardsToBeSpecialSummoned.add(cardLocation);
                 selectCardController.resetSelectedCardLocationList();
                 createActionForActivatingSpellTrap(index);
-                /*
-                if (isRedirectInputBeingProcessesInChain) {
-                    duelController.changeFakeTurn();
-                    isRedirectInputBeingProcessesInChain = false;
-                }
-
-                 */
                 output = Action.conductUninterruptedAction(0);
                 canChainingOccur = canChainingOccur(index);
                 //used to give fakeTurn as input
@@ -279,13 +272,6 @@ public class ActivateSpellTrapController extends ChainController {
                 System.out.println("887");
                 selectCardController.resetSelectedCardLocationList();
                 createActionForActivatingSpellTrap(index);
-                /*
-                if (isRedirectInputBeingProcessesInChain) {
-                    duelController.changeFakeTurn();
-                    isRedirectInputBeingProcessesInChain = false;
-                }
-
-                 */
                 output = Action.conductUninterruptedAction(0);
                 canChainingOccur = canChainingOccur(index);
                 //used to give fakeTurn as input
@@ -304,13 +290,6 @@ public class ActivateSpellTrapController extends ChainController {
                 cardsToBeChosenFromDeckAndAddedToHand.add(cardLocation);
                 selectCardController.resetSelectedCardLocationList();
                 createActionForActivatingSpellTrap(index);
-                /*
-                if (isRedirectInputBeingProcessesInChain) {
-                    duelController.changeFakeTurn();
-                    isRedirectInputBeingProcessesInChain = false;
-                }
-
-                 */
                 output = Action.conductUninterruptedAction(0);
                 canChainingOccur = canChainingOccur(index);
                 //used to give fakeTurn as input
@@ -326,13 +305,6 @@ public class ActivateSpellTrapController extends ChainController {
                 cardsToBeDiscarded.add(cardLocation);
                 selectCardController.resetSelectedCardLocationList();
                 createActionForActivatingSpellTrap(index);
-                /*
-                if (isRedirectInputBeingProcessesInChain) {
-                    duelController.changeFakeTurn();
-                    isRedirectInputBeingProcessesInChain = false;
-                }
-
-                 */
                 output = Action.conductUninterruptedAction(0);
                 canChainingOccur = canChainingOccur(index);
                 //used to give fakeTurn as input
@@ -375,7 +347,12 @@ public class ActivateSpellTrapController extends ChainController {
                 actions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
             }//add action that conducts effects of the card
         }
-
+        cardsToBeDiscarded.clear();
+        cardsToBeChosenToApplyEquipSpellTo.clear();
+        cardsToBeSpecialSummoned.clear();
+        cardsToBeChosenFromDeckAndAddedToHand.clear();
+        cardsToBeDestroyed.clear();
+        cardsToTakeControlOf.clear();
     }
 
     public String canChainingOccur(int index) {
@@ -385,13 +362,13 @@ public class ActivateSpellTrapController extends ChainController {
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         int actionTurn = uninterruptedAction.getActionTurn();
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_SPELL, duelBoard, actionTurn);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_SPELL, actionTurn);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_TRAP)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_TRAP, duelBoard, actionTurn);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_TRAP, actionTurn);
         } else if (uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_SPELL, duelBoard, actionTurn);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_SPELL, actionTurn);
         } else if (uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_TRAP)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_TRAP, duelBoard, actionTurn);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_TRAP, actionTurn);
         }
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, index);
     }

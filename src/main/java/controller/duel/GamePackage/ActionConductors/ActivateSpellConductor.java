@@ -2,10 +2,7 @@ package controller.duel.GamePackage.ActionConductors;
 
 import java.util.ArrayList;
 
-import controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
-import controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
-import controller.duel.CardEffects.SpellEffectEnums.NormalSpellCardEffect;
-import controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
+import controller.duel.CardEffects.SpellEffectEnums.*;
 import controller.duel.GamePackage.Action;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.PreliminaryPackage.GameManager;
@@ -15,6 +12,7 @@ import model.cardData.General.CardPosition;
 import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
+import model.cardData.SpellCardData.SpellCardValue;
 
 public class ActivateSpellConductor {
 
@@ -23,39 +21,70 @@ public class ActivateSpellConductor {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         CardLocation mainSpellCardLocation = uninterruptedAction.getMainCardLocation();
         Card mainSpellCard = duelBoard.getCardByCardLocation(mainSpellCardLocation);
+        System.out.println("CARD THAT IS ASSUMED TO BE ACTIVATED HAS NAME " + mainSpellCard.getCardName());
+        System.out.println("LOCATION " + mainSpellCardLocation.getRowOfCardLocation() + " " + mainSpellCardLocation.getIndex());
         RowOfCardLocation rowOfMainSpellCardLocation = mainSpellCardLocation.getRowOfCardLocation();
-        if (rowOfMainSpellCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfMainSpellCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+        if (rowOfMainSpellCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
+            if (((SpellCard) mainSpellCard).getSpellCardValue().equals(SpellCardValue.FIELD)) {
+                uninterruptedAction.setFinalMainCardLocation(
+                    new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, true).getRowOfCardLocation(),
+                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, true).getIndex() + 1)
+                );
+            } else {
+                uninterruptedAction.setFinalMainCardLocation(
+                    new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_ZONE, true).getRowOfCardLocation(),
+                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_ZONE, true).getIndex() + 1)
+                );
+            }
+            duelBoard.removeCardByCardLocation(mainSpellCardLocation);
+            int actionTurn = uninterruptedAction.getActionTurn();
+            duelBoard.addCardToSpellZone(mainSpellCard, actionTurn);
+        } else if (rowOfMainSpellCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+            if (((SpellCard) mainSpellCard).getSpellCardValue().equals(SpellCardValue.FIELD)) {
+                uninterruptedAction.setFinalMainCardLocation(
+                    new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, false).getRowOfCardLocation(),
+                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, false).getIndex() + 1)
+                );
+            } else {
+                uninterruptedAction.setFinalMainCardLocation(
+                    new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_ZONE, false).getRowOfCardLocation(),
+                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_ZONE, false).getIndex() + 1)
+                );
+            }
             duelBoard.removeCardByCardLocation(mainSpellCardLocation);
             int actionTurn = uninterruptedAction.getActionTurn();
             duelBoard.addCardToSpellZone(mainSpellCard, actionTurn);
         }
+        //if none of the above two ifs occur, then the card was set and we dont need to change location of spell card
         mainSpellCard.setCardPosition(CardPosition.FACE_UP_ACTIVATED_POSITION);
         return "spell card ready for activation";
     }
 
     public static String conductActivatingSpell(int index, int numberInListOfActions) {
-        Action action = GameManager.getActionsByIndex(index).get(numberInListOfActions);
+        Action uninterruptedAction = GameManager.getUninterruptedActionsByIndex(index).get(numberInListOfActions);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        CardLocation mainCardLocation = action.getMainCardLocation();
-        SpellCard spellCard = (SpellCard) duelBoard.getCardByCardLocation(mainCardLocation);
-        return switchCaseAmongAllSpellEffects(action, index, spellCard);
+        CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
+        SpellCard spellCard = (SpellCard) duelBoard.getCardByCardLocation(finalMainCardLocation);
+        return switchCaseAmongAllSpellEffects(uninterruptedAction, index, spellCard);
     }
 
-    public static String switchCaseAmongAllSpellEffects(Action action, int index, SpellCard spellCard) {
+    public static String switchCaseAmongAllSpellEffects(Action uninterruptedAction, int index, SpellCard spellCard) {
         ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
         ArrayList<QuickSpellEffect> quickSpellEffects = spellCard.getQuickSpellEffects();
         ArrayList<FieldSpellEffect> fieldSpellEffects = spellCard.getFieldSpellEffects();
         ArrayList<EquipSpellEffect> equipSpellEffects = spellCard.getEquipSpellEffects();
+        ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
         if (quickSpellEffects.contains(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY)) {
-            ArrayList<CardLocation> targetingCards = action.getTargetingCards();
-            sendCardToGraveyardAfterRemoving(targetingCards.get(targetingCards.size() - 1), index, GameManager.getDuelControllerByIndex(index).getFakeTurn());
+            ArrayList<CardLocation> targetingCards = uninterruptedAction.getTargetingCards();
+            sendCardToGraveyardAfterRemoving(targetingCards.get(targetingCards.size() - 1), index);
+            //sendCardToGraveyardAfterRemoving(targetingCards.get(targetingCards.size() - 1), index, GameManager.getDuelControllerByIndex(index).getFakeTurn());
         }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY)) {
-            ArrayList<CardLocation> cardsToBeSpecialSummoned = action.getCardsToBeSpecialSummoned();
+            ArrayList<CardLocation> cardsToBeSpecialSummoned = uninterruptedAction.getCardsToBeSpecialSummoned();
             specialSummonCard(cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1), index);
         }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.ADD_SPELL_FIELD_CARD_FROM_DECK_TO_HAND)) {
-            ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand = action.getCardsToBeChosenFromDeckAndAddedToHand();
+            ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand = uninterruptedAction.getCardsToBeChosenFromDeckAndAddedToHand();
             addCardToHand(cardsToBeChosenFromDeckAndAddedToHand.get(cardsToBeChosenFromDeckAndAddedToHand.size() - 1), index);
         }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.DRAW_2_CARDS)) {
@@ -72,7 +101,7 @@ public class ActivateSpellConductor {
             destroyAllMonsterCardsInTheField(index);
         }
         if (equipSpellEffects.size() > 0) {
-            ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo = action.getCardsToBeChosenToApplyEquipSpellTo();
+            ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo = uninterruptedAction.getCardsToBeChosenToApplyEquipSpellTo();
             equipSpellEffect(index, cardsToBeChosenToApplyEquipSpellTo, equipSpellEffects);
         }
         if (fieldSpellEffects.size() > 0) {
@@ -80,19 +109,30 @@ public class ActivateSpellConductor {
                 checkSpellFieldEffectInTheField(index, fieldSpellEffects.get(i));
             }
         }
-        CardLocation mainCardLocation = action.getMainCardLocation();
-        if (fieldSpellEffects.size() == 0 || equipSpellEffects.size() == 0) {
+        CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
+        if (fieldSpellEffects.size() == 0 && equipSpellEffects.size() == 0 && continuousSpellCardEffects.size() == 0) {
             //Action thisAction = actions.get(numberInListOfActions);
-            int actionTurn = action.getActionTurn();
-            sendCardToGraveyardAfterRemoving(mainCardLocation, index, actionTurn);
+            int actionTurn = uninterruptedAction.getActionTurn();
+            sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
         }
         return "spell activated";
     }
 
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index, int graveyardToSendCardTo) {
+    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-        duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+        Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
+        if (cardGoingToBeSentToGraveyard != null) {
+            int graveyardToSendCardTo;
+            RowOfCardLocation rowOfCardLocationOfThrownCard = targetingCardLocation.getRowOfCardLocation();
+            if (rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
+                graveyardToSendCardTo = 1;
+            } else {
+                graveyardToSendCardTo = 2;
+            }
+            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+        }
     }
 
     public static void specialSummonCard(CardLocation monsterCardLocation, int index) {
@@ -132,7 +172,8 @@ public class ActivateSpellConductor {
 
     public static void sendAllCardsInThisArrayListToGraveyard(ArrayList<CardLocation> targetingCards, int index, int graveyardToSendCardsTo) {
         for (int i = 0; i < targetingCards.size(); i++) {
-            sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
+            sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
+            //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
         }
     }
 
@@ -199,6 +240,7 @@ public class ActivateSpellConductor {
             monsterCards.add((MonsterCard) duelBoard.getCardByCardLocation(cardsToBeChosenToApplyEquipSpellTo.get(i)));
         }
         for (int i = 0; i < monsterCards.size(); i++) {
+            System.out.println("monster card we are applying equip spell effect to has name " + monsterCards.get(i).getCardName());
             for (int j = 0; j < equipSpellEffects.size(); j++) {
                 monsterCards.get(i).addEquipSpellEffectToList(equipSpellEffects.get(j));
             }

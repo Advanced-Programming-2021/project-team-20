@@ -22,15 +22,15 @@ public class SpellCard extends Card {
     private int numberOfTurnsForActivation;
     private SpellCardValue spellCardValue;
     private boolean isAlreadyActivated;
-    private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = new ArrayList<>();
-    private ArrayList<EquipSpellEffect> equipSpellEffects = new ArrayList<>();
-    private ArrayList<FieldSpellEffect> fieldSpellEffects = new ArrayList<>();
-    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements = new ArrayList<>();
-    private ArrayList<NormalSpellCardEffect> normalSpellCardEffects = new ArrayList<>();
-    private ArrayList<QuickSpellEffect> quickSpellEffects = new ArrayList<>();
-    private ArrayList<RitualSpellEffect> ritualSpellEffects = new ArrayList<>();
-    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects = new ArrayList<>();
-    private ArrayList<UserReplyForActivation> userReplyForActivations = new ArrayList<>();
+    private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects;
+    private ArrayList<EquipSpellEffect> equipSpellEffects;
+    private ArrayList<FieldSpellEffect> fieldSpellEffects;
+    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;
+    private ArrayList<NormalSpellCardEffect> normalSpellCardEffects;
+    private ArrayList<QuickSpellEffect> quickSpellEffects;
+    private ArrayList<RitualSpellEffect> ritualSpellEffects;
+    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;
+    private ArrayList<UserReplyForActivation> userReplyForActivations;
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
@@ -39,11 +39,20 @@ public class SpellCard extends Card {
         this.isCardActivated = false;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.spellCardValue = spellCardValue;
+        this.continuousSpellCardEffects = new ArrayList<>();
+        this.equipSpellEffects = new ArrayList<>();
+        this.fieldSpellEffects = new ArrayList<>();
+        this.logicalActivationRequirements = new ArrayList<>();
+        this.normalSpellCardEffects = new ArrayList<>();
+        this.quickSpellEffects = new ArrayList<>();
+        this.ritualSpellEffects = new ArrayList<>();
+        this.sentToGraveyardEffects = new ArrayList<>();
+        this.userReplyForActivations = new ArrayList<>();
         setEnumValues(enumValues);
     }
 
     public SpellCard(SpellCard spellCard) {
-        super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), null,
+        super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), spellCard.getCardPosition(),
                 spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
         this.isCardActivated = false;
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();

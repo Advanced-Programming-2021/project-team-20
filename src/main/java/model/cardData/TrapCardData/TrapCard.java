@@ -25,18 +25,18 @@ public class TrapCard extends Card {
     private int numberOfTurnsForActivation;
     private TrapCardValue trapCardValue;
     private boolean isAlreadyActivated;
-    private ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects = new ArrayList<>();
-    private ArrayList<FlipSummonTrapCardEffect> flipSummonTrapCardEffects = new ArrayList<>();
-    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements = new ArrayList<>();
-    private ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects = new ArrayList<>();
-    private ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects = new ArrayList<>();
-    private ArrayList<NormalTrapCardEffect> normalTrapCardEffects = new ArrayList<>();
-    private ArrayList<RitualSummonTrapCardEffect> ritualSummonTrapCardEffects = new ArrayList<>();
-    private ArrayList<SpecialSummonTrapCardEffect> specialSummonTrapCardEffects = new ArrayList<>();
-    private ArrayList<MonsterEffectActivationTrapCardEffect> monsterEffectActivationTrapCardEffect = new ArrayList<>();
-    private ArrayList<SpellCardActivationTrapCardEffect> spellCardActivationTrapCardEffects = new ArrayList<>();
-    private ArrayList<TrapCardActivationTrapCardEffect> trapCardActivationTrapCardEffects = new ArrayList<>();
-    private ArrayList<UserReplyForActivation> userReplyForActivations = new ArrayList<>();
+    private ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects;
+    private ArrayList<FlipSummonTrapCardEffect> flipSummonTrapCardEffects;
+    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;
+    private ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects;
+    private ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects;
+    private ArrayList<NormalTrapCardEffect> normalTrapCardEffects;
+    private ArrayList<RitualSummonTrapCardEffect> ritualSummonTrapCardEffects;
+    private ArrayList<SpecialSummonTrapCardEffect> specialSummonTrapCardEffects;
+    private ArrayList<MonsterEffectActivationTrapCardEffect> monsterEffectActivationTrapCardEffect;
+    private ArrayList<SpellCardActivationTrapCardEffect> spellCardActivationTrapCardEffects;
+    private ArrayList<TrapCardActivationTrapCardEffect> trapCardActivationTrapCardEffects;
+    private ArrayList<UserReplyForActivation> userReplyForActivations;
 
     public TrapCard(String cardName, String cardDescription, TrapCardValue trapCardValue, CardPosition cardPosition,
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
@@ -45,6 +45,18 @@ public class TrapCard extends Card {
         this.isCardActivated = false;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.trapCardValue = trapCardValue;
+        this.continuousTrapCardEffects = new ArrayList<>();
+        this.flipSummonTrapCardEffects = new ArrayList<>();
+        this.logicalActivationRequirements = new ArrayList<>();
+        this.monsterAttackingTrapCardEffects = new ArrayList<>();
+        this.normalSummonTrapCardEffects = new ArrayList<>();
+        this.normalTrapCardEffects = new ArrayList<>();
+        this.ritualSummonTrapCardEffects = new ArrayList<>();
+        this.specialSummonTrapCardEffects = new ArrayList<>();
+        this.monsterEffectActivationTrapCardEffect = new ArrayList<>();
+        this.spellCardActivationTrapCardEffects = new ArrayList<>();
+        this.trapCardActivationTrapCardEffects = new ArrayList<>();
+        this.userReplyForActivations = new ArrayList<>();
         setEnumValues(enumValues);
     }
 

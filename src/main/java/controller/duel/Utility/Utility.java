@@ -72,10 +72,10 @@ public class Utility {
         return -1;
     }
 
-    public static int changeYuGiOhIndexToArrayIndex(int cardIndex, RowOfCardLocation rowOfCardLocation, int turn) {
+    public static int changeYuGiOhIndexToArrayIndex(int cardIndex, RowOfCardLocation rowOfCardLocation) {
         boolean seeminglyChoosingSelf = rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE);
         boolean seeminglyChoosingOther = rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE);
-        if (seeminglyChoosingSelf && turn == 1 || seeminglyChoosingOther && turn == 2) {
+        if (seeminglyChoosingSelf) {
             if (cardIndex == 1) {
                 return 3;
             } else if (cardIndex == 2) {
@@ -87,7 +87,7 @@ public class Utility {
             } else if (cardIndex == 5) {
                 return 1;
             }
-        } else if (seeminglyChoosingSelf && turn == 2 || seeminglyChoosingOther && turn == 1) {
+        } else if (seeminglyChoosingOther) {
             if (cardIndex == 1) {
                 return 3;
             } else if (cardIndex == 2) {

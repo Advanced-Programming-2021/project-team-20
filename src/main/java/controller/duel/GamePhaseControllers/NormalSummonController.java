@@ -118,7 +118,7 @@ public class NormalSummonController extends SummonSetCommonClass {
             actions.add(new Action(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null));
             //add action that conducts effects of the card
         }
-
+        cardsToBeTributed.clear();
     }
 
     public String redirectInputForMonsterTributing() {

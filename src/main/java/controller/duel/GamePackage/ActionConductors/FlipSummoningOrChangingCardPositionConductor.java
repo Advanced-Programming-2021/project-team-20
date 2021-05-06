@@ -54,3 +54,4 @@ public class FlipSummoningOrChangingCardPositionConductor {
         return "";
     }
 }
+

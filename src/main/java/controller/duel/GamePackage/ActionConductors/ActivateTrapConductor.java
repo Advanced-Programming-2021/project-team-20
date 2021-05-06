@@ -28,7 +28,6 @@ import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
-
 public class ActivateTrapConductor {
 
     public static String conductActivatingTrapUninterruptedAction(int index, int numberInListOfActions) {
@@ -180,7 +179,8 @@ public class ActivateTrapConductor {
             Action thisAction = actions.get(numberInListOfActions);
             CardLocation mainCardLocationInThisAction = thisAction.getMainCardLocation();
             int thisActionTurn = thisAction.getActionTurn();
-            sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index, thisActionTurn);
+            sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index);
+            //sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index, thisActionTurn);
         }
         return "trap activated";
     }
@@ -191,7 +191,8 @@ public class ActivateTrapConductor {
 
     public static void destroyMainMonsterCardInPreviousAction(Action uninterruptedAction, int index) {
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
-        sendCardToGraveyardAfterRemoving(finalMainCardLocation, index, uninterruptedAction.getActionTurn());
+        sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
+        //sendCardToGraveyardAfterRemoving(finalMainCardLocation, index, uninterruptedAction.getActionTurn());
     }
 
     public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
@@ -201,18 +202,34 @@ public class ActivateTrapConductor {
         return card;
     }
 
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index, int graveyardToSendCardTo) {
+    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
         //System.out.println("sendCardToGraveyardAfterRemoving rowOfCardLocation" + targetingCardLocation.getRowOfCardLocation());
         //System.out.println("sendCardToGraveyardAfterRemoving card index" + targetingCardLocation.getIndex());
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-        duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+        Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
+        if (cardGoingToBeSentToGraveyard != null) {
+            int graveyardToSendCardTo;
+            RowOfCardLocation rowOfCardLocationOfThrownCard = targetingCardLocation.getRowOfCardLocation();
+            if (rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
+                graveyardToSendCardTo = 1;
+            } else {
+                graveyardToSendCardTo = 2;
+            }
+            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            if (card == null) {
+
+            }
+            System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
+            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+        }
     }
 
     public static void sendAllCardsInThisArrayListToGraveyard(ArrayList<CardLocation> targetingCards, int index, int graveyardToSendCardsTo) {
         //System.out.println("sendAllCardsInThisArrayListToGraveyard index is " + index);
         for (int i = 0; i < targetingCards.size(); i++) {
-            sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
+            sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
+            //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
         }
     }
 
@@ -273,7 +290,8 @@ public class ActivateTrapConductor {
             MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(targetingCards.get(i));
             if (monsterCard != null) {
                 if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
-                    sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
+                    sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
+                    //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
                 }
             }
         }
@@ -292,7 +310,8 @@ public class ActivateTrapConductor {
     public static void discardCard(int index, int numberInListOfActions) {
         Action currentAction = GameManager.getActionsByIndex(index).get(numberInListOfActions);
         ArrayList<CardLocation> cardsToBeDiscarded = currentAction.getCardsToBeDiscarded();
-        sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index, currentAction.getActionTurn());
+        sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index);
+        //sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index, currentAction.getActionTurn());
     }
 
     public static void pay2000HP(Action action, int index) {
@@ -328,11 +347,12 @@ public class ActivateTrapConductor {
         }
         return false;
     }
-    public static void dealDamageToOpponentEqualToMonstersATK(Action action, int index){
+
+    public static void dealDamageToOpponentEqualToMonstersATK(Action action, int index) {
         CardLocation mainCardLocation = action.getMainCardLocation();
         int actionTurn = action.getActionTurn();
         int attackOfMainCard = MonsterCard.giveATKDEFConsideringEffects("attack", mainCardLocation, index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
-        duelController.increaseLifePoints(attackOfMainCard*(-1), actionTurn);
+        duelController.increaseLifePoints(attackOfMainCard * (-1), actionTurn);
     }
 }

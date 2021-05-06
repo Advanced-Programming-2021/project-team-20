@@ -12,8 +12,7 @@ public class Card {
     protected int numberOfAllowedUsages;
     protected int cardPrice;
 
-    public Card(String cardName, CardType cardType, String cardDescription, CardPosition cardPosition,
-            int numberOfAllowedUsages, int cardPrice) {
+    public Card(String cardName, CardType cardType, String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice) {
         this.cardName = cardName;
         this.cardType = cardType;
         this.cardDescription = cardDescription;
@@ -33,10 +32,6 @@ public class Card {
     public String getCardDescription() {
         return cardDescription;
     }
-
-    // public CardLocation getCardLocation() {
-    // return cardLocation;
-    // }
 
     public CardPosition getCardPosition() {
         return cardPosition;

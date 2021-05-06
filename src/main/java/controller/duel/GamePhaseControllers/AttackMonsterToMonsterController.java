@@ -84,7 +84,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             } else {
                 rowOfCardLocation = RowOfCardLocation.ALLY_MONSTER_ZONE;
             }
-            indexOfAttackedMonster = Utility.changeYuGiOhIndexToArrayIndex(indexOfAttackedMonster, rowOfCardLocation, turn);
+            indexOfAttackedMonster = Utility.changeYuGiOhIndexToArrayIndex(indexOfAttackedMonster, rowOfCardLocation);
             System.out.println("rowOfCardLocation is " + rowOfCardLocation);
             System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
             CardLocation opponentCardLocation = new CardLocation(rowOfCardLocation, indexOfAttackedMonster);
@@ -118,6 +118,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null));
             uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null));
         }
+        targetingCards.clear();
     }
 
 

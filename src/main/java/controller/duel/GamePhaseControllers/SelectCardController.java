@@ -38,7 +38,7 @@ public class SelectCardController {
                 int cardIndex = Integer.parseInt(matcher.group(6));
                 //System.out.println("card Index is "+cardIndex);
                 if (isSelectedCardIndexValid(cardIndex, rowOfCardLocation, indexOfWholeGame)){
-                    cardIndex = Utility.changeYuGiOhIndexToArrayIndex(cardIndex, rowOfCardLocation, fakeTurn);
+                    cardIndex = Utility.changeYuGiOhIndexToArrayIndex(cardIndex, rowOfCardLocation);
                     System.out.println("cardIndex is "+cardIndex);
                     CardLocation cardLocation = new CardLocation(rowOfCardLocation, cardIndex);
                     DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);

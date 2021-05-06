@@ -13,6 +13,7 @@ import controller.duel.GamePhaseControllers.PhaseController;
 import controller.duel.GamePhaseControllers.SelectCardController;
 import controller.duel.GamePhaseControllers.SetCardController;
 import controller.duel.PreliminaryPackage.GameManager;
+import model.cardData.MonsterCardData.MonsterCard;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
@@ -183,6 +184,9 @@ public class DuelController {
         } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
             return AttackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
         }
+        //else if (string.equals("print")){
+        //    return MonsterCard.printAttackAndDEFOfMonster();
+        //}
         return "invalid command";
     }
 

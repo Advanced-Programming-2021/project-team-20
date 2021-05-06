@@ -44,7 +44,7 @@ public class BattlePhaseController extends ChainController{
             return "this card already attacked";
         } else {
             return "";
-           // return checkIndexOfAttackedMonster(card, index);
+            // return checkIndexOfAttackedMonster(card, index);
         }
     }
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.google.gson.JsonElement;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,7 +30,7 @@ import model.cardData.TrapCardData.TrapCardValue;
 public class ImportAndExport {
 
     public String findCommand(String command) {
-      
+
         Pattern importPattern = Pattern.compile("import card (\\S+)");
         Pattern exportPattern = Pattern.compile("export card (\\S+)");
         Matcher matcher;

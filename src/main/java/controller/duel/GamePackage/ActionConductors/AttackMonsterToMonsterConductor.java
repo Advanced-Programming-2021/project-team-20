@@ -151,6 +151,8 @@ public class AttackMonsterToMonsterConductor {
     public static String faceUpAttackPositionMonsterToFaceUpAttackPositionMonster() {
         attackingMonsterATK = MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterCardLocation, 0);
         defendingMonsterATK = MonsterCard.giveATKDEFConsideringEffects("attack", defendingMonsterCardLocation, 0);
+        System.out.println("attackingMonsterATK is " + attackingMonsterATK);
+        System.out.println("defendingMonsterATK is " + defendingMonsterATK);
         ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
         if (beingAttackedEffects.contains(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN) && doesDefendingMonsterEffectActivate) {
             attackingMonsterATK = 0;
@@ -224,10 +226,21 @@ public class AttackMonsterToMonsterConductor {
         return card;
     }
 
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index, int graveyardToSendCardTo) {
+    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-        duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+        Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
+        if (cardGoingToBeSentToGraveyard != null) {
+            int graveyardToSendCardTo;
+            RowOfCardLocation rowOfCardLocationOfThrownCard = targetingCardLocation.getRowOfCardLocation();
+            if (rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
+                graveyardToSendCardTo = 1;
+            } else {
+                graveyardToSendCardTo = 2;
+            }
+            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+        }
     }
 
 
@@ -264,10 +277,12 @@ public class AttackMonsterToMonsterConductor {
             output = "both you and your opponent monster cards are destroyed and no one receives damage";
         }
         if (doesAttackingMonsterGoToGraveyard) {
-            sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0, actionTurn);
+            sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0);
+            //sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0, actionTurn);
         }
         if (doesDefendingMonsterGoToGraveyard) {
-            sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0, actionTurn);
+            sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0);
+            //sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0, actionTurn);
         }
         return output;
     }

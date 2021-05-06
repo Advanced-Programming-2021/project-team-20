@@ -30,8 +30,8 @@ public class Action {
     private static String outputSentUntilNow = "";
 
     public Action(ActionType actionType, int actionTurn, CardLocation mainCardLocation, ArrayList<CardLocation> targetingCards, ArrayList<CardLocation> spendingCards
-            , ArrayList<CardLocation> cardsToBeDiscarded, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo
-            , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand,
+        , ArrayList<CardLocation> cardsToBeDiscarded, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo
+        , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand,
                   ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf) {
         this.spendingCards = new ArrayList<>();
         this.targetingCards = new ArrayList<>();
@@ -168,9 +168,9 @@ public class Action {
             } else if (action.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || action.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
                 output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - i - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) ||
-                    action.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER) ||
-                    action.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) ||
-                    action.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
+                action.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER) ||
+                action.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) ||
+                action.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
                 output.append(FlipSummoningOrChangingCardPositionConductor.conductFlipSummoningOrChangingCardPosition(index, actions.size() - i - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
                 String string = AttackMonsterToMonsterConductor.AttackConductor(index, actions.size() - i - 1);
@@ -226,9 +226,9 @@ public class Action {
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
             output = SettingCardConductor.conductNormalSettingActionUninterruptedAction(index, uninterruptedActions.size() - 1);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) ||
-                uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER) ||
-                uninterruptedAction.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) ||
-                uninterruptedAction.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
+            uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER) ||
+            uninterruptedAction.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) ||
+            uninterruptedAction.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
             output = FlipSummoningOrChangingCardPositionConductor.conductFlipSummoningOrChangingCardPositionUninterruptedAction(index, uninterruptedActions.size() - 1);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
 
