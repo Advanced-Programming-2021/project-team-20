@@ -28,14 +28,14 @@ public class NormalSummonController extends SummonSetCommonClass {
     }
 
 
-    public String normalSummonInputAnalysis(String string) {
+    public String normalSummonInputAnalysis(String string, String typeOfAnalysis) {
         String inputRegex = "(?<=\\n|^)normal[\\s]+summon(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
             SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
             ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-            String resultOfChecking = startChecking(0, "normal summon", true);
+            String resultOfChecking = startChecking(0, typeOfAnalysis, true);
             if (!resultOfChecking.equals("")) {
                 return resultOfChecking;
             } else {
@@ -48,7 +48,7 @@ public class NormalSummonController extends SummonSetCommonClass {
                         return resultOfChecking;
                     } else {
                         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
-                        return analyzeMonsterCardToBeSummonedOrSet(0, card);
+                        return analyzeMonsterCardToBeSummoned(0, card, typeOfAnalysis);
                     }
                 }
             }
@@ -64,12 +64,12 @@ public class NormalSummonController extends SummonSetCommonClass {
         this.areWeLookingForMonstersToBeTributed = areWeLookingForMonstersToBeTributed;
     }
 
-    public String analyzeMonsterCardToBeSummonedOrSet(int index, Card card) {
+    public String analyzeMonsterCardToBeSummoned(int index, Card card, String typeOfAnalysis) {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        String cardAnalysis = convertMessageFromEffectToControllerToString(card, duelBoard, turn, "normal summon");
+        String cardAnalysis = convertMessageFromEffectToControllerToString(card, duelBoard, turn, typeOfAnalysis);
         String output;
         if (cardAnalysis.equals("normal summoned successfully")) {
             createActionForNormalSummoningMonster(index);
@@ -79,7 +79,10 @@ public class NormalSummonController extends SummonSetCommonClass {
                 output += canChainingOccur;
                 return output;
             }
-            return output+Action.conductAllActions(index);
+            return output + Action.conductAllActions(index);
+        } else if (cardAnalysis.equals("tribute summoned successfully")) {
+            return cardAnalysis;
+
         } else if (cardAnalysis.startsWith("please choose")) {
             mainCard = selectCardController.getSelectedCardLocations().get(0);
             selectCardController.resetSelectedCardLocationList();
@@ -157,7 +160,7 @@ public class NormalSummonController extends SummonSetCommonClass {
                     output += canChainingOccur;
                     return output;
                 }
-                return output+Action.conductAllActions(0);
+                return output + Action.conductAllActions(0);
             }
         } else {
             return "this card cannot be chosen for tribute.\nplease try again.";

@@ -3,33 +3,24 @@ package controller.duel.PreliminaryPackage;
 import java.util.ArrayList;
 
 import controller.duel.GamePackage.Action;
+import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
-import controller.duel.GamePhaseControllers.ActivateSpellTrapController;
-import controller.duel.GamePhaseControllers.AttackMonsterToMonsterController;
-import controller.duel.GamePhaseControllers.BattlePhaseController;
-import controller.duel.GamePhaseControllers.ChainController;
-import controller.duel.GamePhaseControllers.ChangeCardPositionController;
-import controller.duel.GamePhaseControllers.DirectAttackController;
-import controller.duel.GamePhaseControllers.FlipSummonController;
-import controller.duel.GamePhaseControllers.MainPhaseController;
-import controller.duel.GamePhaseControllers.NormalSummonController;
-import controller.duel.GamePhaseControllers.PhaseController;
-import controller.duel.GamePhaseControllers.SelectCardController;
-import controller.duel.GamePhaseControllers.SetCardController;
-import controller.duel.GamePhaseControllers.SummonSetCommonClass;
+import controller.duel.GamePhaseControllers.*;
 import model.cardData.General.Card;
 
 public class GameManager {
     public static ArrayList<DuelController> duelControllerList = new ArrayList<>();
     public static ArrayList<DuelBoard> duelBoardList = new ArrayList<>();
     public static ArrayList<ActivateSpellTrapController> activateSpellTrapControllers = new ArrayList<>();
+    public static ArrayList<ActivateMonsterController> activateMonsterControllers = new ArrayList<>();
     public static ArrayList<AttackMonsterToMonsterController> attackMonsterToMonsterControllers = new ArrayList<>();
     public static ArrayList<BattlePhaseController> battlePhaseControllers = new ArrayList<>();
     public static ArrayList<ChainController> chainControllers = new ArrayList<>();
     public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
     public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
     public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
+    public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
     public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
     public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
     public static ArrayList<PhaseController> phaseControllers = new ArrayList<>();
@@ -43,12 +34,14 @@ public class GameManager {
         duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername));
         duelBoardList.add(new DuelBoard(firstPlayerDeck, secondPlayerDeck));
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
+        activateMonsterControllers.add(new ActivateMonsterController());
         attackMonsterToMonsterControllers.add(new AttackMonsterToMonsterController());
         battlePhaseControllers.add(new BattlePhaseController());
         chainControllers.add(new ChainController());
         changeCardPositionControllers.add(new ChangeCardPositionController());
         directAttackControllers.add(new DirectAttackController());
         flipSummonControllers.add(new FlipSummonController());
+        continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
         mainPhaseControllers.add(new MainPhaseController());
         normalSummonControllers.add(new NormalSummonController());
         selectCardControllers.add(new SelectCardController());
@@ -70,7 +63,9 @@ public class GameManager {
     public static ActivateSpellTrapController getActivateSpellTrapControllerByIndex(int index) {
         return activateSpellTrapControllers.get(index);
     }
-
+    public static ActivateMonsterController getActivateMonsterControllerByIndex(int index){
+        return activateMonsterControllers.get(index);
+    }
     public static AttackMonsterToMonsterController getAttackMonsterToMonsterControllerByIndex(int index) {
         return attackMonsterToMonsterControllers.get(index);
     }
@@ -93,6 +88,10 @@ public class GameManager {
 
     public static FlipSummonController getFlipSummonControllerByIndex(int index) {
         return flipSummonControllers.get(index);
+    }
+
+    public static ContinuousMonsterEffectController getContinuousMonsterEffectControllersByIndex(int index) {
+        return continuousMonsterEffectControllers.get(index);
     }
 
     public static MainPhaseController getMainPhaseControllerByIndex(int index) {

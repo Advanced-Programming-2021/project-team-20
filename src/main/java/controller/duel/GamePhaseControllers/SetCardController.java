@@ -64,7 +64,7 @@ public class SetCardController extends SummonSetCommonClass {
             if (!resultOfChecking.equals("")) {
                 return resultOfChecking;
             } else {
-                return analyzeMonsterCardToBeSummonedOrSet(0, card);
+                return analyzeMonsterCardToBeSet(0, card);
             }
         }
     }
@@ -83,7 +83,7 @@ public class SetCardController extends SummonSetCommonClass {
         }
     }
 
-    public String analyzeMonsterCardToBeSummonedOrSet(int index, Card card) {
+    public String analyzeMonsterCardToBeSet(int index, Card card) {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();

@@ -4,22 +4,14 @@ import java.util.ArrayList;
 
 import controller.duel.CardEffects.MonsterEffectEnums.UponSummoningEffect;
 import controller.duel.CardEffects.SpellEffectEnums.NormalSpellCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.ContinuousTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.FlipSummonTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.MonsterAttackingTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.MonsterEffectActivationTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.NormalSummonTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.NormalTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.RitualSummonTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.SpecialSummonTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.SpellCardActivationTrapCardEffect;
-import controller.duel.CardEffects.TrapEffectEnums.TrapCardActivationTrapCardEffect;
+import controller.duel.CardEffects.TrapEffectEnums.*;
 import controller.duel.GamePackage.Action;
 import controller.duel.GamePackage.ActionType;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
 import controller.duel.GamePackage.PhaseInGame;
 import controller.duel.GamePhaseControllers.PhaseController;
+import controller.duel.GamePhaseControllers.TributeSummonController;
 import controller.duel.PreliminaryPackage.GameManager;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
@@ -67,6 +59,7 @@ public class ActivateTrapConductor {
         ArrayList<NormalTrapCardEffect> normalTrapCardEffects = trapCard.getNormalTrapCardEffects();
         //note that normalTrapCardEffects don't need to counter previous action so 5 lines above gives null pointer exception
         ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects = trapCard.getNormalSummonTrapCardEffects();
+        ArrayList<TributeSummonTrapCardEffect> tributeSummonTrapCardEffects = trapCard.getTributeSummonTrapCardEffects();
         ArrayList<FlipSummonTrapCardEffect> flipSummonTrapCardEffects = trapCard.getFlipSummonTrapCardEffects();
         ArrayList<RitualSummonTrapCardEffect> ritualSummonTrapCardEffects = trapCard.getRitualSummonTrapCardEffects();
         ArrayList<SpecialSummonTrapCardEffect> specialSummonTrapCardEffects = trapCard.getSpecialSummonTrapCardEffects();
@@ -76,6 +69,7 @@ public class ActivateTrapConductor {
         ArrayList<TrapCardActivationTrapCardEffect> trapCardActivationTrapCardEffects = trapCard.getTrapCardActivationTrapCardEffects();
         ArrayList<MonsterEffectActivationTrapCardEffect> monsterEffectActivationTrapCardEffects = trapCard.getMonsterEffectActivationTrapCardEffect();
         boolean isPreviousUninterruptedActionNormalSummoning = ((actionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) && actionTurn == 2);
+        boolean isPreviousUninterruptedActionTributeSummoning = ((actionType.equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionFlipSummoning = ((actionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionSpecialSummoning = ((actionType.equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionRitualSummoning = ((actionType.equals(ActionType.ALLY_RITUAL_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_RITUAL_SUMMONING_MONSTER)) && actionTurn == 2);
@@ -95,6 +89,21 @@ public class ActivateTrapConductor {
             pay2000HP(uninterruptedAction, index);
         }
         if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionNormalSummoning) {
+            destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
+            cancelPreviousAction(action);
+        }
+        if (tributeSummonTrapCardEffects.contains(TributeSummonTrapCardEffect.IF_ATK_IS_AT_LEAST_1000_ATK_DESTROY_IT) && isPreviousUninterruptedActionTributeSummoning) {
+            destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
+            cancelPreviousAction(action);
+        }
+        if (tributeSummonTrapCardEffects.contains(TributeSummonTrapCardEffect.DESTROY_ALL_MONSTERS_ON_FIELD) && isPreviousUninterruptedActionTributeSummoning) {
+            destroyAllMonsterCardsInTheField(index);
+            cancelPreviousAction(action);
+        }
+        if (tributeSummonTrapCardEffects.contains(TributeSummonTrapCardEffect.PAY_2000_LP) && isPreviousUninterruptedActionTributeSummoning) {
+            pay2000HP(uninterruptedAction, index);
+        }
+        if (tributeSummonTrapCardEffects.contains(TributeSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionTributeSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
         }

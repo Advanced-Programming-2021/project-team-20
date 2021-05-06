@@ -33,8 +33,8 @@ public class SpellCard extends Card {
     private ArrayList<UserReplyForActivation> userReplyForActivations;
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
-            int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
-            HashMap<String, List<String>> enumValues) {
+                     int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
+                     HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
         this.isCardActivated = false;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
@@ -48,12 +48,33 @@ public class SpellCard extends Card {
         this.ritualSpellEffects = new ArrayList<>();
         this.sentToGraveyardEffects = new ArrayList<>();
         this.userReplyForActivations = new ArrayList<>();
-        setEnumValues(enumValues);
+        if (cardDescription.equals("a")) {
+            normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD);
+        } else if (cardDescription.equals("b")) {
+            normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS);
+        } else if (cardDescription.equals("c")) {
+            normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS);
+        } else if (cardDescription.equals("d")) {
+            equipSpellEffects.add(EquipSpellEffect.DARK_EQUIPPED_MONSTER_GAINS_400_ATK_LOSE_200_DEF);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_DARK_MONSTER);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_DARK_MONSTER_OWNER_CONTROLS);
+        } else if (cardDescription.equals("e")) {
+            equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_500_ATK);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
+        } else if (cardDescription.equals("f")) {
+            equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_800_ATK_DEF_FOR_EACH_FACE_UP_MONSTER_OWNER_CONTROLS);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
+        }
+        if (enumValues != null) {
+            setEnumValues(enumValues);
+        }
     }
 
     public SpellCard(SpellCard spellCard) {
         super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), spellCard.getCardPosition(),
-                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
+            spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
         this.isCardActivated = false;
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
         this.spellCardValue = spellCard.getSpellCardValue();
@@ -128,7 +149,7 @@ public class SpellCard extends Card {
 
         for (int i = 1; i < enumValues.get("ContinuousSpellCardEffect").size(); i++) {
             continuousSpellCardEffects
-                    .add(ContinuousSpellCardEffect.valueOf(enumValues.get("ContinuousSpellCardEffect").get(i)));
+                .add(ContinuousSpellCardEffect.valueOf(enumValues.get("ContinuousSpellCardEffect").get(i)));
         }
 
         for (int i = 1; i < enumValues.get("EquipSpellEffect").size(); i++) {
@@ -141,7 +162,7 @@ public class SpellCard extends Card {
 
         for (int i = 1; i < enumValues.get("LogicalActivationRequirement").size(); i++) {
             logicalActivationRequirements
-                    .add(LogicalActivationRequirement.valueOf(enumValues.get("LogicalActivationRequirement").get(i)));
+                .add(LogicalActivationRequirement.valueOf(enumValues.get("LogicalActivationRequirement").get(i)));
         }
 
         for (int i = 1; i < enumValues.get("NormalSpellCardEffect").size(); i++) {
@@ -161,7 +182,7 @@ public class SpellCard extends Card {
         }
         for (int i = 1; i < enumValues.get("UserReplyForActivation").size(); i++) {
             userReplyForActivations
-                    .add(UserReplyForActivation.valueOf(enumValues.get("UserReplyForActivation").get(i)));
+                .add(UserReplyForActivation.valueOf(enumValues.get("UserReplyForActivation").get(i)));
         }
 
     }

@@ -137,7 +137,7 @@ public class DuelController {
             PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
             return phaseController.phaseControllerInputAnalysis(string);
         } else if (string.startsWith("normal")) {
-            return normalSummonController.normalSummonInputAnalysis(string);
+            return normalSummonController.normalSummonInputAnalysis(string, "normal summon");
         } else if (string.equals("set")) {
             return setCardController.setCardControllerInputAnalysis(string);
         } else if (string.startsWith("set")) {

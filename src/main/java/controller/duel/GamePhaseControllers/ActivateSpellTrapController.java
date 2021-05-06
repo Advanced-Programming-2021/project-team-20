@@ -83,8 +83,10 @@ public class ActivateSpellTrapController extends ChainController {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
+        ActivateMonsterController activateMonsterController = GameManager.getActivateMonsterControllerByIndex(index);
         if (Card.isCardAMonster(card)) {
-            return "activate effect is only for spell and trap cards.";
+            return activateMonsterController.activateMonsterEffectInputAnalysis("activate effect");
+            //"activate effect is only for spell and trap cards.";
         } else {
             return checkCorrectPhase(index);
         }

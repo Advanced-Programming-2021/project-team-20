@@ -8,6 +8,7 @@ import controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import controller.duel.CardEffects.TrapEffectEnums.*;
 import controller.duel.GamePackage.Action;
+import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
 import controller.duel.GamePackage.ActionType;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
@@ -38,19 +39,30 @@ public class Effect {
                 return MessagesFromEffectToControllers.CANT_BE_SET;
             }
         } else {
-            ArrayList<Card> cardsInMonsterZone = null;
-            if (turn == 1) {
-                cardsInMonsterZone = duelBoard.getAllyMonsterCards();
-            } else if (turn == 2) {
-                cardsInMonsterZone = duelBoard.getOpponentMonsterCards();
-            }
-            int monstersForTribute = 0;
-            for (int i = 0; i < 5; i++) {
-                if (cardsInMonsterZone.get(i) != null) {
-                    monstersForTribute++;
+            if (!cardSummoningRequirements.contains(SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED)
+                && string.equals("normal summon") || !cardSummoningRequirements.contains(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED)
+                && string.equals("set")) {
+                ArrayList<Card> cardsInMonsterZone = null;
+                if (turn == 1) {
+                    cardsInMonsterZone = duelBoard.getAllyMonsterCards();
+                } else if (turn == 2) {
+                    cardsInMonsterZone = duelBoard.getOpponentMonsterCards();
                 }
+                int monstersForTribute = 0;
+                for (int i = 0; i < 5; i++) {
+                    if (cardsInMonsterZone.get(i) != null) {
+                        monstersForTribute++;
+                    }
+                }
+                return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute);
+            } else {
+                if (string.equals("normal summon")) {
+
+                } else {
+
+                }
+                return MessagesFromEffectToControllers.YOU_CAN_NORMAL_SUMMON_THIS_MONSTER;
             }
-            return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute);
         }
         return null;
     }
@@ -76,7 +88,7 @@ public class Effect {
         // This function also checks if preparations are complete and says yes if everything was ok
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         //new line
-        return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(actionTurn,actionType);
+        return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(actionTurn, actionType);
         /*
         if (actionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) && actionTurn == 1) {
             System.out.println("C1");
@@ -198,7 +210,7 @@ public class Effect {
         //This function also calls are preparations complete if the card was available and returns the final answer
         MessagesFromEffectToControllers messagesFromEffectToControllers;
         ArrayList<Card> allyOrOpponentSpellTrapCards;
-        if (actionTurn == 1){
+        if (actionTurn == 1) {
             allyOrOpponentSpellTrapCards = GameManager.getDuelBoardByIndex(0).getOpponentSpellCards();
         } else {
             allyOrOpponentSpellTrapCards = GameManager.getDuelBoardByIndex(0).getAllySpellCards();
@@ -211,12 +223,12 @@ public class Effect {
                 cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
             }
             Card card = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocation);
-            if (card == null){
+            if (card == null) {
                 System.out.println("THIS CARD IS NULLL");
             } else {
-                System.out.println("THIS CARD NAME IS "+card.getCardName());
+                System.out.println("THIS CARD NAME IS " + card.getCardName());
             }
-            if (card != null){
+            if (card != null) {
                 if (isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(cardLocation, actionType, 0)) {
                     return MessagesFromEffectToControllers.SPELL_TRAP_CARD_CAN_BE_ACTIVATED_IN_CHAIN;
                 }
@@ -225,11 +237,11 @@ public class Effect {
         return MessagesFromEffectToControllers.SPELL_TRAP_CARD_CANT_BE_ACTIVATED_IN_CHAIN;
     }
 
-    public static boolean isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(CardLocation cardLocation, ActionType actionType, int index){
+    public static boolean isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(CardLocation cardLocation, ActionType actionType, int index) {
         MessagesFromEffectToControllers messagesFromEffectToControllers = arePreparationsCompleteForActivatingSpellTrapCard(cardLocation, index);
         if (messagesFromEffectToControllers != null) {
             if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE) || messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE)) {
-                if (previousActionTypeIsInSyncWithActivationOfThisSpellTrapCardInChain(cardLocation, actionType)){
+                if (previousActionTypeIsInSyncWithActivationOfThisSpellTrapCardInChain(cardLocation, actionType)) {
                     return true;
                 }
             }
@@ -242,6 +254,8 @@ public class Effect {
         Card spellTrapCard = duelBoard.getCardByCardLocation(spellTrapCardLocation);
         if (previousActionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || previousActionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
             return isSelectedSpellTrapCardCorrectForActivatingInMonsterNormalSummoningInChain(spellTrapCard, previousActionType);
+        } else if (previousActionType.equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || previousActionType.equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
+            return isSelectedSpellTrapCardCorrectForActivatingInMonsterTributeSummoningInChain(spellTrapCard, previousActionType);
         } else if (previousActionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || previousActionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) {
             return isSelectedSpellTrapCardCorrectForActivatingInMonsterFlipSummoningInChain(spellTrapCard, previousActionType);
         } else if (previousActionType.equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) || previousActionType.equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER)) {
@@ -273,7 +287,7 @@ public class Effect {
         } else if (Card.isCardATrap(spellTrapCard)) {
             ArrayList<SpellCardActivationTrapCardEffect> spellCardActivationTrapCardEffects = ((TrapCard) spellTrapCard).getSpellCardActivationTrapCardEffects();
             ArrayList<TrapCardActivationTrapCardEffect> trapCardActivationTrapCardEffects = ((TrapCard) spellTrapCard).getTrapCardActivationTrapCardEffects();
-            if (spellCardActivationTrapCardEffects.size() > 0 && (actionType.equals(ActionType.ALLY_ACTIVATING_SPELL)||actionType.equals(ActionType.OPPONENT_ACTIVATING_SPELL)) ||
+            if (spellCardActivationTrapCardEffects.size() > 0 && (actionType.equals(ActionType.ALLY_ACTIVATING_SPELL) || actionType.equals(ActionType.OPPONENT_ACTIVATING_SPELL)) ||
                 trapCardActivationTrapCardEffects.size() > 0 && (actionType.equals(ActionType.ALLY_ACTIVATING_TRAP) || actionType.equals(ActionType.OPPONENT_ACTIVATING_TRAP))) {
                 return true;
             }
@@ -304,6 +318,16 @@ public class Effect {
         if (Card.isCardATrap(spellTrapCard)) {
             ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects = ((TrapCard) spellTrapCard).getNormalSummonTrapCardEffects();
             if (normalSummonTrapCardEffects.size() > 0 && (actionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || actionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSelectedSpellTrapCardCorrectForActivatingInMonsterTributeSummoningInChain(Card spellTrapCard, ActionType actionType) {
+        if (Card.isCardATrap(spellTrapCard)) {
+            ArrayList<TributeSummonTrapCardEffect> tributeSummonTrapCardEffects = ((TrapCard) spellTrapCard).getTributeSummonTrapCardEffects();
+            if (tributeSummonTrapCardEffects.size() > 0 && (actionType.equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || actionType.equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER))) {
                 return true;
             }
         }
@@ -342,6 +366,7 @@ public class Effect {
 
     public static MessagesFromEffectToControllers arePreparationsCompleteForActivatingSpellTrapCard(CardLocation cardLocation, int index) {
         //this function doesn't care if main card is given as response in chain or not
+        ContinuousMonsterEffectController continuousMonsterEffectController = GameManager.getContinuousMonsterEffectControllersByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(cardLocation);
@@ -408,6 +433,9 @@ public class Effect {
             }
             return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE;
         } else if (Card.isCardATrap(card)) {
+            if (continuousMonsterEffectController.areContinuousMonsterCardEffectsPreventingUserFromActivatingTrap(cardLocation, index)){
+                return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
+            }
             TrapCard trapCard = (TrapCard) card;
             ArrayList<LogicalActivationRequirement> logicalActivationRequirements = trapCard.getLogicalActivationRequirements();
             if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND)) {
@@ -463,7 +491,7 @@ public class Effect {
         for (int i = 0; i < cardsInOwnerMonsterField.size(); i++) {
             if (cardsInOwnerMonsterField.get(i) != null) {
                 MonsterCard monsterCard = (MonsterCard) cardsInOwnerMonsterField.get(i);
-                if (monsterCardAttribute == null && monsterCardFamily == null){
+                if (monsterCardAttribute == null && monsterCardFamily == null) {
                     return true;
                 }
                 if (monsterCardAttribute == null && monsterCard.getMonsterCardFamily().equals(monsterCardFamily)) {
@@ -608,7 +636,7 @@ public class Effect {
     public static boolean logicalActivationRequirementTrapSummonedMonsterMustHaveAtLeast1000ATK(int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
-        Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size()-1);
+        Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         System.out.println("this mainCardLocation we are analyzing has location " + finalMainCardLocation.getRowOfCardLocation() + " " + finalMainCardLocation.getIndex());
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(finalMainCardLocation);

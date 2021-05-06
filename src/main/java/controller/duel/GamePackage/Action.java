@@ -2,13 +2,7 @@ package controller.duel.GamePackage;
 
 import java.util.ArrayList;
 
-import controller.duel.GamePackage.ActionConductors.ActivateSpellConductor;
-import controller.duel.GamePackage.ActionConductors.ActivateTrapConductor;
-import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
-import controller.duel.GamePackage.ActionConductors.DirectAttackConductor;
-import controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
-import controller.duel.GamePackage.ActionConductors.NormalSummonConductor;
-import controller.duel.GamePackage.ActionConductors.SettingCardConductor;
+import controller.duel.GamePackage.ActionConductors.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import model.cardData.General.CardLocation;
 
@@ -163,7 +157,9 @@ public class Action {
             Action action = actions.get(actions.size() - i - 1);
             if (action.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
                 output.append(NormalSummonConductor.conductNormalSummoningAction(index, actions.size() - i - 1));
-            } else if (action.getActionType().equals(ActionType.ALLY_SETTING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
+            } else if (action.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
+                output.append(TributeSummonConductor.conductTributeSummoningAction(index, actions.size() - i - 1));
+            }else if (action.getActionType().equals(ActionType.ALLY_SETTING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
                 output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - i - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || action.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
                 output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - i - 1));
@@ -221,6 +217,8 @@ public class Action {
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
             output = NormalSummonConductor.conductNormalSummoningActionUninterruptedAction(index, uninterruptedActions.size() - 1);
+        } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
+            output =TributeSummonConductor.conductTributeSummoningActionUninterruptedAction(index, uninterruptedActions.size() - 1);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
             output = SettingCardConductor.conductNormalSettingActionUninterruptedAction(index, uninterruptedActions.size() - 1);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
