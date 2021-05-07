@@ -83,11 +83,11 @@ public class FlipSummonController extends SummonSetCommonClass {
         int fakeTurn = duelController.getFakeTurn();
         //maybe should get turn
         if (fakeTurn == 1) {
-            uninterruptedActions.add(new Action(ActionType.ALLY_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null));
-            actions.add(new Action(ActionType.ALLY_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null, null));
         } else {
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null));
-            actions.add(new Action(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null, null));
         }
     }
 
@@ -109,7 +109,6 @@ public class FlipSummonController extends SummonSetCommonClass {
         }
         return "invalid command";
     }
-
 
 
 }

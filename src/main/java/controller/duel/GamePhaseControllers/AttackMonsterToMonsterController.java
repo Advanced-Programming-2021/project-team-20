@@ -93,8 +93,13 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             if (!(Card.isCardAMonster(attackedMonster))) {
                 return "there is no card to attack here";
             } else {
+                String output = "";
+                output = areContinuousSpellTrapOrMonsterEffectsPreventingMonsterFromAttacking(mainCard, opponentCardLocation, index);
+                if (!output.equals("")){
+                    return output;
+                }
                 createActionForAttackMonsterToMonster(index, opponentCardLocation, turn);
-                String output = Action.conductUninterruptedAction(index);
+                output = Action.conductUninterruptedAction(index);
                 String canChainingOccur = canChainingOccur(index, turn, ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER);
                 if (canChainingOccur.equals("")) {
                     return output + Action.conductAllActions(index);
@@ -112,11 +117,11 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         targetingCards.add(opponentCardLocation);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null));
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null));
         }
         targetingCards.clear();
     }
@@ -134,10 +139,10 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         boolean isAlreadyActivated = false;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
-            isAlreadyActivated = spellCard.isAlreadyActivated();
+            isAlreadyActivated = spellCard.isCardAlreadyActivated();
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            isAlreadyActivated = trapCard.isAlreadyActivated();
+            isAlreadyActivated = trapCard.isCardAlreadyActivated();
         } else if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
             ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();

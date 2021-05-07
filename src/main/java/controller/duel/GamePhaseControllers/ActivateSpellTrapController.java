@@ -13,6 +13,7 @@ import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
+import model.cardData.General.CardPosition;
 import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.MonsterCardData.MonsterCardAttribute;
@@ -117,11 +118,11 @@ public class ActivateSpellTrapController extends ChainController {
         boolean isAlreadyActivated = false;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
-            isAlreadyActivated = spellCard.isAlreadyActivated();
+            isAlreadyActivated = spellCard.isCardAlreadyActivated();
 
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            isAlreadyActivated = trapCard.isAlreadyActivated();
+            isAlreadyActivated = trapCard.isCardAlreadyActivated();
         }
         if (isAlreadyActivated) {
             return "you have already activated this card";
@@ -162,7 +163,7 @@ public class ActivateSpellTrapController extends ChainController {
             return "spell field zone is full";
         } else {
             String output = arePreparationsCompleteForSpellTrapActivation(index);
-            System.out.println("SUCH A THING THAT IS SUPPOSED TO GIVE THINGS NEEDED OR SAY PREPARATIONS ARE NOT OK IS SAYING\n"+output);
+            System.out.println("SUCH A THING THAT IS SUPPOSED TO GIVE THINGS NEEDED OR SAY PREPARATIONS ARE NOT OK IS SAYING\n" + output);
             if (output.startsWith("pre")) {
                 return output;
             } else if (output.equals("nothing needed")) {
@@ -332,21 +333,21 @@ public class ActivateSpellTrapController extends ChainController {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         if (fakeTurn == 1) {
             if (Card.isCardASpell(card)) {
-                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
-                actions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
+                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                actions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
 
             } else if (Card.isCardATrap(card)) {
-                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
-                actions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
+                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                actions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
             }
             //add action that conducts effects of the card
         } else if (fakeTurn == 2) {
             if (Card.isCardASpell(card)) {
-                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
-                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
+                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
             } else if (Card.isCardATrap(card)) {
-                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
-                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf));
+                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, CardPosition.FACE_UP_ACTIVATED_POSITION));
             }//add action that conducts effects of the card
         }
         cardsToBeDiscarded.clear();

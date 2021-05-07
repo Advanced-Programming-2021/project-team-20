@@ -12,10 +12,9 @@ import model.cardData.General.CardPosition;
 import model.cardData.General.CardType;
 
 public class TrapCard extends Card {
-    private boolean isCardActivated;
+    private int highestNumberOfTurnsOfActivation;
     private int numberOfTurnsForActivation;
     private TrapCardValue trapCardValue;
-    private boolean isAlreadyActivated;
     private ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects;
     private ArrayList<FlipSummonTrapCardEffect> flipSummonTrapCardEffects;
     private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;
@@ -34,7 +33,7 @@ public class TrapCard extends Card {
                     int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
                     HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.TRAP, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
-        this.isCardActivated = false;
+        this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.trapCardValue = trapCardValue;
         this.continuousTrapCardEffects = new ArrayList<>();
@@ -42,6 +41,7 @@ public class TrapCard extends Card {
         this.logicalActivationRequirements = new ArrayList<>();
         this.monsterAttackingTrapCardEffects = new ArrayList<>();
         this.normalSummonTrapCardEffects = new ArrayList<>();
+        this.tributeSummonTrapCardEffects = new ArrayList<>();
         this.trapCardActivationTrapCardEffects = new ArrayList<>();
         this.normalTrapCardEffects = new ArrayList<>();
         this.ritualSummonTrapCardEffects = new ArrayList<>();
@@ -74,7 +74,7 @@ public class TrapCard extends Card {
     public TrapCard(TrapCard trapCard) {
         super(trapCard.getCardName(), CardType.TRAP, trapCard.getCardDescription(), trapCard.getCardPosition(),
             trapCard.getNumberOfAllowedUsages(), trapCard.getCardPrice());
-        this.isCardActivated = trapCard.isCardActivated;
+        this.highestNumberOfTurnsOfActivation = trapCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = trapCard.getNumberOfTurnsForActivation();
         this.trapCardValue = trapCard.getTrapCardValue();
         this.continuousTrapCardEffects = trapCard.getContinuousTrapCardEffects();
@@ -82,6 +82,7 @@ public class TrapCard extends Card {
         this.logicalActivationRequirements = trapCard.getLogicalActivationRequirements();
         this.monsterAttackingTrapCardEffects = trapCard.getMonsterAttackingTrapCardEffects();
         this.normalSummonTrapCardEffects = trapCard.getNormalSummonTrapCardEffects();
+        this.tributeSummonTrapCardEffects = trapCard.getTributeSummonTrapCardEffects();
         this.normalTrapCardEffects = trapCard.getNormalTrapCardEffects();
         this.ritualSummonTrapCardEffects = trapCard.getRitualSummonTrapCardEffects();
         this.specialSummonTrapCardEffects = trapCard.getSpecialSummonTrapCardEffects();
@@ -91,8 +92,8 @@ public class TrapCard extends Card {
         this.userReplyForActivations = trapCard.getUserReplyForActivations();
     }
 
-    public boolean isCardActivated() {
-        return isCardActivated;
+    public int getHighestNumberOfTurnsOfActivation() {
+        return highestNumberOfTurnsOfActivation;
     }
 
     public int getNumberOfTurnsForActivation() {
@@ -103,8 +104,8 @@ public class TrapCard extends Card {
         return trapCardValue;
     }
 
-    public boolean isAlreadyActivated() {
-        return isAlreadyActivated;
+    public boolean isCardAlreadyActivated() {
+        return cardPosition.equals(CardPosition.FACE_UP_ACTIVATED_POSITION);
     }
 
     public ArrayList<ContinuousTrapCardEffect> getContinuousTrapCardEffects() {
@@ -159,8 +160,8 @@ public class TrapCard extends Card {
         return userReplyForActivations;
     }
 
-    public void setAlreadyActivated(boolean alreadyActivated) {
-        isAlreadyActivated = alreadyActivated;
+    public void setNumberOfTurnsForActivation(int numberOfTurnsForActivation) {
+        this.numberOfTurnsForActivation = numberOfTurnsForActivation;
     }
 
     private void setEnumValues(HashMap<String, List<String>> enumValues) {

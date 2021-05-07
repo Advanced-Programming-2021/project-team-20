@@ -2,11 +2,9 @@ package controller.duel.GamePackage;
 
 import java.util.ArrayList;
 
+import controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import controller.duel.PreliminaryPackage.GameManager;
-import model.cardData.General.Card;
-import model.cardData.General.CardLocation;
-import model.cardData.General.CardType;
-import model.cardData.General.RowOfCardLocation;
+import model.cardData.General.*;
 import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.SpellCardData.SpellCardValue;
@@ -270,12 +268,73 @@ public class DuelBoard {
         return null;
     }
 
+    public void removeNullCardsFromHands() {
+        ArrayList<Card> newAllyCardsInHand = new ArrayList<>();
+        ArrayList<Card> newOpponentCardsInHand = new ArrayList<>();
+        for (int i = 0; i < allyCardsInHand.size(); i++) {
+            if (allyCardsInHand.get(i) != null) {
+                newAllyCardsInHand.add(allyCardsInHand.get(i));
+            }
+        }
+        allyCardsInHand = newAllyCardsInHand;
+        for (int i = 0; i < allyCardsInHand.size(); i++) {
+            if (allyCardsInHand.get(i) != null) {
+                newOpponentCardsInHand.add(allyCardsInHand.get(i));
+            }
+        }
+        allyCardsInHand = newOpponentCardsInHand;
+    }
+
+    public Card setCardLocationToNull(CardLocation cardLocation) {
+        RowOfCardLocation rowOfCardLocation = cardLocation.getRowOfCardLocation();
+        ArrayList<Card> arrayList = giveArrayListByRowOfCardLocation(rowOfCardLocation);
+        Card card = arrayList.get(cardLocation.getIndex() - 1);
+        arrayList.set(cardLocation.getIndex() - 1, null);
+        return card;
+    }
+
+    public void destroyEquipSpellsRelatedToThisCard(CardLocation targetingCardLocation, int graveyardToSendCardTo) {
+        //if change of heart is used and changes card locations, the corresponding arraylist in spell card should be updated too
+        destroyEquipSpellsRelatedToThisCardInThisArrayList(allySpellCards, targetingCardLocation);
+        destroyEquipSpellsRelatedToThisCardInThisArrayList(opponentSpellCards, targetingCardLocation);
+    }
+
+    private void destroyEquipSpellsRelatedToThisCardInThisArrayList(ArrayList<Card> spellCards, CardLocation targetingCardLocation) {
+        for (int i = 0; i < spellCards.size(); i++) {
+            SpellCard spellCard = (SpellCard) spellCards.get(i);
+            ArrayList<CardLocation> equipSpellCardLocations = spellCard.getCardLocationsToWhichEquipSpellIsApplied();
+            for (int j = 0; j < equipSpellCardLocations.size(); j++) {
+                if (targetingCardLocation.getRowOfCardLocation().equals(equipSpellCardLocations.get(j).getRowOfCardLocation()) && targetingCardLocation.getIndex() == equipSpellCardLocations.get(j).getIndex()) {
+                    SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(equipSpellCardLocations.get(j), 0);
+                }
+            }
+        }
+    }
+
+    public void refreshCharacteristicsOfACardSentToGraveyard(Card card){
+        if (Card.isCardAMonster(card)){
+            MonsterCard monsterCard = (MonsterCard) card;
+            monsterCard.setOncePerTurnCardEffectUsed(false);
+            monsterCard.setCardPositionChanged(false);
+            monsterCard.setCardAttacked(false);
+            monsterCard.clearEquipSpellEffect();
+            monsterCard.clearFieldSpellEffect();
+            monsterCard.setCardPosition(null);
+        } else if (Card.isCardASpell(card)){
+            SpellCard spellCard = (SpellCard) card;
+            spellCard.setCardPosition(null);
+            spellCard.clearCardsToWhichEquipSpellIsApplied();
+            spellCard.setNumberOfTurnsForActivation(spellCard.getHighestNumberOfTurnsOfActivation());
+        } else if (Card.isCardATrap(card)){
+            TrapCard trapCard = (TrapCard) card;
+            trapCard.setCardPosition(null);
+            trapCard.setNumberOfTurnsForActivation(trapCard.getHighestNumberOfTurnsOfActivation());
+        }
+    }
+
     public Card removeCardByCardLocation(CardLocation cardLocation) {
         RowOfCardLocation rowOfCardLocation = cardLocation.getRowOfCardLocation();
         ArrayList<Card> arrayList = giveArrayListByRowOfCardLocation(rowOfCardLocation);
-        //for (int i = 0; i < arrayList.size(); i++){
-        //    System.out.println(arrayList.get(i).getCardName());
-        //}
         Card card = arrayList.get(cardLocation.getIndex() - 1);
         if (rowOfCardLocation == RowOfCardLocation.ALLY_MONSTER_ZONE || rowOfCardLocation == RowOfCardLocation.OPPONENT_MONSTER_ZONE || rowOfCardLocation == RowOfCardLocation.ALLY_SPELL_ZONE || rowOfCardLocation == RowOfCardLocation.OPPONENT_SPELL_ZONE || rowOfCardLocation == RowOfCardLocation.ALLY_SPELL_FIELD_ZONE || rowOfCardLocation == RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE) {
             arrayList.set(cardLocation.getIndex() - 1, null);

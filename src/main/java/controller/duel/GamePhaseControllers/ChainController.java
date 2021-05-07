@@ -88,10 +88,10 @@ public class ChainController {
         boolean isAlreadyActivated = false;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
-            isAlreadyActivated = spellCard.isAlreadyActivated();
+            isAlreadyActivated = spellCard.isCardAlreadyActivated();
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            isAlreadyActivated = trapCard.isAlreadyActivated();
+            isAlreadyActivated = trapCard.isCardAlreadyActivated();
         } else {
             return "you can't choose this card for chain activation.\nselect another card";
         }

@@ -14,14 +14,14 @@ import controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.RitualSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import model.cardData.General.Card;
+import model.cardData.General.CardLocation;
 import model.cardData.General.CardPosition;
 import model.cardData.General.CardType;
 
 public class SpellCard extends Card {
-    private boolean isCardActivated;
+    private int highestNumberOfTurnsOfActivation;
     private int numberOfTurnsForActivation;
     private SpellCardValue spellCardValue;
-    private boolean isAlreadyActivated;
     private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects;
     private ArrayList<EquipSpellEffect> equipSpellEffects;
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
@@ -31,12 +31,13 @@ public class SpellCard extends Card {
     private ArrayList<RitualSpellEffect> ritualSpellEffects;
     private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;
     private ArrayList<UserReplyForActivation> userReplyForActivations;
+    private ArrayList<CardLocation> cardLocationsToWhichEquipSpellIsApplied;
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
                      int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
                      HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
-        this.isCardActivated = false;
+        this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.spellCardValue = spellCardValue;
         this.continuousSpellCardEffects = new ArrayList<>();
@@ -48,6 +49,7 @@ public class SpellCard extends Card {
         this.ritualSpellEffects = new ArrayList<>();
         this.sentToGraveyardEffects = new ArrayList<>();
         this.userReplyForActivations = new ArrayList<>();
+        this.cardLocationsToWhichEquipSpellIsApplied = new ArrayList<>();
         if (cardDescription.equals("a")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD);
         } else if (cardDescription.equals("b")) {
@@ -75,7 +77,7 @@ public class SpellCard extends Card {
     public SpellCard(SpellCard spellCard) {
         super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), spellCard.getCardPosition(),
             spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
-        this.isCardActivated = false;
+        this.highestNumberOfTurnsOfActivation = spellCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
         this.spellCardValue = spellCard.getSpellCardValue();
         this.continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
@@ -89,8 +91,8 @@ public class SpellCard extends Card {
         this.userReplyForActivations = spellCard.getUserReplyForActivations();
     }
 
-    public boolean isCardActivated() {
-        return isCardActivated;
+    public int getHighestNumberOfTurnsOfActivation() {
+        return highestNumberOfTurnsOfActivation;
     }
 
     public int getNumberOfTurnsForActivation() {
@@ -101,8 +103,8 @@ public class SpellCard extends Card {
         return spellCardValue;
     }
 
-    public boolean isAlreadyActivated() {
-        return isAlreadyActivated;
+    public boolean isCardAlreadyActivated() {
+        return cardPosition.equals(CardPosition.FACE_UP_ACTIVATED_POSITION);
     }
 
     public ArrayList<ContinuousSpellCardEffect> getContinuousSpellCardEffects() {
@@ -141,8 +143,20 @@ public class SpellCard extends Card {
         return userReplyForActivations;
     }
 
-    public void setAlreadyActivated(boolean alreadyActivated) {
-        isAlreadyActivated = alreadyActivated;
+    public ArrayList<CardLocation> getCardLocationsToWhichEquipSpellIsApplied() {
+        return cardLocationsToWhichEquipSpellIsApplied;
+    }
+
+    public void addCardLocationToEquipSpellAffected(CardLocation cardLocation) {
+        cardLocationsToWhichEquipSpellIsApplied.add(cardLocation);
+    }
+
+    public void clearCardsToWhichEquipSpellIsApplied(){
+        cardLocationsToWhichEquipSpellIsApplied.clear();
+    }
+
+    public void setNumberOfTurnsForActivation(int numberOfTurnsForActivation) {
+        this.numberOfTurnsForActivation = numberOfTurnsForActivation;
     }
 
     private void setEnumValues(HashMap<String, List<String>> enumValues) {

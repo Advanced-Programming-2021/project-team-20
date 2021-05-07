@@ -188,7 +188,7 @@ public class ActivateTrapConductor {
             Action thisAction = actions.get(numberInListOfActions);
             CardLocation mainCardLocationInThisAction = thisAction.getMainCardLocation();
             int thisActionTurn = thisAction.getActionTurn();
-            sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index);
             //sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index, thisActionTurn);
         }
         return "trap activated";
@@ -200,44 +200,14 @@ public class ActivateTrapConductor {
 
     public static void destroyMainMonsterCardInPreviousAction(Action uninterruptedAction, int index) {
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
-        sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
+        SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
         //sendCardToGraveyardAfterRemoving(finalMainCardLocation, index, uninterruptedAction.getActionTurn());
-    }
-
-    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);
-        duelBoard.removeCardByCardLocation(cardToBeRemoved);
-        return card;
-    }
-
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
-        //System.out.println("sendCardToGraveyardAfterRemoving rowOfCardLocation" + targetingCardLocation.getRowOfCardLocation());
-        //System.out.println("sendCardToGraveyardAfterRemoving card index" + targetingCardLocation.getIndex());
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
-        if (cardGoingToBeSentToGraveyard != null) {
-            int graveyardToSendCardTo;
-            RowOfCardLocation rowOfCardLocationOfThrownCard = targetingCardLocation.getRowOfCardLocation();
-            if (rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
-                || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
-                graveyardToSendCardTo = 1;
-            } else {
-                graveyardToSendCardTo = 2;
-            }
-            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-            if (card == null) {
-
-            }
-            System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
-            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
-        }
     }
 
     public static void sendAllCardsInThisArrayListToGraveyard(ArrayList<CardLocation> targetingCards, int index, int graveyardToSendCardsTo) {
         //System.out.println("sendAllCardsInThisArrayListToGraveyard index is " + index);
         for (int i = 0; i < targetingCards.size(); i++) {
-            sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
             //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
         }
     }
@@ -299,7 +269,7 @@ public class ActivateTrapConductor {
             MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(targetingCards.get(i));
             if (monsterCard != null) {
                 if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
-                    sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
+                    SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
                     //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
                 }
             }
@@ -319,7 +289,7 @@ public class ActivateTrapConductor {
     public static void discardCard(int index, int numberInListOfActions) {
         Action currentAction = GameManager.getActionsByIndex(index).get(numberInListOfActions);
         ArrayList<CardLocation> cardsToBeDiscarded = currentAction.getCardsToBeDiscarded();
-        sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index);
+        SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index);
         //sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index, currentAction.getActionTurn());
     }
 

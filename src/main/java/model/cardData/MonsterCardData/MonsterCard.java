@@ -275,6 +275,14 @@ public class MonsterCard extends Card {
         this.fieldSpellEffects.remove(fieldSpellEffect);
     }
 
+    public void clearEquipSpellEffect() {
+        this.equipSpellEffects.clear();
+    }
+
+    public void clearFieldSpellEffect() {
+        this.fieldSpellEffects.clear();
+    }
+
     private void setEnumValues(HashMap<String, List<String>> enumValues) {
 
         for (int i = 1; i < enumValues.get("AttackerEffect").size(); i++) {
@@ -323,26 +331,26 @@ public class MonsterCard extends Card {
         MonsterCardFamily monsterCardFamily = monsterCard.getMonsterCardFamily();
         MonsterCardAttribute monsterCardAttribute = monsterCard.getMonsterCardAttribute();
         CardPosition cardPosition = monsterCard.getCardPosition();
-        if (continuousMonsterEffects.contains(ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL)){
+        if (continuousMonsterEffects.contains(ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL)) {
             int sumOfLevels = 0;
-            if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)){
-                for (int i = 0; i < 5; i++){
-                    Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i+1));
+            if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
+                for (int i = 0; i < 5; i++) {
+                    Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1));
                     if (Card.isCardAMonster(card) && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) ||
-                        card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))){
-                        sumOfLevels += ((MonsterCard)card).getLevel();
+                        card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                        sumOfLevels += ((MonsterCard) card).getLevel();
                     }
                 }
             } else {
-                for (int i = 0; i < 5; i++){
-                    Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i+1));
+                for (int i = 0; i < 5; i++) {
+                    Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1));
                     if (Card.isCardAMonster(card) && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) ||
-                        card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))){
-                        sumOfLevels += ((MonsterCard)card).getLevel();
+                        card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                        sumOfLevels += ((MonsterCard) card).getLevel();
                     }
                 }
             }
-            finalAttackPower += 300*sumOfLevels;
+            finalAttackPower += 300 * sumOfLevels;
         }
         if (fieldSpellEffects.contains(FieldSpellEffect.FIEND_GAIN_200_ATK_DEF) && monsterCardFamily.equals(MonsterCardFamily.FIEND)) {
             System.out.println("F1");

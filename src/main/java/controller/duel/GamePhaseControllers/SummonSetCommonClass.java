@@ -14,7 +14,7 @@ import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.SpellCardData.SpellCardValue;
 
-public class SummonSetCommonClass extends ChainController{
+public class SummonSetCommonClass extends ChainController {
 
     public static String startChecking(int index, String stringUsedInOutput, boolean continueChecking) {
         return Utility.isACardSelected(index, stringUsedInOutput, continueChecking);
@@ -51,7 +51,6 @@ public class SummonSetCommonClass extends ChainController{
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.selectedCardLocations;
         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
-        //System.out.println("IMPORTANT"+(card instanceof MonsterCard));
         if (!(card instanceof MonsterCard)) {
             return "you can't " + stringUsedInOutput + " this card";
         }
@@ -109,13 +108,19 @@ public class SummonSetCommonClass extends ChainController{
             messagesFromEffectToControllers = Effect.canMonsterBeNormalSummonedOrSet(card, duelBoard, turn, stringUsedInOutput);
         } else if (stringUsedInOutput.equals("normal summon")) {
             messagesFromEffectToControllers = Effect.canMonsterBeNormalSummonedOrSet(card, duelBoard, turn, stringUsedInOutput);
+        } else if (stringUsedInOutput.equals("special summon")) {
+            messagesFromEffectToControllers = Effect.canMonsterBeSpecialSummoned(card, duelBoard, turn, stringUsedInOutput);
         }
         if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_NORMAL_SUMMONED)) {
+            return "you can't " + stringUsedInOutput + " this card";
+        }else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_SPECIAL_SUMMONED)) {
             return "you can't " + stringUsedInOutput + " this card";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_SET)) {
             return "you can't " + stringUsedInOutput + " this card";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.IT_IS_NOT_A_MONSTER_CARD)) {
             return "you can't " + stringUsedInOutput + " this card";
+        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.THERE_IS_NO_CARD_IN_HAND_TO_DISCARD)) {
+            return "there is no card in your hand for discarding\nyou can't special summon this card";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.THERE_ARE_NOT_ENOUGH_CARDS_FOR_TRIBUTE)) {
             return "there are not enough cards for tribute";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PLEASE_CHOOSE_1_MONSTER_TO_TRIBUTE)) {
@@ -124,6 +129,8 @@ public class SummonSetCommonClass extends ChainController{
             return "please choose two monsters to tribute\nyou need to enter select command";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PLEASE_CHOOSE_3_MONSTERS_TO_TRIBUTE)) {
             return "please choose three monsters to tribute\nyou need to enter select command";
+        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PLEASE_CHOOSE_ONE_CARD_FROM_YOUR_HAND_TO_DISCARD)){
+            return "please choose one card from your hand to discard\nyou need to enter select command";
         }
         if (stringUsedInOutput.equals("set")) {
             return "set successfully";

@@ -287,7 +287,8 @@ public class ActivateMonsterController extends ChainController {
             return "you can't select this card for copying the characteristics\nselect another card";
         }
     }
-    public void copyPasteCharacteristicsOfCard(CardLocation copyee, CardLocation copied, int index){
+
+    public void copyPasteCharacteristicsOfCard(CardLocation copyee, CardLocation copied, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         MonsterCard copyeeMonster = (MonsterCard) duelBoard.getCardByCardLocation(copyee);
         MonsterCard copiedMonster = (MonsterCard) duelBoard.getCardByCardLocation(copied);
@@ -308,6 +309,7 @@ public class ActivateMonsterController extends ChainController {
         copyeeMonster.setCardType(copiedMonster.getCardType());
         copyeeMonster.setCardDescription(copiedMonster.getCardDescription());
     }
+
     public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);

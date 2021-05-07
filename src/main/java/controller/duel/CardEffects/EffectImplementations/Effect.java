@@ -25,6 +25,46 @@ import model.cardData.SpellCardData.SpellCardValue;
 import model.cardData.TrapCardData.TrapCard;
 
 public class Effect {
+    public static MessagesFromEffectToControllers canMonsterBeSpecialSummoned(Card card, DuelBoard duelBoard, int turn, String string) {
+        if (!Card.isCardAMonster(card)) {
+            return MessagesFromEffectToControllers.IT_IS_NOT_A_MONSTER_CARD;
+        }
+        MonsterCard monsterCard = (MonsterCard) card;
+        ArrayList<SummoningRequirement> cardSummoningRequirements = monsterCard.getSummoningRequirements();
+        if (!cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED)) {
+            return MessagesFromEffectToControllers.CANT_BE_SPECIAL_SUMMONED;
+        } else {
+            if (cardSummoningRequirements.contains(SummoningRequirement.DISCARD_1_CARD)) {
+                ArrayList<Card> cardsInHand;
+                if (turn == 1) {
+                    cardsInHand = duelBoard.getAllyCardsInHand();
+                } else {
+                    cardsInHand = duelBoard.getOpponentCardsInHand();
+                }
+                if (cardsInHand.size() <= 1) {
+                    return MessagesFromEffectToControllers.THERE_IS_NO_CARD_IN_HAND_TO_DISCARD;
+                } else {
+                    return MessagesFromEffectToControllers.PLEASE_CHOOSE_ONE_CARD_FROM_YOUR_HAND_TO_DISCARD;
+                }
+            }
+            if (cardSummoningRequirements.contains(SummoningRequirement.TRIBUTE_3_MONSTERS)) {
+                ArrayList<Card> cardsInMonsterZone = null;
+                if (turn == 1) {
+                    cardsInMonsterZone = duelBoard.getAllyMonsterCards();
+                } else if (turn == 2) {
+                    cardsInMonsterZone = duelBoard.getOpponentMonsterCards();
+                }
+                int monstersForTribute = 0;
+                for (int i = 0; i < 5; i++) {
+                    if (cardsInMonsterZone.get(i) != null) {
+                        monstersForTribute++;
+                    }
+                }
+                return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute);
+            }
+        }
+        return null;
+    }
 
     public static MessagesFromEffectToControllers canMonsterBeNormalSummonedOrSet(Card card, DuelBoard duelBoard, int turn, String string) {
         if (!Card.isCardAMonster(card)) {
@@ -433,7 +473,7 @@ public class Effect {
             }
             return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE;
         } else if (Card.isCardATrap(card)) {
-            if (continuousMonsterEffectController.areContinuousMonsterCardEffectsPreventingUserFromActivatingTrap(cardLocation, index)){
+            if (continuousMonsterEffectController.areContinuousMonsterCardEffectsPreventingUserFromActivatingTrap(cardLocation, index)) {
                 return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
             }
             TrapCard trapCard = (TrapCard) card;
