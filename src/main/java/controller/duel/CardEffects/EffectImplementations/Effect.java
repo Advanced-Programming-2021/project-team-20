@@ -651,8 +651,31 @@ public class Effect {
             }
         }
         // Algorithmic Reasoning !!!
+        boolean isRitualSummoningPossible;
+        for (int i = 0; i < levelsOfRitualCardsInHand.size(); i++) {
+            isRitualSummoningPossible = doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(normalMonsterCardLevels,
+                levelsOfRitualCardsInHand.get(i), levelsOfRitualCardsInHand.size());
+            if (isRitualSummoningPossible) {
+                return true;
+            }
+        }
         return false;
     }
+
+    public static boolean doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(ArrayList<Integer> normalMonsterCardLevels, int levelOfRitualMonsterInHand, int size) {
+        if (size == 0) {
+            return false;
+        }
+        if (levelOfRitualMonsterInHand == 0) {
+            return true;
+        }
+        if (normalMonsterCardLevels.get(size - 1) > levelOfRitualMonsterInHand) {
+            return doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(normalMonsterCardLevels, levelOfRitualMonsterInHand, size - 1);
+        }
+        return doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(normalMonsterCardLevels, levelOfRitualMonsterInHand - normalMonsterCardLevels.get(size - 1), size - 1) ||
+            doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(normalMonsterCardLevels, levelOfRitualMonsterInHand, size - 1);
+    }
+
 
     public static boolean logicalActivationRequirementTrapOwnerMustHaveAtLeast1MonsterInTheirGraveyard(DuelBoard duelBoard, int fakeTurn) {
         ArrayList<Card> cardsInGraveyard = null;
@@ -698,44 +721,53 @@ public class Effect {
         return false;
     }
 
-    public static String inputsNeededForActivatingSpellTrapCard(CardLocation cardLocation, int index) {
+    public static ArrayList<String> inputsNeededForActivatingSpellTrapCard(CardLocation cardLocation, int index) {
+        ArrayList<String> output = new ArrayList<>();
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(cardLocation);
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
             ArrayList<UserReplyForActivation> userReplyForActivations = spellCard.getUserReplyForActivations();
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_DARK_MONSTER_OWNER_CONTROLS)) {
-                return "please choose one dark monster you control for assigning your equip spell card to it.\nSimply enter select command";
+                output.add("please choose one dark monster you control for assigning your equip spell card to it.\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_WARRIOR_MONSTER_OWNER_CONTROLS)) {
-                return "please choose one warrior monster you control for assigning your equip spell card to it.\nSimply enter select command";
+                output.add("please choose one warrior monster you control for assigning your equip spell card to it.\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS)) {
-                return "please choose one monster you control for assigning your equip spell card to it.\nSimply enter select command";
+                output.add("please choose one monster you control for assigning your equip spell card to it.\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_EITHER_GY)) {
-                return "show graveyard\nplease choose one monster from either graveyard\nSimply enter select command";
+                output.add("show graveyard\nplease choose one monster from either graveyard\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_OF_OPPONENTS_MONSTERS)) {
-                return "please choose one of your opponent's monsters\nSimply enter select command";
+                output.add("please choose one of your opponent's monsters\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_SPELL_FIELD_CARD_FROM_OWNER_DECK)) {
-                return "show deck\nplease choose one spell field card from your deck\nSimply enter select command";
+                output.add("show deck\nplease choose one spell field card from your deck\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_UP_TO_TWO_SPELL_TRAP_CARDS_IN_FIELD)) {
-                return "please choose up to two spell or trap cards in the field.\nSimply enter select command\nAfter you are done selecting, enter finish";
+                output.add("please choose up to two spell or trap cards in the field.\nSimply enter select command\nAfter you are done selecting, enter finish");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.DISCARD_1_CARD)) {
-                return "please choose one card from your hand to discard.\nSimple enter select command";
+                output.add("please choose one card from your hand to discard.\nSimple enter select command");
             }
-            return "nothing needed";
+            if (output.size() == 0) {
+                output.add("nothing needed");
+                return output;
+            }
+            return output;
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
             ArrayList<UserReplyForActivation> userReplyForActivations = trapCard.getUserReplyForActivations();
             if (userReplyForActivations.contains(UserReplyForActivation.DISCARD_1_CARD)) {
-                return "please choose one card from your hand to discard.\nSimple enter select command";
+                output.add("please choose one card from your hand to discard.\nSimple enter select command");
             }
-            return "nothing needed";
+            if (output.size() == 0) {
+                output.add("nothing needed");
+                return output;
+            }
+            return output;
         }
         return null;
     }

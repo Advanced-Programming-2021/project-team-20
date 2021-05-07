@@ -20,6 +20,7 @@ import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
+
 public class ActivateTrapConductor {
 
     public static String conductActivatingTrapUninterruptedAction(int index, int numberInListOfActions) {
@@ -183,6 +184,12 @@ public class ActivateTrapConductor {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
         }
+        if (normalTrapCardEffects.contains(NormalTrapCardEffect.SKIP_OPPONENT_DRAW_PHASE_NEXT_TURN)) {
+            skipOpponentDrawCardNextPhase(actions.get(numberInListOfActions), index);
+        }
+        if (normalTrapCardEffects.contains(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION)) {
+            specialSummonMonsterFromGraveyard(actions.get(numberInListOfActions), index, CardPosition.FACE_UP_ATTACK_POSITION);
+        }
         //System.out.println("main trap card continuous is " + continuousTrapCardEffects);
         if (continuousTrapCardEffects.size() == 0) {
             Action thisAction = actions.get(numberInListOfActions);
@@ -192,6 +199,21 @@ public class ActivateTrapConductor {
             //sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index, thisActionTurn);
         }
         return "trap activated";
+    }
+
+    public static void specialSummonMonsterFromGraveyard(Action thisAction, int index, CardPosition cardPosition) {
+        ArrayList<CardLocation> cardsToBeSpecialSummoned = thisAction.getCardsToBeSpecialSummoned();
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        int actionTurn = thisAction.getActionTurn();
+        Card card = SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1), index);
+        duelBoard.addCardToMonsterZone(card, actionTurn);
+        card.setCardPosition(cardPosition);
+    }
+
+    public static void skipOpponentDrawCardNextPhase(Action thisAction, int index) {
+        int actionTurn = thisAction.getActionTurn();
+        PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
+        phaseController.setPlayersProhibitedToDrawCardNextTurn(3 - actionTurn, true);
     }
 
     public static void cancelPreviousAction(Action uninterruptedAction) {
@@ -319,8 +341,8 @@ public class ActivateTrapConductor {
         }
         if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects = trapCard.getContinuousTrapCardEffects();
-            if (continuousTrapCardEffects.contains(ContinuousTrapCardEffect.THIS_CARD_IS_TIED_TO_THE_SPECIAL_SUMMONED_MONSTER)) {
+            ArrayList<NormalTrapCardEffect> normalTrapCardEffects = trapCard.getNormalTrapCardEffects();
+            if (normalTrapCardEffects.contains(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION)) {
                 return true;
             }
         }
