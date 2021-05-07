@@ -75,6 +75,7 @@ public class ActivateSpellConductor {
         ArrayList<FieldSpellEffect> fieldSpellEffects = spellCard.getFieldSpellEffects();
         ArrayList<EquipSpellEffect> equipSpellEffects = spellCard.getEquipSpellEffects();
         ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
+        ArrayList<RitualSpellEffect> ritualSpellEffects = spellCard.getRitualSpellEffects();
         if (quickSpellEffects.contains(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY)) {
             ArrayList<CardLocation> targetingCards = uninterruptedAction.getTargetingCards();
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(targetingCards.size() - 1), index);
@@ -110,6 +111,13 @@ public class ActivateSpellConductor {
                 checkSpellFieldEffectInTheField(index, fieldSpellEffects.get(i));
             }
         }
+        if (ritualSpellEffects.contains(RitualSpellEffect.SEND_NORMAL_MONSTERS_WITH_SUM_OF_LEVELS_EQUAL_TO_MONSTERS_LEVEL_FROM_DECK_TO_GRAVEYARD)){
+            ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard = uninterruptedAction.getCardsToBeChosenFromDeckAndSentToGraveyard();
+            sendCardsFromSensitiveArrayListToGraveyard(cardsToBeChosenFromDeckAndSentToGraveyard, index);
+        }
+        if (ritualSpellEffects.contains(RitualSpellEffect.RITUAL_SUMMON_CHOSEN_MONSTER_FROM_HAND)){
+            ritualSummonMonster(uninterruptedAction, index);
+        }
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         if (fieldSpellEffects.size() == 0 && equipSpellEffects.size() == 0 && continuousSpellCardEffects.size() == 0) {
             //Action thisAction = actions.get(numberInListOfActions);
@@ -121,6 +129,19 @@ public class ActivateSpellConductor {
             return "spell activated\n" + output;
         }
         return "spell activated" + give500LifePointsToPlayerOwningACardOfThisEffect(index);
+    }
+
+    public static void ritualSummonMonster(Action uninterruptedAction, int index){
+        ArrayList<CardLocation> cardsToBeRitualSummoned = uninterruptedAction.getCardsToBeRitualSummoned();
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        Card card = duelBoard.removeCardByCardLocation(cardsToBeRitualSummoned.get(cardsToBeRitualSummoned.size()-1));
+        duelBoard.addCardToMonsterZone(card, uninterruptedAction.getActionTurn());
+        card.setCardPosition(uninterruptedAction.getCardPositionOfMainCard());
+    }
+
+    public static void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, int index){
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        duelBoard.sendCardsFromSensitiveArrayListToGraveyard(cardsToBeChosenFromDeckAndSentToGraveyard);
     }
 
     public static String give500LifePointsToPlayerOwningACardOfThisEffect(int index) {

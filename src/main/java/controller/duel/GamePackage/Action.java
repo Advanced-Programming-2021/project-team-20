@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import controller.duel.GamePackage.ActionConductors.*;
 import controller.duel.PreliminaryPackage.GameManager;
+import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 import model.cardData.General.CardPosition;
 
@@ -21,14 +22,17 @@ public class Action {
     private ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand;
     private ArrayList<CardLocation> cardsToBeDestroyed;
     private ArrayList<CardLocation> cardsToTakeControlOf;
+    private ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard;
+    private ArrayList<CardLocation> cardsToBeRitualSummoned;
     private CardPosition cardPositionOfMainCard;
     private static int currentActionConducting = 0;
     private static String outputSentUntilNow = "";
 
     public Action(ActionType actionType, int actionTurn, CardLocation mainCardLocation, ArrayList<CardLocation> targetingCards, ArrayList<CardLocation> spendingCards
         , ArrayList<CardLocation> cardsToBeDiscarded, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo
-        , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand,
-                  ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf, CardPosition cardPosition) {
+        , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand
+        , ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf
+        , ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, ArrayList<CardLocation> cardsToBeRitualSummoned, CardPosition cardPosition) {
         this.spendingCards = new ArrayList<>();
         this.targetingCards = new ArrayList<>();
         this.mainCardLocation = mainCardLocation;
@@ -40,6 +44,8 @@ public class Action {
         this.cardsToBeChosenFromDeckAndAddedToHand = new ArrayList<>();
         this.cardsToBeDestroyed = new ArrayList<>();
         this.cardsToTakeControlOf = new ArrayList<>();
+        this.cardsToBeChosenFromDeckAndSentToGraveyard = new ArrayList<>();
+        this.cardsToBeRitualSummoned = new ArrayList<>();
         this.actionType = actionType;
         this.actionTurn = actionTurn;
         this.isActionCanceled = false;
@@ -66,6 +72,12 @@ public class Action {
         }
         if (cardsToTakeControlOf != null) {
             this.cardsToTakeControlOf.addAll(cardsToTakeControlOf);
+        }
+        if (cardsToBeChosenFromDeckAndSentToGraveyard != null) {
+            this.cardsToBeChosenFromDeckAndSentToGraveyard.addAll(cardsToBeChosenFromDeckAndSentToGraveyard);
+        }
+        if (cardsToBeRitualSummoned != null) {
+            this.cardsToBeRitualSummoned.addAll(cardsToBeRitualSummoned);
         }
     }
 /*
@@ -132,6 +144,14 @@ public class Action {
 
     public ArrayList<CardLocation> getCardsToBeChosenFromDeckAndAddedToHand() {
         return cardsToBeChosenFromDeckAndAddedToHand;
+    }
+
+    public ArrayList<CardLocation> getCardsToBeChosenFromDeckAndSentToGraveyard() {
+        return cardsToBeChosenFromDeckAndSentToGraveyard;
+    }
+
+    public ArrayList<CardLocation> getCardsToBeRitualSummoned() {
+        return cardsToBeRitualSummoned;
     }
 
     public ArrayList<CardLocation> getCardsToBeDestroyed() {

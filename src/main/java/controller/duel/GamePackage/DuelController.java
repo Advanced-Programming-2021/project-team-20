@@ -22,6 +22,7 @@ public class DuelController {
     private ArrayList<String> playingUsers;
     private ArrayList<Integer> lifePoints;
     private ArrayList<Boolean> usersSummoningOrSettingMonsterOneTime;
+    private ArrayList<String> allInputs;
 
     public DuelController(String firstUser, String secondUser) {
         playingUsers = new ArrayList<>();
@@ -33,9 +34,11 @@ public class DuelController {
         usersSummoningOrSettingMonsterOneTime = new ArrayList<>();
         usersSummoningOrSettingMonsterOneTime.add(true);
         usersSummoningOrSettingMonsterOneTime.add(true);
+        allInputs = new ArrayList<>();
     }
 
     public String getInput(String string) {
+        allInputs.add(string);
         NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
         FlipSummonController flipSummonController = GameManager.getFlipSummonControllerByIndex(0);
         SetCardController setCardController = GameManager.getSetCardControllerByIndex(0);
@@ -220,6 +223,10 @@ public class DuelController {
 
     public void setTurn(int turn) {
         this.turn = turn;
+    }
+
+    public String getLatestInput() {
+        return allInputs.get(allInputs.size() - 1);
     }
 
     public void changeFakeTurn() {

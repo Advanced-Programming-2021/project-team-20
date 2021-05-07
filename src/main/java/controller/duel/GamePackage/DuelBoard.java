@@ -311,8 +311,8 @@ public class DuelBoard {
         }
     }
 
-    public void refreshCharacteristicsOfACardSentToGraveyard(Card card){
-        if (Card.isCardAMonster(card)){
+    public void refreshCharacteristicsOfACardSentToGraveyard(Card card) {
+        if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
             monsterCard.setOncePerTurnCardEffectUsed(false);
             monsterCard.setCardPositionChanged(false);
@@ -320,12 +320,12 @@ public class DuelBoard {
             monsterCard.clearEquipSpellEffect();
             monsterCard.clearFieldSpellEffect();
             monsterCard.setCardPosition(null);
-        } else if (Card.isCardASpell(card)){
+        } else if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
             spellCard.setCardPosition(null);
             spellCard.clearCardsToWhichEquipSpellIsApplied();
             spellCard.setNumberOfTurnsForActivation(spellCard.getHighestNumberOfTurnsOfActivation());
-        } else if (Card.isCardATrap(card)){
+        } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
             trapCard.setCardPosition(null);
             trapCard.setNumberOfTurnsForActivation(trapCard.getHighestNumberOfTurnsOfActivation());
@@ -342,6 +342,31 @@ public class DuelBoard {
             arrayList.remove(cardLocation.getIndex() - 1);
         }
         return card;
+    }
+
+    public void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardLocations) {
+        ArrayList<Card> cards = new ArrayList<>();
+        for (int i = 0; i < cardLocations.size(); i++) {
+            cards.add(getCardByCardLocation(cardLocations.get(i)));
+        }
+        RowOfCardLocation rowOfCardLocation = cardLocations.get(0).getRowOfCardLocation();
+        ArrayList<Card> arrayList = giveArrayListByRowOfCardLocation(rowOfCardLocation);
+        for (int i = 0; i < cardLocations.size(); i++) {
+            arrayList.set(cardLocations.get(i).getIndex() - 1, null);
+        }
+        for (int i = 0; i < cards.size(); i++) {
+            if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.ALLY_DECK_ZONE)) {
+                allyCardsInGraveyard.addAll(cards);
+            } else {
+                opponentCardsInGraveyard.addAll(cards);
+            }
+        }
+        ArrayList<Card> newArrayList = new ArrayList<>();
+        for (int i = 0; i < arrayList.size(); i++) {
+            if (arrayList.get(i) != null) {
+                newArrayList.add(arrayList.get(i));
+            }
+        }
     }
 
     public void addCardToHand(Card card, int turn) {

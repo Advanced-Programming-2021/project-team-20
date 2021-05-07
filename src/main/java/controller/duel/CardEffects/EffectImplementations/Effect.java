@@ -752,6 +752,17 @@ public class Effect {
             if (userReplyForActivations.contains(UserReplyForActivation.DISCARD_1_CARD)) {
                 output.add("please choose one card from your hand to discard.\nSimple enter select command");
             }
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER)) {
+                output.add("please choose if you want to summon your monster in face up attack position of face up defense position.\n" +
+                    "simple enter attack or defense");
+            }
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE)){
+                output.add("now select one ritual monster from your hand\nits level should be equal to the sum of levels of normal monsters you have already chosen");
+            }
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_NORMAL_MONSTERS_FROM_YOUR_DECK_WITH_SUM_OF_LEVELS_EQUAL_TO_A_RITUAL_MONSTER_LEVEL)) {
+                output.add("please choose normal monsters form your deck with sum of levels equal to level of your ritual monster" +
+                    "\nsimply enter select command\nshow deck");
+            }
             if (output.size() == 0) {
                 output.add("nothing needed");
                 return output;
