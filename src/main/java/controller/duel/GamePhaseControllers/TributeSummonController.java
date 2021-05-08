@@ -43,6 +43,8 @@ public class TributeSummonController extends ChainController {
             String resultOfChecking = normalSummonController.normalSummonInputAnalysis("normal summon", "tribute summon");
             if (resultOfChecking.startsWith("tribute")) {
                 return "you can't tribute summon a monster with level less than 5.";
+            } else if (resultOfChecking.startsWith("you can't")){
+                return resultOfChecking;
             }
             SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
             ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();

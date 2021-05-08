@@ -115,10 +115,16 @@ public class SummonSetCommonClass extends ChainController {
         }
         if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_NORMAL_SUMMONED)) {
             return "you can't " + stringUsedInOutput + " this card";
+        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_TRIBUTE_SUMMONED)) {
+            return "you can't " + stringUsedInOutput + " this card";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_SPECIAL_SUMMONED)) {
+            return "you can't " + stringUsedInOutput + " this card";
+        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_RITUAL_SUMMONED)) {
             return "you can't " + stringUsedInOutput + " this card";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.CANT_BE_SET)) {
             return "you can't " + stringUsedInOutput + " this card";
+        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.RITUAL_SUMMON_THIS_MONSTER_BY_USING_ADVANCED_RITUAL_ART)) {
+            return "ritual summon this monster by activating advanced ritual art";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.IT_IS_NOT_A_MONSTER_CARD)) {
             return "you can't " + stringUsedInOutput + " this card";
         } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.THERE_IS_NO_CARD_IN_HAND_TO_DISCARD)) {

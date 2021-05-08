@@ -96,6 +96,11 @@ public class MonsterCard extends Card {
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_NORMAL_SUMMONED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
+        } else if (cardDescription.equals("c")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
+        } else if (cardDescription.equals("r")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_RITUAL_SUMMONED);
         }
         if (enumValues != null) {
             setEnumValues(enumValues);
@@ -127,7 +132,7 @@ public class MonsterCard extends Card {
         this.equipSpellEffects = monster.getEquipSpellEffects();
         this.fieldSpellEffects = monster.getFieldSpellEffects();
     }
-    
+
 
     public MonsterCardValue getMonsterCardValue() {
         return monsterCardValue;
