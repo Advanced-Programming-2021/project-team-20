@@ -47,9 +47,9 @@ public class MonsterCard extends Card {
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
 
     public MonsterCard(int attackPower, int defensePower, int level, MonsterCardAttribute attribute,
-            MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
-            String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice,
-            HashMap<String, List<String>> enumValues) {
+                       MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
+                       String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice,
+                       HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.MONSTER, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
         this.attackPower = attackPower;
         this.defensePower = defensePower;
@@ -80,12 +80,14 @@ public class MonsterCard extends Card {
         } else if (level >= 9) {
             summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
         }
-        setEnumValues(enumValues);
+        if (enumValues != null) {
+            setEnumValues(enumValues);
+        }
     }
 
     public MonsterCard(MonsterCard monster) {
         super(monster.getCardName(), CardType.MONSTER, monster.getCardDescription(), monster.getCardPosition(),
-                monster.getNumberOfAllowedUsages(), monster.getCardPrice());
+            monster.getNumberOfAllowedUsages(), monster.getCardPrice());
         this.attackPower = monster.getAttackPower();
         this.defensePower = monster.getDefensePower();
         this.attackPowerConsideringEffects = 0;
@@ -205,6 +207,58 @@ public class MonsterCard extends Card {
         return fieldSpellEffects;
     }
 
+    public void setAttackPower(int attackPower) {
+        this.attackPower = attackPower;
+    }
+
+    public void setDefensePower(int defensePower) {
+        this.defensePower = defensePower;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setMonsterCardFamily(MonsterCardFamily monsterCardFamily) {
+        this.monsterCardFamily = monsterCardFamily;
+    }
+
+    public void setMonsterCardValue(MonsterCardValue monsterCardValue) {
+        this.monsterCardValue = monsterCardValue;
+    }
+
+    public void setSummoningRequirements(ArrayList<SummoningRequirement> summoningRequirements) {
+        this.summoningRequirements = summoningRequirements;
+    }
+
+    public void setUponSummoningEffects(ArrayList<UponSummoningEffect> uponSummoningEffects) {
+        this.uponSummoningEffects = uponSummoningEffects;
+    }
+
+    public void setBeingAttackedEffects(ArrayList<BeingAttackedEffect> beingAttackedEffects) {
+        this.beingAttackedEffects = beingAttackedEffects;
+    }
+
+    public void setContinuousMonsterEffects(ArrayList<ContinuousMonsterEffect> continuousMonsterEffects) {
+        this.continuousMonsterEffects = continuousMonsterEffects;
+    }
+
+    public void setFlipEffects(ArrayList<FlipEffect> flipEffects) {
+        this.flipEffects = flipEffects;
+    }
+
+    public void setOptionalMonsterEffects(ArrayList<OptionalMonsterEffect> optionalMonsterEffects) {
+        this.optionalMonsterEffects = optionalMonsterEffects;
+    }
+
+    public void setSentToGraveyardEffects(ArrayList<SentToGraveyardEffect> sentToGraveyardEffects) {
+        this.sentToGraveyardEffects = sentToGraveyardEffects;
+    }
+
+    public void setAttackerEffects(ArrayList<AttackerEffect> attackerEffects) {
+        this.attackerEffects = attackerEffects;
+    }
+
     public void addEquipSpellEffectToList(EquipSpellEffect equipSpellEffect) {
         this.equipSpellEffects.add(equipSpellEffect);
     }
@@ -221,6 +275,14 @@ public class MonsterCard extends Card {
         this.fieldSpellEffects.remove(fieldSpellEffect);
     }
 
+    public void clearEquipSpellEffect() {
+        this.equipSpellEffects.clear();
+    }
+
+    public void clearFieldSpellEffect() {
+        this.fieldSpellEffects.clear();
+    }
+
     private void setEnumValues(HashMap<String, List<String>> enumValues) {
 
         for (int i = 1; i < enumValues.get("AttackerEffect").size(); i++) {
@@ -233,7 +295,7 @@ public class MonsterCard extends Card {
 
         for (int i = 1; i < enumValues.get("ContinuousMonsterEffect").size(); i++) {
             continuousMonsterEffects
-                    .add(ContinuousMonsterEffect.valueOf(enumValues.get("ContinuousMonsterEffect").get(i)));
+                .add(ContinuousMonsterEffect.valueOf(enumValues.get("ContinuousMonsterEffect").get(i)));
         }
 
         for (int i = 1; i < enumValues.get("FlipEffect").size(); i++) {
@@ -265,9 +327,31 @@ public class MonsterCard extends Card {
         int finalDefensePower = monsterCard.getDefensePower();
         ArrayList<FieldSpellEffect> fieldSpellEffects = monsterCard.getFieldSpellEffects();
         ArrayList<EquipSpellEffect> equipSpellEffects = monsterCard.getEquipSpellEffects();
+        ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = monsterCard.getContinuousMonsterEffects();
         MonsterCardFamily monsterCardFamily = monsterCard.getMonsterCardFamily();
         MonsterCardAttribute monsterCardAttribute = monsterCard.getMonsterCardAttribute();
         CardPosition cardPosition = monsterCard.getCardPosition();
+        if (continuousMonsterEffects.contains(ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL)) {
+            int sumOfLevels = 0;
+            if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
+                for (int i = 0; i < 5; i++) {
+                    Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1));
+                    if (Card.isCardAMonster(card) && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) ||
+                        card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                        sumOfLevels += ((MonsterCard) card).getLevel();
+                    }
+                }
+            } else {
+                for (int i = 0; i < 5; i++) {
+                    Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1));
+                    if (Card.isCardAMonster(card) && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) ||
+                        card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                        sumOfLevels += ((MonsterCard) card).getLevel();
+                    }
+                }
+            }
+            finalAttackPower += 300 * sumOfLevels;
+        }
         if (fieldSpellEffects.contains(FieldSpellEffect.FIEND_GAIN_200_ATK_DEF) && monsterCardFamily.equals(MonsterCardFamily.FIEND)) {
             System.out.println("F1");
             finalAttackPower += 200;
@@ -357,7 +441,7 @@ public class MonsterCard extends Card {
             if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                 System.out.println("E5");
                 for (int i = 0; i < 5; i++) {
-                    CardLocation cardLocationOfAllyMonster = new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i+1);
+                    CardLocation cardLocationOfAllyMonster = new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1);
                     Card card = duelBoard.getCardByCardLocation(cardLocationOfAllyMonster);
                     if (card != null) {
                         MonsterCard allyMonsterCard = (MonsterCard) card;
@@ -370,7 +454,7 @@ public class MonsterCard extends Card {
             } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
                 System.out.println("E6");
                 for (int i = 0; i < 5; i++) {
-                    CardLocation cardLocationOfAllyMonster = new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i+1);
+                    CardLocation cardLocationOfAllyMonster = new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1);
                     Card card = duelBoard.getCardByCardLocation(cardLocationOfAllyMonster);
                     if (card != null) {
                         MonsterCard allyMonsterCard = (MonsterCard) card;
@@ -390,6 +474,7 @@ public class MonsterCard extends Card {
         }
         return 0;
     }
+
     @Override
     protected Object clone() {
         return new MonsterCard(this);

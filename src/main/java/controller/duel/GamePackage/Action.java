@@ -2,15 +2,11 @@ package controller.duel.GamePackage;
 
 import java.util.ArrayList;
 
-import controller.duel.GamePackage.ActionConductors.ActivateSpellConductor;
-import controller.duel.GamePackage.ActionConductors.ActivateTrapConductor;
-import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
-import controller.duel.GamePackage.ActionConductors.DirectAttackConductor;
-import controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
-import controller.duel.GamePackage.ActionConductors.NormalSummonConductor;
-import controller.duel.GamePackage.ActionConductors.SettingCardConductor;
+import controller.duel.GamePackage.ActionConductors.*;
 import controller.duel.PreliminaryPackage.GameManager;
+import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
+import model.cardData.General.CardPosition;
 
 public class Action {
     private ActionType actionType;
@@ -26,16 +22,21 @@ public class Action {
     private ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand;
     private ArrayList<CardLocation> cardsToBeDestroyed;
     private ArrayList<CardLocation> cardsToTakeControlOf;
+    private ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard;
+    private ArrayList<CardLocation> cardsToBeRitualSummoned;
+    private CardPosition cardPositionOfMainCard;
     private static int currentActionConducting = 0;
     private static String outputSentUntilNow = "";
 
     public Action(ActionType actionType, int actionTurn, CardLocation mainCardLocation, ArrayList<CardLocation> targetingCards, ArrayList<CardLocation> spendingCards
         , ArrayList<CardLocation> cardsToBeDiscarded, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo
-        , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand,
-                  ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf) {
+        , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand
+        , ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf
+        , ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, ArrayList<CardLocation> cardsToBeRitualSummoned, CardPosition cardPosition) {
         this.spendingCards = new ArrayList<>();
         this.targetingCards = new ArrayList<>();
         this.mainCardLocation = mainCardLocation;
+        this.cardPositionOfMainCard = cardPosition;
         this.finalMainCardLocation = mainCardLocation;
         this.cardsToBeDiscarded = new ArrayList<>();
         this.cardsToBeChosenToApplyEquipSpellTo = new ArrayList<>();
@@ -43,6 +44,8 @@ public class Action {
         this.cardsToBeChosenFromDeckAndAddedToHand = new ArrayList<>();
         this.cardsToBeDestroyed = new ArrayList<>();
         this.cardsToTakeControlOf = new ArrayList<>();
+        this.cardsToBeChosenFromDeckAndSentToGraveyard = new ArrayList<>();
+        this.cardsToBeRitualSummoned = new ArrayList<>();
         this.actionType = actionType;
         this.actionTurn = actionTurn;
         this.isActionCanceled = false;
@@ -70,6 +73,12 @@ public class Action {
         if (cardsToTakeControlOf != null) {
             this.cardsToTakeControlOf.addAll(cardsToTakeControlOf);
         }
+        if (cardsToBeChosenFromDeckAndSentToGraveyard != null) {
+            this.cardsToBeChosenFromDeckAndSentToGraveyard.addAll(cardsToBeChosenFromDeckAndSentToGraveyard);
+        }
+        if (cardsToBeRitualSummoned != null) {
+            this.cardsToBeRitualSummoned.addAll(cardsToBeRitualSummoned);
+        }
     }
 /*
     public Action(ArrayList<CardLocation> cardsToBeDiscarded, ActionType actionType, ArrayList<CardLocation> targetingCards, CardLocation mainCardLocation) {
@@ -95,6 +104,10 @@ public class Action {
 
     public static int getCurrentActionConducting() {
         return currentActionConducting;
+    }
+
+    public CardPosition getCardPositionOfMainCard() {
+        return cardPositionOfMainCard;
     }
 
     public ArrayList<CardLocation> getSpendingCards() {
@@ -133,6 +146,14 @@ public class Action {
         return cardsToBeChosenFromDeckAndAddedToHand;
     }
 
+    public ArrayList<CardLocation> getCardsToBeChosenFromDeckAndSentToGraveyard() {
+        return cardsToBeChosenFromDeckAndSentToGraveyard;
+    }
+
+    public ArrayList<CardLocation> getCardsToBeRitualSummoned() {
+        return cardsToBeRitualSummoned;
+    }
+
     public ArrayList<CardLocation> getCardsToBeDestroyed() {
         return cardsToBeDestroyed;
     }
@@ -163,6 +184,10 @@ public class Action {
             Action action = actions.get(actions.size() - i - 1);
             if (action.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
                 output.append(NormalSummonConductor.conductNormalSummoningAction(index, actions.size() - i - 1));
+            } else if (action.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
+                output.append(TributeSummonConductor.conductTributeSummoningAction(index, actions.size() - i - 1));
+            } else if (action.getActionType().equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER)) {
+                output.append(SpecialSummonConductor.conductSpecialSummoningAction(index, actions.size() - i - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_SETTING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
                 output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - i - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || action.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
@@ -177,7 +202,7 @@ public class Action {
                 if (string.startsWith("show")) {
                     output.append(string);
                     //this barely gets tested
-                    if ((actions.size()-currentActionConducting)%2 == 1){
+                    if ((actions.size() - currentActionConducting) % 2 == 1) {
                         GameManager.getDuelControllerByIndex(index).changeFakeTurn();
                     }
                     return output.toString();
@@ -199,10 +224,10 @@ public class Action {
         }
         if (currentActionConducting == actions.size() - 1) {
             GameManager.getDuelControllerByIndex(index).setFakeTurn(GameManager.getDuelControllerByIndex(index).getTurn());
-            System.out.println("fakeTurn DuelController is now "+GameManager.getDuelControllerByIndex(0).getFakeTurn());
+            System.out.println("fakeTurn DuelController is now " + GameManager.getDuelControllerByIndex(0).getFakeTurn());
             currentActionConducting = 0;
             actions.clear();
-            System.out.println("!actions.size is now"+ GameManager.getActionsByIndex(0).size());
+            System.out.println("!actions.size is now" + GameManager.getActionsByIndex(0).size());
             ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
             uninterruptedActions.clear();
         }
@@ -221,6 +246,10 @@ public class Action {
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
             output = NormalSummonConductor.conductNormalSummoningActionUninterruptedAction(index, uninterruptedActions.size() - 1);
+        } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
+            output = TributeSummonConductor.conductTributeSummoningActionUninterruptedAction(index, uninterruptedActions.size() - 1);
+        } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER)) {
+            output = SpecialSummonConductor.conductSpecialSummoningActionUninterruptedAction(index, uninterruptedActions.size() - 1);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
             output = SettingCardConductor.conductNormalSettingActionUninterruptedAction(index, uninterruptedActions.size() - 1);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {

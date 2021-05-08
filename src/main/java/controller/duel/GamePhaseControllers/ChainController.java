@@ -57,7 +57,7 @@ public class ChainController {
     public String canChainingOccur(int index, int turn, ActionType allyActionType, ActionType opponentActionType) {
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         if (turn == 1) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(allyActionType,  1);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(allyActionType, 1);
         } else if (turn == 2) {
             messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(opponentActionType, 2);
         }
@@ -89,10 +89,10 @@ public class ChainController {
         boolean isAlreadyActivated = false;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
-            isAlreadyActivated = spellCard.isAlreadyActivated();
+            isAlreadyActivated = spellCard.isCardAlreadyActivated();
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            isAlreadyActivated = trapCard.isAlreadyActivated();
+            isAlreadyActivated = trapCard.isCardAlreadyActivated();
         } else {
             return "you can't choose this card for chain activation.\nselect another card";
         }
@@ -101,13 +101,13 @@ public class ChainController {
         } else {
             //should use advanced function
             ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
-            ActionType actionType = uninterruptedActions.get(uninterruptedActions.size()-1).getActionType();
-            boolean chainSpellTrapIsCorrect = Effect.isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(cardLocation, actionType,index);
+            ActionType actionType = uninterruptedActions.get(uninterruptedActions.size() - 1).getActionType();
+            boolean chainSpellTrapIsCorrect = Effect.isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(cardLocation, actionType, index);
             if (!chainSpellTrapIsCorrect) {
                 return "you can't activate this card in chain\nselect another card";
-            } else{
-                String inputsNeeded = Effect.inputsNeededForActivatingSpellTrapCard(cardLocation, index);
-                if (inputsNeeded.startsWith("nothing")){
+            } else {
+                ArrayList<String> inputsNeeded = Effect.inputsNeededForActivatingSpellTrapCard(cardLocation, index);
+                if (inputsNeeded.get(inputsNeeded.size() - 1).startsWith("nothing")) {
                     activateSpellTrapController.setMainCardLocation(cardLocation);
                     isClassWaitingForChainCardToBeSelected = false;
                     activateSpellTrapController.createActionForActivatingSpellTrap(index);
@@ -117,7 +117,7 @@ public class ChainController {
                     //duelController.changeFakeTurn();
                     //used to give fakeTurn as input
                     if (canChainingOccur.equals("")) {
-                        return output+"\n" + Action.conductAllActions(index);
+                        return output + "\n" + Action.conductAllActions(index);
                     }
                     //activateSpellTrapController.setGoingToChangeTurnsForChaining(true);
                     return output + "\n" + canChainingOccur;
@@ -127,7 +127,7 @@ public class ChainController {
                     //activateSpellTrapController.setRedirectInputBeingProcessesInChain(true);
                     selectCardController.resetSelectedCardLocationList();
                     isClassWaitingForChainCardToBeSelected = false;
-                    return inputsNeeded;
+                    return inputsNeeded.get(inputsNeeded.size() - 1);
                 }
             }
 

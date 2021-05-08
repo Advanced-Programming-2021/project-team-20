@@ -2,6 +2,7 @@ package controller.duel.GamePackage.ActionConductors;
 
 import java.util.ArrayList;
 
+import controller.duel.CardEffects.MonsterEffectEnums.UponSummoningEffect;
 import controller.duel.GamePackage.Action;
 import controller.duel.GamePackage.ActionType;
 import controller.duel.GamePackage.DuelBoard;
@@ -10,6 +11,7 @@ import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 import model.cardData.General.CardPosition;
 import model.cardData.General.RowOfCardLocation;
+import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.SpellCardData.SpellCardValue;
 
@@ -105,6 +107,20 @@ public class SettingCardConductor {
     }
 
     public static String conductNormalSettingAction(int index, int numberInListOfActions) {
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+        Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
+        ArrayList<Action> actions = GameManager.getActionsByIndex(index);
+        Action action = actions.get(numberInListOfActions);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        if (!action.isActionCanceled()){
+            CardLocation mainCardLocation = uninterruptedAction.getFinalMainCardLocation();
+            Card mainCard = duelBoard.getCardByCardLocation(mainCardLocation);
+            MonsterCard monsterCard = (MonsterCard) mainCard;
+            ArrayList<UponSummoningEffect> uponSummoningEffects = monsterCard.getUponSummoningEffects();
+            if (uponSummoningEffects.contains(UponSummoningEffect.SET_ATK_1900_IF_SET)){
+                monsterCard.setAttackPower(1900);
+            }
+        }
         return "";
     }
 }
