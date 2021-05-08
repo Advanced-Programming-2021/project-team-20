@@ -143,12 +143,12 @@ public class SetCardController extends SummonSetCommonClass {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, null, null, null, null, null, null,null,null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, null, null, null, null,null,null, null, null, null, null));
             //Action.conductUninterruptedAction(0);
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null, null,null,null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null,null,null, null));
             //Action.conductUninterruptedAction(0);
         }
         //Action.conductAllActions(index);
@@ -172,8 +172,8 @@ public class SetCardController extends SummonSetCommonClass {
             numberOfCardsToBeTributed -= 1;
             if (numberOfCardsToBeTributed == 0) {
                 areWeLookingForMonstersToBeTributed = false;
-                actions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null));
-                uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null));
+                actions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null,null,null, null, null, null, null));
+                uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, cardsToBeTributed, null,null,null, null, null, null, null, null, null));
                 output = Action.conductUninterruptedAction(0);
                 return output + Action.conductAllActions(0);
             }
@@ -183,8 +183,8 @@ public class SetCardController extends SummonSetCommonClass {
             numberOfCardsToBeTributed -= 1;
             if (numberOfCardsToBeTributed == 0) {
                 areWeLookingForMonstersToBeTributed = false;
-                actions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null));
-                uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null));
+                actions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null,null,null));
+                uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null,null,null, null, null));
                 output = Action.conductUninterruptedAction(0);
                 return output + Action.conductAllActions(0);
             }

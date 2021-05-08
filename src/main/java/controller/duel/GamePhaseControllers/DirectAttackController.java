@@ -75,7 +75,7 @@ public class DirectAttackController extends BattlePhaseController {
         mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         if (turn == 1) {
             actions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null,null, null, null, null, null, null, null, null));
         } else if (turn == 2) {
             actions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
             uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
