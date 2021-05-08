@@ -60,7 +60,7 @@ public class Effect {
                         monstersForTribute++;
                     }
                 }
-                return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute);
+                return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute, string);
             }
         }
         return null;
@@ -81,7 +81,8 @@ public class Effect {
         } else {
             if (!cardSummoningRequirements.contains(SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED)
                 && string.equals("normal summon") || !cardSummoningRequirements.contains(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED)
-                && string.equals("set")) {
+                && string.equals("set") || string.equals("tribute summon")) {
+                //this checks tributes for all monsters
                 ArrayList<Card> cardsInMonsterZone = null;
                 if (turn == 1) {
                     cardsInMonsterZone = duelBoard.getAllyMonsterCards();
@@ -94,20 +95,20 @@ public class Effect {
                         monstersForTribute++;
                     }
                 }
-                return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute);
+                return checkNumberOfMonstersToTribute(cardSummoningRequirements, monstersForTribute, string);
             } else {
+                //coming inside here means we are checking beast king barbaros
                 if (string.equals("normal summon")) {
-
+                    return MessagesFromEffectToControllers.YOU_CAN_NORMAL_SUMMON_THIS_MONSTER;
                 } else {
-
+                    return MessagesFromEffectToControllers.YOU_CAN_SET_THIS_MONSTER;
                 }
-                return MessagesFromEffectToControllers.YOU_CAN_NORMAL_SUMMON_THIS_MONSTER;
             }
         }
         return null;
     }
 
-    public static MessagesFromEffectToControllers checkNumberOfMonstersToTribute(ArrayList<SummoningRequirement> summoningRequirements, int monstersForTribute) {
+    public static MessagesFromEffectToControllers checkNumberOfMonstersToTribute(ArrayList<SummoningRequirement> summoningRequirements, int monstersForTribute, String string) {
         if (summoningRequirements.contains(SummoningRequirement.TRIBUTE_1_MONSTER) && monstersForTribute >= 1) {
             return MessagesFromEffectToControllers.PLEASE_CHOOSE_1_MONSTER_TO_TRIBUTE;
         } else if (summoningRequirements.contains(SummoningRequirement.TRIBUTE_1_MONSTER) && monstersForTribute == 0) {
@@ -121,7 +122,16 @@ public class Effect {
         } else if (summoningRequirements.contains(SummoningRequirement.TRIBUTE_3_MONSTERS) && monstersForTribute <= 2) {
             return MessagesFromEffectToControllers.THERE_ARE_NOT_ENOUGH_CARDS_FOR_TRIBUTE;
         }
-        return MessagesFromEffectToControllers.YOU_CAN_NORMAL_SUMMON_THIS_MONSTER;
+        if (string.equals("normal summon")) {
+            return MessagesFromEffectToControllers.YOU_CAN_NORMAL_SUMMON_THIS_MONSTER;
+        } else if (string.equals("tribute summon")) {
+            return MessagesFromEffectToControllers.YOU_CAN_TRIBUTE_SUMMON_THIS_MONSTER;
+        } else if (string.equals("special summon")) {
+            return MessagesFromEffectToControllers.YOU_CAN_SPECIAL_SUMMON_THIS_MONSTER;
+        } else if (string.equals("set")){
+            return MessagesFromEffectToControllers.YOU_CAN_SET_THIS_MONSTER;
+        }
+        return null;
     }
 
     public static MessagesFromEffectToControllers canSpellTrapCardBeActivatedInChain(ActionType actionType, int actionTurn) {

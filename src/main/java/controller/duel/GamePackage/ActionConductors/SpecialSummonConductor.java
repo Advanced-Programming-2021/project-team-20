@@ -12,14 +12,15 @@ import model.cardData.MonsterCardData.MonsterCard;
 
 import java.util.ArrayList;
 
-public class SpecialSummonConductor {
+public class SpecialSummonConductor extends SendCardToGraveyardConductor{
     public static String conductSpecialSummoningActionUninterruptedAction(int index, int numberInListOfActions) {
         //if (!isActionCanceled){
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        ArrayList<Card> cardsToBeTributed = new ArrayList<>();
-        ArrayList<Card> cardsToBeDiscarded = new ArrayList<>();
+        for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
+            sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
+        }
         int turn = 0;
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER)) {
             turn = 1;
@@ -42,16 +43,8 @@ public class SpecialSummonConductor {
             System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
             System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
         }
-        for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
-            cardsToBeTributed.add(duelBoard.getCardByCardLocation(uninterruptedAction.getSpendingCards().get(i)));
-            duelBoard.removeCardByCardLocation(uninterruptedAction.getSpendingCards().get(i));
-            duelBoard.addCardToGraveyard(cardsToBeTributed.get(i), turn);
-        }
         for (int i = 0; i < uninterruptedAction.getCardsToBeDiscarded().size(); i++) {
-            cardsToBeDiscarded.add(duelBoard.getCardByCardLocation(uninterruptedAction.getCardsToBeDiscarded().get(i)));
-            //duelBoard.removeCardByCardLocation(uninterruptedAction.getSpendingCards().get(i));
-            duelBoard.setCardLocationToNull(uninterruptedAction.getCardsToBeDiscarded().get(i));
-            duelBoard.addCardToGraveyard(cardsToBeDiscarded.get(i), turn);
+            sendCardToGraveyardAfterRemoving(uninterruptedAction.getCardsToBeDiscarded().get(i), index);
         }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());

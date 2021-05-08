@@ -80,10 +80,7 @@ public class NormalSummonController extends SummonSetCommonClass {
                 return output;
             }
             return output + Action.conductAllActions(index);
-        } else if (cardAnalysis.equals("tribute summoned successfully")) {
-            return cardAnalysis;
-
-        } else if (cardAnalysis.startsWith("please choose")) {
+        } else if (cardAnalysis.startsWith("please choose") && typeOfAnalysis.equals("normal summon")) {
             mainCard = selectCardController.getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1);
             selectCardController.resetSelectedCardLocationList();
             areWeLookingForMonstersToBeTributed = true;
@@ -104,7 +101,6 @@ public class NormalSummonController extends SummonSetCommonClass {
     public void createActionForNormalSummoningMonster(int index) {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         int turn = duelController.getTurn();
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         mainCard = selectedCardLocations.get(selectedCardLocations.size() - 1);
@@ -145,13 +141,11 @@ public class NormalSummonController extends SummonSetCommonClass {
                 ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
                 areWeLookingForMonstersToBeTributed = false;
                 if (turn == 1 && cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
-                    actions.add(new Action(ActionType.ALLY_NORMAL_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, null));
-                    uninterruptedActions.add(new Action(ActionType.ALLY_NORMAL_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, null));
+                    createActionForNormalSummoningMonster(0);
                     output = Action.conductUninterruptedAction(0);
                     canChainingOccur = canChainingOccur(0, 1, ActionType.ALLY_NORMAL_SUMMONING_MONSTER, ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER);
                 } else {
-                    actions.add(new Action(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, null));
-                    uninterruptedActions.add(new Action(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, null));
+                    createActionForNormalSummoningMonster(0);
                     output = Action.conductUninterruptedAction(0);
                     canChainingOccur = canChainingOccur(0, 2, ActionType.ALLY_NORMAL_SUMMONING_MONSTER, ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER);
                 }

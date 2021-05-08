@@ -145,7 +145,16 @@ public class DuelController {
                 System.out.println("A11");
                 return specialSummonController.redirectInputForCardsToBeDiscarded();
             }
-        } else if (string.startsWith("select")) {
+        } else if (string.startsWith("select") && tributeSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B12");
+                return output;
+            } else {
+                System.out.println("A12");
+                return tributeSummonController.redirectInputForMonsterTributing();
+            }
+        }else if (string.startsWith("select")) {
             return selectCardController.selectCardInputAnalysis(string);
         } else if ((string.startsWith("attacking") || string.startsWith("defensive")) && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
             return activateSpellTrapController.redirectInput(0);

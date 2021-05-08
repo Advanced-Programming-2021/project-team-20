@@ -258,7 +258,7 @@ public class DuelBoard {
                 } else if (arrayList.get(3) == null) {
                     return new CardLocation(rowOfCardLocation, 3);
                 } else if (arrayList.get(0) == null) {
-                    return new CardLocation(rowOfCardLocation, 2);
+                    return new CardLocation(rowOfCardLocation, 0);
                 } else if (arrayList.get(4) == null) {
                     return new CardLocation(rowOfCardLocation, 4);
                 }
