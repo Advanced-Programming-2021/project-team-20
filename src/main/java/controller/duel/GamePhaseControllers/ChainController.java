@@ -12,6 +12,7 @@ import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
 
 public class ChainController {
+
     protected boolean isClassWaitingForChainCardToBeSelected;
     protected boolean isGoingToChangeTurnsForChaining;
 
