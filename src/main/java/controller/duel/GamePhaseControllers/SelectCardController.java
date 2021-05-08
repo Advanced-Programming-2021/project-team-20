@@ -31,27 +31,27 @@ public class SelectCardController {
         int fakeTurn = duelController.getFakeTurn();
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
             rowOfCardLocation = switchCaseInputToGetRowOfCardLocation(matcher.group(2), matcher.group(4), fakeTurn);
-            if (rowOfCardLocation == null){
+            if (rowOfCardLocation == null) {
                 return "invalid selection";
             }
-            if (matcher.group(6) != null){
+            if (matcher.group(6) != null) {
                 int cardIndex = Integer.parseInt(matcher.group(6));
                 //System.out.println("card Index is "+cardIndex);
-                if (isSelectedCardIndexValid(cardIndex, rowOfCardLocation, indexOfWholeGame)){
+                if (isSelectedCardIndexValid(cardIndex, rowOfCardLocation, indexOfWholeGame)) {
                     cardIndex = Utility.changeYuGiOhIndexToArrayIndex(cardIndex, rowOfCardLocation);
-                    System.out.println("cardIndex is "+cardIndex);
+                    System.out.println("cardIndex is " + cardIndex);
                     CardLocation cardLocation = new CardLocation(rowOfCardLocation, cardIndex);
                     DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
                     Card card = duelBoard.getCardByCardLocation(cardLocation);
-                    if (card == null){
+                    if (card == null) {
                         return "no card found in the given position";
                     } else {
                         //System.out.println(card.getCardName()+" is what is chosen");
                         selectedCardLocations.add(cardLocation);
-                        for (int i = 0; i < selectedCardLocations.size(); i++){
-                            System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString()+selectedCardLocations.get(i).getIndex());
+                        for (int i = 0; i < selectedCardLocations.size(); i++) {
+                            System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString() + selectedCardLocations.get(i).getIndex());
                         }
-                        System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName()+"is selected");
+                        System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName() + "is selected");
                         return "card selected";
                     }
                 } else {
@@ -61,7 +61,7 @@ public class SelectCardController {
                 CardLocation cardLocation = new CardLocation(rowOfCardLocation, 1);
                 DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
                 Card card = duelBoard.getCardByCardLocation(cardLocation);
-                if (card == null){
+                if (card == null) {
                     return "no card found in the given position";
                 } else {
                     selectedCardLocations.add(cardLocation);
@@ -71,8 +71,8 @@ public class SelectCardController {
         } else {
             String secondInputRegex = "(?<=\\n|^)select[\\s]+-d(?=\\n|$)";
             Matcher secondMatcher = Utility.getCommandMatcher(string, secondInputRegex);
-            if (Utility.isMatcherCorrectWithoutErrorPrinting(secondMatcher)){
-                if (selectedCardLocations.size() == 0){
+            if (Utility.isMatcherCorrectWithoutErrorPrinting(secondMatcher)) {
+                if (selectedCardLocations.size() == 0) {
                     return "no card is selected yet";
                 } else {
                     selectedCardLocations.remove(selectedCardLocations.size() - 1);
@@ -92,11 +92,11 @@ public class SelectCardController {
         selectedCardLocations.clear();
     }
 
-    private RowOfCardLocation switchCaseInputToGetRowOfCardLocation(String firstString, String secondString, int turn){
-        if (firstString == null){
+    private RowOfCardLocation switchCaseInputToGetRowOfCardLocation(String firstString, String secondString, int turn) {
+        if (firstString == null) {
             firstString = "";
         }
-        if (secondString == null){
+        if (secondString == null) {
             secondString = "";
         }
         if (firstString.equals("opponent") && secondString.equals("monster")) {
@@ -115,6 +115,10 @@ public class SelectCardController {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, turn);
         } else if (firstString.equals("opponent") && secondString.equals("hand")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, turn);
+        } else if (firstString.equals("deck") && secondString.equals("opponent")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, turn);
+        } else if (firstString.equals("opponent") && secondString.equals("deck")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, turn);
         } else if (firstString.equals("graveyard") && secondString.equals("opponent")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, turn);
         } else if (firstString.equals("opponent") && secondString.equals("graveyard")) {
@@ -127,6 +131,8 @@ public class SelectCardController {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, turn);
         } else if (firstString.equals("hand") && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_HAND_ZONE, turn);
+        } else if (firstString.equals("deck") && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_DECK_ZONE, turn);
         } else if (firstString.equals("graveyard") && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_GRAVEYARD_ZONE, turn);
         }
@@ -135,36 +141,36 @@ public class SelectCardController {
 
 
     // when this function is called, we are sure thar rowOfCardLocation is adjusted with the program.
-    private boolean isSelectedCardIndexValid(int cardIndex, RowOfCardLocation rowOfCardLocation, int indexOfWholeGame){
-        if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) && cardIndex <= 5 && cardIndex >= 1){
+    private boolean isSelectedCardIndexValid(int cardIndex, RowOfCardLocation rowOfCardLocation, int indexOfWholeGame) {
+        if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) && cardIndex <= 5 && cardIndex >= 1) {
             return true;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) && cardIndex <= 5 && cardIndex >= 1){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) && cardIndex <= 5 && cardIndex >= 1) {
             return true;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE)){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
             int size = duelBoard.getAllyCardsInHand().size();
             return cardIndex >= 1 && size >= cardIndex;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_DECK_ZONE)){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_DECK_ZONE)) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
             int size = duelBoard.getAllyCardsInDeck().size();
             return cardIndex >= 1 && size >= cardIndex;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
             int size = duelBoard.getAllyCardsInGraveyard().size();
             return cardIndex >= 1 && size >= cardIndex;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) && cardIndex <= 5 && cardIndex >= 1){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) && cardIndex <= 5 && cardIndex >= 1) {
             return true;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE) && cardIndex <= 5 && cardIndex >= 1){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE) && cardIndex <= 5 && cardIndex >= 1) {
             return true;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
             int size = duelBoard.getOpponentCardsInHand().size();
             return cardIndex >= 1 && size >= cardIndex;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_DECK_ZONE)){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_DECK_ZONE)) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
             int size = duelBoard.getOpponentCardsInDeck().size();
             return cardIndex >= 1 && size >= cardIndex;
-        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)){
+        } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
             int size = duelBoard.getOpponentCardsInGraveyard().size();
             return cardIndex >= 1 && size >= cardIndex;
@@ -172,7 +178,7 @@ public class SelectCardController {
         return false;
     }
 
-    public boolean doesSelectedCardLocationsHaveCard(){
+    public boolean doesSelectedCardLocationsHaveCard() {
         return selectedCardLocations.size() != 0;
     }
 }

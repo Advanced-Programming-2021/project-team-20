@@ -72,13 +72,30 @@ public class MonsterCard extends Card {
         sentToGraveyardEffects = new ArrayList<>();
         equipSpellEffects = new ArrayList<>();
         fieldSpellEffects = new ArrayList<>();
-        summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
-        if (level == 5 || level == 6) {
+        if (cardDescription.equals("")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
+            if (level == 5 || level == 6) {
+                summoningRequirements.add(SummoningRequirement.TRIBUTE_1_MONSTER);
+            } else if (level == 7 || level == 8) {
+                summoningRequirements.add(SummoningRequirement.TRIBUTE_2_MONSTERS);
+            } else if (level >= 9) {
+                summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
+            }
+        } else if (cardDescription.equals("a")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
             summoningRequirements.add(SummoningRequirement.TRIBUTE_1_MONSTER);
-        } else if (level == 7 || level == 8) {
-            summoningRequirements.add(SummoningRequirement.TRIBUTE_2_MONSTERS);
-        } else if (level >= 9) {
+            summoningRequirements.add(SummoningRequirement.DISCARD_1_CARD);
+        } else if (cardDescription.equals("b")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
             summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
+            summoningRequirements.add(SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+            summoningRequirements.add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+            uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_NORMAL_SUMMONED);
+            uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
+            uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
         }
         if (enumValues != null) {
             setEnumValues(enumValues);

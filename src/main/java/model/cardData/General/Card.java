@@ -18,7 +18,11 @@ public class Card {
         this.realName = cardName;
         this.cardType = cardType;
         this.cardDescription = cardDescription;
-        this.cardPosition = cardPosition;
+        if (cardPosition == null) {
+            this.cardPosition = CardPosition.NOT_APPLICABLE;
+        } else {
+            this.cardPosition = cardPosition;
+        }
         this.numberOfAllowedUsages = numberOfAllowedUsages;
         this.cardPrice = cardPrice;
     }

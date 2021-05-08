@@ -121,12 +121,12 @@ public class SetCardController extends SummonSetCommonClass {
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD, 1, cardLocation, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD, 1, cardLocation, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD, 1, cardLocation, null, null, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD, 1, cardLocation, null, null, null, null, null, null, null, null, null, null, null));
             //Action.conductUninterruptedAction(index);
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD, 2, cardLocation, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD, 2, cardLocation, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD, 2, cardLocation, null, null, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD, 2, cardLocation, null, null, null, null, null, null, null, null, null, null, null));
             //Action.conductUninterruptedAction(index);
         }
     }

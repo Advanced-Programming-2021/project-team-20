@@ -1,10 +1,7 @@
 package controller.duel.GamePhaseControllers;
 
-import java.net.NoRouteToHostException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
-
-import com.sun.source.tree.ArrayAccessTree;
 import controller.duel.CardEffects.EffectImplementations.Effect;
 import controller.duel.CardEffects.EffectImplementations.MessagesFromEffectToControllers;
 import controller.duel.GamePackage.Action;
@@ -343,6 +340,11 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (!((MonsterCard) card).getMonsterCardValue().equals(MonsterCardValue.NORMAL)) {
                 return "chosen monster card is not normal\nplease try again";
             } else {
+                for (int i = 0; i <cardsToBeChosenFromDeckAndSentToGraveyard.size();i++){
+                    if (cardsToBeChosenFromDeckAndSentToGraveyard.get(i).getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && cardsToBeChosenFromDeckAndSentToGraveyard.get(i).getIndex()==cardLocation.getIndex()){
+                        return "you have already chosen this normal monster for sending to graveyard\nplease try again";
+                    }
+                }
                 cardsToBeChosenFromDeckAndSentToGraveyard.add(cardLocation);
                 sumOfLevelsOfChosenMonsters.add(((MonsterCard) card).getLevel());
                 if (areSumOfNormalMonsterLevelsEqualToARitualMonsterLevel(fakeTurn, index)) {
@@ -385,7 +387,7 @@ public class ActivateSpellTrapController extends ChainController {
             }
         } else if (message.startsWith("please choose if you want")) {
             String input = duelController.getLatestInput();
-            if (input.equals("attack")) {
+            if (input.equals("attacking")) {
                 mainCardPosition = CardPosition.FACE_UP_ATTACK_POSITION;
                 boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
                 if (isMoreInputNeeded) {
@@ -394,7 +396,7 @@ public class ActivateSpellTrapController extends ChainController {
                     output = Action.conductUninterruptedAction(0);
                     canChainingOccur = canChainingOccur(index);
                 }
-            } else if (input.equals("defense")) {
+            } else if (input.equals("defensive")) {
                 mainCardPosition = CardPosition.FACE_UP_DEFENSE_POSITION;
                 boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
                 if (isMoreInputNeeded) {
@@ -490,6 +492,8 @@ public class ActivateSpellTrapController extends ChainController {
         cardsToBeChosenFromDeckAndAddedToHand.clear();
         cardsToBeDestroyed.clear();
         cardsToTakeControlOf.clear();
+        cardsToBeChosenFromDeckAndSentToGraveyard.clear();
+        cardsToBeRitualSummoned.clear();
     }
 
     public String canChainingOccur(int index) {

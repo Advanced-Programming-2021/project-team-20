@@ -19,10 +19,12 @@ public class GameManager {
     public static ArrayList<ChainController> chainControllers = new ArrayList<>();
     public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
     public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
-    public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
     public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
     public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
     public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
+    public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
+    public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
+    public static ArrayList<TributeSummonController> tributeSummonControllers = new ArrayList<>();
     public static ArrayList<PhaseController> phaseControllers = new ArrayList<>();
     public static ArrayList<SelectCardController> selectCardControllers = new ArrayList<>();
     public static ArrayList<SetCardController> setCardControllers = new ArrayList<>();
@@ -40,10 +42,12 @@ public class GameManager {
         chainControllers.add(new ChainController());
         changeCardPositionControllers.add(new ChangeCardPositionController());
         directAttackControllers.add(new DirectAttackController());
-        flipSummonControllers.add(new FlipSummonController());
         continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
         mainPhaseControllers.add(new MainPhaseController());
         normalSummonControllers.add(new NormalSummonController());
+        flipSummonControllers.add(new FlipSummonController());
+        specialSummonControllers.add(new SpecialSummonController());
+        tributeSummonControllers.add(new TributeSummonController());
         selectCardControllers.add(new SelectCardController());
         setCardControllers.add(new SetCardController());
         summonSetCommonClasses.add(new SummonSetCommonClass());
@@ -98,8 +102,16 @@ public class GameManager {
         return mainPhaseControllers.get(index);
     }
 
-    public static NormalSummonController getNormalSummonController(int index) {
+    public static NormalSummonController getNormalSummonControllerByIndex(int index) {
         return normalSummonControllers.get(index);
+    }
+
+    public static SpecialSummonController getSpecialSummonControllerByIndex(int index) {
+        return specialSummonControllers.get(index);
+    }
+
+    public static TributeSummonController getTributeSummonControllerByIndex(int index) {
+        return tributeSummonControllers.get(index);
     }
 
     public static SelectCardController getSelectCardControllerByIndex(int index) {

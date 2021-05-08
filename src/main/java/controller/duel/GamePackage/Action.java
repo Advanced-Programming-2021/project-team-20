@@ -12,6 +12,7 @@ public class Action {
     private ActionType actionType;
     private int actionTurn;
     private boolean isActionCanceled;
+    private boolean isSecondCardInHandAfterFirstCardInHand;
     private ArrayList<CardLocation> spendingCards;
     private ArrayList<CardLocation> targetingCards;
     private CardLocation mainCardLocation;
@@ -49,6 +50,7 @@ public class Action {
         this.actionType = actionType;
         this.actionTurn = actionTurn;
         this.isActionCanceled = false;
+        this.isSecondCardInHandAfterFirstCardInHand = false;
         if (spendingCards != null) {
             this.spendingCards.addAll(spendingCards);
         }
@@ -130,6 +132,10 @@ public class Action {
         return isActionCanceled;
     }
 
+    public boolean isSecondCardInHandAfterFirstCardInHand() {
+        return isSecondCardInHandAfterFirstCardInHand;
+    }
+
     public ArrayList<CardLocation> getCardsToBeDiscarded() {
         return cardsToBeDiscarded;
     }
@@ -168,6 +174,10 @@ public class Action {
 
     public void setActionCanceled(boolean actionCanceled) {
         isActionCanceled = actionCanceled;
+    }
+
+    public void setSecondCardInHandAfterFirstCardInHand(boolean secondCardInHandAfterFirstCardInHand) {
+        this.isSecondCardInHandAfterFirstCardInHand = secondCardInHandAfterFirstCardInHand;
     }
 
     public static String conductAllActions(int index) {
