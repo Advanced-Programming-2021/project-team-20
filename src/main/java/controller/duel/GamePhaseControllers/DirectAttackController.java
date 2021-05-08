@@ -44,6 +44,8 @@ public class DirectAttackController extends BattlePhaseController {
     }
 
     public String checkPossibilityOfDirectAttack(Card card, int index) {
+        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
+        ArrayList<CardLocation> selectCardLocations = selectCardController.getSelectedCardLocations();
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
         if (turn == 1 && !duelBoard.isZoneEmpty(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
@@ -52,33 +54,31 @@ public class DirectAttackController extends BattlePhaseController {
         if (turn == 2 && !duelBoard.isZoneEmpty(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
             return "you can't attack the opponent directly";
         }
+        mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         String output = "";
         output = areContinuousSpellTrapOrMonsterEffectsPreventingMonsterFromAttacking(mainCard, null, index);
-        if (!output.equals("")){
+        if (!output.equals("")) {
             return output;
         }
         createActionForDirectAttack(card, index, turn);
         output = Action.conductUninterruptedAction(index);
         String canChainingOccur = canChainingOccur(index, turn, ActionType.ALLY_DIRECT_ATTACKING, ActionType.OPPONENT_DIRECT_ATTACKING);
-        if (canChainingOccur.equals("")){
+        if (canChainingOccur.equals("")) {
             return output + Action.conductAllActions(index);
         }
-        return output+"\n"+canChainingOccur;
+        return output + "\n" + canChainingOccur;
     }
 
 
     private void createActionForDirectAttack(Card card, int index, int turn) {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
-        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
-        ArrayList<CardLocation> selectCardLocations = selectCardController.getSelectedCardLocations();
-        mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null));
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null));
         }
     }
 

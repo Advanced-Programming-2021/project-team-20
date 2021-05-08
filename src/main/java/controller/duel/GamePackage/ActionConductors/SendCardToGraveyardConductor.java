@@ -35,13 +35,18 @@ public class SendCardToGraveyardConductor {
                 graveyardToSendCardTo = 2;
             }
             duelBoard.destroyEquipSpellsRelatedToThisCard(targetingCardLocation, graveyardToSendCardTo);
-            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            Card card = duelBoard.getCardByCardLocation(targetingCardLocation);
             if (Card.isCardAMonster(card)) {
                 checkIfPlayerShouldDrawACard(graveyardToSendCardTo, index);
             }
-            System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
-            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
-            duelBoard.refreshCharacteristicsOfACardSentToGraveyard(card);
+            if (Card.isCardASpell(card)) {
+                duelBoard.removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(targetingCardLocation);
+                duelBoard.removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(targetingCardLocation);
+            }
+            Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            System.out.println("CARD WITH NAME" + removedCard.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
+            duelBoard.addCardToGraveyard(removedCard, graveyardToSendCardTo);
+            duelBoard.refreshCharacteristicsOfACardSentToGraveyard(removedCard);
         }
     }
 

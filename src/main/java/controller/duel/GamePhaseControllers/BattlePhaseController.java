@@ -1,7 +1,5 @@
 package controller.duel.GamePhaseControllers;
 
-import com.sun.org.apache.xerces.internal.impl.Constants;
-import com.sun.org.apache.xerces.internal.impl.xs.opti.SchemaDOMParser;
 import controller.duel.CardEffects.MonsterEffectEnums.ContinuousMonsterEffect;
 import controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
 import controller.duel.GamePackage.DuelBoard;
@@ -91,6 +89,7 @@ public class BattlePhaseController extends ChainController {
     }
 
     private String areMonsterWithATK1500OrMoreEligibleToAttack(ArrayList<Card> spellCards, CardLocation allyCardLocation) {
+        System.out.println("GIVE ME INFO " + allyCardLocation.getRowOfCardLocation() + " II " + allyCardLocation.getIndex());
         if (MonsterCard.giveATKDEFConsideringEffects("attack", allyCardLocation, 0) >= 1500) {
             for (int i = 0; i < spellCards.size(); i++) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
@@ -105,12 +104,14 @@ public class BattlePhaseController extends ChainController {
 
     private String areOpponentMonstersAllowedToAttack(ArrayList<Card> spellCards, int index) {
         for (int i = 0; i < spellCards.size(); i++) {
-            SpellCard spellCard = (SpellCard) spellCards.get(i);
-            ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
-            if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK)) {
-                if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                    if (spellCard.getNumberOfTurnsForActivation() >= 1) {
-                        return "your monster is not allowed to attack in this turn";
+            if (spellCards.get(i) != null){
+                SpellCard spellCard = (SpellCard) spellCards.get(i);
+                ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
+                if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK)) {
+                    if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
+                        if (spellCard.getNumberOfTurnsForActivation() >= 1) {
+                            return "your monster is not allowed to attack in this turn";
+                        }
                     }
                 }
             }

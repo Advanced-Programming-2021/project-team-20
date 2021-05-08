@@ -47,6 +47,9 @@ public class ActivateTrapConductor {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         CardLocation mainCardLocation = action.getMainCardLocation();
         TrapCard trapCard = (TrapCard) duelBoard.getCardByCardLocation(mainCardLocation);
+        if (action.isActionCanceled()) {
+            return "\nactivation of trap was canceled";
+        }
         return switchCaseAmongAllTrapEffects(index, trapCard, numberInListOfActions);
     }
 

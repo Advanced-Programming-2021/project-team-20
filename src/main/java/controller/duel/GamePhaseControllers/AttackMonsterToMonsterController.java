@@ -29,7 +29,6 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
     }
 
 
-
     public void setGoingToChangeTurnsForChaining(boolean goingToChangeTurnsForChaining) {
         isGoingToChangeTurnsForChaining = goingToChangeTurnsForChaining;
     }
@@ -95,7 +94,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             } else {
                 String output = "";
                 output = areContinuousSpellTrapOrMonsterEffectsPreventingMonsterFromAttacking(mainCard, opponentCardLocation, index);
-                if (!output.equals("")){
+                if (!output.equals("")) {
                     return output;
                 }
                 createActionForAttackMonsterToMonster(index, opponentCardLocation, turn);
@@ -117,15 +116,14 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         targetingCards.add(opponentCardLocation);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
         }
         targetingCards.clear();
     }
-
 
 
     public String isSelectedCardCorrectForChainActivation(String string, int index) {
@@ -160,7 +158,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             return "you have already activated this card\nselect another card";
         } else {
             String output = activateSpellTrapController.arePreparationsCompleteForSpellTrapActivation(index);
-            System.out.println("output is "+output);
+            System.out.println("output is " + output);
             if (output.startsWith("preparations for this")) {
                 return output + "\nselect another card";
             } else if (!output.equals("nothing needed")) {
@@ -173,7 +171,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
                 //This is when user has chosen the spell/trap he wants to activate but we have to prompt him to enter more input to activate his card
             } else {
                 activateSpellTrapController.setMainCardLocation(cardLocation);
-                System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName()+" is being activated");
+                System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName() + " is being activated");
                 isClassWaitingForChainCardToBeSelected = false;
                 activateSpellTrapController.createActionForActivatingSpellTrap(index);
                 selectCardController.resetSelectedCardLocationList();

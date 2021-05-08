@@ -161,13 +161,13 @@ public class PhaseController {
         ArrayList<Card> spellCards;
         if (turn == 1) {
             spellCards = duelBoard.getAllySpellCards();
-            phaseInGame = PhaseInGame.ALLY_BATTLE_PHASE;
+            phaseInGame = PhaseInGame.ALLY_STANDBY_PHASE;
         } else {
             spellCards = duelBoard.getOpponentSpellCards();
             phaseInGame = PhaseInGame.OPPONENT_STANDBY_PHASE;
         }
         output += doesSpellExistThatNeedsToPay100LPOrGetDestroyed(spellCards);
-        if (output.equals("\"phase: standby phase\\n\"")) {
+        if (output.equals("phase: standby phase\n")) {
             if (turn == 1) {
                 phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
             } else {
@@ -180,12 +180,14 @@ public class PhaseController {
 
     public String doesSpellExistThatNeedsToPay100LPOrGetDestroyed(ArrayList<Card> spellCards) {
         for (int i = 0; i < spellCards.size(); i++) {
-            SpellCard spellCard = (SpellCard) spellCards.get(i);
-            ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
-            if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD)) {
-                if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                    isClassWaitingForPayingLifePointsOrDestroyingCard = true;
-                    return "do you want to pay 100 lifepoints or do you want to destroy your spell card?\nsimply enter pay or destroy\n";
+            if (spellCards.get(i) != null){
+                SpellCard spellCard = (SpellCard) spellCards.get(i);
+                ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
+                if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD)) {
+                    if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
+                        isClassWaitingForPayingLifePointsOrDestroyingCard = true;
+                        return "do you want to pay 100 lifepoints or do you want to destroy your spell card?\nsimply enter pay or destroy\n";
+                    }
                 }
             }
         }
@@ -260,7 +262,7 @@ public class PhaseController {
             phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
         }
         if (drawingCardSuccessful) {
-            return "new card added to hand: " + card.getCardName() + "\nphase: standby phase\nphase: main phase 1\n";
+            return "new card added to hand: " + card.getCardName() + "\n";
         } else {
             return "player was prohibited to draw a card this turn\n";
         }

@@ -462,6 +462,7 @@ public class Effect {
                 }
             }
             if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND)) {
+                System.out.println("CHECKING EXISTENCE OF RITUAL IN USE HAND FAKE TURN IS" + fakeTurn);
                 if (!logicalActivationRequirementSpellOwnerMustHaveAtLeast1RitualMonsterInHand(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
                 }
@@ -613,7 +614,9 @@ public class Effect {
             Card card = cardsInOwnerHand.get(i);
             if (Card.isCardAMonster(card)) {
                 MonsterCard monsterCard = (MonsterCard) card;
+                System.out.println("monster card in hand has name " + monsterCard.getCardName());
                 if (monsterCard.getMonsterCardValue().equals(MonsterCardValue.RITUAL)) {
+                    System.out.println("i a, returning true");
                     return true;
                 }
             }
@@ -627,7 +630,9 @@ public class Effect {
         ArrayList<Card> cardsInHand = null;
         if (fakeTurn == 1) {
             cardsInDeck = duelBoard.getAllyCardsInDeck();
+            System.out.println("ally cards in deck is " + cardsInDeck);
             cardsInHand = duelBoard.getAllyCardsInHand();
+            System.out.println("ally cards in hand is " + cardsInHand);
         } else if (fakeTurn == 2) {
             cardsInDeck = duelBoard.getOpponentCardsInDeck();
             cardsInHand = duelBoard.getOpponentCardsInHand();
@@ -639,22 +644,20 @@ public class Effect {
                 normalMonsterCardLevels.add(((MonsterCard) card).getLevel());
             }
         }
+        System.out.println("levels of normal monsters in deck is" + normalMonsterCardLevels);
         ArrayList<Integer> levelsOfRitualCardsInHand = new ArrayList<>();
-        if (!logicalActivationRequirementSpellOwnerMustHaveAtLeast1RitualMonsterInHand(duelBoard, fakeTurn)) {
-            return false;
-        } else {
-            for (int i = 0; i < cardsInHand.size(); i++) {
-                Card card = cardsInHand.get(i);
-                if (Card.isCardAMonster(card) && ((MonsterCard) card).getMonsterCardValue().equals(MonsterCardValue.RITUAL)) {
-                    levelsOfRitualCardsInHand.add(((MonsterCard) card).getLevel());
-                }
+        for (int i = 0; i < cardsInHand.size(); i++) {
+            Card card = cardsInHand.get(i);
+            if (Card.isCardAMonster(card) && ((MonsterCard) card).getMonsterCardValue().equals(MonsterCardValue.RITUAL)) {
+                levelsOfRitualCardsInHand.add(((MonsterCard) card).getLevel());
             }
         }
+        System.out.println("levels of ritual monsters in hand is " + levelsOfRitualCardsInHand);
         // Algorithmic Reasoning !!!
         boolean isRitualSummoningPossible;
         for (int i = 0; i < levelsOfRitualCardsInHand.size(); i++) {
             isRitualSummoningPossible = doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(normalMonsterCardLevels,
-                levelsOfRitualCardsInHand.get(i), levelsOfRitualCardsInHand.size());
+                levelsOfRitualCardsInHand.get(i), normalMonsterCardLevels.size());
             if (isRitualSummoningPossible) {
                 return true;
             }
@@ -663,11 +666,11 @@ public class Effect {
     }
 
     public static boolean doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(ArrayList<Integer> normalMonsterCardLevels, int levelOfRitualMonsterInHand, int size) {
-        if (size == 0) {
-            return false;
-        }
         if (levelOfRitualMonsterInHand == 0) {
             return true;
+        }
+        if (size == 0) {
+            return false;
         }
         if (normalMonsterCardLevels.get(size - 1) > levelOfRitualMonsterInHand) {
             return doesExistSubsetOfNormalMonsterLevelsWithSumEqualToRitualMonsterLevel(normalMonsterCardLevels, levelOfRitualMonsterInHand, size - 1);
@@ -754,9 +757,9 @@ public class Effect {
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER)) {
                 output.add("please choose if you want to summon your monster in face up attack position of face up defense position.\n" +
-                    "simple enter attack or defense");
+                    "simple enter attacking or defensive");
             }
-            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE)){
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE)) {
                 output.add("now select one ritual monster from your hand\nits level should be equal to the sum of levels of normal monsters you have already chosen");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_NORMAL_MONSTERS_FROM_YOUR_DECK_WITH_SUM_OF_LEVELS_EQUAL_TO_A_RITUAL_MONSTER_LEVEL)) {

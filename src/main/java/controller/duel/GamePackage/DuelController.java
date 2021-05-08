@@ -3,17 +3,8 @@ package controller.duel.GamePackage;
 import java.util.ArrayList;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
-import controller.duel.GamePhaseControllers.ActivateSpellTrapController;
-import controller.duel.GamePhaseControllers.AttackMonsterToMonsterController;
-import controller.duel.GamePhaseControllers.ChangeCardPositionController;
-import controller.duel.GamePhaseControllers.DirectAttackController;
-import controller.duel.GamePhaseControllers.FlipSummonController;
-import controller.duel.GamePhaseControllers.NormalSummonController;
-import controller.duel.GamePhaseControllers.PhaseController;
-import controller.duel.GamePhaseControllers.SelectCardController;
-import controller.duel.GamePhaseControllers.SetCardController;
+import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
-import model.cardData.MonsterCardData.MonsterCard;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
@@ -39,8 +30,10 @@ public class DuelController {
 
     public String getInput(String string) {
         allInputs.add(string);
-        NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
+        NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
         FlipSummonController flipSummonController = GameManager.getFlipSummonControllerByIndex(0);
+        SpecialSummonController specialSummonController = GameManager.getSpecialSummonControllerByIndex(0);
+        TributeSummonController tributeSummonController = GameManager.getTributeSummonControllerByIndex(0);
         SetCardController setCardController = GameManager.getSetCardControllerByIndex(0);
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
         AttackMonsterToMonsterController attackMonsterToMonsterController = GameManager.getAttackMonsterToMonsterControllerByIndex(0);
@@ -134,14 +127,40 @@ public class DuelController {
                 System.out.println("A9");
                 return flipSummonController.isSelectedCardCorrectForChainActivation(string, 0);
             }
+        } else if (string.startsWith("select") && specialSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B10");
+                return output;
+            } else {
+                System.out.println("A10");
+                return specialSummonController.redirectInputForMonsterTributing();
+            }
+        } else if (string.startsWith("select") && specialSummonController.isClassWaitingForCardToBeDiscarded()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B11");
+                return output;
+            } else {
+                System.out.println("A11");
+                return specialSummonController.redirectInputForCardsToBeDiscarded();
+            }
         } else if (string.startsWith("select")) {
             return selectCardController.selectCardInputAnalysis(string);
+        } else if ((string.startsWith("attacking") || string.startsWith("defensive")) && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
+            return activateSpellTrapController.redirectInput(0);
+        } else if ((string.startsWith("attacking") || string.startsWith("defensive")) && specialSummonController.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
+            return specialSummonController.redirectInputForAnalyzingAttackPositionOrDefensePosition(string);
         } else if (string.startsWith("next")) {
             PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
             return phaseController.phaseControllerInputAnalysis(string);
         } else if (string.startsWith("normal")) {
             return normalSummonController.normalSummonInputAnalysis(string, "normal summon");
-        } else if (string.equals("set")) {
+        } else if (string.startsWith("tribute")) {
+            return tributeSummonController.tributeSummonInputAnalysis(string);
+        } else if (string.startsWith("special")) {
+            return specialSummonController.specialSummonInputAnalysis(string);
+        }else if (string.equals("set")) {
             return setCardController.setCardControllerInputAnalysis(string);
         } else if (string.startsWith("set")) {
             ChangeCardPositionController changeCardPositionController = GameManager.getChangeCardPositionController(0);

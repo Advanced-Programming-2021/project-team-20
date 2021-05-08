@@ -103,10 +103,12 @@ public class SettingCardConductor {
         if (!action.isActionCanceled()){
             CardLocation mainCardLocation = uninterruptedAction.getFinalMainCardLocation();
             Card mainCard = duelBoard.getCardByCardLocation(mainCardLocation);
-            MonsterCard monsterCard = (MonsterCard) mainCard;
-            ArrayList<UponSummoningEffect> uponSummoningEffects = monsterCard.getUponSummoningEffects();
-            if (uponSummoningEffects.contains(UponSummoningEffect.SET_ATK_1900_IF_SET)){
-                monsterCard.setAttackPower(1900);
+            if (Card.isCardAMonster(mainCard)){
+                MonsterCard monsterCard = (MonsterCard) mainCard;
+                ArrayList<UponSummoningEffect> uponSummoningEffects = monsterCard.getUponSummoningEffects();
+                if (uponSummoningEffects.contains(UponSummoningEffect.SET_ATK_1900_IF_SET)){
+                    monsterCard.setAttackPower(1900);
+                }
             }
         }
         return "";
