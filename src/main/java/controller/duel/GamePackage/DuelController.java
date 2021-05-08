@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
+import controller.duel.cheat.Cheat;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
@@ -40,6 +41,10 @@ public class DuelController {
         DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+        if(string.startsWith("cheat")){
+            Cheat cheat = new Cheat();
+            return cheat.findCheatCommand(string, 0);
+        }
         //System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()" + normalSummonController.isAreWeLookingForMonstersToBeTributed());
         if (string.startsWith("select") && normalSummonController.isAreWeLookingForMonstersToBeTributed()) {
             //NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);

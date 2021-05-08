@@ -127,6 +127,7 @@ public class MonsterCard extends Card {
         this.equipSpellEffects = monster.getEquipSpellEffects();
         this.fieldSpellEffects = monster.getFieldSpellEffects();
     }
+    
 
     public MonsterCardValue getMonsterCardValue() {
         return monsterCardValue;

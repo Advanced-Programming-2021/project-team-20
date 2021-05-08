@@ -11,7 +11,6 @@ import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 
 public class ActivateMonsterController extends ChainController {
