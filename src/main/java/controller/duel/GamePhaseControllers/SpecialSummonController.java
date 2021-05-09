@@ -116,7 +116,6 @@ public class SpecialSummonController extends SummonSetCommonClass {
     public void createActionForSpecialSummoningMonster(int index) {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         int turn = duelController.getTurn();
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         //mainCard = selectedCardLocations.get(selectedCardLocations.size() - 1);
@@ -156,7 +155,7 @@ public class SpecialSummonController extends SummonSetCommonClass {
             isClassWaitingForCardToBeDiscarded = false;
             cardsToBeDiscarded.add(cardLocation);
             isClassWaitingForUserToChooseAttackPositionOrDefensePosition = true;
-            return "do you want to special summon your card in face up attack position or face up defense position?\nsimply enter either attack or defense";
+            return "do you want to special summon your card in face up attack position or face up defense position?\nsimply enter either attacking or defensive";
         }
     }
 
@@ -176,7 +175,7 @@ public class SpecialSummonController extends SummonSetCommonClass {
             if (numberOfCardsToBeTributed == 0) {
                 areWeLookingForMonstersToBeTributed = false;
                 isClassWaitingForUserToChooseAttackPositionOrDefensePosition = true;
-                return "do you want to special summon your card in face up attack position or face up defense position?\nsimply enter either attack or defense";
+                return "do you want to special summon your card in face up attack position or face up defense position?\nsimply enter either attacking or defensive";
             }
         } else {
             return "this card cannot be chosen for tribute.\nplease try again.";

@@ -6,6 +6,7 @@ import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConduc
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.cheat.Cheat;
+import model.cardData.MonsterCardData.MonsterCard;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
@@ -41,7 +42,7 @@ public class DuelController {
         DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-        if(string.startsWith("cheat")){
+        if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
             return cheat.findCheatCommand(string, 0);
         }
@@ -150,6 +151,15 @@ public class DuelController {
                 System.out.println("A11");
                 return specialSummonController.redirectInputForCardsToBeDiscarded();
             }
+        } else if (string.startsWith("select") && tributeSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B12");
+                return output;
+            } else {
+                System.out.println("A12");
+                return tributeSummonController.redirectInputForMonsterTributing();
+            }
         } else if (string.startsWith("select")) {
             return selectCardController.selectCardInputAnalysis(string);
         } else if ((string.startsWith("attacking") || string.startsWith("defensive")) && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
@@ -165,7 +175,7 @@ public class DuelController {
             return tributeSummonController.tributeSummonInputAnalysis(string);
         } else if (string.startsWith("special")) {
             return specialSummonController.specialSummonInputAnalysis(string);
-        }else if (string.equals("set")) {
+        } else if (string.equals("set")) {
             return setCardController.setCardControllerInputAnalysis(string);
         } else if (string.startsWith("set")) {
             ChangeCardPositionController changeCardPositionController = GameManager.getChangeCardPositionController(0);
@@ -210,10 +220,10 @@ public class DuelController {
             return AttackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
         } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
             return AttackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
+        } else if (string.equals("print")) {
+            System.out.println(MonsterCard.giveATKDEFConsideringEffects("attack", selectCardController.getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size()-1),0));
+            System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController.getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size()-1),0));
         }
-        //else if (string.equals("print")){
-        //    return MonsterCard.printAttackAndDEFOfMonster();
-        //}
         return "invalid command";
     }
 

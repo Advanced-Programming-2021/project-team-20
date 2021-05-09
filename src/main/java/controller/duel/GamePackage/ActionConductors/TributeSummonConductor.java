@@ -14,13 +14,15 @@ import model.cardData.MonsterCardData.MonsterCard;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-public class TributeSummonConductor {
+public class TributeSummonConductor extends SendCardToGraveyardConductor{
     public static String conductTributeSummoningActionUninterruptedAction(int index, int numberInListOfActions) {
         //if (!isActionCanceled){
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        ArrayList<Card> cardsToBeTributed = new ArrayList<>();
+        for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
+            sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
+        }
         int turn = 0;
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER)) {
             turn = 1;
@@ -43,14 +45,7 @@ public class TributeSummonConductor {
             System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
             System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
         }
-        for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
-            cardsToBeTributed.add(duelBoard.getCardByCardLocation(uninterruptedAction.getSpendingCards().get(i)));
-            duelBoard.removeCardByCardLocation(uninterruptedAction.getSpendingCards().get(i));
-            duelBoard.addCardToGraveyard(cardsToBeTributed.get(i), turn);
-        }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
-        //System.out.println(duelBoard.getCardByCardLocation(action.getMainCardLocation()).getCardName());
-
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());
         duelBoard.addCardToMonsterZone(mainCard, turn);
         mainCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
@@ -77,10 +72,9 @@ public class TributeSummonConductor {
                 destroyAllOfOpponentsCards(actionTurn, index);
             }
         }
-
         return "";
     }
-
+/*
     public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);
@@ -111,6 +105,8 @@ public class TributeSummonConductor {
         }
     }
 
+
+ */
     public static void destroyAllOfOpponentsCards(int actionTurn, int index) {
         if (actionTurn == 1) {
             for (int i = 0; i < 5; i++) {
