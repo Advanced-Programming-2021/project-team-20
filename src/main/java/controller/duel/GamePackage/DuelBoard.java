@@ -1,7 +1,6 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
@@ -557,7 +556,7 @@ public class DuelBoard {
 
         builderDuelBoard
                 .append(otherTurnUser.getNickname() + " : " + duelController.getLifePoints().get(-turn + 2) + "\n");
-        builderDuelBoard.append(reverseWords(toShowInDuelBoardFormatCardsInHand(-turn + 3).toString()) + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(-turn + 3).reverse().toString() + "\n");
         builderDuelBoard.append(reverseWords(toShowInDuelBoardFormatCardsInDeck(-turn + 3).toString()) + "\n");
         builderDuelBoard
                 .append("    " + reverseWords(toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3).toString()) + "\n");
@@ -692,28 +691,28 @@ public class DuelBoard {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
-      
+
         if (cardLocation == null) {
             return "no card is selected yet";
         }
         Card selectedCard = getCardByCardLocation(cardLocation);
         if (turn == 1) {
-            if (cardLocation.getRowOfCardLocation().toString().startsWith("OPPONENT") && isCardHidden( selectedCard)) {
+            if (cardLocation.getRowOfCardLocation().toString().startsWith("OPPONENT") && isCardHidden(selectedCard)) {
                 return "card is not visible";
             }
         } else if (turn == 2) {
             if (cardLocation.getRowOfCardLocation().toString().startsWith("ALLY") && isCardHidden(selectedCard)) {
-                    return "card is not visible";
-                }
+                return "card is not visible";
             }
+        }
         return selectedCard.getCardName() + " : " + selectedCard.getCardDescription();
     }
 
-    private boolean isCardHidden( Card card){
+    private boolean isCardHidden(Card card) {
         String cardPositionToString = card.getCardPosition().toString();
         if (cardPositionToString.equals("FACE_DOWN_SPELL_SET_POSITION")
                 || cardPositionToString.equals("FACE_DOWN_MONSTER_SET_POSITION")) {
-           return true;
+            return true;
         }
         return false;
     }

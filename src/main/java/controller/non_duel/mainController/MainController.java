@@ -5,11 +5,13 @@ import controller.non_duel.deckCommands.DeckCommands;
 import controller.non_duel.importAndExport.ImportAndExport;
 import controller.non_duel.loginMenu.LoginMenu;
 import controller.non_duel.profile.Profile;
-import controller.non_duel.profile.scoreboard.Scoreboard;
+import controller.non_duel.scoreboard.Scoreboard;
 import controller.non_duel.shop.Shop;
 import view.View;
 
 public class MainController {
+
+    private static MainController mainController;
 
     private boolean isInLoginMenu = true;
     private boolean isInMainMenu;
@@ -27,6 +29,14 @@ public class MainController {
     private Shop shop = new Shop();
     private ImportAndExport importAndExport = new ImportAndExport();
     private GameManager gameManager = new GameManager();
+
+    public static MainController getInstance() {
+        if (mainController == null) {
+            mainController = new MainController();
+        }
+
+        return mainController;
+    }
 
     public String switchCaseInput(String command) {
 
@@ -50,6 +60,8 @@ public class MainController {
             gameManager.getClass();
         } else if (isInImportAndExport) {
             return importAndExport.findCommand(command);
+        } else if (View.getCurrentMenu().equals("Main Menu") && command.startsWith("duel")) {
+            gameManager.getClass();
         }
 
         return "invalid commend!";

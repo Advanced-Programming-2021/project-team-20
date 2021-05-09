@@ -1,4 +1,4 @@
-package controller.non_duel.profile.scoreboard;
+package controller.non_duel.scoreboard;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -7,8 +7,7 @@ import java.util.regex.Pattern;
 import controller.non_duel.mainController.MainController;
 
 public class View {
-
-    private MainController mainController = new MainController();
+    private MainController mainController;
     private String invalidCommand = "invalid command!";
     private String loginMenu = "Login Menu";
 
@@ -18,44 +17,41 @@ public class View {
     }
 
     public void infiniteLoop() {
-
+        mainController = MainController.getInstance();
         Scanner input = new Scanner(System.in);
         String commands = new String();
 
         while (true) {
 
             commands = input.nextLine().replaceAll("\\s+", " ").trim();
-        //    System.out.println(commands + "  beging of view");
             if (commands.matches("end program")) {
                 break;
             }
-        //    System.out.println("123456789");
             if (currentMenu.equals("Main Menu") && commands.matches("user logout")) {
                 setCurrentMenu(loginMenu);
                 continue;
             }
-        //    System.out.println("   dsadasdasasdsada");
             if (commands.startsWith("menu enter")) {
-        //        System.out.println("menu enter");
                 enterMenu(commands);
                 continue;
             } else if (commands.startsWith("menu exit")) {
                 exitMenu(commands);
                 continue;
             } else if (commands.equals("menu show-current")) {
-        //        System.out.println("menu show current          2");
                 System.out.println(currentMenu);
                 continue;
             }
-        //    System.out.println(commands + " " + currentMenu);
             System.out.println(mainController.switchCaseInput(commands));
         }
-
         input.close();
     }
 
     public static void setCurrentMenu(String currentMenu) {
         View.currentMenu = currentMenu;
+    }
+
+    public static String getCurrentMenu() {
+        return currentMenu;
     }
 
     private void exitMenu(String command) {

@@ -32,9 +32,12 @@ public class GameManager {
     public static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
     public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
 
-    public void addANewGame(ArrayList<Card> firstPlayerDeck, ArrayList<Card> secondPlayerDeck, String firstPlayerUsername, String secondPlayerUsername) {
-        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername));
-        duelBoardList.add(new DuelBoard(firstPlayerDeck, secondPlayerDeck));
+    public void addANewGame(ArrayList<Card> firstPlayerMainDeck, ArrayList<Card> firstPlayerSideDeck,
+            ArrayList<Card> secondPlayerMainDeck, ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername,
+            String secondPlayerUsername, int numberOfRounds) {
+        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, firstPlayerSideDeck,
+                secondPlayerSideDeck, numberOfRounds));
+        duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
         activateMonsterControllers.add(new ActivateMonsterController());
         attackMonsterToMonsterControllers.add(new AttackMonsterToMonsterController());
@@ -56,6 +59,30 @@ public class GameManager {
         uninterruptedActions.add(new ArrayList<>());
     }
 
+    public static void removeClassesOfGameIsOver(int index) {
+        duelControllerList.remove(index);
+        duelBoardList.remove(index);
+        activateSpellTrapControllers.remove(index);
+        activateMonsterControllers.remove(index);
+        attackMonsterToMonsterControllers.remove(index);
+        battlePhaseControllers.remove(index);
+        chainControllers.remove(index);
+        changeCardPositionControllers.remove(index);
+        directAttackControllers.remove(index);
+        continuousMonsterEffectControllers.remove(index);
+        mainPhaseControllers.remove(index);
+        normalSummonControllers.remove(index);
+        flipSummonControllers.remove(index);
+        specialSummonControllers.remove(index);
+        tributeSummonControllers.remove(index);
+        selectCardControllers.remove(index);
+        setCardControllers.remove(index);
+        summonSetCommonClasses.remove(index);
+        phaseControllers.remove(index);
+        actions.remove(index);
+        uninterruptedActions.remove(index);
+    }
+
     public static DuelController getDuelControllerByIndex(int index) {
         return duelControllerList.get(index);
     }
@@ -67,9 +94,11 @@ public class GameManager {
     public static ActivateSpellTrapController getActivateSpellTrapControllerByIndex(int index) {
         return activateSpellTrapControllers.get(index);
     }
-    public static ActivateMonsterController getActivateMonsterControllerByIndex(int index){
+
+    public static ActivateMonsterController getActivateMonsterControllerByIndex(int index) {
         return activateMonsterControllers.get(index);
     }
+
     public static AttackMonsterToMonsterController getAttackMonsterToMonsterControllerByIndex(int index) {
         return attackMonsterToMonsterControllers.get(index);
     }
@@ -126,9 +155,10 @@ public class GameManager {
         return actions.get(index);
     }
 
-    public static ArrayList<Action> getUninterruptedActionsByIndex(int index){
+    public static ArrayList<Action> getUninterruptedActionsByIndex(int index) {
         return uninterruptedActions.get(index);
     }
+
     public static SummonSetCommonClass getSummonSetCommonClassByIndex(int index) {
         return summonSetCommonClasses.get(index);
     }
@@ -136,6 +166,5 @@ public class GameManager {
     public static PhaseController getPhaseControllerByIndex(int index) {
         return phaseControllers.get(index);
     }
-
 
 }

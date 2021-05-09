@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
+import controller.duel.GamePackage.DuelController;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
 import controller.non_duel.storage.Storage;
+import model.User;
 import model.cardData.General.Card;
 import model.cardData.General.CardType;
 import model.cardData.MonsterCardData.MonsterCard;
@@ -20,13 +22,13 @@ public class Cheat {
         Matcher matcher;
         matcher = Utility.getCommandMatcher(input, "cheat increase (-L|--LP) (?<amount>\\d+)");
         if (matcher.find()) {
-            return increaseLifePoints(Integer.parseInt(matcher.group("amount")), 0);
+            return increaseLifePoints(Integer.parseInt(matcher.group("amount")), index);
 
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\S+)");
         if (matcher.find()) {
-            return setWinner(matcher.group(1));
+            return setWinner(matcher.group(1), index);
 
         }
 
@@ -148,9 +150,20 @@ public class Cheat {
         return "money increased " + amount + " successfully!";
     }
 
-    private String setWinner(String nickname) {
-        return "null";
-        // do
+    private String setWinner(String nickname, int index) {
+
+        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        User allyUser = Storage.getUserByName(duelController.getPlayingUsers().get(0));
+        User opponentUser = Storage.getUserByName(duelController.getPlayingUsers().get(1));
+        if (allyUser.getNickname().equals(nickname)) {
+            return duelController.endGame(1, index);
+        }
+        if (opponentUser.getNickname().equals(nickname)) {
+            return duelController.endGame(2, index);
+        }
+
+        return "player with this nickname is not playing!";
+
     }
 
     private String increaseLifePoints(int amount, int index) {

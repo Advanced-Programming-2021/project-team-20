@@ -1,33 +1,52 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.text.View;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.cheat.Cheat;
+import view.*;
+import controller.non_duel.storage.Storage;
+import model.User;
+import model.cardData.General.Card;
 import model.cardData.MonsterCardData.MonsterCard;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
     private int turn;
     private int fakeTurn;
-    private ArrayList<String> playingUsers;
-    private ArrayList<Integer> lifePoints;
-    private ArrayList<Boolean> usersSummoningOrSettingMonsterOneTime;
-    private ArrayList<String> allInputs;
+    private int numberOfRounds;
+    private int currentRound;
+    private boolean isRoundOver;
+    private boolean isGameOver;
+    private ArrayList<Card> allySideDeckCards = new ArrayList<>();
+    private ArrayList<Card> opponentSideDeckCards = new ArrayList<>();
+    private ArrayList<String> playingUsers = new ArrayList<>();
+    private ArrayList<Integer> lifePoints = new ArrayList<>();
+    private ArrayList<Boolean> usersSummoningOrSettingMonsterOneTime = new ArrayList<>();
+    private ArrayList<String> allInputs = new ArrayList<>();
+    private ArrayList<Integer> maxLifePointOfPlayers = new ArrayList<>();
 
-    public DuelController(String firstUser, String secondUser) {
-        playingUsers = new ArrayList<>();
+    public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
+            ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
+        this.numberOfRounds = numberOfRounds;
+        this.allySideDeckCards = allySideDeckCards;
+        this.opponentSideDeckCards = opponentSideDeckCards;
         playingUsers.add(firstUser);
         playingUsers.add(secondUser);
-        lifePoints = new ArrayList<>();
         lifePoints.add(8000);
         lifePoints.add(8000);
-        usersSummoningOrSettingMonsterOneTime = new ArrayList<>();
+        maxLifePointOfPlayers.add(8000);
+        maxLifePointOfPlayers.add(8000);
         usersSummoningOrSettingMonsterOneTime.add(true);
         usersSummoningOrSettingMonsterOneTime.add(true);
-        allInputs = new ArrayList<>();
+        isGameOver = false;
+        isRoundOver = false;
+        currentRound = 1;
     }
 
     public String getInput(String string) {
@@ -38,17 +57,26 @@ public class DuelController {
         TributeSummonController tributeSummonController = GameManager.getTributeSummonControllerByIndex(0);
         SetCardController setCardController = GameManager.getSetCardControllerByIndex(0);
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
-        AttackMonsterToMonsterController attackMonsterToMonsterController = GameManager.getAttackMonsterToMonsterControllerByIndex(0);
+        AttackMonsterToMonsterController attackMonsterToMonsterController = GameManager
+                .getAttackMonsterToMonsterControllerByIndex(0);
         DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+
         if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
             return cheat.findCheatCommand(string, 0);
+        } else if (string.equals("surrender")) {
+            endGame(turn, 0);
+        } else if (isRoundOver) {
+            ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
+
         }
-        //System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()" + normalSummonController.isAreWeLookingForMonstersToBeTributed());
+        // System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()"
+        // + normalSummonController.isAreWeLookingForMonstersToBeTributed());
         if (string.startsWith("select") && normalSummonController.isAreWeLookingForMonstersToBeTributed()) {
-            //NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
+            // NormalSummonController normalSummonController =
+            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B1");
@@ -58,7 +86,8 @@ public class DuelController {
                 return normalSummonController.redirectInputForMonsterTributing();
             }
         } else if (string.startsWith("select") && setCardController.isAreWeLookingForMonstersToBeTributed()) {
-            //NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
+            // NormalSummonController normalSummonController =
+            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B2");
@@ -67,8 +96,10 @@ public class DuelController {
                 System.out.println("A2");
                 return setCardController.redirectInput();
             }
-        } else if (string.startsWith("select") && attackMonsterToMonsterController.isClassWaitingForChainCardToBeSelected()) {
-            //NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
+        } else if (string.startsWith("select")
+                && attackMonsterToMonsterController.isClassWaitingForChainCardToBeSelected()) {
+            // NormalSummonController normalSummonController =
+            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B3");
@@ -78,7 +109,8 @@ public class DuelController {
                 return attackMonsterToMonsterController.isSelectedCardCorrectForChainActivation(string, 0);
             }
         } else if (string.startsWith("select") && directAttackController.isClassWaitingForChainCardToBeSelected()) {
-            //NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
+            // NormalSummonController normalSummonController =
+            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B4");
@@ -87,8 +119,10 @@ public class DuelController {
                 System.out.println("A4");
                 return directAttackController.isSelectedCardCorrectForChainActivation(string, 0);
             }
-        } else if (string.startsWith("select") && AttackMonsterToMonsterConductor.isClassWaitingForFurtherChainInput()) {
-            //NormalSummonController normalSummonController = GameManager.getNormalSummonController(0);
+        } else if (string.startsWith("select")
+                && AttackMonsterToMonsterConductor.isClassWaitingForFurtherChainInput()) {
+            // NormalSummonController normalSummonController =
+            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B5");
@@ -106,7 +140,8 @@ public class DuelController {
                 System.out.println("A6");
                 return normalSummonController.isSelectedCardCorrectForChainActivation(string, 0);
             }
-        } else if (string.startsWith("select") && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
+        } else if (string.startsWith("select")
+                && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B7");
@@ -115,7 +150,8 @@ public class DuelController {
                 System.out.println("A7");
                 return activateSpellTrapController.redirectInput(0);
             }
-        } else if (string.startsWith("select") && activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
+        } else if (string.startsWith("select")
+                && activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B8");
@@ -162,9 +198,11 @@ public class DuelController {
             }
         } else if (string.startsWith("select")) {
             return selectCardController.selectCardInputAnalysis(string);
-        } else if ((string.startsWith("attacking") || string.startsWith("defensive")) && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
+        } else if ((string.startsWith("attacking") || string.startsWith("defensive"))
+                && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
             return activateSpellTrapController.redirectInput(0);
-        } else if ((string.startsWith("attacking") || string.startsWith("defensive")) && specialSummonController.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
+        } else if ((string.startsWith("attacking") || string.startsWith("defensive"))
+                && specialSummonController.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
             return specialSummonController.redirectInputForAnalyzingAttackPositionOrDefensePosition(string);
         } else if (string.startsWith("next")) {
             PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
@@ -221,8 +259,10 @@ public class DuelController {
         } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
             return AttackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
         } else if (string.equals("print")) {
-            System.out.println(MonsterCard.giveATKDEFConsideringEffects("attack", selectCardController.getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size()-1),0));
-            System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController.getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size()-1),0));
+            System.out.println(MonsterCard.giveATKDEFConsideringEffects("attack", selectCardController
+                    .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
+            System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController
+                    .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
         }
         return "invalid command";
     }
@@ -233,6 +273,47 @@ public class DuelController {
         turn = 1;
         fakeTurn = 1;
         return "Its first players turn";
+    }
+
+    public String endGame(int turn, int index) {
+
+        User winnerUser = Storage.getUserByName(playingUsers.get(turn - 1));
+        User loserUser = Storage.getUserByName(playingUsers.get(-turn + 2));
+        winnerUser.setMoney(numberOfRounds * (1000 + maxLifePointOfPlayers.get(turn - 1)));
+        winnerUser.setScore(numberOfRounds * (1000));
+        loserUser.setMoney(numberOfRounds * (100));
+        view.View.setCurrentMenu("Main Menu");
+        GameManager.removeClassesOfGameIsOver(index);
+
+        return winnerUser.getName() + " won the whole match with score: " + winnerUser.getScore();
+    }
+
+    public ArrayList<Integer> getMaxLifePointOfPlayers() {
+        return maxLifePointOfPlayers;
+    }
+
+    public int getNumberOfRounds() {
+        return numberOfRounds;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
+    public boolean isRoundOver() {
+        return isRoundOver;
+    }
+
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public ArrayList<Card> getAllySideDeckCards() {
+        return allySideDeckCards;
+    }
+
+    public ArrayList<Card> getOpponentSideDeckCards() {
+        return opponentSideDeckCards;
     }
 
     public int getTurn() {
@@ -285,5 +366,33 @@ public class DuelController {
 
     public void setUsersSummoningOneTime(int fakeTurn, boolean bool) {
         usersSummoningOrSettingMonsterOneTime.set(fakeTurn, bool);
+    }
+
+    public void setNumberOfRounds(int numberOfRounds) {
+        this.numberOfRounds = numberOfRounds;
+    }
+
+    public void setAllySideDeckCards(ArrayList<Card> allySideDeckCards) {
+        this.allySideDeckCards = allySideDeckCards;
+    }
+
+    public void setOpponentSideDeckCards(ArrayList<Card> opponentSideDeckCards) {
+        this.opponentSideDeckCards = opponentSideDeckCards;
+    }
+
+    public void setGameOver(boolean isGameOver) {
+        this.isGameOver = isGameOver;
+    }
+
+    public void setRoundOver(boolean isRoundOver) {
+        this.isRoundOver = isRoundOver;
+    }
+
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public void setMaxLifePointOfPlayers(ArrayList<Integer> maxLifePointOfPlayers) {
+        this.maxLifePointOfPlayers = maxLifePointOfPlayers;
     }
 }
