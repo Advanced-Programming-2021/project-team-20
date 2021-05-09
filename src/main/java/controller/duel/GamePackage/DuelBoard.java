@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
 import controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
+import controller.duel.GamePhaseControllers.SelectCardController;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.non_duel.storage.Storage;
 import model.User;
@@ -553,6 +554,7 @@ public class DuelBoard {
         User myTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(turn - 1));
         User otherTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(-turn + 2));
         StringBuilder builderDuelBoard = new StringBuilder();
+
         builderDuelBoard
                 .append(otherTurnUser.getNickname() + " : " + duelController.getLifePoints().get(-turn + 2) + "\n");
         builderDuelBoard.append(reverseWords(toShowInDuelBoardFormatCardsInHand(-turn + 3).toString()) + "\n");
@@ -573,8 +575,8 @@ public class DuelBoard {
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInDeck(turn).toString() + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(turn).toString() + "\n");
         builderDuelBoard.append(myTurnUser.getNickname() + " : " + duelController.getLifePoints().get(turn - 1));
-        return builderDuelBoard.toString();
 
+        return builderDuelBoard.toString();
     }
 
     private String reverseWords(String input) {
@@ -683,6 +685,37 @@ public class DuelBoard {
             }
         }
         return showCardsInHandBuilder;
+    }
+
+    public String showSelectedCard(int index, int turn) {
+
+        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
+        ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
+        CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
+      
+        if (cardLocation == null) {
+            return "no card is selected yet";
+        }
+        Card selectedCard = getCardByCardLocation(cardLocation);
+        if (turn == 1) {
+            if (cardLocation.getRowOfCardLocation().toString().startsWith("OPPONENT") && isCardHidden( selectedCard)) {
+                return "card is not visible";
+            }
+        } else if (turn == 2) {
+            if (cardLocation.getRowOfCardLocation().toString().startsWith("ALLY") && isCardHidden(selectedCard)) {
+                    return "card is not visible";
+                }
+            }
+        return selectedCard.getCardName() + " : " + selectedCard.getCardDescription();
+    }
+
+    private boolean isCardHidden( Card card){
+        String cardPositionToString = card.getCardPosition().toString();
+        if (cardPositionToString.equals("FACE_DOWN_SPELL_SET_POSITION")
+                || cardPositionToString.equals("FACE_DOWN_MONSTER_SET_POSITION")) {
+           return true;
+        }
+        return false;
     }
 
     public String showDuelBoard(int index) {
