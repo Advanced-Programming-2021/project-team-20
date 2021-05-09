@@ -2,14 +2,16 @@ package controller.duel.cheat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
 import controller.non_duel.storage.Storage;
 import model.cardData.General.Card;
+import model.cardData.General.CardType;
 import model.cardData.MonsterCardData.MonsterCard;
+import model.cardData.SpellCardData.SpellCard;
+import model.cardData.TrapCardData.TrapCard;
 
 public class Cheat {
 
@@ -121,13 +123,20 @@ public class Cheat {
 
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         if (allMonsterCards.containsKey(cardname)) {
-            GameManager.getDuelBoardByIndex(index).addCardToHand(allMonsterCards.get(cardname), turn);
+            MonsterCard monster = (MonsterCard) allMonsterCards.get(cardname);
+            GameManager.getDuelBoardByIndex(index).addCardToHand((MonsterCard) monster.clone(), turn);
             return cardname + " added to hand successfully!";
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         if (allSpellAndTrapCards.containsKey(cardname)) {
-            GameManager.getDuelBoardByIndex(index).addCardToHand(allSpellAndTrapCards.get(cardname), turn);
+            if (allSpellAndTrapCards.get(cardname).getCardType().equals(CardType.SPELL)) {
+                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardname);
+                GameManager.getDuelBoardByIndex(index).addCardToHand((SpellCard) spellCard.clone(), turn);
+            } else {
+                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardname);
+                GameManager.getDuelBoardByIndex(index).addCardToHand((TrapCard) trapCard.clone(), turn);
+            }
             return cardname + " added to hand successfully!";
         }
         return cardname + " does not found!";

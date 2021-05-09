@@ -494,7 +494,7 @@ public class MonsterCard extends Card {
     }
 
     @Override
-    protected Object clone() {
+    public Object clone() {
         return new MonsterCard(this);
     }
 
