@@ -1,15 +1,11 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.swing.text.View;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.cheat.Cheat;
-import view.*;
 import controller.non_duel.storage.Storage;
 import model.User;
 import model.cardData.General.Card;
@@ -274,6 +270,8 @@ public class DuelController {
         fakeTurn = 1;
         //set isRoundOver
         //set mainDeckCards
+        //set turn
+        //set lifepoint
         return "Its first players turn";
     }
 
