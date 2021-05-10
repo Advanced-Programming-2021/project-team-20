@@ -272,6 +272,8 @@ public class DuelController {
         phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
         turn = 1;
         fakeTurn = 1;
+        //set isRoundOver
+        //set mainDeckCards
         return "Its first players turn";
     }
 
@@ -285,7 +287,8 @@ public class DuelController {
         view.View.setCurrentMenu("Main Menu");
         GameManager.removeClassesOfGameIsOver(index);
 
-        return winnerUser.getName() + " won the whole match with score: " + winnerUser.getScore();
+        return winnerUser.getName() + " won the whole match with score: "
+                + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + winnerUser.getScore());
     }
 
     public ArrayList<Integer> getMaxLifePointOfPlayers() {

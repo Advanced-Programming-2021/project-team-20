@@ -23,25 +23,21 @@ public class Cheat {
         matcher = Utility.getCommandMatcher(input, "cheat increase (-L|--LP) (?<amount>\\d+)");
         if (matcher.find()) {
             return increaseLifePoints(Integer.parseInt(matcher.group("amount")), index);
-
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\S+)");
         if (matcher.find()) {
             return setWinner(matcher.group(1), index);
-
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat increase (-m|--money) (?<amount>\\d+)");
         if (matcher.find()) {
             return increaseMoney(Integer.parseInt(matcher.group("amount")), index);
-
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat select (-h|--hand) (?<cardname>\\S+) (-f|--force)");
         if (matcher.find()) {
             return addAdditionCardToHand(matcher.group("cardname"), index);
-
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat select (-f|--force) (-h|--hand) (?<cardname>\\S+)");

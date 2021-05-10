@@ -16,19 +16,19 @@ import model.cardData.SpellCardData.SpellCardValue;
 import model.cardData.TrapCardData.TrapCard;
 
 public class DuelBoard {
-    ArrayList<Card> allyCardsInHand;
-    ArrayList<Card> allySpellCards;
-    ArrayList<Card> allySpellFieldCard;
-    ArrayList<Card> allyMonsterCards;
-    ArrayList<Card> allyCardsInDeck;
-    ArrayList<Card> allyCardsInGraveyard;
-    ArrayList<Card> opponentCardsInHand;
-    ArrayList<Card> opponentSpellCards;
-    ArrayList<Card> opponentSpellFieldCard;
-    ArrayList<Card> opponentMonsterCards;
-    ArrayList<Card> opponentCardsInDeck;
-    ArrayList<Card> opponentCardsInGraveyard;
-    ArrayList<CardLocation> changedCardPositions;
+    private ArrayList<Card> allyCardsInHand;
+    private ArrayList<Card> allySpellCards;
+    private ArrayList<Card> allySpellFieldCard;
+    private ArrayList<Card> allyMonsterCards;
+    private ArrayList<Card> allyCardsInDeck;
+    private ArrayList<Card> allyCardsInGraveyard;
+    private ArrayList<Card> opponentCardsInHand;
+    private ArrayList<Card> opponentSpellCards;
+    private ArrayList<Card> opponentSpellFieldCard;
+    private ArrayList<Card> opponentMonsterCards;
+    private ArrayList<Card> opponentCardsInDeck;
+    private ArrayList<Card> opponentCardsInGraveyard;
+    private ArrayList<CardLocation> changedCardPositions;
 
     public DuelBoard(ArrayList<Card> firstPlayerDeck, ArrayList<Card> secondPlayerDeck) {
         allyCardsInHand = new ArrayList<>();
@@ -93,6 +93,14 @@ public class DuelBoard {
 
     public ArrayList<Card> getOpponentCardsInGraveyard() {
         return opponentCardsInGraveyard;
+    }
+
+    public void setAllyCardsInDeck(ArrayList<Card> allyCardsInDeck) {
+        this.allyCardsInDeck = allyCardsInDeck;
+    }
+
+    public void setOpponentCardsInDeck(ArrayList<Card> opponentCardsInDeck) {
+        this.opponentCardsInDeck = opponentCardsInDeck;
     }
 
     public Card getCardByCardLocation(CardLocation cardLocation) {
