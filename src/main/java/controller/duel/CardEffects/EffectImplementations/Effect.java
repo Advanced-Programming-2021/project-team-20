@@ -72,31 +72,15 @@ public class Effect {
         }
         MonsterCard monsterCard = (MonsterCard) card;
         ArrayList<SummoningRequirement> cardSummoningRequirements = monsterCard.getSummoningRequirements();
-        if (string.equals("normal summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_NORMAL_SUMMONED)){
+        if (string.equals("normal summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_NORMAL_SUMMONED)) {
             return MessagesFromEffectToControllers.CANT_BE_NORMAL_SUMMONED;
-        } else if (string.equals("tribute summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED)){
+        } else if (string.equals("tribute summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED)) {
             return MessagesFromEffectToControllers.CANT_BE_TRIBUTE_SUMMONED;
-        } else if (string.equals("special summon") &&!cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED)){
+        } else if (string.equals("special summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED)) {
             return MessagesFromEffectToControllers.CANT_BE_SPECIAL_SUMMONED;
-        } else if (string.equals("ritual summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_RITUAL_SUMMONED)){
+        } else if (string.equals("ritual summon") && !cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_RITUAL_SUMMONED)) {
             return MessagesFromEffectToControllers.CANT_BE_RITUAL_SUMMONED;
-        }
-        /*
-        if (!cardSummoningRequirements.contains(SummoningRequirement.CAN_BE_NORMAL_SUMMONED)) {
-            if (string.equals("normal summon")) {
-                return MessagesFromEffectToControllers.CANT_BE_NORMAL_SUMMONED;
-            } else if (string.equals("set")) {
-                return MessagesFromEffectToControllers.CANT_BE_SET;
-            } else if (string.equals("tribute summon")) {
-                return MessagesFromEffectToControllers.CANT_BE_TRIBUTE_SUMMONED;
-            } else if (string.equals("ritual summoned")) {
-                if (!monsterCard.getMonsterCardValue().equals(MonsterCardValue.RITUAL)) {
-                    return MessagesFromEffectToControllers.CANT_BE_RITUAL_SUMMONED;
-                }
-                return MessagesFromEffectToControllers.RITUAL_SUMMON_THIS_MONSTER_BY_USING_ADVANCED_RITUAL_ART;
-            }
-        }*/
-        else {
+        } else {
             if (!cardSummoningRequirements.contains(SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED)
                 && string.equals("normal summon") || !cardSummoningRequirements.contains(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED)
                 && string.equals("set") || string.equals("tribute summon")) {
