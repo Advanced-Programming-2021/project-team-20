@@ -2,7 +2,7 @@ package controller.duel.GamePackage;
 
 import controller.duel.PreliminaryPackage.GameManager;
 
-public class SetTurnController {
+public class SetTurnForGame {
 
     private boolean isPrimarilyMessageSent = false;
     private boolean isFirstPlayerCanSelect = true;

@@ -29,7 +29,7 @@ public class DuelController {
     private ArrayList<String> allInputs = new ArrayList<>();
     private ArrayList<Integer> maxLifePointOfPlayers = new ArrayList<>();
     private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds;
-    private SetTurnController setTurnController;
+    private SetTurnForGame setTurnForGame;
 
     public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
             ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
@@ -65,7 +65,7 @@ public class DuelController {
         if (isRoundOver) {
           return  changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
         } else if (isRoundBegin) {
-            return setTurnController.setTurnBetweenTwoPlayer(string, 0);
+            return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
 
         if (string.startsWith("cheat")) {
@@ -276,7 +276,7 @@ public class DuelController {
         isRoundBegin = true;
         GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
         changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
-        setTurnController = new SetTurnController();
+        setTurnForGame = new SetTurnForGame();
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
         return "Its first players turn";

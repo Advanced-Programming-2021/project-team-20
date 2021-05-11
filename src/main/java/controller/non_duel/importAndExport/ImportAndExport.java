@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.gson.JsonElement;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -41,17 +40,19 @@ public class ImportAndExport {
 
         matcher = exportPattern.matcher(command);
         if (matcher.find()) {
-            exportCard(matcher.group(1));
+           return exportCard(matcher.group(1));
         }
 
         return "invalid command!";
     }
 
     private String exportCard(String cardname) {
-        File file = new File("Resourses\\ImportAndExpot\\" + cardname);
+
+        File file = new File("Resourses\\ExportedCards\\" + cardname + ".json");
+        
         if (file.exists()) {
             try {
-                FileReader fileReader = new FileReader("Resourses\\ImportAndExpot\\" + cardname);
+                FileReader fileReader = new FileReader("Resourses\\ExportedCards\\" + cardname + ".json");
                 Scanner myReader = new Scanner(fileReader);
                 getValuesOfCardFromFile(myReader.nextLine());
                 myReader.close();
@@ -82,6 +83,14 @@ public class ImportAndExport {
             } else {
                 addMonsterToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
             }
+
+            try {
+                FileWriter fileWriter = new FileWriter("Resourses\\ExportedCards\\" + cardName+ ".json");
+                fileWriter.write(cardDesciption);
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -95,7 +104,7 @@ public class ImportAndExport {
         int defensePower = detailsOfCards.get("Defence Power").getAsInt();
         new MonsterCard(attackPower, defensePower, level, MonsterCardAttribute.valueOf(attribute),
                 MonsterCardFamily.valueOf(formatterStringToEnum(monsterType)),
-                MonsterCardValue.valueOf(cardType.toUpperCase()), cardName, cardDescription, null, 3, cardPrice , null);
+                MonsterCardValue.valueOf(cardType.toUpperCase()), cardName, cardDescription, null, 3, cardPrice, null);
     }
 
     private String formatterStringToEnum(String string) {
@@ -128,7 +137,7 @@ public class ImportAndExport {
         if (allMonsterCards.containsKey(cardname)) {
             FileWriter fileWriter;
             try {
-                fileWriter = new FileWriter("Resourses\\ImportAndExpot\\" + cardname);
+                fileWriter = new FileWriter("Resourses\\ImportedCards\\" + cardname + ".json");
                 fileWriter.write(toJsonFormatMonsterCard(allMonsterCards.get(cardname)));
                 fileWriter.close();
             } catch (IOException e) {
@@ -141,7 +150,7 @@ public class ImportAndExport {
         if (allSpellAndTrapCards.containsKey(cardname)) {
             FileWriter fileWriter;
             try {
-                fileWriter = new FileWriter("Resourses\\ImportAndExpot\\");
+                fileWriter = new FileWriter("Resourses\\ImportedCards\\" + cardname + ".json");
                 fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(cardname)));
                 fileWriter.close();
             } catch (IOException e) {

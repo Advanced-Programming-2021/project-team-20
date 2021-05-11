@@ -69,7 +69,7 @@ public class LoginMenu {
         return false;
     }
 
-    private String loginUser() {
+    private String loginUser() { 
         return "user logged in successfully!";
     }
 
