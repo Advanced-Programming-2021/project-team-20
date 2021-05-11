@@ -34,12 +34,8 @@ public class Storage {
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private String addressOfStorage = "Resourses\\";
 
-    public void startProgram() {
-        try {
-            addUsersToArrayList();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void startProgram() throws IOException {
+        addUsersToArrayList();
         addMonsterCards();
         addTrapCards();
         addSpellCards();
@@ -264,7 +260,6 @@ public class Storage {
                 user.setScore(details.get("score").getAsInt());
                 user.setMoney(details.get("money").getAsInt());
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
-                allUsers.add(user);
             }
         }
     }
