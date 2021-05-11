@@ -2,14 +2,18 @@ package controller.duel.cheat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 
+import controller.duel.GamePackage.DuelController;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
 import controller.non_duel.storage.Storage;
+import model.User;
 import model.cardData.General.Card;
+import model.cardData.General.CardType;
 import model.cardData.MonsterCardData.MonsterCard;
+import model.cardData.SpellCardData.SpellCard;
+import model.cardData.TrapCardData.TrapCard;
 
 public class Cheat {
 
@@ -18,26 +22,22 @@ public class Cheat {
         Matcher matcher;
         matcher = Utility.getCommandMatcher(input, "cheat increase (-L|--LP) (?<amount>\\d+)");
         if (matcher.find()) {
-            return increaseLifePoints(Integer.parseInt(matcher.group("amount")), 0);
-
+            return increaseLifePoints(Integer.parseInt(matcher.group("amount")), index);
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\S+)");
         if (matcher.find()) {
-            return setWinner(matcher.group(1));
-
+            return setWinner(matcher.group(1), index);
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat increase (-m|--money) (?<amount>\\d+)");
         if (matcher.find()) {
             return increaseMoney(Integer.parseInt(matcher.group("amount")), index);
-
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat select (-h|--hand) (?<cardname>\\S+) (-f|--force)");
         if (matcher.find()) {
             return addAdditionCardToHand(matcher.group("cardname"), index);
-
         }
 
         matcher = Utility.getCommandMatcher(input, "cheat select (-f|--force) (-h|--hand) (?<cardname>\\S+)");
@@ -121,13 +121,20 @@ public class Cheat {
 
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         if (allMonsterCards.containsKey(cardname)) {
-            GameManager.getDuelBoardByIndex(index).addCardToHand(allMonsterCards.get(cardname), turn);
+            MonsterCard monster = (MonsterCard) allMonsterCards.get(cardname);
+            GameManager.getDuelBoardByIndex(index).addCardToHand((MonsterCard) monster.clone(), turn);
             return cardname + " added to hand successfully!";
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         if (allSpellAndTrapCards.containsKey(cardname)) {
-            GameManager.getDuelBoardByIndex(index).addCardToHand(allSpellAndTrapCards.get(cardname), turn);
+            if (allSpellAndTrapCards.get(cardname).getCardType().equals(CardType.SPELL)) {
+                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardname);
+                GameManager.getDuelBoardByIndex(index).addCardToHand((SpellCard) spellCard.clone(), turn);
+            } else {
+                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardname);
+                GameManager.getDuelBoardByIndex(index).addCardToHand((TrapCard) trapCard.clone(), turn);
+            }
             return cardname + " added to hand successfully!";
         }
         return cardname + " does not found!";
@@ -139,9 +146,20 @@ public class Cheat {
         return "money increased " + amount + " successfully!";
     }
 
-    private String setWinner(String nickname) {
-        return "null";
-        // do
+    private String setWinner(String nickname, int index) {
+
+        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        User allyUser = Storage.getUserByName(duelController.getPlayingUsers().get(0));
+        User opponentUser = Storage.getUserByName(duelController.getPlayingUsers().get(1));
+        if (allyUser.getNickname().equals(nickname)) {
+            return duelController.endGame(1, index);
+        }
+        if (opponentUser.getNickname().equals(nickname)) {
+            return duelController.endGame(2, index);
+        }
+
+        return "player with this nickname is not playing!";
+
     }
 
     private String increaseLifePoints(int amount, int index) {

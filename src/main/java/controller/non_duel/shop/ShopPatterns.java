@@ -16,4 +16,13 @@ public class ShopPatterns {
         Matcher matcher = pattern.matcher(command);
         return matcher.find();
     }
+
+    public static String getCardName(String command) {
+        Pattern pattern = Pattern.compile("shop buy (\\S+)");
+        Matcher matcher = pattern.matcher(command);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
 }

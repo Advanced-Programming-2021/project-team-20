@@ -210,7 +210,7 @@ public class SpellCard extends Card {
     }
 
     @Override
-    protected Object clone() {
+    public Object clone() {
         return new SpellCard(this);
     }
 }

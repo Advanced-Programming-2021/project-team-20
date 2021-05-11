@@ -227,7 +227,7 @@ public class TrapCard extends Card {
     }
 
     @Override
-    protected Object clone() {
+    public Object clone() {
         return new TrapCard(this);
     }
 }
