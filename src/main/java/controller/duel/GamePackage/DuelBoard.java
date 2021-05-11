@@ -1,6 +1,7 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
@@ -552,6 +553,11 @@ public class DuelBoard {
         for (int i = 0; i < secondPlayerDeck.size() - 5; i++) {
             opponentCardsInDeck.add(secondPlayerDeck.get(i + 5));
         }
+    }
+
+    public void shuffleMainDecks() {
+        Collections.shuffle(allyCardsInDeck);
+        Collections.shuffle(opponentCardsInDeck);
     }
 
     public String showMainDuelBord(int index) {

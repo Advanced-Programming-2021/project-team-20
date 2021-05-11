@@ -12,9 +12,10 @@ import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
 
 public class ChangeCardsBetweenTwoRounds {
-    
+
     private ArrayList<Card> mainDeckCards;
     private ArrayList<Card> sideDeckCards;
+    private boolean isFirstPlayerChangedHisDeck = true;
 
     public String changeCardsBetweenTwoRounds(int turn, String input, int index) {
 
@@ -24,6 +25,11 @@ public class ChangeCardsBetweenTwoRounds {
         } else if (turn == 2) {
             mainDeckCards = GameManager.getDuelBoardByIndex(index).getOpponentCardsInDeck();
             sideDeckCards = GameManager.getDuelControllerByIndex(index).getOpponentSideDeckCards();
+        }
+
+        if (isFirstPlayerChangedHisDeck) {
+            isFirstPlayerChangedHisDeck = false;
+            return "now player 1 can change his main deck";
         }
 
         if (input.equals("end")) {

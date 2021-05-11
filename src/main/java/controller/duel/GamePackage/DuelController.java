@@ -1,6 +1,7 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePhaseControllers.*;
@@ -18,6 +19,7 @@ public class DuelController {
     private int numberOfRounds;
     private int currentRound;
     private boolean isRoundOver;
+    private boolean isRoundBegin;
     private boolean isGameOver;
     private ArrayList<Card> allySideDeckCards = new ArrayList<>();
     private ArrayList<Card> opponentSideDeckCards = new ArrayList<>();
@@ -26,6 +28,8 @@ public class DuelController {
     private ArrayList<Boolean> usersSummoningOrSettingMonsterOneTime = new ArrayList<>();
     private ArrayList<String> allInputs = new ArrayList<>();
     private ArrayList<Integer> maxLifePointOfPlayers = new ArrayList<>();
+    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds;
+    private SetTurnController setTurnController;
 
     public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
             ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
@@ -41,7 +45,6 @@ public class DuelController {
         usersSummoningOrSettingMonsterOneTime.add(true);
         usersSummoningOrSettingMonsterOneTime.add(true);
         isGameOver = false;
-        isRoundOver = false;
         currentRound = 1;
     }
 
@@ -59,14 +62,17 @@ public class DuelController {
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
 
+        if (isRoundOver) {
+          return  changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
+        } else if (isRoundBegin) {
+            return setTurnController.setTurnBetweenTwoPlayer(string, 0);
+        }
+
         if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
             return cheat.findCheatCommand(string, 0);
         } else if (string.equals("surrender")) {
             endGame(turn, 0);
-        } else if (isRoundOver) {
-            ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
-
         }
         // System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()"
         // + normalSummonController.isAreWeLookingForMonstersToBeTributed());
@@ -266,12 +272,13 @@ public class DuelController {
     public String startDuel(int index) {
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
         phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
-        turn = 1;
-        fakeTurn = 1;
-        //set isRoundOver
-        //set mainDeckCards
-        //set turn
-        //set lifepoint
+        isRoundOver = false;
+        isRoundBegin = true;
+        GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
+        changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
+        setTurnController = new SetTurnController();
+        lifePoints.set(0, 8000);
+        lifePoints.set(1, 8000);
         return "Its first players turn";
     }
 
@@ -286,7 +293,7 @@ public class DuelController {
         GameManager.removeClassesOfGameIsOver(index);
 
         return winnerUser.getName() + " won the whole match with score: "
-                + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + winnerUser.getScore());
+                + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + (numberOfRounds * 1000));
     }
 
     public ArrayList<Integer> getMaxLifePointOfPlayers() {
@@ -335,6 +342,14 @@ public class DuelController {
 
     public String getPlayingUsernameByTurn(int turn) {
         return playingUsers.get(turn - 1);
+    }
+
+    public boolean isRoundBegin() {
+        return isRoundBegin;
+    }
+
+    public void setRoundBegin(boolean isRoundBegin) {
+        this.isRoundBegin = isRoundBegin;
     }
 
     public void setTurn(int turn) {

@@ -37,13 +37,9 @@ public class TributeSummonController extends ChainController {
         String inputRegex = "(?<=\\n|^)tribute[\\s]+summon(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
-            DuelController duelController = GameManager.getDuelControllerByIndex(0);
-            int turn = duelController.getTurn();
             NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
             String resultOfChecking = normalSummonController.normalSummonInputAnalysis("normal summon", "tribute summon");
-            if (resultOfChecking.startsWith("tribute")) {
-                return "you can't tribute summon a monster with level less than 5.";
-            } else if (resultOfChecking.startsWith("you can't")){
+            if (resultOfChecking.startsWith("you can't") || resultOfChecking.startsWith("there are")) {
                 return resultOfChecking;
             }
             SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
