@@ -47,6 +47,7 @@ public class DuelController {
 
     public String getInput(String string) {
         allInputs.add(string);
+        PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
         NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
         FlipSummonController flipSummonController = GameManager.getFlipSummonControllerByIndex(0);
         SpecialSummonController specialSummonController = GameManager.getSpecialSummonControllerByIndex(0);
@@ -201,7 +202,6 @@ public class DuelController {
                 && specialSummonController.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
             return specialSummonController.redirectInputForAnalyzingAttackPositionOrDefensePosition(string);
         } else if (string.startsWith("next")) {
-            PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
             return phaseController.phaseControllerInputAnalysis(string);
         } else if (string.startsWith("normal")) {
             return normalSummonController.normalSummonInputAnalysis(string, "normal summon");
@@ -259,6 +259,8 @@ public class DuelController {
                     .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
             System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController
                     .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
+        } else if ((string.startsWith("pay") || string.startsWith("destroy")) && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()){
+            return phaseController.redirectInputForStandByPhaseSpellCheck(string);
         }
         return "invalid command";
     }

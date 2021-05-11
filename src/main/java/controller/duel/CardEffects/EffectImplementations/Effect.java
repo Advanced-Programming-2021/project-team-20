@@ -3,8 +3,8 @@ package controller.duel.CardEffects.EffectImplementations;
 import java.util.ArrayList;
 
 import controller.duel.CardEffects.MonsterEffectEnums.SummoningRequirement;
+import controller.duel.CardEffects.SpellEffectEnums.*;
 import controller.duel.CardEffects.SpellEffectEnums.LogicalActivationRequirement;
-import controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import controller.duel.CardEffects.TrapEffectEnums.*;
 import controller.duel.GamePackage.Action;
@@ -490,29 +490,29 @@ public class Effect {
                 return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
             }
             TrapCard trapCard = (TrapCard) card;
-            ArrayList<LogicalActivationRequirement> logicalActivationRequirements = trapCard.getLogicalActivationRequirements();
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND)) {
+            ArrayList<controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement> logicalActivationRequirements = trapCard.getLogicalActivationRequirements();
+            if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND)) {
                 if (!logicalActivationRequirementSpellOwnerMustHaveAtLeast1CardInHand(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY)) {
+            if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY)) {
                 if (!logicalActivationRequirementTrapOwnerMustHaveAtLeast1MonsterInTheirGraveyard(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.NORMAL_SUMMONED_MONSTER_MUST_HAVE_AT_LEAST_1000_ATK)) {
+            if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.NORMAL_SUMMONED_MONSTER_MUST_HAVE_AT_LEAST_1000_ATK)) {
                 System.out.println("I AM CHECKING THE IF I AM SUPPOSED TO");
                 if (!logicalActivationRequirementTrapSummonedMonsterMustHaveAtLeast1000ATK(index)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.FLIP_SUMMONED_MONSTER_MUST_HAVE_AT_LEAST_1000_ATK)) {
+            if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.FLIP_SUMMONED_MONSTER_MUST_HAVE_AT_LEAST_1000_ATK)) {
                 if (!logicalActivationRequirementTrapSummonedMonsterMustHaveAtLeast1000ATK(index)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.MONSTER_IS_SUMMONED_OR_SPELL_TRAP_MONSTER_EFFECT_INCLUDING_SPECIAL_SUMMONING)) {
+            if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.MONSTER_IS_SUMMONED_OR_SPELL_TRAP_MONSTER_EFFECT_INCLUDING_SPECIAL_SUMMONING)) {
                 if (!logicalActivationRequirementTrapMonsterIsSummonedOrSpellTrapMonsterEffectIncludingSpecialSummoningIsActivated(index)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
@@ -785,8 +785,8 @@ public class Effect {
             return output;
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            ArrayList<UserReplyForActivation> userReplyForActivations = trapCard.getUserReplyForActivations();
-            if (userReplyForActivations.contains(UserReplyForActivation.DISCARD_1_CARD)) {
+            ArrayList<controller.duel.CardEffects.TrapEffectEnums.UserReplyForActivation> userReplyForActivations = trapCard.getUserReplyForActivations();
+            if (userReplyForActivations.contains(controller.duel.CardEffects.TrapEffectEnums.UserReplyForActivation.DISCARD_1_CARD)) {
                 output.add("please choose one card from your hand to discard.\nSimple enter select command");
             }
             if (output.size() == 0) {

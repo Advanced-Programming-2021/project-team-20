@@ -50,10 +50,10 @@ public class SendCardToGraveyardConductor {
         }
     }
 
-    public static String checkIfPlayerShouldDrawACard(int graveyardToSenCardTo, int index) {
+    public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<Card> spellCards;
-        if (graveyardToSenCardTo == 1) {
+        if (graveyardToSendCardTo == 1) {
             spellCards = duelBoard.getAllySpellCards();
         } else {
             spellCards = duelBoard.getOpponentSpellCards();
@@ -62,14 +62,16 @@ public class SendCardToGraveyardConductor {
             if (Card.isCardASpell(spellCards.get(i))) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
-                if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD)) {
+                if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD)
+                    && !spellCard.isOncePerTurnCardEffectUsed()){
+                    spellCard.setOncePerTurnCardEffectUsed(true);
                     PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
-                    String output = phaseController.ifPossibleDrawACard(index, graveyardToSenCardTo);
+                    String output = phaseController.ifPossibleDrawACard(index, graveyardToSendCardTo);
                     if (output.equals("")) {
                         return output;
                     }
                     DuelController duelController = GameManager.getDuelControllerByIndex(index);
-                    String playerUsername = duelController.getPlayingUsernameByTurn(graveyardToSenCardTo);
+                    String playerUsername = duelController.getPlayingUsernameByTurn(graveyardToSendCardTo);
                     return output + " of player " + playerUsername;
                 }
             }

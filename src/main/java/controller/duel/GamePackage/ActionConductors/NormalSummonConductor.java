@@ -13,7 +13,7 @@ import model.cardData.General.CardPosition;
 import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 
-public class NormalSummonConductor extends SendCardToGraveyardConductor{
+public class NormalSummonConductor {
     private static boolean isActionCanceled = false;
 
     public static boolean isIsActionCanceled() {
@@ -30,7 +30,7 @@ public class NormalSummonConductor extends SendCardToGraveyardConductor{
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
-            sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
         }
         int turn = 0;
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER)) {

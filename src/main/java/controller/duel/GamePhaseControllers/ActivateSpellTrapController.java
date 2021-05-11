@@ -2,6 +2,7 @@ package controller.duel.GamePhaseControllers;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
+
 import controller.duel.CardEffects.EffectImplementations.Effect;
 import controller.duel.CardEffects.EffectImplementations.MessagesFromEffectToControllers;
 import controller.duel.GamePackage.Action;
@@ -108,6 +109,7 @@ public class ActivateSpellTrapController extends ChainController {
         int turn = duelController.getTurn();
         int fakeTurn = duelController.getFakeTurn();
         String resultOfChecking;
+        //wrong if
         if (turn == fakeTurn) {
             resultOfChecking = Utility.areWeInMainPhase(index);
             if (!resultOfChecking.equals("")) {
@@ -146,7 +148,8 @@ public class ActivateSpellTrapController extends ChainController {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
-        Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
+        CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
+        Card card = duelBoard.getCardByCardLocation(cardLocation);
         if (card == null) {
             System.out.println("WHOOPS!");
         } else {
@@ -167,9 +170,11 @@ public class ActivateSpellTrapController extends ChainController {
                 rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_ZONE;
             }
         }
-        if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))) {
+        if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))
+            && (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) || cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE))) {
             return "spell zone is full";
-        } else if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))) {
+        } else if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))
+            && (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) || cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE))) {
             return "spell field zone is full";
         } else {
             String output = arePreparationsCompleteForSpellTrapActivation(index);
@@ -214,8 +219,6 @@ public class ActivateSpellTrapController extends ChainController {
     public String checkWhatIsNeededForSpellTrapActivation(int index) {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        int fakeTurn = GameManager.getDuelControllerByIndex(index).getFakeTurn();
         CardLocation spellTrapCardActivating = selectedCardLocations.get(selectedCardLocations.size() - 1);
         ArrayList<String> resultOfChecking = Effect.inputsNeededForActivatingSpellTrapCard(spellTrapCardActivating, index);
         //System.out.println("WHY IS RESULTOFCHECKING NULL"+resultOfChecking);
@@ -340,8 +343,8 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (!((MonsterCard) card).getMonsterCardValue().equals(MonsterCardValue.NORMAL)) {
                 return "chosen monster card is not normal\nplease try again";
             } else {
-                for (int i = 0; i <cardsToBeChosenFromDeckAndSentToGraveyard.size();i++){
-                    if (cardsToBeChosenFromDeckAndSentToGraveyard.get(i).getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && cardsToBeChosenFromDeckAndSentToGraveyard.get(i).getIndex()==cardLocation.getIndex()){
+                for (int i = 0; i < cardsToBeChosenFromDeckAndSentToGraveyard.size(); i++) {
+                    if (cardsToBeChosenFromDeckAndSentToGraveyard.get(i).getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && cardsToBeChosenFromDeckAndSentToGraveyard.get(i).getIndex() == cardLocation.getIndex()) {
                         return "you have already chosen this normal monster for sending to graveyard\nplease try again";
                     }
                 }

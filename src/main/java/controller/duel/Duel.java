@@ -43,6 +43,7 @@ public class Duel {
         HashMap<String, Deck> decks = user.getDecks();
         Deck deck;
         //deck.
+        return true;
     }
 
     private boolean doesItHaveAnyActiveDeck(User firstUser) {

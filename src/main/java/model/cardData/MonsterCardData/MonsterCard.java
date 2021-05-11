@@ -102,6 +102,15 @@ public class MonsterCard extends Card {
         } else if (cardDescription.equals("r")){
             summoningRequirements.add(SummoningRequirement.CAN_BE_RITUAL_SUMMONED);
         }
+        if (cardName.equals("exploder dragon")){
+            beingAttackedEffects.add(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES);
+            beingAttackedEffects.add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
+        } else if (cardName.equals("yomi ship")){
+            beingAttackedEffects.add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
+        } else if (cardName.equals("marshmallon")){
+            beingAttackedEffects.add(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE);
+            beingAttackedEffects.add(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE);
+        }
         if (enumValues != null) {
             setEnumValues(enumValues);
         }

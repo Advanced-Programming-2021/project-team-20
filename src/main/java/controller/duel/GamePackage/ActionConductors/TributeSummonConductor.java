@@ -14,14 +14,14 @@ import model.cardData.MonsterCardData.MonsterCard;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-public class TributeSummonConductor extends SendCardToGraveyardConductor{
+public class TributeSummonConductor{
     public static String conductTributeSummoningActionUninterruptedAction(int index, int numberInListOfActions) {
         //if (!isActionCanceled){
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
-            sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
         }
         int turn = 0;
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER)) {
@@ -110,20 +110,20 @@ public class TributeSummonConductor extends SendCardToGraveyardConductor{
     public static void destroyAllOfOpponentsCards(int actionTurn, int index) {
         if (actionTurn == 1) {
             for (int i = 0; i < 5; i++) {
-                sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1), index);
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1), index);
             }
             for (int i = 0; i < 5; i++) {
-                sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), index);
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), index);
             }
-            sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1), index);
         } else {
             for (int i = 0; i < 5; i++) {
-                sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1), index);
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1), index);
             }
             for (int i = 0; i < 5; i++) {
-                sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), index);
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), index);
             }
-            sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1), index);
         }
 
 

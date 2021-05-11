@@ -93,9 +93,11 @@ public class BattlePhaseController extends ChainController {
         if (MonsterCard.giveATKDEFConsideringEffects("attack", allyCardLocation, 0) >= 1500) {
             for (int i = 0; i < spellCards.size(); i++) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
-                ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
-                if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK)) {
-                    return "this monster card has at least 1500 ATK, so it can't attack.";
+                if (spellCard != null){
+                    ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
+                    if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK)) {
+                        return "this monster card has at least 1500 ATK, so it can't attack.";
+                    }
                 }
             }
         }

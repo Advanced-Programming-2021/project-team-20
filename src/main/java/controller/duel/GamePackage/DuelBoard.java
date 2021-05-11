@@ -821,7 +821,7 @@ public class DuelBoard {
     public String showGraveyardInList(ArrayList<Card> cards) {
         StringBuilder graveyard = new StringBuilder();
         if (cards.size() == 0) {
-            graveyard.append("graveyard empty");
+            graveyard.append("graveyard empty\n");
         } else {
             for (int i = 0; i < cards.size(); i++) {
                 graveyard.append(i).append(". ").append(cards.get(i).getCardName()).append(": ");

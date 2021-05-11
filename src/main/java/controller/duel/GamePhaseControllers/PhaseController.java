@@ -3,7 +3,6 @@ package controller.duel.GamePhaseControllers;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import controller.duel.CardEffects.MonsterEffectEnums.ContinuousMonsterEffect;
 import controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
 import controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import controller.duel.GamePackage.DuelBoard;
@@ -24,6 +23,8 @@ import model.cardData.TrapCardData.TrapCard;
 public class PhaseController {
     private PhaseInGame phaseInGame;
     private ArrayList<Boolean> playersProhibitedToDrawCardNextTurn;
+    private int numberOfSpellCardsPayedFor;
+    private int numberOfSpellCardsToPayFor;
     private boolean isClassWaitingForPayingLifePointsOrDestroyingCard;
     private boolean gameIsOver;
 
@@ -32,6 +33,8 @@ public class PhaseController {
         playersProhibitedToDrawCardNextTurn = new ArrayList<>();
         playersProhibitedToDrawCardNextTurn.add(false);
         playersProhibitedToDrawCardNextTurn.add(false);
+        numberOfSpellCardsPayedFor = 0;
+        numberOfSpellCardsToPayFor = 0;
         isClassWaitingForPayingLifePointsOrDestroyingCard = false;
         gameIsOver = false;
     }
@@ -91,12 +94,12 @@ public class PhaseController {
 
     public boolean isPhaseCurrentlyMainPhase(int turn) {
         if (turn == 1 && (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1)
-                || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2))) {
+            || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2))) {
             return true;
         } else if (turn == 1) {
             return false;
         } else if (phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1)
-                || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2)) {
+            || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2)) {
             return true;
         } else {
             return false;
@@ -120,39 +123,62 @@ public class PhaseController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
         int turn = duelController.getTurn();
         if (string.equals("pay")) {
-            isClassWaitingForPayingLifePointsOrDestroyingCard = false;
             duelController.increaseLifePoints(-100, turn);
-            if (turn == 1) {
-                phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
+            numberOfSpellCardsToPayFor -= 1;
+            numberOfSpellCardsPayedFor += 1;
+            if (numberOfSpellCardsToPayFor == 0) {
+                isClassWaitingForPayingLifePointsOrDestroyingCard = false;
+                numberOfSpellCardsPayedFor = 0;
+                if (turn == 1) {
+                    phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
+                } else {
+                    phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
+                }
+                return "phase: main phase 1\n";
             } else {
-                phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
+                return "decide for your other spell cards\nenter pay or destroy";
             }
-            return "phase: main phase 1\n";
         } else if (string.equals("destroy")) {
-            isClassWaitingForPayingLifePointsOrDestroyingCard = false;
+            numberOfSpellCardsToPayFor -= 1;
+            //isClassWaitingForPayingLifePointsOrDestroyingCard = false;
             ArrayList<Card> spellCards;
             if (turn == 1) {
                 spellCards = duelBoard.getAllySpellCards();
             } else {
                 spellCards = duelBoard.getOpponentSpellCards();
             }
+            int numberOfSpellsFound = 0;
             for (int i = 0; i < spellCards.size(); i++) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
-                ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard
-                        .getContinuousSpellCardEffects();
-                if (continuousSpellCardEffects
-                        .contains(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD)) {
-                    if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                        if (turn == 1) {
-                            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
-                                    new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), 1);
-                            phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
-                        } else {
-                            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
-                                    new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), 2);
-                            phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
+                if (spellCard != null) {
+                    ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
+                    if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD)) {
+                        if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
+                            numberOfSpellsFound += 1;
+                            if (numberOfSpellsFound == numberOfSpellCardsPayedFor + 1) {
+                                if (turn == 1) {
+                                    SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
+                                        new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), 0);
+                                    if (numberOfSpellCardsToPayFor == 0){
+                                        isClassWaitingForPayingLifePointsOrDestroyingCard = false;
+                                        phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
+                                        return "phase: main phase 1\n";
+                                    } else {
+                                        return "decide for your other spell cards\nenter pay or destroy";
+                                    }
+                                } else {
+                                    SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
+                                        new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), 0);
+                                    if (numberOfSpellCardsToPayFor == 0){
+                                        isClassWaitingForPayingLifePointsOrDestroyingCard = false;
+                                        phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
+                                        return "phase: main phase 1\n";
+                                    } else {
+                                        return "decide for your other spell cards\nenter pay or destroy";
+                                    }
+                                }
+                            }
                         }
-                        return "phase: main phase 1\n";
                     }
                 }
             }
@@ -186,21 +212,25 @@ public class PhaseController {
     }
 
     public String doesSpellExistThatNeedsToPay100LPOrGetDestroyed(ArrayList<Card> spellCards) {
+        numberOfSpellCardsToPayFor = 0;
+        numberOfSpellCardsPayedFor = 0;
+        StringBuilder output = new StringBuilder();
         for (int i = 0; i < spellCards.size(); i++) {
             if (spellCards.get(i) != null) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard
-                        .getContinuousSpellCardEffects();
+                    .getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects
-                        .contains(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD)) {
+                    .contains(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD)) {
                     if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
                         isClassWaitingForPayingLifePointsOrDestroyingCard = true;
-                        return "do you want to pay 100 lifepoints or do you want to destroy your spell card?\nsimply enter pay or destroy\n";
+                        numberOfSpellCardsToPayFor += 1;
+                        output.append("do you want to pay 100 lifepoints or do you want to destroy your spell card?\nsimply enter pay or destroy\n");
                     }
                 }
             }
         }
-        return "";
+        return output.toString();
     }
 
     public String ifPossibleDrawACard(int index, int turn) {
@@ -279,19 +309,19 @@ public class PhaseController {
     }
 
     private void rewardWinner(int turn, int index, int maxLifePointOffWinner, int rounds) {
-      
+
         User winnerUser = Storage
-                .getUserByName(GameManager.getDuelControllerByIndex(index).getPlayingUsernameByTurn(turn - 1));
+            .getUserByName(GameManager.getDuelControllerByIndex(index).getPlayingUsernameByTurn(turn - 1));
         User loserUser = Storage
-                .getUserByName(GameManager.getDuelControllerByIndex(index).getPlayingUsernameByTurn(-turn + 2));
+            .getUserByName(GameManager.getDuelControllerByIndex(index).getPlayingUsernameByTurn(-turn + 2));
         winnerUser.setMoney(rounds * (1000 + maxLifePointOffWinner));
         winnerUser.setScore(rounds * 1000);
         loserUser.setMoney(rounds * 100);
-    
+
     }
 
     private String resetAllVariables(int index) {
-   
+
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<Card> allySpellCards = duelBoard.getAllySpellCards();
         ArrayList<Card> allyMonsterCards = duelBoard.getAllyMonsterCards();
@@ -302,11 +332,11 @@ public class PhaseController {
         resetSetsOfArraylistsWhenTurnsChange(allyMonsterCards, allySpellCards, allySpellFieldCard);
         resetSetsOfArraylistsWhenTurnsChange(opponentMonsterCards, opponentSpellCards, opponentSpellFieldCard);
         return "";
-   
+
     }
 
     private void resetSetsOfArraylistsWhenTurnsChange(ArrayList<Card> monsterCards, ArrayList<Card> spellCards,
-            ArrayList<Card> spellFieldCard) {
+                                                      ArrayList<Card> spellFieldCard) {
         for (int i = 0; i < monsterCards.size(); i++) {
             resetCharacteristicsOfOneCardWhenTurnChanges(monsterCards.get(i));
         }
@@ -329,6 +359,7 @@ public class PhaseController {
             monsterCard.setCardAttacked(false);
         } else if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
+            spellCard.setOncePerTurnCardEffectUsed(false);
             spellCard.setNumberOfTurnsForActivation(spellCard.getNumberOfTurnsForActivation() - 1);
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;

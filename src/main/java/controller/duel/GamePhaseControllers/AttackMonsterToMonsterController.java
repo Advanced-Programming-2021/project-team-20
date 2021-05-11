@@ -56,11 +56,15 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
                     return resultOfChecking;
                 } else {
                     resultOfChecking = checkIndexOfAttackedMonster(card, 0);
+                    return resultOfChecking;
+                    /*
                     if (resultOfChecking.equals("")) {
                         Action.conductAllActions(0);
                     } else {
                         return resultOfChecking;
                     }
+
+                     */
                 }
             }
         }
@@ -71,6 +75,8 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();
+        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
+        ArrayList<CardLocation> selectCardLocations = selectCardController.getSelectedCardLocations();
         //System.out.println("turn is "+turn);
         //System.out.println("card name is "+card.getCardName());
         System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
@@ -88,11 +94,12 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
             CardLocation opponentCardLocation = new CardLocation(rowOfCardLocation, indexOfAttackedMonster);
             Card attackedMonster = duelBoard.getCardByCardLocation(opponentCardLocation);
-            System.out.println("attackedMonster name is " + attackedMonster.getCardName());
             if (!(Card.isCardAMonster(attackedMonster))) {
                 return "there is no card to attack here";
             } else {
+                System.out.println("attackedMonster name is " + attackedMonster.getCardName());
                 String output = "";
+                mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
                 output = areContinuousSpellTrapOrMonsterEffectsPreventingMonsterFromAttacking(mainCard, opponentCardLocation, index);
                 if (!output.equals("")) {
                     return output;
@@ -129,12 +136,11 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
     public String isSelectedCardCorrectForChainActivation(String string, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(index);
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
         Card card = duelBoard.getCardByCardLocation(cardLocation);
-        boolean isAlreadyActivated = false;
+        boolean isAlreadyActivated;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
             isAlreadyActivated = spellCard.isCardAlreadyActivated();

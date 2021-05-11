@@ -28,6 +28,8 @@ public class AttackMonsterToMonsterConductor {
     private static CardLocation defendingMonsterCardLocation;
     private static MonsterCard attackingMonsterCard;
     private static MonsterCard defendingMonsterCard;
+    private static ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster = new ArrayList<>();
+    private static ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster = new ArrayList<>();
     private static boolean promptingUserToActivateMonsterEffect;
     private static boolean isBeingAttackedMonsterFlipped = false;
     private static boolean isClassWaitingForFurtherChainInput = false;
@@ -35,6 +37,8 @@ public class AttackMonsterToMonsterConductor {
     private static int actionTurn;
     private static boolean doesAttackingMonsterGoToGraveyard;
     private static boolean doesDefendingMonsterGoToGraveyard;
+    private static boolean doesDefendingMonsterEventuallyGoToGraveyard;
+    private static boolean doesAttackingMonsterEventuallyGoToGraveyard;
     private static ArrayList<Integer> playersLifePointsChange = new ArrayList<>();
     private static boolean didAttackingUserReceiveDamage = false;
 
@@ -67,6 +71,7 @@ public class AttackMonsterToMonsterConductor {
                 isBeingAttackedMonsterFlipped = true;
                 //must change turns and prompt user to select for flip effect
             }
+            //also put if flip effect
             if (doesDefendingMonsterHaveEffect() && !defendingMonsterCard.isOncePerTurnCardEffectUsed()) {
                 promptingUserToActivateMonsterEffect = true;
                 return "now it will be another player's turn\nshow board\ndo you want to activate your monster card's effect?";
@@ -170,14 +175,19 @@ public class AttackMonsterToMonsterConductor {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterATK);
             didAttackingUserReceiveDamage = true;
         }
-        reconsiderEffectsOfMonsterInBattle();
+        //reconsiderEffectsOfMonsterInBattle();
         return finishAttackConduction();
     }
 
     public static String faceUpAttackPositionMonsterToFaceUpDefensePositionMonster() {
+        System.out.println("defending monster card name os " + defendingMonsterCard.getCardName() + "\niiiiiiiiiiiiiiiiiiiiiii\n");
+        System.out.println("attacking monster card name os " + attackingMonsterCard.getCardName() + "\niiiiiiiiiiiiiiiiiiiiiii\n");
         attackingMonsterATK = MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterCardLocation, 0);
         defendingMonsterDEF = MonsterCard.giveATKDEFConsideringEffects("defense", defendingMonsterCardLocation, 0);
         ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
+        for (int i = 0; i < beingAttackedEffects.size(); i++) {
+            System.out.println("being attacked effect are " + beingAttackedEffects.get(i));
+        }
         if (beingAttackedEffects.contains(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN) && doesDefendingMonsterEffectActivate) {
             attackingMonsterATK = 0;
         }
@@ -193,97 +203,214 @@ public class AttackMonsterToMonsterConductor {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterDEF);
             didAttackingUserReceiveDamage = true;
         }
-        reconsiderEffectsOfMonsterInBattle();
+        //reconsiderEffectsOfMonsterInBattle();
         return finishAttackConduction();
     }
 
-    public static void reconsiderEffectsOfMonsterInBattle() {
-        ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
-        if (beingAttackedEffects.contains(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE)) {
+    /*
+        public static void reconsiderEffectsOfMonsterInBattle() {
+            ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
+            if (beingAttackedEffects.contains(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES) && doesDefendingMonsterGoToGraveyard) {
+                playersLifePointsChange.set(0, 0);
+                playersLifePointsChange.set(1, 0);
+            }
+            if (beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)) {
+                if (doesDefendingMonsterGoToGraveyard) {
+                    doesAttackingMonsterGoToGraveyard = true;
+                }
+            }
+            if (beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                if (doesDefendingMonsterGoToGraveyard) {
+                    doesDefendingMonsterGoToGraveyard = false;
+                }
+            }
+            if (beingAttackedEffects.contains(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE) && isBeingAttackedMonsterFlipped) {
+                playersLifePointsChange.set(2 - actionTurn, -1000);
+            }
+        }
+
+
+     */
+    public static void tendToNeitherPlayerReceivesBattleDamageIfMonsterDies() {
+        if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES) && doesDefendingMonsterGoToGraveyard) {
             playersLifePointsChange.set(0, 0);
             playersLifePointsChange.set(1, 0);
         }
-        if (beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)) {
-            if (doesDefendingMonsterGoToGraveyard) {
-                doesAttackingMonsterGoToGraveyard = true;
-            }
-        }
-        if (beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
-            if (doesDefendingMonsterGoToGraveyard) {
-                doesAttackingMonsterGoToGraveyard = false;
-            }
-        }
-        if (beingAttackedEffects.contains(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE) && isBeingAttackedMonsterFlipped) {
-            playersLifePointsChange.set(2 - actionTurn, -1000);
+        if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES) && doesAttackingMonsterGoToGraveyard) {
+            playersLifePointsChange.set(0, 0);
+            playersLifePointsChange.set(1, 0);
         }
     }
 
-
-    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);
-        duelBoard.removeCardByCardLocation(cardToBeRemoved);
-        return card;
-    }
-
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
-        if (cardGoingToBeSentToGraveyard != null) {
-            int graveyardToSendCardTo;
-            RowOfCardLocation rowOfCardLocationOfThrownCard = targetingCardLocation.getRowOfCardLocation();
-            if (rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
-                || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
-                graveyardToSendCardTo = 1;
-            } else {
-                graveyardToSendCardTo = 2;
-            }
-            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
+    public static void tendToMonsterSendingOtherMonsterToGraveyardIfItselfIsDestroyed() {
+        if (!beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) &&
+            beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD) && doesDefendingMonsterGoToGraveyard) {
+            doesAttackingMonsterEventuallyGoToGraveyard = true;
+            //output += "\nbecause of your opponent's monster's effect, your monster is destroyed too.";
+        }
+        if (!beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) &&
+            beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD) && doesAttackingMonsterGoToGraveyard) {
+            doesDefendingMonsterEventuallyGoToGraveyard = true;
+            //output += "\nbecause of your opponent's monster's effect, your monster is destroyed too.";
         }
     }
-
 
     public static String finishAttackConduction() {
+        doesDefendingMonsterEventuallyGoToGraveyard = doesDefendingMonsterGoToGraveyard;
+        doesAttackingMonsterEventuallyGoToGraveyard = doesAttackingMonsterGoToGraveyard;
+        beingAttackedEffectsForDefendingMonster = defendingMonsterCard.getBeingAttackedEffects();
+        beingAttackedEffectsForAttackingMonster = attackingMonsterCard.getBeingAttackedEffects();
+        tendToNeitherPlayerReceivesBattleDamageIfMonsterDies();
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
+        if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE) && isBeingAttackedMonsterFlipped) {
+            playersLifePointsChange.set(actionTurn - 1, playersLifePointsChange.get(actionTurn - 1) - 1000);
+        }
         duelController.increaseLifePoints(playersLifePointsChange.get(0), 1);
         duelController.increaseLifePoints(playersLifePointsChange.get(1), 2);
         String output = "";
-        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard && !didAttackingUserReceiveDamage) {
-            if (isBeingAttackedMonsterFlipped) {
-                output = "opponent's monster card was" + defendingMonsterCard.getCardName() + "and";
-            }
-            output += "no card is destroyed";
-        }
-        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard && didAttackingUserReceiveDamage) {
-            if (isBeingAttackedMonsterFlipped) {
-                output = "opponent's monster card was" + defendingMonsterCard.getCardName() + "and";
-            }
-            output = "no card is destroyed and you received " + playersLifePointsChange.get(actionTurn - 1) * (-1) + " battle damage";
-        }
-        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
-            if (isBeingAttackedMonsterFlipped) {
-                output = "opponent's monster card was" + defendingMonsterCard.getCardName() + "and";
-            }
-            output += "the defense position monster is destroyed";
-        }
-        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard) {
-            output = "your monster card is destroyed and you received" + playersLifePointsChange.get(actionTurn - 1) * (-1) + "battle damage";
-        }
-        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && !doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
-            output = "your opponent's monster is destroyed and your opponent receives" + playersLifePointsChange.get(2 - actionTurn) * (-1) + "battle damage";
-        }
-        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
-            output = "both you and your opponent monster cards are destroyed and no one receives damage";
-        }
-        if (doesAttackingMonsterGoToGraveyard) {
-            sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0);
+        output += tendToFaceUpAttackPositionMonsterLogicallyWinning();
+        output += tendToFaceUpAttackPositionMonsterLogicallyEqual();
+        output += tendToFaceUpAttackPositionMonsterLogicallyLost();
+        output += tendToFaceUpDefensePositionMonsterLogicallyWinning();
+        output += tendToFaceUpDefensePositionMonsterLogicallyEqual();
+        output += tendToFaceUpDefensePositionMonsterLogicallyLost();
+
+        //tendToMonsterSendingOtherMonsterToGraveyardIfItselfIsDestroyed();
+        if (doesAttackingMonsterEventuallyGoToGraveyard) {
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0);
             //sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0, actionTurn);
         }
-        if (doesDefendingMonsterGoToGraveyard) {
-            sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0);
+        if (doesDefendingMonsterEventuallyGoToGraveyard) {
+            //if (!beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0);
+            //}
             //sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0, actionTurn);
         }
         return output;
     }
+
+    public static String tendToFaceUpDefensePositionMonsterLogicallyWinning() {
+        System.out.println("tendToFaceUpDefensePositionMonsterLogicallyWinning");
+        String output = "";
+        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
+            if (isBeingAttackedMonsterFlipped) {
+                output += "opponent's monster card was " + defendingMonsterCard.getCardName() + " and ";
+            }
+            if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "the defense position monster is not destroyed because of its effect";
+                doesAttackingMonsterEventuallyGoToGraveyard = false;
+                doesDefendingMonsterEventuallyGoToGraveyard = false;
+            } else if (!beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) &&
+                beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)) {
+                output += "the defense position monster is destroyed and your monster is destroyed because of opponent monster card's effect";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            } else {
+                output += "the defense position monster is destroyed";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            }
+        }
+        return output;
+    }
+
+    public static String tendToFaceUpDefensePositionMonsterLogicallyEqual() {
+        System.out.println("tendToFaceUpDefensePositionMonsterLogicallyEqual");
+        String output = "";
+        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard && !didAttackingUserReceiveDamage) {
+            if (isBeingAttackedMonsterFlipped) {
+                output += "opponent's monster card was " + defendingMonsterCard.getCardName() + " and ";
+            }
+            output += "no card is destroyed";
+            doesAttackingMonsterEventuallyGoToGraveyard = false;
+            doesDefendingMonsterEventuallyGoToGraveyard = false;
+        }
+        return output;
+    }
+
+    public static String tendToFaceUpDefensePositionMonsterLogicallyLost() {
+        System.out.println("tendToFaceUpDefensePositionMonsterLogicallyLost");
+        String output = "";
+        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard && didAttackingUserReceiveDamage) {
+            if (isBeingAttackedMonsterFlipped) {
+                output += "opponent's monster card was " + defendingMonsterCard.getCardName() + " and ";
+            }
+            output += "no card is destroyed and you received " + playersLifePointsChange.get(actionTurn - 1) * (-1) + " battle damage";
+            doesAttackingMonsterEventuallyGoToGraveyard = false;
+            doesDefendingMonsterEventuallyGoToGraveyard = false;
+        }
+        return output;
+    }
+
+    public static String tendToFaceUpAttackPositionMonsterLogicallyWinning() {
+        System.out.println("tendToFaceUpAttackPositionMonsterLogicallyWinning");
+        String output = "";
+        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && !doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
+            if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "your opponent's monster is not destroyed because of its effect and your opponent receives " + playersLifePointsChange.get(2 - actionTurn) * (-1) + " battle damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = false;
+                doesDefendingMonsterEventuallyGoToGraveyard = false;
+            } else if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)
+                && !beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "your opponent's monster is destroyed and your monster is destroyed because of your opponent monster card's effect " +
+                    "and your opponent receives " + playersLifePointsChange.get(2 - actionTurn) * (-1) + " battle damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            } else {
+                output += "your opponent's monster is destroyed and your opponent receives " + playersLifePointsChange.get(2 - actionTurn) * (-1) + " battle damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = false;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            }
+        }
+        return output;
+    }
+
+    public static String tendToFaceUpAttackPositionMonsterLogicallyEqual() {
+        System.out.println("tendToFaceUpAttackPositionMonsterLogicallyEqual");
+        String output = "";
+        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
+            if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) && beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "no card is destroyed because of the card's effects and no one receives damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = false;
+                doesDefendingMonsterEventuallyGoToGraveyard = false;
+            } else if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) && !beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "your opponent's monster is destroyed and your monster is not destroyed because of its effect and no one receives damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = false;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            } else if (!beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) && beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "your opponent's monster is not destroyed because of its effect and your monster is destroyed and no one receives damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = false;
+            } else if (!beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) && !beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "both you and your opponent monster cards are destroyed and no one receives damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            }
+        }
+        return output;
+    }
+
+    public static String tendToFaceUpAttackPositionMonsterLogicallyLost() {
+        System.out.println("tendToFaceUpAttackPositionMonsterLogicallyLost");
+        String output = "";
+        if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard) {
+            if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "your monster card is not destroyed because of its effect and you received " + playersLifePointsChange.get(actionTurn - 1) * (-1) + " battle damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = false;
+                doesDefendingMonsterEventuallyGoToGraveyard = false;
+            } else if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD) &&
+                !beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
+                output += "both you and your opponent monster cards are destroyed because of your monster card's effect " +
+                    "and you received " + playersLifePointsChange.get(actionTurn - 1) * (-1) + " battle damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = true;
+            } else {
+                output += "your monster card is destroyed and you received " + playersLifePointsChange.get(actionTurn - 1) * (-1) + " battle damage";
+                doesAttackingMonsterEventuallyGoToGraveyard = true;
+                doesDefendingMonsterEventuallyGoToGraveyard = false;
+            }
+        }
+        return output;
+    }
+
 }

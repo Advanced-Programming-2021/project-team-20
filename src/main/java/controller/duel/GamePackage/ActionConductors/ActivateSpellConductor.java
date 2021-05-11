@@ -136,16 +136,16 @@ public class ActivateSpellConductor {
             ritualSummonMonster(uninterruptedAction, index);
         }
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
+        String output = give500LifePointsToPlayerOwningACardOfThisEffect(index, finalMainCardLocation);
         if (fieldSpellEffects.size() == 0 && equipSpellEffects.size() == 0 && continuousSpellCardEffects.size() == 0) {
             //Action thisAction = actions.get(numberInListOfActions);
             int actionTurn = uninterruptedAction.getActionTurn();
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
         }
-        String output = give500LifePointsToPlayerOwningACardOfThisEffect(index);
         if (!output.equals("")) {
             return "spell activated\n" + output;
         }
-        return "spell activated" + give500LifePointsToPlayerOwningACardOfThisEffect(index);
+        return "spell activated";
     }
 
     public static void ritualSummonMonster(Action uninterruptedAction, int index) {
@@ -171,15 +171,16 @@ public class ActivateSpellConductor {
         duelBoard.sendCardsFromSensitiveArrayListToGraveyard(cardsToBeChosenFromDeckAndSentToGraveyard);
     }
 
-    public static String give500LifePointsToPlayerOwningACardOfThisEffect(int index) {
+    public static String give500LifePointsToPlayerOwningACardOfThisEffect(int index, CardLocation spellCardBeingActivated) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         ArrayList<Card> allySpellCards = duelBoard.getAllySpellCards();
         ArrayList<Card> opponentSpellCards = duelBoard.getOpponentSpellCards();
         String output = "";
         for (int i = 0; i < allySpellCards.size(); i++) {
-            Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1));
-            if (card != null) {
+            CardLocation cardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1);
+            Card card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null && !(spellCardBeingActivated.getRowOfCardLocation() == RowOfCardLocation.ALLY_SPELL_ZONE && spellCardBeingActivated.getIndex() == i + 1)) {
                 SpellCard spellCard = (SpellCard) card;
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS) && spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
@@ -189,13 +190,15 @@ public class ActivateSpellConductor {
             }
         }
         for (int i = 0; i < opponentSpellCards.size(); i++) {
-            Card card = duelBoard.getCardByCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1));
-            if (card != null) {
+            CardLocation cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
+            Card card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null && !(spellCardBeingActivated.getRowOfCardLocation() == RowOfCardLocation.OPPONENT_SPELL_ZONE && spellCardBeingActivated.getIndex() == i + 1)) {
                 SpellCard spellCard = (SpellCard) card;
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS) && spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
                     duelController.increaseLifePoints(500, 2);
                     output += ("500 life points is added to player " + duelController.getPlayingUsernameByTurn(2) + "\n");
+
                 }
             }
         }
@@ -237,7 +240,7 @@ public class ActivateSpellConductor {
         duelBoard.addCardToHand(card, fakeTurn);
     }
 
-    public static void sendAllCardsInThisArrayListToGraveyard(ArrayList<CardLocation> targetingCards, int index, int graveyardToSendCardsTo) {
+    public static void sendAllCardsInThisArrayListToGraveyard(ArrayList<CardLocation> targetingCards, int index) {
         for (int i = 0; i < targetingCards.size(); i++) {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
             //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
@@ -248,20 +251,20 @@ public class ActivateSpellConductor {
         ArrayList<CardLocation> cardLocations = new ArrayList<>();
         if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
             for (int i = 0; i < 5; i++) {
-                cardLocations.add(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i));
+                cardLocations.add(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1));
             }
         } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
             for (int i = 0; i < 5; i++) {
-                cardLocations.add(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i));
+                cardLocations.add(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1));
             }
         } else if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE)) {
             for (int i = 0; i < 5; i++) {
-                cardLocations.add(new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i));
+                cardLocations.add(new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1));
             }
             cardLocations.add(new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1));
         } else if (rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {
             for (int i = 0; i < 5; i++) {
-                cardLocations.add(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i));
+                cardLocations.add(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1));
             }
             cardLocations.add(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1));
         }
@@ -270,34 +273,34 @@ public class ActivateSpellConductor {
 
     public static void destroyAllOfOpponentsSpellAndTrapCards(int index) {
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
-        ArrayList<CardLocation> targetingCards;
+        ArrayList<CardLocation> targetingCards = null;
         if (turn == 1) {
             targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE);
-            sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 2);
+            //sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 2);
         } else if (turn == 2) {
             targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.ALLY_SPELL_ZONE);
-            sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 1);
+            //sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 1);
         }
+        sendAllCardsInThisArrayListToGraveyard(targetingCards, index);
     }
 
     public static void destroyAllOfOpponentsMonsterCards(int index) {
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
-        ArrayList<CardLocation> targetingCards;
+        ArrayList<CardLocation> targetingCards = null;
         if (turn == 1) {
             targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE);
-            sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 2);
         } else if (turn == 2) {
             targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE);
-            sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 1);
         }
+        sendAllCardsInThisArrayListToGraveyard(targetingCards, index);
     }
 
     public static void destroyAllMonsterCardsInTheField(int index) {
         ArrayList<CardLocation> targetingCards;
         targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE);
-        sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 2);
+        sendAllCardsInThisArrayListToGraveyard(targetingCards, index);
         targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE);
-        sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 1);
+        sendAllCardsInThisArrayListToGraveyard(targetingCards, index);
     }
 
     public static void equipSpellEffect(int index, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo, ArrayList<EquipSpellEffect> equipSpellEffects, Action uninterruptedAction) {

@@ -3,9 +3,6 @@ package model.cardData.TrapCardData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import controller.duel.CardEffects.SpellEffectEnums.LogicalActivationRequirement;
-import controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import controller.duel.CardEffects.TrapEffectEnums.*;
 import model.cardData.General.Card;
 import model.cardData.General.CardPosition;
@@ -50,21 +47,49 @@ public class TrapCard extends Card {
         this.spellCardActivationTrapCardEffects = new ArrayList<>();
         this.trapCardActivationTrapCardEffects = new ArrayList<>();
         this.userReplyForActivations = new ArrayList<>();
-        if (cardDescription.equals("a")) {
+        if (cardName.equals("torrential tribute")) {
             normalSummonTrapCardEffects.add(NormalSummonTrapCardEffect.DESTROY_ALL_MONSTERS_ON_FIELD);
-        } else if (cardDescription.equals("b")) {
+        } else if (cardName.equals("mirror force")) {
             monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.DESTROY_ALL_OPPONENT_ATTACK_POSITION_MONSTERS);
-        } else if (cardDescription.equals("c")) {
+        } else if (cardName.equals("magic cylinder")) {
             monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.NEGATE_OPPONENT_ATTACK);
             monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.INFLICT_DAMAGE_TO_OPPONENT_EQUAL_TO_MONSTERS_ATK);
-        } else if (cardDescription.equals("d")) {
+        } else if (cardName.equals("negate attack")) {
             monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.NEGATE_OPPONENT_ATTACK);
             monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.END_BATTLE_PHASE);
-        } else if (cardDescription.equals("e")) {
+        } else if (cardName.equals("trap hole")) {
             normalSummonTrapCardEffects.add(NormalSummonTrapCardEffect.IF_ATK_IS_AT_LEAST_1000_ATK_DESTROY_IT);
             flipSummonTrapCardEffects.add(FlipSummonTrapCardEffect.IF_ATK_IS_AT_LEAST_1000_ATK_DESTROY_IT);
             logicalActivationRequirements.add(LogicalActivationRequirement.NORMAL_SUMMONED_MONSTER_MUST_HAVE_AT_LEAST_1000_ATK);
             logicalActivationRequirements.add(LogicalActivationRequirement.FLIP_SUMMONED_MONSTER_MUST_HAVE_AT_LEAST_1000_ATK);
+        } else if (cardName.equals("time seal")){
+            normalTrapCardEffects.add(NormalTrapCardEffect.SKIP_OPPONENT_DRAW_PHASE_NEXT_TURN);
+        } else if (cardName.equals("solemn warning")){
+            normalSummonTrapCardEffects.add(NormalSummonTrapCardEffect.PAY_2000_LP);
+            normalSummonTrapCardEffects.add(NormalSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            flipSummonTrapCardEffects.add(FlipSummonTrapCardEffect.PAY_2000_LP);
+            flipSummonTrapCardEffects.add(FlipSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            specialSummonTrapCardEffects.add(SpecialSummonTrapCardEffect.PAY_2000_LP);
+            specialSummonTrapCardEffects.add(SpecialSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            ritualSummonTrapCardEffects.add(RitualSummonTrapCardEffect.PAY_2000_LP);
+            ritualSummonTrapCardEffects.add(RitualSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            spellCardActivationTrapCardEffects.add(SpellCardActivationTrapCardEffect.PAY_2000_LP);
+            spellCardActivationTrapCardEffects.add(SpellCardActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            monsterEffectActivationTrapCardEffect.add(MonsterEffectActivationTrapCardEffect.PAY_2000_LP);
+            monsterEffectActivationTrapCardEffect.add(MonsterEffectActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            trapCardActivationTrapCardEffects.add(TrapCardActivationTrapCardEffect.PAY_2000_LP);
+            trapCardActivationTrapCardEffects.add(TrapCardActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            logicalActivationRequirements.add(LogicalActivationRequirement.MONSTER_IS_SUMMONED_OR_SPELL_TRAP_MONSTER_EFFECT_INCLUDING_SPECIAL_SUMMONING);
+        } else if (cardName.equals("magic jammer")){
+            spellCardActivationTrapCardEffects.add(SpellCardActivationTrapCardEffect.DISCARD_1_CARD_NEGATE_DESTROY_CARD);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
+            userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);
+        } else if (cardName.equals("call of the hunted")){
+            normalTrapCardEffects.add(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_OWNERS_GRAVEYARD_TO_SPECIAL_SUMMON);
+        } else if (cardName.equals("mind crush")){
+
         }
         if (enumValues != null) {
             setEnumValues(enumValues);
