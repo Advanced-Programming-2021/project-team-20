@@ -6,6 +6,9 @@ import controller.non_duel.storage.Storage;
 import model.Deck;
 import model.User;
 import model.cardData.General.Card;
+import model.cardData.MonsterCardData.MonsterCard;
+import model.cardData.SpellCardData.SpellCard;
+import model.cardData.TrapCardData.TrapCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +52,7 @@ public class Duel {
         for (Map.Entry string : allDecks.entrySet()) {
             if (allDecks.get(string).getIsDeckActive()) deckFirstPlayer = allDecks.get(string);
         }
+        //arrayList first player main deck
         ArrayList<Card> cardsFirstPlayerMainDeck = null;
         List<String> stringFirstPlayerMainDeck;
         stringFirstPlayerMainDeck = deckFirstPlayer.getMainDeck();
@@ -56,10 +60,41 @@ public class Duel {
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         for (int i = 0; i < stringFirstPlayerMainDeck.size(); i++) {
             if (allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i)) != null) {
-                 //Card string = allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i));
-                cardsFirstPlayerMainDeck.add(allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i)));
+                if (Card.isCardASpell(allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i)))) {
+                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i));
+                    cardsFirstPlayerMainDeck.add((Card) spellCard.clone());
+                }
+                else if (Card.isCardATrap(allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i)))) {
+                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i));
+                    cardsFirstPlayerMainDeck.add((Card) trapCard.clone());
+                }
+            }
+            else if (allMonsterCards.get(stringFirstPlayerMainDeck.get(i)) != null) {
+                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(stringFirstPlayerMainDeck.get(i));
+                cardsFirstPlayerMainDeck.add((Card) monsterCard.clone());
             }
         }
+        //arrayList first player side deck
+        ArrayList<Card> cardsFirstPlayerSideDeck = null;
+        List<String> stringFirstPlayerSideDeck;
+        stringFirstPlayerSideDeck = deckFirstPlayer.getSideDeck();
+        for (int i = 0; i < stringFirstPlayerSideDeck.size(); i++) {
+            if (allSpellAndTrapCards.get(stringFirstPlayerSideDeck.get(i)) != null) {
+                if (Card.isCardASpell(allSpellAndTrapCards.get(stringFirstPlayerSideDeck.get(i)))) {
+                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(stringFirstPlayerSideDeck.get(i));
+                    cardsFirstPlayerSideDeck.add((Card) spellCard.clone());
+                }
+                else if (Card.isCardATrap(allSpellAndTrapCards.get(stringFirstPlayerSideDeck.get(i)))) {
+                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(stringFirstPlayerSideDeck.get(i));
+                    cardsFirstPlayerSideDeck.add((Card) trapCard.clone());
+                }
+            }
+            else if (allMonsterCards.get(stringFirstPlayerSideDeck.get(i)) != null) {
+                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(stringFirstPlayerSideDeck.get(i));
+                cardsFirstPlayerSideDeck.add((Card) monsterCard.clone());
+            }
+        }
+
     }
 
 
