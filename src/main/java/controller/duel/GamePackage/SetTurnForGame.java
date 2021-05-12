@@ -44,12 +44,24 @@ public class SetTurnForGame {
                 || (player1Selection == 3 && player2Selecyion == 2)) {
             GameManager.getDuelControllerByIndex(index).setTurn(1);
             GameManager.getDuelControllerByIndex(index).setRoundBegin(false);
+            GameManager.getDuelControllerByIndex(index).startDuel(index);
+            setFieldsOfClassLikeFirst();
             return "player 1 must start game";
         }
 
         GameManager.getDuelControllerByIndex(index).setTurn(2);
         GameManager.getDuelControllerByIndex(index).setRoundBegin(false);
+        GameManager.getDuelControllerByIndex(index).startDuel(index);
+        setFieldsOfClassLikeFirst();
         return "player 2 must start game";
 
+    }
+
+    private void setFieldsOfClassLikeFirst(){
+        isPrimarilyMessageSent = false;
+        isFirstPlayerCanSelect = true;
+        isSecondPlayerCanSelect = false;
+        player1Selection = 0;
+        player2Selecyion = 0;
     }
 }

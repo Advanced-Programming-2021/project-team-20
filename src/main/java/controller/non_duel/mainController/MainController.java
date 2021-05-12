@@ -22,6 +22,7 @@ public class MainController {
     private boolean isInProfile;
     private boolean isInImportAndExport;
     private boolean isInDuelMenu;
+    private boolean isDuelBegan;
 
     private LoginMenu loginMenu = new LoginMenu();
     private DeckCommands deckCommands = new DeckCommands();
@@ -61,6 +62,8 @@ public class MainController {
             return importAndExport.findCommand(command);
         } else if (isInDuelMenu) {
             return duel.findCommand(command);
+        } else if (isDuelBegan) {
+            return GameManager.getDuelControllerByIndex(0).getInput(command);
         }
 
         return "invalid commend!";
@@ -123,6 +126,11 @@ public class MainController {
             isInImportAndExport = true;
             isInLoginMenu = false;
             View.setCurrentMenu(menuname);
+            return true;
+        } else if (menuname.equals("Duel Began")) {
+            isDuelBegan = true;
+            isInMainMenu = false;
+            View.setCurrentMenu("Duel Began");
             return true;
         }
         return false;

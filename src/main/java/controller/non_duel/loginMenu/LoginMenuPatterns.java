@@ -48,21 +48,6 @@ public class LoginMenuPatterns {
         return null;
     }
 
-//    public static String findUsernameLoginUser(String command) {
-//        Pattern[] createUserPattern = new Pattern[6];
-//        createUserPattern[0] = Pattern.compile("user login (-u|--username) (\\S+) (-p|--password) (\\S+)");
-//        createUserPattern[1] = Pattern.compile("user login (-p|--password) (\\S+) (-u|--username) (\\S+)");
-//        createUserPattern[2] = Pattern.compile("user login (-u|--username) (\\S+) (-p|--password) (\\S+)");
-//        createUserPattern[3] = Pattern.compile("user login (-u|--username) (\\S+) (-p|--password) (\\S+)");
-//        for (int i = 0; i < 4; i++) {
-//            Matcher matcher = createUserPattern[i].matcher(command);
-//            if (matcher.find()) {
-//                return findUsernameCreateUserWithNumber(command, i);
-//            }
-//        }
-//        return null;
-//    }
-
     private static String findUsernameCreateUserWithNumber(String command, int i) {
         Pattern[] createUserPattern = new Pattern[6];
         createUserPattern[0] = Pattern.compile("user create (-n|--nickname) (\\S+) (-u|--username) (\\S+) (-p|--password) (\\S+)");
