@@ -35,10 +35,12 @@ public class Storage {
     private String addressOfStorage = "Resourses\\";
 
     public void startProgram() throws IOException {
+        
         addUsersToArrayList();
         addMonsterCards();
         addTrapCards();
         addSpellCards();
+    
     }
 
     public void endProgram() {

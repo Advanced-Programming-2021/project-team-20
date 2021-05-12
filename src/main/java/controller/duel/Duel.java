@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class Duel {
     public String findCommand(String command) {
+    
         if(DuelPatterns.isItCorrectPattern(command)) {
             String secondPlayer = DuelPatterns.getSecondPlayer(command);
             if (!doesThisUserNameExist(secondPlayer)) {
@@ -34,7 +35,6 @@ public class Duel {
             if (!isItsRoundNumberCorrect(command)) {
                 return "number of rounds is not supported";
             }
-
         }
         return "invalid commend!";
     }
