@@ -1,7 +1,6 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePhaseControllers.*;
@@ -57,8 +56,8 @@ public class DuelController {
         TributeSummonController tributeSummonController = GameManager.getTributeSummonControllerByIndex(0);
         SetCardController setCardController = GameManager.getSetCardControllerByIndex(0);
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
-        AttackMonsterToMonsterController attackMonsterToMonsterController = GameManager
-                .getAttackMonsterToMonsterControllerByIndex(0);
+        AttackMonsterToMonsterController attackMonsterToMonsterController = GameManager.getAttackMonsterToMonsterControllerByIndex(0);
+        AttackMonsterToMonsterConductor attackMonsterToMonsterConductor = GameManager.getAttackMonsterToMonsterConductorsByIndex(0);
         DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
@@ -68,7 +67,6 @@ public class DuelController {
         } else if (isRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
-
         if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
             return cheat.findCheatCommand(string, 0);
@@ -123,7 +121,7 @@ public class DuelController {
                 return directAttackController.isSelectedCardCorrectForChainActivation(string, 0);
             }
         } else if (string.startsWith("select")
-                && AttackMonsterToMonsterConductor.isClassWaitingForFurtherChainInput()) {
+                && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
             // NormalSummonController normalSummonController =
             // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
@@ -132,7 +130,7 @@ public class DuelController {
                 return output;
             } else {
                 System.out.println("A5");
-                return AttackMonsterToMonsterConductor.checkGivenInputForMonsterEffectActivation(0);
+                return attackMonsterToMonsterConductor.checkGivenInputForMonsterEffectActivation(0);
             }
         } else if (string.startsWith("select") && normalSummonController.isClassWaitingForChainCardToBeSelected()) {
             String output = selectCardController.selectCardInputAnalysis(string);
@@ -256,10 +254,10 @@ public class DuelController {
             return directAttackController.userReplyYesNoForChain(string);
         } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
             return directAttackController.userReplyYesNoForChain(string);
-        } else if (string.equals("no") && AttackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()) {
-            return AttackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
+        } else if (string.equals("no") && attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()) {
+            return attackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
         } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
-            return AttackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
+            return attackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
         } else if (string.equals("print")) {
             System.out.println(MonsterCard.giveATKDEFConsideringEffects("attack", selectCardController
                     .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));

@@ -182,6 +182,7 @@ public class Action {
 
     public static String conductAllActions(int index) {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         //if (actions.get(0).getActionType().equals())
         StringBuilder output = new StringBuilder();
         int startIndex = currentActionConducting;
@@ -189,49 +190,58 @@ public class Action {
         for (int j = 0; j < actions.size(); j++) {
             System.out.println("action " + j + " " + actions.get(j).getActionType().toString());
         }
-        for (int i = startIndex; i < actions.size(); i++) {
-            currentActionConducting = i;
-            Action action = actions.get(actions.size() - i - 1);
+        //int maximumSize = actions.size();
+        //int mirageSize = maximumSize;
+        while (actions.size() != 0) {
+            //currentActionConducting = i;
+            Action action = actions.get(actions.size() - 1);
             if (action.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
-                output.append(NormalSummonConductor.conductNormalSummoningAction(index, actions.size() - i - 1));
+                output.append(NormalSummonConductor.conductNormalSummoningAction(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
-                output.append(TributeSummonConductor.conductTributeSummoningAction(index, actions.size() - i - 1));
+                output.append(TributeSummonConductor.conductTributeSummoningAction(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER)) {
-                output.append(SpecialSummonConductor.conductSpecialSummoningAction(index, actions.size() - i - 1));
+                output.append(SpecialSummonConductor.conductSpecialSummoningAction(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_SETTING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
-                output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - i - 1));
+                output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD) || action.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
-                output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - i - 1));
+                output.append(SettingCardConductor.conductNormalSettingAction(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) ||
                 action.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER) ||
                 action.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) ||
                 action.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
-                output.append(FlipSummoningOrChangingCardPositionConductor.conductFlipSummoningOrChangingCardPosition(index, actions.size() - i - 1));
+                output.append(FlipSummoningOrChangingCardPositionConductor.conductFlipSummoningOrChangingCardPosition(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
-                String string = AttackMonsterToMonsterConductor.AttackConductor(index, actions.size() - i - 1);
+                String string = GameManager.getAttackMonsterToMonsterConductorsByIndex(index).AttackConductor(index, actions.size() - 1);
                 if (string.startsWith("show")) {
                     output.append(string);
                     //this barely gets tested
-                    if ((actions.size() - currentActionConducting) % 2 == 1) {
-                        GameManager.getDuelControllerByIndex(index).changeFakeTurn();
-                    }
-                    return output.toString();
+                    //if ((actions.size() - currentActionConducting) % 2 == 1) {
+                    //    GameManager.getDuelControllerByIndex(index).changeFakeTurn();
+                    //}
+                    break;
+                    //return output.toString();
                 } else {
                     output.append(string);
                 }
             } else if (action.getActionType().equals(ActionType.ALLY_DIRECT_ATTACKING) || action.getActionType().equals(ActionType.OPPONENT_DIRECT_ATTACKING)) {
-                output.append(DirectAttackConductor.DirectAttackConductor(index, actions.size() - i - 1));
+                output.append(DirectAttackConductor.DirectAttackConductor(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL) || action.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)) {
-                output.append(ActivateSpellConductor.conductActivatingSpell(index, actions.size() - i - 1));
+                output.append(ActivateSpellConductor.conductActivatingSpell(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_ACTIVATING_TRAP) || action.getActionType().equals(ActionType.OPPONENT_ACTIVATING_TRAP)) {
-                output.append(ActivateTrapConductor.conductActivatingTrap(index, actions.size() - i - 1));
+                output.append(ActivateTrapConductor.conductActivatingTrap(index, actions.size() - 1));
             }
             output.append("\n");
             outputSentUntilNow = output.toString();
+            if (actions.size() > 1){
+                GameManager.getDuelControllerByIndex(index).changeFakeTurn();
+            }
+            uninterruptedActions.remove(uninterruptedActions.size()-1);
+            actions.remove(actions.size()-1);
         }
         if (output.toString().equals("")) {
             return "nothing is conducted";
         }
+        /*
         if (currentActionConducting == actions.size() - 1) {
             GameManager.getDuelControllerByIndex(index).setFakeTurn(GameManager.getDuelControllerByIndex(index).getTurn());
             System.out.println("fakeTurn DuelController is now " + GameManager.getDuelControllerByIndex(0).getFakeTurn());
@@ -241,6 +251,8 @@ public class Action {
             ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
             uninterruptedActions.clear();
         }
+
+         */
         return output.toString();
     }
 

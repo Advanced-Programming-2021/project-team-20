@@ -239,7 +239,8 @@ public class PhaseController {
         if (turn == 1) {
             cardLocation = new CardLocation(RowOfCardLocation.ALLY_DECK_ZONE, 1);
         } else {
-            cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, 2);
+            //changed index here from 2 to 1
+            cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, 1);
         }
         Card card = duelBoard.getCardByCardLocation(cardLocation);
         if (card == null) {

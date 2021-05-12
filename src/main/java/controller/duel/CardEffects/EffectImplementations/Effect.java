@@ -1,7 +1,9 @@
 package controller.duel.CardEffects.EffectImplementations;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
+import controller.duel.CardEffects.MonsterEffectEnums.BeingAttackedEffect;
 import controller.duel.CardEffects.MonsterEffectEnums.SummoningRequirement;
 import controller.duel.CardEffects.SpellEffectEnums.*;
 import controller.duel.CardEffects.SpellEffectEnums.LogicalActivationRequirement;
@@ -260,6 +262,7 @@ public class Effect {
      */
     private static MessagesFromEffectToControllers iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(int actionTurn, ActionType actionType) {
         //This function also calls are preparations complete if the card was available and returns the final answer
+        //Here, actionTurn is the turn we want to make a move and we are going to check if our opponent can stop us
         MessagesFromEffectToControllers messagesFromEffectToControllers;
         ArrayList<Card> allyOrOpponentSpellTrapCards;
         if (actionTurn == 1) {
@@ -726,11 +729,36 @@ public class Effect {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         ActionType uninterruptedActionType = uninterruptedAction.getActionType();
-        if (uninterruptedActionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER)
-            || uninterruptedActionType.equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.ALLY_RITUAL_SUMMONING_MONSTER)
-            || uninterruptedActionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)
+        if (uninterruptedActionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER)
+            || uninterruptedActionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER)
+            || uninterruptedActionType.equals(ActionType.ALLY_RITUAL_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)
+            || uninterruptedActionType.equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)
             || uninterruptedActionType.equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_RITUAL_SUMMONING_MONSTER)) {
             return true;
+        } else {
+            if (uninterruptedActionType.equals(ActionType.ALLY_ACTIVATING_SPELL) || uninterruptedActionType.equals(ActionType.OPPONENT_ACTIVATING_SPELL)){
+                CardLocation spellCardLocation = uninterruptedAction.getFinalMainCardLocation();
+                Card card = GameManager.getDuelBoardByIndex(index).getCardByCardLocation(spellCardLocation);
+                ArrayList<NormalSpellCardEffect> normalSpellCardEffects = ((SpellCard)card).getNormalSpellCardEffects();
+                if (normalSpellCardEffects.contains(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY)){
+                    return true;
+                }
+            } else if (uninterruptedActionType.equals(ActionType.ALLY_ACTIVATING_TRAP) || uninterruptedActionType.equals(ActionType.OPPONENT_ACTIVATING_TRAP)){
+                CardLocation trapCardLocation = uninterruptedAction.getFinalMainCardLocation();
+                Card card = GameManager.getDuelBoardByIndex(index).getCardByCardLocation(trapCardLocation);
+                ArrayList<NormalTrapCardEffect> normalTrapCardEffects = ((TrapCard)card).getNormalTrapCardEffects();
+                if (normalTrapCardEffects.contains(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION)){
+                    return true;
+                }
+            } else if (uninterruptedActionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)){
+                CardLocation defendingMonsterCardLocation = uninterruptedAction.getTargetingCards().get(uninterruptedAction.getTargetingCards().size()-1);
+                Card card = GameManager.getDuelBoardByIndex(index).getCardByCardLocation(defendingMonsterCardLocation);
+                ArrayList<BeingAttackedEffect> beingAttackedEffects = ((MonsterCard)card).getBeingAttackedEffects();
+                if (beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN)){
+                    return true;
+                }
+            }
+
         }
         // have to check more ifs
         return false;

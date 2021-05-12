@@ -2,6 +2,7 @@ package controller.duel.GamePackage.ActionConductors;
 
 import java.util.ArrayList;
 
+import controller.duel.CardEffects.MonsterEffectEnums.BeingAttackedEffect;
 import controller.duel.CardEffects.MonsterEffectEnums.UponSummoningEffect;
 import controller.duel.CardEffects.SpellEffectEnums.NormalSpellCardEffect;
 import controller.duel.CardEffects.TrapEffectEnums.*;
@@ -45,7 +46,7 @@ public class ActivateTrapConductor {
             previousAction = GameManager.getActionsByIndex(index).get(numberInListOfActions - 1);
         }
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        CardLocation mainCardLocation = action.getMainCardLocation();
+        CardLocation mainCardLocation = action.getFinalMainCardLocation();
         TrapCard trapCard = (TrapCard) duelBoard.getCardByCardLocation(mainCardLocation);
         if (action.isActionCanceled()) {
             return "\nactivation of trap was canceled";
@@ -60,6 +61,7 @@ public class ActivateTrapConductor {
         ActionType actionType = uninterruptedAction.getActionType();
         int actionTurn = uninterruptedAction.getActionTurn();
         Action action = actions.get(numberInListOfActions - 1);
+        Action thisUninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         ArrayList<NormalTrapCardEffect> normalTrapCardEffects = trapCard.getNormalTrapCardEffects();
         //note that normalTrapCardEffects don't need to counter previous action so 5 lines above gives null pointer exception
         ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects = trapCard.getNormalSummonTrapCardEffects();
@@ -71,7 +73,7 @@ public class ActivateTrapConductor {
         ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects = trapCard.getMonsterAttackingTrapCardEffects();
         ArrayList<SpellCardActivationTrapCardEffect> spellCardActivationTrapCardEffects = trapCard.getSpellCardActivationTrapCardEffects();
         ArrayList<TrapCardActivationTrapCardEffect> trapCardActivationTrapCardEffects = trapCard.getTrapCardActivationTrapCardEffects();
-        ArrayList<MonsterEffectActivationTrapCardEffect> monsterEffectActivationTrapCardEffects = trapCard.getMonsterEffectActivationTrapCardEffect();
+        //ArrayList<MonsterEffectActivationTrapCardEffect> monsterEffectActivationTrapCardEffects = trapCard.getMonsterEffectActivationTrapCardEffect();
         boolean isPreviousUninterruptedActionNormalSummoning = ((actionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionTributeSummoning = ((actionType.equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionFlipSummoning = ((actionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) && actionTurn == 2);
@@ -80,7 +82,7 @@ public class ActivateTrapConductor {
         boolean isPreviousUninterruptedActionMonsterAttacking = ((actionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) && actionTurn == 2) || (actionType.equals(ActionType.ALLY_DIRECT_ATTACKING) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_DIRECT_ATTACKING) && actionTurn == 2);
         boolean isPreviousUninterruptedActionSpellActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_SPELL) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_SPELL)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionTrapActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_TRAP) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_TRAP)) && actionTurn == 2);
-        boolean isPreviousUninterruptedActionMonsterEffectActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_MONSTER_EFFECT) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_MONSTER_EFFECT)) && actionTurn == 2);
+        //boolean isPreviousUninterruptedActionMonsterEffectActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_MONSTER_EFFECT) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_MONSTER_EFFECT)) && actionTurn == 2);
         if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.IF_ATK_IS_AT_LEAST_1000_ATK_DESTROY_IT) && isPreviousUninterruptedActionNormalSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
@@ -90,7 +92,7 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.PAY_2000_LP) && isPreviousUninterruptedActionNormalSummoning) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionNormalSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
@@ -105,7 +107,7 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (tributeSummonTrapCardEffects.contains(TributeSummonTrapCardEffect.PAY_2000_LP) && isPreviousUninterruptedActionTributeSummoning) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (tributeSummonTrapCardEffects.contains(TributeSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionTributeSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
@@ -120,7 +122,7 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (flipSummonTrapCardEffects.contains(FlipSummonTrapCardEffect.PAY_2000_LP) && isPreviousUninterruptedActionFlipSummoning) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (flipSummonTrapCardEffects.contains(FlipSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionFlipSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
@@ -131,7 +133,7 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (specialSummonTrapCardEffects.contains(SpecialSummonTrapCardEffect.PAY_2000_LP) && isPreviousUninterruptedActionSpecialSummoning) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (specialSummonTrapCardEffects.contains(SpecialSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionSpecialSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
@@ -142,7 +144,7 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (ritualSummonTrapCardEffects.contains(RitualSummonTrapCardEffect.PAY_2000_LP) && isPreviousUninterruptedActionRitualSummoning) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (ritualSummonTrapCardEffects.contains(RitualSummonTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && isPreviousUninterruptedActionRitualSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
@@ -167,23 +169,23 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (spellCardActivationTrapCardEffects.contains(SpellCardActivationTrapCardEffect.PAY_2000_LP) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionSpellActivating) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (spellCardActivationTrapCardEffects.contains(SpellCardActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionSpellActivating) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
         }
         if (trapCardActivationTrapCardEffects.contains(TrapCardActivationTrapCardEffect.PAY_2000_LP) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionTrapActivating) {
-            pay2000HP(uninterruptedAction, index);
+            pay2000HP(thisUninterruptedAction, index);
         }
         if (trapCardActivationTrapCardEffects.contains(TrapCardActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionTrapActivating) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
         }
-        if (monsterEffectActivationTrapCardEffects.contains(MonsterEffectActivationTrapCardEffect.PAY_2000_LP) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionMonsterEffectActivating) {
-            pay2000HP(uninterruptedAction, index);
+        if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.PAY_2000_LP) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionMonsterAttacking) {
+            pay2000HP(thisUninterruptedAction, index);
         }
-        if (monsterEffectActivationTrapCardEffects.contains(MonsterEffectActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionMonsterEffectActivating) {
+        if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD) && doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(uninterruptedAction, index) && isPreviousUninterruptedActionMonsterAttacking) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
         }
@@ -325,13 +327,20 @@ public class ActivateTrapConductor {
     }
 
     public static boolean doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(Action uninterruptedAction, int index) {
-        CardLocation mainCardLocation = uninterruptedAction.getMainCardLocation();
+        CardLocation mainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(mainCardLocation);
         if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
             ArrayList<UponSummoningEffect> uponSummoningEffects = monsterCard.getUponSummoningEffects();
             if (uponSummoningEffects.contains(UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_MONSTER_FROM_HAND_IN_DEFENSE_POSITION)) {
+                return true;
+            }
+            CardLocation defendingMonsterCardLocation = uninterruptedAction.getTargetingCards().get(uninterruptedAction.getTargetingCards().size()-1);
+            Card defendingCard = duelBoard.getCardByCardLocation(defendingMonsterCardLocation);
+            MonsterCard defendingMonsterCard = (MonsterCard) defendingCard;
+            ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
+            if (beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN)){
                 return true;
             }
         }

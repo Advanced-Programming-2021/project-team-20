@@ -3,6 +3,7 @@ package controller.duel.PreliminaryPackage;
 import java.util.ArrayList;
 
 import controller.duel.GamePackage.Action;
+import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
@@ -15,6 +16,7 @@ public class GameManager {
     public static ArrayList<ActivateSpellTrapController> activateSpellTrapControllers = new ArrayList<>();
     public static ArrayList<ActivateMonsterController> activateMonsterControllers = new ArrayList<>();
     public static ArrayList<AttackMonsterToMonsterController> attackMonsterToMonsterControllers = new ArrayList<>();
+    public static ArrayList<AttackMonsterToMonsterConductor> attackMonsterToMonsterConductors = new ArrayList<>();
     public static ArrayList<BattlePhaseController> battlePhaseControllers = new ArrayList<>();
     public static ArrayList<ChainController> chainControllers = new ArrayList<>();
     public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
@@ -41,6 +43,7 @@ public class GameManager {
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
         activateMonsterControllers.add(new ActivateMonsterController());
         attackMonsterToMonsterControllers.add(new AttackMonsterToMonsterController());
+        attackMonsterToMonsterConductors.add(new AttackMonsterToMonsterConductor());
         battlePhaseControllers.add(new BattlePhaseController());
         chainControllers.add(new ChainController());
         changeCardPositionControllers.add(new ChangeCardPositionController());
@@ -101,6 +104,10 @@ public class GameManager {
 
     public static AttackMonsterToMonsterController getAttackMonsterToMonsterControllerByIndex(int index) {
         return attackMonsterToMonsterControllers.get(index);
+    }
+
+    public static AttackMonsterToMonsterConductor getAttackMonsterToMonsterConductorsByIndex(int index) {
+        return attackMonsterToMonsterConductors.get(index);
     }
 
     public static BattlePhaseController battlePhaseController(int index) {

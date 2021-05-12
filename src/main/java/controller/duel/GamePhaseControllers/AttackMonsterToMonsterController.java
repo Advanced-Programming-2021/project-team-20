@@ -150,7 +150,10 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         } else if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
             ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();
-            if (beingAttackedEffects.contains(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN) && beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN)) {
+            if (beingAttackedEffects.contains(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN) &&
+                beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN) &&
+                !monsterCard.isOncePerTurnCardEffectUsed()) {
+                monsterCard.setOncePerTurnCardEffectUsed(true);
                 return "select a card from your graveyard, hand, or deck to special summon";
             }
             // add suijin effect here too

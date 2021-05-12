@@ -24,14 +24,6 @@ public class FlipSummonController extends SummonSetCommonClass {
         isClassWaitingForFurtherChainInput = false;
     }
 
-    public boolean isGoingToChangeTurnsForChaining() {
-        return isGoingToChangeTurnsForChaining;
-    }
-
-    public boolean isClassWaitingForChainCardToBeSelected() {
-        return isClassWaitingForFurtherChainInput;
-    }
-
     public String flipSummonInputAnalysis(String string) {
         String inputRegex = "(?<=\\n|^)flip-summon(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
@@ -75,7 +67,6 @@ public class FlipSummonController extends SummonSetCommonClass {
         return null;
     }
 
-
     public void createActionForFlipSummoning(int index) {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
@@ -90,25 +81,5 @@ public class FlipSummonController extends SummonSetCommonClass {
             actions.add(new Action(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER, fakeTurn, mainCard, null, null, null, null, null, null, null, null, null, null, null));
         }
     }
-
-
-    public String userReplyYesNoForChain(String string) {
-        String inputRegex = "(?<=\\n|^)no(?=\\n|$)";
-        Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
-        if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
-            isGoingToChangeTurnsForChaining = false;
-            return "now it will be player's turn\nshow board" + Action.conductAllActions(0);
-        } else {
-            String anotherRegex = "(?<=\\n|^)yes(?=\\n|$)";
-            Matcher newMatcher = Utility.getCommandMatcher(string, anotherRegex);
-            if (Utility.isMatcherCorrectWithoutErrorPrinting(newMatcher)) {
-                isGoingToChangeTurnsForChaining = false;
-                isClassWaitingForFurtherChainInput = true;
-                return "simply select the spell or trap card you want to activate.\nthere is no need to enter activate command after that.";
-            }
-        }
-        return "invalid command";
-    }
-
 
 }

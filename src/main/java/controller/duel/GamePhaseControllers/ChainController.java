@@ -30,12 +30,10 @@ public class ChainController {
     }
 
     public String userReplyYesNoForChain(String string) {
-        ArrayList<Action> actions = GameManager.getActionsByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
         String inputRegex = "(?<=\\n|^)no(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
-        int turn = duelController.getTurn();
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
             duelController.changeFakeTurn();
             int fakeTurn = duelController.getFakeTurn();

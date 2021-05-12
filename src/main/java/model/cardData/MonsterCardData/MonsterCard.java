@@ -81,12 +81,6 @@ public class MonsterCard extends Card {
             } else if (level >= 9) {
                 summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
             }
-        } else if (cardDescription.equals("a")){
-            summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
-            summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
-            summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
-            summoningRequirements.add(SummoningRequirement.TRIBUTE_1_MONSTER);
-            summoningRequirements.add(SummoningRequirement.DISCARD_1_CARD);
         } else if (cardDescription.equals("b")){
             summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
             summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
@@ -97,12 +91,23 @@ public class MonsterCard extends Card {
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
         } else if (cardDescription.equals("c")){
-            summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
-            summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
+
         } else if (cardDescription.equals("r")){
             summoningRequirements.add(SummoningRequirement.CAN_BE_RITUAL_SUMMONED);
         }
-        if (cardName.equals("exploder dragon")){
+        if (cardName.equals("beast king barbaros")){
+
+        }
+        if (cardName.equals("the tricky")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
+            //summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.TRIBUTE_1_MONSTER);
+            summoningRequirements.add(SummoningRequirement.DISCARD_1_CARD);
+        } else if (cardName.equals("gate guardian")){
+            summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
+            summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
+        } else if (cardName.equals("exploder dragon")){
             beingAttackedEffects.add(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES);
             beingAttackedEffects.add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
         } else if (cardName.equals("yomi ship")){
