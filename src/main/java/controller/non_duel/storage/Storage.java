@@ -35,10 +35,23 @@ public class Storage {
     private String addressOfStorage = "Resourses\\";
 
     public void startProgram() throws IOException {
+
         addUsersToArrayList();
         addMonsterCards();
         addTrapCards();
         addSpellCards();
+
+        // User user = getUserByName("mohammad");
+        // Deck deck = user.getDecks().get("myDeck");
+        // System.out.println(deck.getSizeOfMainDeck() + " " + deck.getSizeOfSideDeck());
+
+        // for (Map.Entry<String, Card> a : allMonsterCards.entrySet()) {
+        // System.out.println("shop buy " + a.getValue().getCardName());
+        // }
+        // for (Map.Entry<String, Card> a : allSpellAndTrapCards.entrySet()) {
+        // System.out.println("shop buy " + a.getValue().getCardName());
+        // }
+
     }
 
     public void endProgram() {
@@ -336,6 +349,8 @@ public class Storage {
     }
 
     public static boolean doesCardExist(String cardname) {
+        // System.out.println(cardname + " " + (allMonsterCards.containsKey(cardname) ||
+        // allSpellAndTrapCards.containsKey(cardname)));
         return allMonsterCards.containsKey(cardname) || allSpellAndTrapCards.containsKey(cardname);
     }
 

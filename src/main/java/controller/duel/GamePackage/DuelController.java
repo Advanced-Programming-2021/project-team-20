@@ -6,6 +6,7 @@ import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConduc
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.cheat.Cheat;
+import controller.non_duel.mainController.MainController;
 import controller.non_duel.storage.Storage;
 import model.User;
 import model.cardData.General.Card;
@@ -27,8 +28,8 @@ public class DuelController {
     private ArrayList<Boolean> usersSummoningOrSettingMonsterOneTime = new ArrayList<>();
     private ArrayList<String> allInputs = new ArrayList<>();
     private ArrayList<Integer> maxLifePointOfPlayers = new ArrayList<>();
-    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds;
-    private SetTurnForGame setTurnForGame;
+    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
+    private SetTurnForGame setTurnForGame = new SetTurnForGame();
 
     public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
             ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
@@ -39,15 +40,16 @@ public class DuelController {
         playingUsers.add(secondUser);
         lifePoints.add(8000);
         lifePoints.add(8000);
-        maxLifePointOfPlayers.add(8000);
-        maxLifePointOfPlayers.add(8000);
+        maxLifePointOfPlayers.add(0);
+        maxLifePointOfPlayers.add(0);
         usersSummoningOrSettingMonsterOneTime.add(true);
         usersSummoningOrSettingMonsterOneTime.add(true);
-        isGameOver = false;
+        isRoundBegin = true;
         currentRound = 1;
     }
 
     public String getInput(String string) {
+
         allInputs.add(string);
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
         NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
@@ -63,7 +65,7 @@ public class DuelController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
 
         if (isRoundOver) {
-          return  changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
+            return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
         } else if (isRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
@@ -263,23 +265,27 @@ public class DuelController {
                     .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
             System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController
                     .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
-        } else if ((string.startsWith("pay") || string.startsWith("destroy")) && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()){
+        } else if ((string.startsWith("pay") || string.startsWith("destroy"))
+                && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()) {
             return phaseController.redirectInputForStandByPhaseSpellCheck(string);
         }
         return "invalid command";
     }
 
-    public String startDuel(int index) {
+    public void startDuel(int index) {
+
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
-        phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
+        if (turn == 1) {
+            phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
+        }
+        if (turn == 2) {
+            phaseController.setPhaseInGame(PhaseInGame.OPPONENT_MAIN_PHASE_1);
+        }
         isRoundOver = false;
-        isRoundBegin = true;
         GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
-        changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
-        setTurnForGame = new SetTurnForGame();
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
-        return "Its first players turn";
+
     }
 
     public String endGame(int turn, int index) {
@@ -289,8 +295,9 @@ public class DuelController {
         winnerUser.setMoney(numberOfRounds * (1000 + maxLifePointOfPlayers.get(turn - 1)));
         winnerUser.setScore(numberOfRounds * (1000));
         loserUser.setMoney(numberOfRounds * (100));
-        view.View.setCurrentMenu("Main Menu");
-        GameManager.removeClassesOfGameIsOver(index);
+        GameManager.removeClassesWhenGameIsOver(index);
+        MainController mainController = MainController.getInstance();
+        mainController.exitMenu();
 
         return winnerUser.getName() + " won the whole match with score: "
                 + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + (numberOfRounds * 1000));

@@ -17,7 +17,7 @@ public class User {
         this.name = username;
         this.nickname = nickname;
         this.password = password;
-        this.money = 100000;
+        this.money = 1000000;
     }
 
     public User() {

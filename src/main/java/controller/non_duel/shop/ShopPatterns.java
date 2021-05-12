@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class ShopPatterns {
 
     public static boolean isItBuyPattern(String command) {
-        Pattern pattern = Pattern.compile("shop buy \\S+");
+        Pattern pattern = Pattern.compile("shop buy .+");
         Matcher matcher = pattern.matcher(command);
         return matcher.find();
     }
@@ -18,11 +18,11 @@ public class ShopPatterns {
     }
 
     public static String getCardName(String command) {
-        Pattern pattern = Pattern.compile("shop buy (\\S+)");
+        Pattern pattern = Pattern.compile("shop buy (.+)");
         Matcher matcher = pattern.matcher(command);
         if (matcher.find()) {
             return matcher.group(1);
         }
-        return null;
+        return "invalid command!";
     }
 }

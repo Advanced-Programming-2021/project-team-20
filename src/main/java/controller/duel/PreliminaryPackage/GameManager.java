@@ -62,7 +62,7 @@ public class GameManager {
         uninterruptedActions.add(new ArrayList<>());
     }
 
-    public static void removeClassesOfGameIsOver(int index) {
+    public static void removeClassesWhenGameIsOver(int index) {
         duelControllerList.remove(index);
         duelBoardList.remove(index);
         activateSpellTrapControllers.remove(index);
