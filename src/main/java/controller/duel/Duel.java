@@ -57,8 +57,7 @@ public class Duel {
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         for (int i = 0; i < stringFirstPlayerMainDeck.size(); i++) {
             if (allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i)) != null) {
-                // String string = allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i));
-                // cardsFirstPlayerMainDeck.add(allSpellAndTrapCards.get(string));
+           
             }
         }
     }
