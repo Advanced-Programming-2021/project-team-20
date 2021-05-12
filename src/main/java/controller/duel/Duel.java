@@ -7,7 +7,9 @@ import model.Deck;
 import model.User;
 import model.cardData.General.Card;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Duel {
@@ -35,9 +37,32 @@ public class Duel {
             if (!isItsRoundNumberCorrect(command)) {
                 return "number of rounds is not supported";
             }
+            startNewGame(firstUser, secondUser, DuelPatterns.getRoundsNumber(command));
+            return "duel successfully started!";
         }
         return "invalid commend!";
     }
+
+
+    private void startNewGame(User firstUser, User secondUser, int roundsNumber) {
+        HashMap<String, Deck> allDecks = firstUser.getDecks();
+        Deck deckFirstPlayer = null;
+        for (Map.Entry string : allDecks.entrySet()) {
+            if (allDecks.get(string).getIsDeckActive()) deckFirstPlayer = allDecks.get(string);
+        }
+        ArrayList<Card> cardsFirstPlayerMainDeck = null;
+        List<String> stringFirstPlayerMainDeck;
+        stringFirstPlayerMainDeck = deckFirstPlayer.getMainDeck();
+        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
+        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        for (int i = 0; i < stringFirstPlayerMainDeck.size(); i++) {
+            if (allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i)) != null) {
+                // String string = allSpellAndTrapCards.get(stringFirstPlayerMainDeck.get(i));
+                // cardsFirstPlayerMainDeck.add(allSpellAndTrapCards.get(string));
+            }
+        }
+    }
+
 
     private boolean isThisDeckValid(User user) {
         HashMap<String, Deck> allDecks = user.getDecks();
@@ -45,7 +70,7 @@ public class Duel {
         for (Map.Entry string : allDecks.entrySet()) {
             if (allDecks.get(string).getIsDeckActive()) deck = allDecks.get(string);
         }
-        if (deck.getSizeOfMainDeck() >= 40) return true;
+        if (deck.getSizeOfMainDeck() >= 40 && deck.getSizeOfMainDeck() <= 60) return true;
         return false;
     }
 
