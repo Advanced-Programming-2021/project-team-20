@@ -95,6 +95,58 @@ public class Duel {
             }
         }
 
+
+
+
+        HashMap<String, Deck> allDecksSecondPlayer = secondUser.getDecks();
+        Deck deckSecondPlayer = null;
+        for (Map.Entry string : allDecksSecondPlayer.entrySet()) {
+            if (allDecksSecondPlayer.get(string).getIsDeckActive()) deckFirstPlayer = allDecksSecondPlayer.get(string);
+        }
+        //arrayList second player main deck
+        ArrayList<Card> cardsSecondPlayerMainDeck = null;
+        List<String> stringSecondPlayerMainDeck;
+        stringSecondPlayerMainDeck = deckSecondPlayer.getMainDeck();
+        for (int i = 0; i < stringSecondPlayerMainDeck.size(); i++) {
+            if (allSpellAndTrapCards.get(stringSecondPlayerMainDeck.get(i)) != null) {
+                if (Card.isCardASpell(allSpellAndTrapCards.get(stringSecondPlayerMainDeck.get(i)))) {
+                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(stringSecondPlayerMainDeck.get(i));
+                    cardsSecondPlayerMainDeck.add((Card) spellCard.clone());
+                }
+                else if (Card.isCardATrap(allSpellAndTrapCards.get(stringSecondPlayerMainDeck.get(i)))) {
+                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(stringSecondPlayerMainDeck.get(i));
+                    cardsSecondPlayerMainDeck.add((Card) trapCard.clone());
+                }
+            }
+            else if (allMonsterCards.get(stringSecondPlayerMainDeck.get(i)) != null) {
+                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(stringSecondPlayerMainDeck.get(i));
+                cardsSecondPlayerMainDeck.add((Card) monsterCard.clone());
+            }
+        }
+        //arrayList first player side deck
+        ArrayList<Card> cardsSecondPlayerSideDeck = null;
+        List<String> stringSecondPlayerSideDeck;
+        stringSecondPlayerSideDeck = deckSecondPlayer.getSideDeck();
+        for (int i = 0; i < stringSecondPlayerSideDeck.size(); i++) {
+            if (allSpellAndTrapCards.get(stringSecondPlayerSideDeck.get(i)) != null) {
+                if (Card.isCardASpell(allSpellAndTrapCards.get(stringSecondPlayerSideDeck.get(i)))) {
+                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(stringSecondPlayerSideDeck.get(i));
+                    cardsSecondPlayerSideDeck.add((Card) spellCard.clone());
+                }
+                else if (Card.isCardATrap(allSpellAndTrapCards.get(stringSecondPlayerSideDeck.get(i)))) {
+                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(stringSecondPlayerSideDeck.get(i));
+                    cardsSecondPlayerSideDeck.add((Card) trapCard.clone());
+                }
+            }
+            else if (allMonsterCards.get(stringSecondPlayerSideDeck.get(i)) != null) {
+                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(stringSecondPlayerSideDeck.get(i));
+                cardsSecondPlayerSideDeck.add((Card) monsterCard.clone());
+            }
+        }
+        GameManager gameManager = new GameManager();
+        gameManager.addANewGame(cardsFirstPlayerMainDeck, cardsFirstPlayerSideDeck,
+            cardsSecondPlayerMainDeck, cardsSecondPlayerSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
+
     }
 
 
