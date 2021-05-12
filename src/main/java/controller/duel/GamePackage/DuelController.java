@@ -7,6 +7,7 @@ import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConduc
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.cheat.Cheat;
+import controller.non_duel.mainController.MainController;
 import controller.non_duel.storage.Storage;
 import model.User;
 import model.cardData.General.Card;
@@ -40,8 +41,8 @@ public class DuelController {
         playingUsers.add(secondUser);
         lifePoints.add(8000);
         lifePoints.add(8000);
-        maxLifePointOfPlayers.add(8000);
-        maxLifePointOfPlayers.add(8000);
+        maxLifePointOfPlayers.add(0);
+        maxLifePointOfPlayers.add(0);
         usersSummoningOrSettingMonsterOneTime.add(true);
         usersSummoningOrSettingMonsterOneTime.add(true);
         isGameOver = false;
@@ -291,8 +292,9 @@ public class DuelController {
         winnerUser.setMoney(numberOfRounds * (1000 + maxLifePointOfPlayers.get(turn - 1)));
         winnerUser.setScore(numberOfRounds * (1000));
         loserUser.setMoney(numberOfRounds * (100));
-        view.View.setCurrentMenu("Main Menu");
-        GameManager.removeClassesOfGameIsOver(index);
+        GameManager.removeClassesWhenGameIsOver(index);
+        MainController mainController = MainController.getInstance();
+        mainController.exitMenu();
 
         return winnerUser.getName() + " won the whole match with score: "
                 + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + (numberOfRounds * 1000));

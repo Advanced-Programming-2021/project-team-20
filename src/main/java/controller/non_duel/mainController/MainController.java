@@ -1,5 +1,6 @@
 package controller.non_duel.mainController;
 
+import controller.duel.Duel;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.non_duel.deckCommands.DeckCommands;
 import controller.non_duel.importAndExport.ImportAndExport;
@@ -20,7 +21,7 @@ public class MainController {
     private boolean isInShop;
     private boolean isInProfile;
     private boolean isInImportAndExport;
-    private boolean isInGameManager;
+    private boolean isInDuelMenu;
 
     private LoginMenu loginMenu = new LoginMenu();
     private DeckCommands deckCommands = new DeckCommands();
@@ -28,7 +29,7 @@ public class MainController {
     private Scoreboard scoreboard = new Scoreboard();
     private Shop shop = new Shop();
     private ImportAndExport importAndExport = new ImportAndExport();
-    private GameManager gameManager = new GameManager();
+    private Duel duel = new Duel();
 
     public static MainController getInstance() {
         if (mainController == null) {
@@ -56,12 +57,10 @@ public class MainController {
             return scoreboard.findCommands(command);
         } else if (isInShop) {
             return shop.findCommand(command);
-        } else if (isInGameManager) {
-            gameManager.getClass();
         } else if (isInImportAndExport) {
             return importAndExport.findCommand(command);
-        } else if (View.getCurrentMenu().equals("Main Menu") && command.startsWith("duel")) {
-            gameManager.getClass();
+        } else if (isInDuelMenu) {
+            return duel.findCommand(command);
         }
 
         return "invalid commend!";
@@ -83,15 +82,14 @@ public class MainController {
             isInShop = false;
         } else if (isInScoreBoard) {
             isInScoreBoard = false;
-        } else if (isInGameManager) {
-            isInGameManager = false;
         } else if (isInImportAndExport) {
             isInImportAndExport = false;
+        } else if (isInDuelMenu) {
+            isInDuelMenu = false;
         }
 
         isInMainMenu = true;
         View.setCurrentMenu("Main Menu");
-
     }
 
     public boolean enterMenu(String menuname) {
@@ -117,7 +115,7 @@ public class MainController {
             View.setCurrentMenu(menuname);
             return true;
         } else if (menuname.equals("Duel")) {
-            isInGameManager = true;
+            isInDuelMenu = true;
             isInMainMenu = false;
             View.setCurrentMenu(menuname);
             return true;
@@ -129,5 +127,4 @@ public class MainController {
         }
         return false;
     }
-
 }
