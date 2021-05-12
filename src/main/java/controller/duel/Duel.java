@@ -8,6 +8,7 @@ import model.User;
 import model.cardData.General.Card;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Duel {
     public String findCommand(String command) {
@@ -33,27 +34,31 @@ public class Duel {
             if (!isItsRoundNumberCorrect(command)) {
                 return "number of rounds is not supported";
             }
-            //GameManager gameManager;
+
         }
         return "invalid commend!";
     }
 
     private boolean isThisDeckValid(User user) {
-        //needs completion
-        HashMap<String, Deck> decks = user.getDecks();
-        Deck deck;
-        //deck.
-        return true;
+        HashMap<String, Deck> allDecks = user.getDecks();
+        Deck deck = null;
+        for (Map.Entry string : allDecks.entrySet()) {
+            if (allDecks.get(string).getIsDeckActive()) deck = allDecks.get(string);
+        }
+        if (deck.getSizeOfMainDeck() >= 40) return true;
+        return false;
     }
 
-    private boolean doesItHaveAnyActiveDeck(User firstUser) {
-        //doroste?
-        if (firstUser.getDecks() == null) return false;
-        return true;
+    private boolean doesItHaveAnyActiveDeck(User user) {
+        HashMap<String, Deck> allDecks = user.getDecks();
+        for (Map.Entry string : allDecks.entrySet()) {
+            if (allDecks.get(string).getIsDeckActive()) return true;
+        }
+        return false;
     }
 
-    private boolean doesThisUserNameExist(String secondPlayer) {
-        if (Storage.getUserByName(secondPlayer) == null) return false;
+    private boolean doesThisUserNameExist(String player) {
+        if (Storage.getUserByName(player) == null) return false;
         return true;
     }
 
