@@ -44,11 +44,8 @@ public class SettingCardConductor {
             turn = 1;
             Card card = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
             if (Card.isCardASpell(card) && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
-                uninterruptedAction.setFinalMainCardLocation(new CardLocation(
-                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, true)
-                                .getRowOfCardLocation(),
-                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, true)
-                                .getIndex() + 1));
+                uninterruptedAction.setFinalMainCardLocation(new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1));
+                sendUseLessSpellFieldCardToGraveyard(index, 1);
             } else {
                 uninterruptedAction.setFinalMainCardLocation(new CardLocation(
                         duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_ZONE, true)
@@ -67,11 +64,8 @@ public class SettingCardConductor {
             turn = 2;
             Card card = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
             if (Card.isCardASpell(card) && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
-                uninterruptedAction.setFinalMainCardLocation(new CardLocation(
-                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, false)
-                                .getRowOfCardLocation(),
-                        duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, false)
-                                .getIndex() + 1));
+                uninterruptedAction.setFinalMainCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1));
+                sendUseLessSpellFieldCardToGraveyard(index, 2);
             } else {
                 uninterruptedAction.setFinalMainCardLocation(new CardLocation(
                         duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_ZONE, false)
@@ -104,6 +98,20 @@ public class SettingCardConductor {
         return "set successfully";
         // }
         // return "normal setting action was interrupted and therefore, canceled.";
+    }
+
+    private static void sendUseLessSpellFieldCardToGraveyard(int index, int turn){
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        CardLocation possibleCardLocation;
+        if (turn ==1 ){
+            possibleCardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE ,1);
+        } else {
+            possibleCardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE ,1);
+        }
+        Card possibleCard = duelBoard.getCardByCardLocation(possibleCardLocation);
+        if (Card.isCardASpell(possibleCard)){
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(possibleCardLocation, index);
+        }
     }
 
     public static String conductNormalSettingAction(int index, int numberInListOfActions) {

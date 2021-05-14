@@ -26,6 +26,7 @@ public class Action {
     private ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard;
     private ArrayList<CardLocation> cardsToBeRitualSummoned;
     private CardPosition cardPositionOfMainCard;
+    private String optionalCardNameInput;
     private static int currentActionConducting = 0;
     private static String outputSentUntilNow = "";
 
@@ -33,7 +34,7 @@ public class Action {
         , ArrayList<CardLocation> cardsToBeDiscarded, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo
         , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand
         , ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf
-        , ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, ArrayList<CardLocation> cardsToBeRitualSummoned, CardPosition cardPosition) {
+        , ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, ArrayList<CardLocation> cardsToBeRitualSummoned, CardPosition cardPosition, String optionalCardNameInput) {
         this.spendingCards = new ArrayList<>();
         this.targetingCards = new ArrayList<>();
         this.mainCardLocation = mainCardLocation;
@@ -51,6 +52,7 @@ public class Action {
         this.actionTurn = actionTurn;
         this.isActionCanceled = false;
         this.isSecondCardInHandAfterFirstCardInHand = false;
+        this.optionalCardNameInput = optionalCardNameInput;
         if (spendingCards != null) {
             this.spendingCards.addAll(spendingCards);
         }
@@ -136,6 +138,10 @@ public class Action {
         return isSecondCardInHandAfterFirstCardInHand;
     }
 
+    public String getOptionalCardNameInput() {
+        return optionalCardNameInput;
+    }
+
     public ArrayList<CardLocation> getCardsToBeDiscarded() {
         return cardsToBeDiscarded;
     }
@@ -192,9 +198,11 @@ public class Action {
         }
         //int maximumSize = actions.size();
         //int mirageSize = maximumSize;
-        while (actions.size() != 0) {
+        boolean breakStatement = false;
+        while (actions.size() != 0 && !breakStatement) {
             //currentActionConducting = i;
             Action action = actions.get(actions.size() - 1);
+            AttackMonsterToMonsterConductor attackMonsterToMonsterConductor = GameManager.getAttackMonsterToMonsterConductorsByIndex(index);
             if (action.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {
                 output.append(NormalSummonConductor.conductNormalSummoningAction(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
@@ -211,18 +219,8 @@ public class Action {
                 action.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
                 output.append(FlipSummoningOrChangingCardPositionConductor.conductFlipSummoningOrChangingCardPosition(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || action.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
-                String string = GameManager.getAttackMonsterToMonsterConductorsByIndex(index).AttackConductor(index, actions.size() - 1);
-                if (string.startsWith("show")) {
-                    output.append(string);
-                    //this barely gets tested
-                    //if ((actions.size() - currentActionConducting) % 2 == 1) {
-                    //    GameManager.getDuelControllerByIndex(index).changeFakeTurn();
-                    //}
-                    break;
-                    //return output.toString();
-                } else {
-                    output.append(string);
-                }
+                String string = attackMonsterToMonsterConductor.AttackConductor(index, actions.size() - 1);
+                output.append(string);
             } else if (action.getActionType().equals(ActionType.ALLY_DIRECT_ATTACKING) || action.getActionType().equals(ActionType.OPPONENT_DIRECT_ATTACKING)) {
                 output.append(DirectAttackConductor.DirectAttackConductor(index, actions.size() - 1));
             } else if (action.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL) || action.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)) {
@@ -232,11 +230,17 @@ public class Action {
             }
             output.append("\n");
             outputSentUntilNow = output.toString();
-            if (actions.size() > 1){
-                GameManager.getDuelControllerByIndex(index).changeFakeTurn();
+            if (attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToDestroy() || attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToSpecialSummon()
+                || attackMonsterToMonsterConductor.isClassWaitingForUserToChooseAttackPositionOrDefensePosition() || attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()
+            || FlipSummoningOrChangingCardPositionConductor.isClassWaitingForPlayerToPickMonsterToDestroy() || FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
+                breakStatement = true;
+            } else {
+                if (actions.size() > 1 && action.getActionTurn() != actions.get(actions.size() - 2).getActionTurn()) {
+                    GameManager.getDuelControllerByIndex(index).changeFakeTurn();
+                }
+                uninterruptedActions.remove(uninterruptedActions.size() - 1);
+                actions.remove(actions.size() - 1);
             }
-            uninterruptedActions.remove(uninterruptedActions.size()-1);
-            actions.remove(actions.size()-1);
         }
         if (output.toString().equals("")) {
             return "nothing is conducted";

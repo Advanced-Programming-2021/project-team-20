@@ -79,12 +79,16 @@ public class SummonSetCommonClass extends ChainController {
             SpellCard spellCard = (SpellCard) card;
             SpellCardValue spellCardValue = spellCard.getSpellCardValue();
             if (spellCardValue.equals(SpellCardValue.FIELD)) {
+                return "";
+                /*
                 if (turn == 1 && duelBoard.isZoneFull(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
                     return "spell card zone is full";
                 } else if (turn == 2 && duelBoard.isZoneFull(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
                     return "spell card zone is full";
                 }
                 return "";
+
+                 */
             }
         }
         if (turn == 1 && duelBoard.isZoneFull(RowOfCardLocation.ALLY_SPELL_ZONE) || turn == 2 && duelBoard.isZoneFull(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {

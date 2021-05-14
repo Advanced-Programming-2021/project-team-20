@@ -123,16 +123,16 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         targetingCards.add(opponentCardLocation);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
+            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null));
+            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
         }
         targetingCards.clear();
     }
 
-
+/*
     public String isSelectedCardCorrectForChainActivation(String string, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(index);
@@ -147,7 +147,13 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
             isAlreadyActivated = trapCard.isCardAlreadyActivated();
-        } else if (Card.isCardAMonster(card)) {
+        }
+
+        */
+
+
+        /*
+        else if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
             ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();
             if (beingAttackedEffects.contains(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN) &&
@@ -160,8 +166,14 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             else {
                 return "you can't choose this card for chain activation.\nselect another card";
             }
-        } else {
-            return "you can't choose this card for chain activation.\nselect another card";
+        }
+        */
+
+
+
+    /*
+         else {
+             return "you can't choose this card for chain activation.\nselect another card";
         }
         if (isAlreadyActivated) {
             return "you have already activated this card\nselect another card";
@@ -199,4 +211,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
 
         }
     }
+
+     */
+
 }

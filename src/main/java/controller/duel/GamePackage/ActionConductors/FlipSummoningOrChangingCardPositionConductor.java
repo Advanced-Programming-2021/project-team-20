@@ -1,13 +1,17 @@
 package controller.duel.GamePackage.ActionConductors;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
+import controller.duel.CardEffects.MonsterEffectEnums.BeingAttackedEffect;
 import controller.duel.CardEffects.MonsterEffectEnums.FlipEffect;
 import controller.duel.GamePackage.Action;
 import controller.duel.GamePackage.ActionType;
 import controller.duel.GamePackage.DuelBoard;
+import controller.duel.GamePackage.DuelController;
 import controller.duel.GamePhaseControllers.SelectCardController;
 import controller.duel.PreliminaryPackage.GameManager;
+import controller.duel.Utility.Utility;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 import model.cardData.General.CardPosition;
@@ -15,9 +19,15 @@ import model.cardData.General.RowOfCardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 
 public class FlipSummoningOrChangingCardPositionConductor {
+    private static CardLocation monsterCardToBeFlippedOrPositionChanged;
     private static boolean isActionCanceled = false;
-    private static boolean isClassWaitingWaitingForPlayerToPickMonsterToDestroy = false;
+    private static boolean isClassWaitingForPlayerToPickMonsterToDestroy = false;
     private static boolean shouldRedirectConductorToAvoidRepetition = false;
+    private static boolean promptingUserToActivateMonsterEffect;
+
+    public static boolean isPromptingUserToActivateMonsterEffect() {
+        return promptingUserToActivateMonsterEffect;
+    }
 
     public static boolean isIsActionCanceled() {
         return isActionCanceled;
@@ -27,25 +37,26 @@ public class FlipSummoningOrChangingCardPositionConductor {
         FlipSummoningOrChangingCardPositionConductor.isActionCanceled = isActionCanceled;
     }
 
-    public static boolean isIsClassWaitingWaitingForPlayerToPickMonsterToDestroy() {
-        return isClassWaitingWaitingForPlayerToPickMonsterToDestroy;
+    public static boolean isClassWaitingForPlayerToPickMonsterToDestroy() {
+        return isClassWaitingForPlayerToPickMonsterToDestroy;
     }
 
     public static String conductFlipSummoningOrChangingCardPositionUninterruptedAction(int index, int numberInListOfActions) {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        if (!isActionCanceled){
+        if (!isActionCanceled) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-            MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
+            monsterCardToBeFlippedOrPositionChanged = uninterruptedAction.getMainCardLocation();
+            MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardToBeFlippedOrPositionChanged);
             monsterCard.setCardPositionChanged(true);
-            if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)){
+            if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) {
                 monsterCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
                 //uninterruptedActions.remove(numberInListOfActions);
                 return "flip summoned successfully";
-            } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)){
-                if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)){
+            } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
+                if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
                     monsterCard.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);
-                } else if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)){
+                } else if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                     monsterCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
                 }
                 //actions.remove(numberInListOfActions);
@@ -54,7 +65,7 @@ public class FlipSummoningOrChangingCardPositionConductor {
             // check effectts
             return "nothing is conducted";
         }
-        if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)){
+        if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) {
             return "flip summoning action was interrupted and therefore, canceled.";
         } else {
             return "changing card position action was interrupted and therefore, canceled.";
@@ -62,23 +73,54 @@ public class FlipSummoningOrChangingCardPositionConductor {
     }
 
     public static String conductFlipSummoningOrChangingCardPosition(int index, int numberInListOfActions) {
-        if (shouldRedirectConductorToAvoidRepetition){
-            shouldRedirectConductorToAvoidRepetition = false;
-            return "";
-        }
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
-        Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(uninterruptedAction.getFinalMainCardLocation());
-        ArrayList<FlipEffect> flipEffects = monsterCard.getFlipEffects();
-        if (flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD)){
-            isClassWaitingWaitingForPlayerToPickMonsterToDestroy = true;
-            return "flip summoned successfully\ndo you want to activate your monster card's effect?";
+        ArrayList<Action> actions = GameManager.getActionsByIndex(index);
+        Action action = actions.get(numberInListOfActions);
+        if (!action.isActionCanceled()) {
+            if (shouldRedirectConductorToAvoidRepetition) {
+                shouldRedirectConductorToAvoidRepetition = false;
+                return "";
+            }
+            ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+            Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+            MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(uninterruptedAction.getFinalMainCardLocation());
+            ArrayList<FlipEffect> flipEffects = monsterCard.getFlipEffects();
+            if (flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD)) {
+                shouldRedirectConductorToAvoidRepetition = true;
+                promptingUserToActivateMonsterEffect = true;
+                return "do you want to activate your monster card's effect?";
+            }
         }
         return "";
     }
 
-    public String checkGivenInputForMonsterToDestroy(int index){
+    public static String defendingMonsterEffectAnalysis(String string) {
+        String inputRegex = "(?<=\\n|^)no(?=\\n|$)";
+        Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
+        DuelController duelController = GameManager.getDuelControllerByIndex(0);
+        if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
+            promptingUserToActivateMonsterEffect = false;
+            duelController.changeFakeTurn();
+        } else {
+            String anotherRegex = "(?<=\\n|^)yes(?=\\n|$)";
+            Matcher newMatcher = Utility.getCommandMatcher(string, anotherRegex);
+            if (Utility.isMatcherCorrectWithoutErrorPrinting(newMatcher)) {
+                DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+                MonsterCard defendingMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardToBeFlippedOrPositionChanged);
+                defendingMonsterCard.setOncePerTurnCardEffectUsed(true);
+                promptingUserToActivateMonsterEffect = false;
+                //isClassWaitingForFurtherChainInput = true;
+                ArrayList<FlipEffect> flipEffects = defendingMonsterCard.getFlipEffects();
+                if (flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD)) {
+                    isClassWaitingForPlayerToPickMonsterToDestroy = true;
+                    return "select one monster on the field to destroy";
+                }
+            }
+        }
+        return Action.conductAllActions(0);
+    }
+
+    public static String checkGivenInputForMonsterToDestroy(int index) {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
@@ -91,8 +133,8 @@ public class FlipSummoningOrChangingCardPositionConductor {
             return "you can't select this monster for destroying.\nselect another card";
         } else {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, index);
-            isClassWaitingWaitingForPlayerToPickMonsterToDestroy = false;
-            return "monster destroyed successfully\n" +Action.conductAllActions(index);
+            isClassWaitingForPlayerToPickMonsterToDestroy = false;
+            return "monster destroyed successfully\n" + Action.conductAllActions(index);
         }
     }
 

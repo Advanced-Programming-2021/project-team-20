@@ -79,7 +79,6 @@ public class ChainController {
     public String isSelectedCardCorrectForChainActivation(String string, int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(index);
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
@@ -122,6 +121,7 @@ public class ChainController {
                 } else {
                     activateSpellTrapController.setAreWeLookingForFurtherInputToActivateSpellTrap(true);
                     activateSpellTrapController.setMainCardLocation(cardLocation);
+                    activateSpellTrapController.setMessagesSentToUser(inputsNeeded);
                     //activateSpellTrapController.setRedirectInputBeingProcessesInChain(true);
                     selectCardController.resetSelectedCardLocationList();
                     isClassWaitingForChainCardToBeSelected = false;

@@ -3,6 +3,7 @@ package controller.duel.GamePhaseControllers;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
+import controller.duel.CardEffects.MonsterEffectEnums.*;
 import controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
 import controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import controller.duel.GamePackage.DuelBoard;
@@ -12,11 +13,10 @@ import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
 import controller.non_duel.storage.Storage;
 import model.User;
-import model.cardData.General.Card;
-import model.cardData.General.CardLocation;
-import model.cardData.General.CardPosition;
-import model.cardData.General.RowOfCardLocation;
+import model.cardData.General.*;
 import model.cardData.MonsterCardData.MonsterCard;
+import model.cardData.MonsterCardData.MonsterCardFamily;
+import model.cardData.MonsterCardData.MonsterCardValue;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
 
@@ -29,7 +29,7 @@ public class PhaseController {
     private boolean gameIsOver;
 
     public PhaseController() {
-        phaseInGame = null;
+        //phaseInGame = null;
         playersProhibitedToDrawCardNextTurn = new ArrayList<>();
         playersProhibitedToDrawCardNextTurn.add(false);
         playersProhibitedToDrawCardNextTurn.add(false);
@@ -216,7 +216,7 @@ public class PhaseController {
         numberOfSpellCardsPayedFor = 0;
         StringBuilder output = new StringBuilder();
         for (int i = 0; i < spellCards.size(); i++) {
-            if (spellCards.get(i) != null) {
+            if (spellCards.get(i) != null && Card.isCardASpell(spellCards.get(i))) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard
                     .getContinuousSpellCardEffects();
@@ -369,6 +369,31 @@ public class PhaseController {
     }
 
     private void resetScannerCard(MonsterCard monsterCard) {
-        // reseting scanner
+        monsterCard.setAttackPower(0);
+        monsterCard.setDefensePower(0);
+        monsterCard.setLevel(1);
+        monsterCard.setMonsterCardFamily(MonsterCardFamily.MACHINE);
+        monsterCard.setMonsterCardValue(MonsterCardValue.EFFECT);
+        ArrayList<SummoningRequirement> summoningRequirements = new ArrayList<>();
+        summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
+        monsterCard.setSummoningRequirements(summoningRequirements);
+        ArrayList<UponSummoningEffect> uponSummoningEffects = new ArrayList<>();
+        monsterCard.setUponSummoningEffects(uponSummoningEffects);
+        ArrayList<BeingAttackedEffect> beingAttackedEffects = new ArrayList<>();
+        monsterCard.setBeingAttackedEffects(beingAttackedEffects);
+        ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = new ArrayList<>();
+        monsterCard.setContinuousMonsterEffects(continuousMonsterEffects);
+        ArrayList<FlipEffect> flipEffects = new ArrayList<>();
+        monsterCard.setFlipEffects(flipEffects);
+        ArrayList<OptionalMonsterEffect> optionalMonsterEffects = new ArrayList<>();
+        optionalMonsterEffects.add(OptionalMonsterEffect.ONCE_PER_TURN_CHOOSE_A_MONSTER_IN_YOUR_OPPONENTS_GRAVEYARD_AND_COPY_ALL_CHARACTERISTICS_UNTIL_THE_END_OF_THAT_TURN);
+        monsterCard.setOptionalMonsterEffects(optionalMonsterEffects);
+        ArrayList<SentToGraveyardEffect> sentToGraveyardEffects = new ArrayList<>();
+        monsterCard.setSentToGraveyardEffects(sentToGraveyardEffects);
+        ArrayList<AttackerEffect> attackerEffects = new ArrayList<>();
+        monsterCard.setAttackerEffects(attackerEffects);
+        monsterCard.setCardName("scanner");
+        monsterCard.setCardType(CardType.MONSTER);
+        monsterCard.setCardDescription("");
     }
 }

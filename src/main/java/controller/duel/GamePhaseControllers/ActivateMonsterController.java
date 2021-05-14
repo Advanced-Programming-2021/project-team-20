@@ -277,7 +277,7 @@ public class ActivateMonsterController extends ChainController {
                 copyPasteCharacteristicsOfCard(mainMonsterCardLocation, cardLocation, 0);
                 Card cardToBeAddedToHand = removeCardAndGetRemovedCard(cardLocation, 0);
                 duelBoard.addCardToHand(cardToBeAddedToHand, activateMonsterTurn);
-                isClassWaitingForUserToChooseMonsterFromGraveyard = false;
+                isClassWaitingForUserToChooseMonsterFromOpponentGraveyard = false;
                 MonsterCard mainMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(mainMonsterCardLocation);
                 mainMonsterCard.setOncePerTurnCardEffectUsed(true);
                 return "monster effect activated";

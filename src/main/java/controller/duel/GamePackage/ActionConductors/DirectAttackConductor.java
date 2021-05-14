@@ -11,7 +11,7 @@ import model.cardData.General.CardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 
 public class DirectAttackConductor {
-    private static boolean isDirectAttackCanceled;
+    //private static boolean isDirectAttackCanceled;
     private static int actionTurn;
     private static ArrayList<Integer> playersLifePointsChange = new ArrayList<>();
     private static CardLocation attackingMonsterCardLocation;
@@ -21,7 +21,7 @@ public class DirectAttackConductor {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         Action action = actions.get(numberInListOfActions);
-        isDirectAttackCanceled = action.isActionCanceled();
+        boolean isDirectAttackCanceled = action.isActionCanceled();
         if (!isDirectAttackCanceled) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
             actionTurn = action.getActionTurn();

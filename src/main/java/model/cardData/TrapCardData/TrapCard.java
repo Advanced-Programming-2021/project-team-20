@@ -77,6 +77,8 @@ public class TrapCard extends Card {
             spellCardActivationTrapCardEffects.add(SpellCardActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
             monsterEffectActivationTrapCardEffect.add(MonsterEffectActivationTrapCardEffect.PAY_2000_LP);
             monsterEffectActivationTrapCardEffect.add(MonsterEffectActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
+            monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.PAY_2000_LP);
+            monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
             trapCardActivationTrapCardEffects.add(TrapCardActivationTrapCardEffect.PAY_2000_LP);
             trapCardActivationTrapCardEffects.add(TrapCardActivationTrapCardEffect.NEGATE_ACTIVATION_OR_SUMMONING_AND_DESTROY_CARD);
             logicalActivationRequirements.add(LogicalActivationRequirement.MONSTER_IS_SUMMONED_OR_SPELL_TRAP_MONSTER_EFFECT_INCLUDING_SPECIAL_SUMMONING);
@@ -85,11 +87,15 @@ public class TrapCard extends Card {
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
             userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);
         } else if (cardName.equals("call of the hunted")){
+            monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
             normalTrapCardEffects.add(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_OWNERS_GRAVEYARD_TO_SPECIAL_SUMMON);
         } else if (cardName.equals("mind crush")){
-
+            normalTrapCardEffects.add(NormalTrapCardEffect.OPPONENT_DISCARDS_ALL_CARDS_WITH_A_GIVEN_NAME_OTHERWISE_OWNER_LOSES_ONE_RANDOM_CARD);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OPPONENT_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
+            userReplyForActivations.add(UserReplyForActivation.ENTER_NAME_OF_A_CARD);
         }
         if (enumValues != null) {
             setEnumValues(enumValues);
