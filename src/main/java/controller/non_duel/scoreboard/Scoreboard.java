@@ -18,6 +18,7 @@ public class Scoreboard {
         if (command.equals("scoreboard show")) {
             return sortUsers();
         }
+       
         return "invalid command!";
     }
 

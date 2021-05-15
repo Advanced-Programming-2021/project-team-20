@@ -66,7 +66,7 @@ public class MainController {
             return GameManager.getDuelControllerByIndex(0).getInput(command);
         }
 
-        return "invalid commend!";
+        return "invalid command!";
     }
 
     public void exitMenu() {

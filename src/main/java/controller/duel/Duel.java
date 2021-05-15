@@ -48,7 +48,7 @@ public class Duel {
             mainController.enterMenu("Duel Began");
             return "duel successfully started!";
         }
-        return "invalid commend!";
+        return "invalid command!";
     }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber) {

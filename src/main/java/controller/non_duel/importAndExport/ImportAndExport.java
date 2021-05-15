@@ -30,8 +30,8 @@ public class ImportAndExport {
 
     public String findCommand(String command) {
 
-        Pattern importPattern = Pattern.compile("import card (\\S+)");
-        Pattern exportPattern = Pattern.compile("export card (\\S+)");
+        Pattern importPattern = Pattern.compile("import card (.+)");
+        Pattern exportPattern = Pattern.compile("export card (.+)");
         Matcher matcher;
         matcher = importPattern.matcher(command);
         if (matcher.find()) {
@@ -40,7 +40,7 @@ public class ImportAndExport {
 
         matcher = exportPattern.matcher(command);
         if (matcher.find()) {
-           return exportCard(matcher.group(1));
+            return exportCard(matcher.group(1));
         }
 
         return "invalid command!";
@@ -48,11 +48,11 @@ public class ImportAndExport {
 
     private String exportCard(String cardname) {
 
-        File file = new File("Resourses\\ExportedCards\\" + cardname + ".json");
-        
+        File file = new File("Resourses\\ImportedCards\\" + cardname + ".json");
+        //System.out.println(file.exists() + " " + cardname);
         if (file.exists()) {
             try {
-                FileReader fileReader = new FileReader("Resourses\\ExportedCards\\" + cardname + ".json");
+                FileReader fileReader = new FileReader("Resourses\\ImportedCards\\" + cardname + ".json");
                 Scanner myReader = new Scanner(fileReader);
                 getValuesOfCardFromFile(myReader.nextLine());
                 myReader.close();
@@ -76,16 +76,15 @@ public class ImportAndExport {
             String cardDesciption = detailsOfCards.get("Description").getAsString();
             int price = detailsOfCards.get("Price").getAsInt();
 
-            if (cardType.equals("Trap")) {
-                addSpellAndTrapCardToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
-            } else if (cardType.equals("Spell")) {
-                addSpellAndTrapCardToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
-            } else {
+            if(Storage.getAllMonsterCards().containsKey(cardName)){
                 addMonsterToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
             }
-
+            else if(Storage.getAllSpellAndTrapCards().containsKey(cardName)){
+                addSpellAndTrapCardToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
+            }
+            
             try {
-                FileWriter fileWriter = new FileWriter("Resourses\\ExportedCards\\" + cardName+ ".json");
+                FileWriter fileWriter = new FileWriter("Resourses\\ExportedCards\\" + cardName + ".json");
                 fileWriter.write(cardDesciption);
                 fileWriter.close();
             } catch (IOException e) {
@@ -104,7 +103,7 @@ public class ImportAndExport {
         int defensePower = detailsOfCards.get("Defence Power").getAsInt();
         new MonsterCard(attackPower, defensePower, level, MonsterCardAttribute.valueOf(attribute),
                 MonsterCardFamily.valueOf(formatterStringToEnum(monsterType)),
-                MonsterCardValue.valueOf(cardType.toUpperCase()), cardName, cardDescription, null, 3, cardPrice, null);
+                MonsterCardValue.valueOf(cardType), cardName, cardDescription, null, 3, cardPrice, null);
     }
 
     private String formatterStringToEnum(String string) {
@@ -143,7 +142,7 @@ public class ImportAndExport {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "card imported successfuly!";
+            return "card imported successfully!";
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
@@ -169,7 +168,7 @@ public class ImportAndExport {
         jsonObject.addProperty("Level", monsterCard.getLevel());
         jsonObject.addProperty("Attribute", monsterCard.getMonsterCardAttribute().toString());
         jsonObject.addProperty("Monster Type", monsterCard.getMonsterCardFamily().toString());
-        jsonObject.addProperty("Card Type", monsterCard.getCardType().toString());
+        jsonObject.addProperty("Card Type", monsterCard.getMonsterCardValue().toString());
         jsonObject.addProperty("Attack Power", monsterCard.getAttackPower());
         jsonObject.addProperty("Defence Power", monsterCard.getDefensePower());
         jsonObject.addProperty("Description", monsterCard.getCardDescription());
