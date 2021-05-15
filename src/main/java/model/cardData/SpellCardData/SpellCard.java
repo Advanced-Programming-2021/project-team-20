@@ -59,9 +59,9 @@ public class SpellCard extends Card {
         } else if (cardName.equals("raigeki")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS);
         } else if (cardName.equals("sword of dark destruction")) {
-            equipSpellEffects.add(EquipSpellEffect.DARK_EQUIPPED_MONSTER_GAINS_400_ATK_LOSE_200_DEF);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_DARK_MONSTER);
-            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_DARK_MONSTER_OWNER_CONTROLS);
+            equipSpellEffects.add(EquipSpellEffect.FIEND_OR_SPELLCASTER_EQUIPPED_MONSTER_GAINS_400_ATK_LOSE_200_DEF);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_FIEND_OR_SPELLCASTER_MONSTER_OWNER_CONTROLS);
         } else if (cardName.equals("black pendant")) {
             equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_500_ATK);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
@@ -76,10 +76,10 @@ public class SpellCard extends Card {
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_WARRIOR_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_WARRIOR_MONSTER_OWNER_CONTROLS);
         } else if (cardName.equals("umiruka")) {
-            fieldSpellEffects.add(FieldSpellEffect.WATER_GAINS_500_ATK);
-            fieldSpellEffects.add(FieldSpellEffect.WATER_LOSES_400_DEF);
+            fieldSpellEffects.add(FieldSpellEffect.AQUA_GAINS_500_ATK);
+            fieldSpellEffects.add(FieldSpellEffect.AQUA_LOSES_400_DEF);
         } else if (cardName.equals("closed forest")) {
-
+            fieldSpellEffects.add(FieldSpellEffect.BEAST_MONSTERS_OWNER_CONTROLS_GAIN_100_ATK_FOR_EACH_MONSTER_IN_GY);
         } else if (cardName.equals("forest")) {
             fieldSpellEffects.add(FieldSpellEffect.INSECT_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.BEAST_GAIN_200_ATK_DEF);
@@ -92,8 +92,13 @@ public class SpellCard extends Card {
 
         } else if (cardName.equals("mystical space typhoon")) {
             quickSpellEffects.add(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY);
+            logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_TRAP_CARD_IN_FIELD);
         } else if (cardName.equals("twin twisters")) {
             quickSpellEffects.add(QuickSpellEffect.DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY);
+            logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
+            userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_UP_TO_TWO_SPELL_TRAP_CARDS_IN_FIELD);
         } else if (cardName.equals("messenger of peace")) {
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK);
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD);
@@ -108,7 +113,9 @@ public class SpellCard extends Card {
         } else if (cardName.equals("swords of revealing light")) {
 
         } else if (cardName.equals("terraforming")) {
-
+            normalSpellCardEffects.add(NormalSpellCardEffect.ADD_SPELL_FIELD_CARD_FROM_DECK_TO_HAND);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_FIELD_CARD_FROM_OWNER_DECK);
         } else if (cardName.equals("monster reborn")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_1_MONSTER_IN_EITHER_GY);

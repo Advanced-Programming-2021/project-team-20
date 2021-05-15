@@ -109,12 +109,12 @@ public class TributeSummonController extends ChainController {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         if (turn == 1) {
-            uninterruptedActions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION));
-            actions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION));
+            uninterruptedActions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, ""));
+            actions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, ""));
             //add action that conducts effects of the card
         } else if (turn == 2) {
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed,  null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION));
-            actions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed,  null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, ""));
+            actions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, ""));
             //add action that conducts effects of the card
         }
         cardsToBeTributed.clear();

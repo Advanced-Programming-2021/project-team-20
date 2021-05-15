@@ -92,8 +92,8 @@ public class BattlePhaseController extends ChainController {
         System.out.println("GIVE ME INFO " + allyCardLocation.getRowOfCardLocation() + " II " + allyCardLocation.getIndex());
         if (MonsterCard.giveATKDEFConsideringEffects("attack", allyCardLocation, 0) >= 1500) {
             for (int i = 0; i < spellCards.size(); i++) {
-                SpellCard spellCard = (SpellCard) spellCards.get(i);
-                if (spellCard != null){
+                if (spellCards.get(i) != null && Card.isCardASpell(spellCards.get(i))) {
+                    SpellCard spellCard = (SpellCard) spellCards.get(i);
                     ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                     if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK)) {
                         return "this monster card has at least 1500 ATK, so it can't attack.";
@@ -106,7 +106,7 @@ public class BattlePhaseController extends ChainController {
 
     private String areOpponentMonstersAllowedToAttack(ArrayList<Card> spellCards, int index) {
         for (int i = 0; i < spellCards.size(); i++) {
-            if (spellCards.get(i) != null){
+            if (spellCards.get(i) != null && (Card.isCardASpell(spellCards.get(i)))) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK)) {

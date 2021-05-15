@@ -25,10 +25,12 @@ import model.cardData.TrapCardData.TrapCard;
 
 public class ActivateSpellTrapController extends ChainController {
     private boolean areWeLookingForFurtherInputToActivateSpellTrap;
+    private boolean areWeLookingForACardNameToBeInserted;
     private String messageSentToUser;
     private ArrayList<String> messagesSentToUser;
     private CardLocation mainCardLocation;
     private CardPosition mainCardPosition;
+    private ArrayList<CardLocation> cardsToBeTargeted;
     private ArrayList<CardLocation> cardsToBeDiscarded;
     private ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo;
     private ArrayList<CardLocation> cardsToBeSpecialSummoned;
@@ -38,13 +40,17 @@ public class ActivateSpellTrapController extends ChainController {
     private ArrayList<CardLocation> cardsToTakeControlOf;
     private ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard;
     private ArrayList<Integer> sumOfLevelsOfChosenMonsters;
+    private String optionalCardNameInput;
 
     public ActivateSpellTrapController() {
         areWeLookingForFurtherInputToActivateSpellTrap = false;
         isClassWaitingForChainCardToBeSelected = false;
         isGoingToChangeTurnsForChaining = false;
+        areWeLookingForACardNameToBeInserted = false;
+        optionalCardNameInput = "";
         mainCardPosition = CardPosition.FACE_UP_ACTIVATED_POSITION;
         messagesSentToUser = new ArrayList<>();
+        cardsToBeTargeted = new ArrayList<>();
         cardsToBeDiscarded = new ArrayList<>();
         cardsToBeChosenToApplyEquipSpellTo = new ArrayList<>();
         cardsToBeSpecialSummoned = new ArrayList<>();
@@ -60,12 +66,20 @@ public class ActivateSpellTrapController extends ChainController {
         return areWeLookingForFurtherInputToActivateSpellTrap;
     }
 
+    public boolean isAreWeLookingForACardNameToBeInserted() {
+        return areWeLookingForACardNameToBeInserted;
+    }
+
     public void setGoingToChangeTurnsForChaining(boolean goingToChangeTurnsForChaining) {
         isGoingToChangeTurnsForChaining = goingToChangeTurnsForChaining;
     }
 
     public void setMainCardLocation(CardLocation mainCardLocation) {
         this.mainCardLocation = mainCardLocation;
+    }
+
+    public void setMessagesSentToUser(ArrayList<String> messagesSentToUser) {
+        this.messagesSentToUser = messagesSentToUser;
     }
 
     public void setAreWeLookingForFurtherInputToActivateSpellTrap(boolean areWeLookingForFurtherInputToActivateSpellTrap) {
@@ -155,6 +169,7 @@ public class ActivateSpellTrapController extends ChainController {
         } else {
             System.out.println("CARD NAME IS " + card.getCardName());
         }
+        //probably should be turn
         int fakeTurn = duelController.getFakeTurn();
         RowOfCardLocation rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_ZONE;
         if (fakeTurn == 1) {
@@ -164,7 +179,7 @@ public class ActivateSpellTrapController extends ChainController {
                 rowOfCardLocation = RowOfCardLocation.ALLY_SPELL_ZONE;
             }
         } else if (fakeTurn == 2) {
-            if (card instanceof SpellCard && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
+            if (Card.isCardASpell(card) && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE;
             } else {
                 rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_ZONE;
@@ -173,9 +188,6 @@ public class ActivateSpellTrapController extends ChainController {
         if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))
             && (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) || cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE))) {
             return "spell zone is full";
-        } else if (duelBoard.isZoneFull(rowOfCardLocation) && (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))
-            && (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) || cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE))) {
-            return "spell field zone is full";
         } else {
             String output = arePreparationsCompleteForSpellTrapActivation(index);
             System.out.println("SUCH A THING THAT IS SUPPOSED TO GIVE THINGS NEEDED OR SAY PREPARATIONS ARE NOT OK IS SAYING\n" + output);
@@ -194,7 +206,11 @@ public class ActivateSpellTrapController extends ChainController {
                 //activateSpellTrapController.setGoingToChangeTurnsForChaining(true);
                 return finalOutput + "\n" + canChainingOccur;
             } else {
-                areWeLookingForFurtherInputToActivateSpellTrap = true;
+                if (card.getCardName().equals("mind crush")) {
+                    areWeLookingForACardNameToBeInserted = true;
+                } else {
+                    areWeLookingForFurtherInputToActivateSpellTrap = true;
+                }
                 return output;
             }
         }
@@ -203,17 +219,23 @@ public class ActivateSpellTrapController extends ChainController {
     public String arePreparationsCompleteForSpellTrapActivation(int index) {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
-        MessagesFromEffectToControllers messagesFromEffectToControllers = Effect.arePreparationsCompleteForActivatingSpellTrapCard(selectedCardLocations.get(selectedCardLocations.size() - 1), index);
-        if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE)) {
-            return "preparations of this spell are not complete yet";
-        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE)) {
-            return "preparations of this trap are not complete yet";
-        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE)) {
-            return checkWhatIsNeededForSpellTrapActivation(index);
-        } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE)) {
-            return checkWhatIsNeededForSpellTrapActivation(index);
+        CardLocation selectedCardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
+        Card card = GameManager.getDuelBoardByIndex(index).getCardByCardLocation(selectedCardLocation);
+        //if (Card.isCardATrap(card))
+        if (Card.isCardASpell(card) || Card.isCardATrap(card) && ((TrapCard) card).getNormalTrapCardEffects().size() > 0) {
+            MessagesFromEffectToControllers messagesFromEffectToControllers = Effect.arePreparationsCompleteForActivatingSpellTrapCard(selectedCardLocation, index);
+            if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE)) {
+                return "preparations of this spell are not complete yet";
+            } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE)) {
+                return "preparations of this trap are not complete yet";
+            } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE)) {
+                return checkWhatIsNeededForSpellTrapActivation(index);
+            } else if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE)) {
+                return checkWhatIsNeededForSpellTrapActivation(index);
+            }
+            return null;
         }
-        return null;
+        return "preparations of this trap are not complete yet";
     }
 
     public String checkWhatIsNeededForSpellTrapActivation(int index) {
@@ -221,7 +243,7 @@ public class ActivateSpellTrapController extends ChainController {
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation spellTrapCardActivating = selectedCardLocations.get(selectedCardLocations.size() - 1);
         ArrayList<String> resultOfChecking = Effect.inputsNeededForActivatingSpellTrapCard(spellTrapCardActivating, index);
-        //System.out.println("WHY IS RESULTOFCHECKING NULL"+resultOfChecking);
+        System.out.println("WHY IS RESULTOFCHECKING NULL" + resultOfChecking);
         messagesSentToUser = resultOfChecking;
         mainCardLocation = spellTrapCardActivating;
         return resultOfChecking.get(resultOfChecking.size() - 1);
@@ -238,7 +260,7 @@ public class ActivateSpellTrapController extends ChainController {
         String canChainingOccur = "";
         String output = "";
         String message = messagesSentToUser.get(messagesSentToUser.size() - 1);
-        if (message.startsWith("please choose one dark") || message.startsWith("please choose one monster") || message.startsWith("please choose one warrior")) {
+        if (message.startsWith("please choose one fiend") || message.startsWith("please choose one monster") || message.startsWith("please choose one warrior")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
@@ -246,7 +268,8 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (!Card.isCardAMonster(card)) {
                 return "invalid selection\nplease try again";
             } else {
-                if ((message.startsWith("please choose one dark") && !((MonsterCard) card).getMonsterCardAttribute().equals(MonsterCardAttribute.DARK))) {
+                if ((message.startsWith("please choose one fiend") && !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.FIEND)) &&
+                    !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.SPELLCASTER)) {
                     return "invalid selection\nplease try again";
                 } else if (message.startsWith("please choose one warrior") && !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.WARRIOR)) {
                     return "invalid selection\nplease try again";
@@ -262,7 +285,23 @@ public class ActivateSpellTrapController extends ChainController {
                     //used to give fakeTurn as input
                 }
             }
-        } else if (message.startsWith("show graveyard")) {
+        } else if (message.startsWith("show graveyard\nplease choose one monster from either graveyard")) {
+            if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)
+                && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)) {
+                return "invalid selection\nplease try again";
+            } else if (!Card.isCardAMonster(card)) {
+                return "invalid selection\nplease try again";
+            } else {
+                cardsToBeSpecialSummoned.add(cardLocation);
+                boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
+                if (isMoreInputNeeded) {
+                    return messagesSentToUser.get(messagesSentToUser.size() - 1);
+                } else {
+                    output = Action.conductUninterruptedAction(0);
+                    canChainingOccur = canChainingOccur(index);
+                }
+            }
+        } else if (message.startsWith("show graveyard\nplease choose one monster from your own graveyard")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)) {
@@ -328,8 +367,11 @@ public class ActivateSpellTrapController extends ChainController {
                 if (isMoreInputNeeded) {
                     return messagesSentToUser.get(messagesSentToUser.size() - 1);
                 } else {
+                    System.out.println("creatign action for magic jammer");
                     output = Action.conductUninterruptedAction(0);
+                    System.out.println("conducted uninterrupted");
                     canChainingOccur = canChainingOccur(index);
+                    System.out.println("this is can chaining: " + canChainingOccur);
                 }
                 //used to give fakeTurn as input
             }
@@ -411,11 +453,70 @@ public class ActivateSpellTrapController extends ChainController {
             } else {
                 return "invalid input\nplease enter attack or defense";
             }
+        } else if (message.startsWith("please enter")) {
+            optionalCardNameInput = duelController.getLatestInput();
+            boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
+            if (isMoreInputNeeded) {
+                return messagesSentToUser.get(messagesSentToUser.size() - 1);
+            } else {
+                areWeLookingForACardNameToBeInserted = false;
+                output = Action.conductUninterruptedAction(0);
+                canChainingOccur = canChainingOccur(index);
+            }
+            //used to give fakeTurn as input
+        } else if (message.startsWith("please select one spell")) {
+            if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)
+                && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)
+                && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)
+                && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
+                return "invalid selection\nplease try again";
+            } else if (card == null) {
+                return "there is no card here\nplease try again";
+            } else {
+                cardsToBeTargeted.add(cardLocation);
+                boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
+                if (isMoreInputNeeded) {
+                    return messagesSentToUser.get(messagesSentToUser.size() - 1);
+                } else {
+                    output = Action.conductUninterruptedAction(0);
+                    canChainingOccur = canChainingOccur(index);
+                }
+                //used to give fakeTurn as input
+            }
+        } else if (message.startsWith("please select up to two")) {
+            String currentInput = duelController.getLatestInput();
+            if (currentInput.equals("finish selecting")){
+                areWeLookingForFurtherInputToActivateSpellTrap = false;
+                selectCardController.resetSelectedCardLocationList();
+                createActionForActivatingSpellTrap(index);
+                output = Action.conductUninterruptedAction(0);
+                canChainingOccur = canChainingOccur(index);
+            } else {
+                if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)
+                    && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)
+                    && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)
+                    && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
+                    return "invalid selection\nplease try again";
+                } else if (card == null) {
+                    return "there is no card here\nplease try again";
+                } else {
+                    cardsToBeTargeted.add(cardLocation);
+                    boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
+                    if (isMoreInputNeeded) {
+                        return "you can select another spell or trap card to destroy";
+                    } else {
+                        output = Action.conductUninterruptedAction(0);
+                        canChainingOccur = canChainingOccur(index);
+                    }
+                    //used to give fakeTurn as input
+                }
+            }
         }
         if (!canChainingOccur.equals("")) {
             output += canChainingOccur;
             return output;
         }
+        System.out.println("happy me!");
         return output + Action.conductAllActions(0);
     }
 
@@ -472,23 +573,25 @@ public class ActivateSpellTrapController extends ChainController {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         if (fakeTurn == 1) {
             if (Card.isCardASpell(card)) {
-                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
-                actions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
+                actions.add(new Action(ActionType.ALLY_ACTIVATING_SPELL, 1, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
 
             } else if (Card.isCardATrap(card)) {
-                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
-                actions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
+                actions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
             }
             //add action that conducts effects of the card
         } else if (fakeTurn == 2) {
             if (Card.isCardASpell(card)) {
-                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
-                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
+                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
             } else if (Card.isCardATrap(card)) {
-                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
-                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, null, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION));
+                uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
+                actions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput));
             }//add action that conducts effects of the card
         }
+        optionalCardNameInput = "";
+        cardsToBeTargeted.clear();
         cardsToBeDiscarded.clear();
         cardsToBeChosenToApplyEquipSpellTo.clear();
         cardsToBeSpecialSummoned.clear();

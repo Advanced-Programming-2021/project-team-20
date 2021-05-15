@@ -124,12 +124,12 @@ public class SpecialSummonController extends SummonSetCommonClass {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         if (turn == 1) {
-            uninterruptedActions.add(new Action(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard));
-            actions.add(new Action(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard));
+            uninterruptedActions.add(new Action(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard, ""));
+            actions.add(new Action(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard, ""));
             //add action that conducts effects of the card
         } else if (turn == 2) {
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard));
-            actions.add(new Action(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard, ""));
+            actions.add(new Action(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, cardsToBeDiscarded, null, null, null, null, null, null, null, cardPositionOfMainCard, ""));
             //add action that conducts effects of the card
         }
         cardsToBeTributed.clear();
@@ -140,12 +140,9 @@ public class SpecialSummonController extends SummonSetCommonClass {
     public String redirectInputForCardsToBeDiscarded() {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(0);
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
         int turn = duelController.getTurn();
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
-        //System.out.println("mainCard\n" + mainCard.getRowOfCardLocation().toString() + mainCard.getIndex());
-        //selectCardController.resetSelectedCardLocationList();
         RowOfCardLocation rowOfCardLocation = cardLocation.getRowOfCardLocation();
         if (turn == 1 && !rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE) || turn == 2 && !rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
             return "you can't choose this card for discarding\nchoose another card";
@@ -188,18 +185,19 @@ public class SpecialSummonController extends SummonSetCommonClass {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
         String output = "";
         String canChainingOccur = "";
+        DuelController duelController = GameManager.getDuelControllerByIndex(0);
         if (string.equals("attacking")) {
             isClassWaitingForUserToChooseAttackPositionOrDefensePosition = false;
             cardPositionOfMainCard = CardPosition.FACE_UP_ATTACK_POSITION;
             createActionForSpecialSummoningMonster(0);
             output = Action.conductUninterruptedAction(0);
-            canChainingOccur = canChainingOccur(0, 1, ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER);
+            canChainingOccur = canChainingOccur(0, duelController.getTurn(), ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER);
         } else if (string.equals("defensive")) {
             isClassWaitingForUserToChooseAttackPositionOrDefensePosition = false;
             cardPositionOfMainCard = CardPosition.FACE_UP_DEFENSE_POSITION;
             createActionForSpecialSummoningMonster(0);
             output = Action.conductUninterruptedAction(0);
-            canChainingOccur = canChainingOccur(0, 2, ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER);
+            canChainingOccur = canChainingOccur(0, duelController.getTurn(), ActionType.ALLY_SPECIAL_SUMMONING_MONSTER, ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER);
         }
         if (!isClassWaitingForUserToChooseAttackPositionOrDefensePosition){
             if (!canChainingOccur.equals("")) {

@@ -3,6 +3,7 @@ package controller.duel.GamePackage;
 import java.util.ArrayList;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
+import controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.cheat.Cheat;
@@ -32,7 +33,7 @@ public class DuelController {
     private SetTurnForGame setTurnForGame = new SetTurnForGame();
 
     public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
-            ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
+                          ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
         this.allySideDeckCards = allySideDeckCards;
         this.opponentSideDeckCards = opponentSideDeckCards;
@@ -52,6 +53,7 @@ public class DuelController {
 
         allInputs.add(string);
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
+        ActivateMonsterController activateMonsterController = GameManager.getActivateMonsterControllerByIndex(0);
         NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
         FlipSummonController flipSummonController = GameManager.getFlipSummonControllerByIndex(0);
         SpecialSummonController specialSummonController = GameManager.getSpecialSummonControllerByIndex(0);
@@ -75,6 +77,8 @@ public class DuelController {
         } else if (string.equals("surrender")) {
             endGame(turn, 0);
         }
+
+
         // System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()"
         // + normalSummonController.isAreWeLookingForMonstersToBeTributed());
         if (string.startsWith("select") && normalSummonController.isAreWeLookingForMonstersToBeTributed()) {
@@ -89,8 +93,6 @@ public class DuelController {
                 return normalSummonController.redirectInputForMonsterTributing();
             }
         } else if (string.startsWith("select") && setCardController.isAreWeLookingForMonstersToBeTributed()) {
-            // NormalSummonController normalSummonController =
-            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B2");
@@ -99,10 +101,7 @@ public class DuelController {
                 System.out.println("A2");
                 return setCardController.redirectInput();
             }
-        } else if (string.startsWith("select")
-                && attackMonsterToMonsterController.isClassWaitingForChainCardToBeSelected()) {
-            // NormalSummonController normalSummonController =
-            // GameManager.getNormalSummonController(0);
+        } else if (string.startsWith("select") && attackMonsterToMonsterController.isClassWaitingForChainCardToBeSelected()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B3");
@@ -112,8 +111,6 @@ public class DuelController {
                 return attackMonsterToMonsterController.isSelectedCardCorrectForChainActivation(string, 0);
             }
         } else if (string.startsWith("select") && directAttackController.isClassWaitingForChainCardToBeSelected()) {
-            // NormalSummonController normalSummonController =
-            // GameManager.getNormalSummonController(0);
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B4");
@@ -122,10 +119,25 @@ public class DuelController {
                 System.out.println("A4");
                 return directAttackController.isSelectedCardCorrectForChainActivation(string, 0);
             }
-        } else if (string.startsWith("select")
-                && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
-            // NormalSummonController normalSummonController =
-            // GameManager.getNormalSummonController(0);
+        } else if (string.startsWith("select") && FlipSummoningOrChangingCardPositionConductor.isClassWaitingForPlayerToPickMonsterToDestroy()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B4.5");
+                return output;
+            } else {
+                System.out.println("A4.5");
+                return FlipSummoningOrChangingCardPositionConductor.checkGivenInputForMonsterToDestroy(0);
+            }
+        } else if (string.startsWith("select") && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToDestroy()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B4.5");
+                return output;
+            } else {
+                System.out.println("A4.5");
+                return attackMonsterToMonsterConductor.checkGivenInputForMonsterToDestroy(0);
+            }
+        } else if (string.startsWith("select") && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B5");
@@ -133,6 +145,15 @@ public class DuelController {
             } else {
                 System.out.println("A5");
                 return attackMonsterToMonsterConductor.checkGivenInputForMonsterEffectActivation(0);
+            }
+        } else if (string.startsWith("select") && attackMonsterToMonsterConductor.isClassWaitingForChainCardToBeSelected()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B5.5");
+                return output;
+            } else {
+                System.out.println("A5.5");
+                return attackMonsterToMonsterConductor.isSelectedCardCorrectForChainActivation(string, 0);
             }
         } else if (string.startsWith("select") && normalSummonController.isClassWaitingForChainCardToBeSelected()) {
             String output = selectCardController.selectCardInputAnalysis(string);
@@ -143,8 +164,7 @@ public class DuelController {
                 System.out.println("A6");
                 return normalSummonController.isSelectedCardCorrectForChainActivation(string, 0);
             }
-        } else if (string.startsWith("select")
-                && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
+        } else if (string.startsWith("select") && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B7");
@@ -153,8 +173,7 @@ public class DuelController {
                 System.out.println("A7");
                 return activateSpellTrapController.redirectInput(0);
             }
-        } else if (string.startsWith("select")
-                && activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
+        } else if (string.startsWith("select") && activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B8");
@@ -190,23 +209,65 @@ public class DuelController {
                 System.out.println("A11");
                 return specialSummonController.redirectInputForCardsToBeDiscarded();
             }
-        } else if (string.startsWith("select") && tributeSummonController.isAreWeLookingForMonstersToBeTributed()) {
+        } else if (string.startsWith("select") && specialSummonController.isClassWaitingForChainCardToBeSelected()) {
             String output = selectCardController.selectCardInputAnalysis(string);
             if (!output.equals("card selected")) {
                 System.out.println("B12");
                 return output;
             } else {
                 System.out.println("A12");
+                return specialSummonController.isSelectedCardCorrectForChainActivation(string, 0);
+            }
+        } else if (string.startsWith("select") && tributeSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B13");
+                return output;
+            } else {
+                System.out.println("A13");
                 return tributeSummonController.redirectInputForMonsterTributing();
             }
+        } else if (string.startsWith("select") && activateMonsterController.isClassWaitingForUserToDiscardOneCard()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B14");
+                return output;
+            } else {
+                System.out.println("A14");
+                return activateMonsterController.analyzeInputWhenClassIsWaitingToDiscardCardFromHand();
+            }
+        } else if (string.startsWith("select") && activateMonsterController.isClassWaitingForUserToChooseMonsterFromGraveyard()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B15");
+                return output;
+            } else {
+                System.out.println("A15");
+                return activateMonsterController.analyzeInputWhenClassIsWaitingToChooseMonsterFromSelfGraveyard();
+            }
+        } else if (string.startsWith("select") && activateMonsterController.isClassWaitingForUserToChooseMonsterFromOpponentGraveyard()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B16");
+                return output;
+            } else {
+                System.out.println("A16");
+                return activateMonsterController.analyzeInputWhenClassIsWaitingToChooseMonsterFromOpponentGraveyard();
+            }
+        } else if (activateSpellTrapController.isAreWeLookingForACardNameToBeInserted()) {
+            System.out.println("AB17");
+            return activateSpellTrapController.redirectInput(0);
         } else if (string.startsWith("select")) {
             return selectCardController.selectCardInputAnalysis(string);
         } else if ((string.startsWith("attacking") || string.startsWith("defensive"))
-                && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
+            && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
             return activateSpellTrapController.redirectInput(0);
         } else if ((string.startsWith("attacking") || string.startsWith("defensive"))
-                && specialSummonController.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
+            && specialSummonController.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
             return specialSummonController.redirectInputForAnalyzingAttackPositionOrDefensePosition(string);
+        } else if ((string.startsWith("attacking") || string.startsWith("defensive"))
+            && attackMonsterToMonsterConductor.isClassWaitingForUserToChooseAttackPositionOrDefensePosition()) {
+            return attackMonsterToMonsterConductor.redirectInputForAnalyzingAttackPositionOrDefensePosition(string);
         } else if (string.startsWith("next")) {
             return phaseController.phaseControllerInputAnalysis(string);
         } else if (string.startsWith("normal")) {
@@ -232,22 +293,6 @@ public class DuelController {
             return duelBoard.showDuelBoard(0);
         } else if (string.equals("show graveyard")) {
             return duelBoard.showGraveyard();
-        } else if (string.equals("no") && normalSummonController.isGoingToChangeTurnsForChaining()) {
-            return normalSummonController.userReplyYesNoForChain(string);
-        } else if (string.equals("yes") && normalSummonController.isGoingToChangeTurnsForChaining()) {
-            return normalSummonController.userReplyYesNoForChain(string);
-        } else if (string.equals("no") && attackMonsterToMonsterController.isGoingToChangeTurnsForChaining()) {
-            return attackMonsterToMonsterController.userReplyYesNoForChain(string);
-        } else if (string.equals("yes") && attackMonsterToMonsterController.isGoingToChangeTurnsForChaining()) {
-            return attackMonsterToMonsterController.userReplyYesNoForChain(string);
-        } else if (string.equals("no") && activateSpellTrapController.isGoingToChangeTurnsForChaining()) {
-            return activateSpellTrapController.userReplyYesNoForChain(string);
-        } else if (string.equals("yes") && activateSpellTrapController.isGoingToChangeTurnsForChaining()) {
-            return activateSpellTrapController.userReplyYesNoForChain(string);
-        } else if (string.equals("no") && flipSummonController.isGoingToChangeTurnsForChaining()) {
-            return flipSummonController.userReplyYesNoForChain(string);
-        } else if (string.equals("yes") && flipSummonController.isGoingToChangeTurnsForChaining()) {
-            return flipSummonController.userReplyYesNoForChain(string);
         } else if (string.equals("no") && attackMonsterToMonsterController.isGoingToChangeTurnsForChaining()) {
             return attackMonsterToMonsterController.userReplyYesNoForChain(string);
         } else if (string.equals("yes") && attackMonsterToMonsterController.isGoingToChangeTurnsForChaining()) {
@@ -256,17 +301,45 @@ public class DuelController {
             return directAttackController.userReplyYesNoForChain(string);
         } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
             return directAttackController.userReplyYesNoForChain(string);
+        } else if (string.equals("no") && activateSpellTrapController.isGoingToChangeTurnsForChaining()) {
+            return activateSpellTrapController.userReplyYesNoForChain(string);
+        } else if (string.equals("yes") && activateSpellTrapController.isGoingToChangeTurnsForChaining()) {
+            return activateSpellTrapController.userReplyYesNoForChain(string);
+        } else if (string.equals("no") && normalSummonController.isGoingToChangeTurnsForChaining()) {
+            return normalSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("yes") && normalSummonController.isGoingToChangeTurnsForChaining()) {
+            return normalSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("no") && flipSummonController.isGoingToChangeTurnsForChaining()) {
+            return flipSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("yes") && flipSummonController.isGoingToChangeTurnsForChaining()) {
+            return flipSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("no") && specialSummonController.isGoingToChangeTurnsForChaining()) {
+            return specialSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("yes") && specialSummonController.isGoingToChangeTurnsForChaining()) {
+            return specialSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("no") && tributeSummonController.isGoingToChangeTurnsForChaining()) {
+            return tributeSummonController.userReplyYesNoForChain(string);
+        } else if (string.equals("yes") && tributeSummonController.isGoingToChangeTurnsForChaining()) {
+            return tributeSummonController.userReplyYesNoForChain(string);
         } else if (string.equals("no") && attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()) {
             return attackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
-        } else if (string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
+        } else if (string.equals("yes") && attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()) {
             return attackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string);
+        } else if (string.equals("no") && FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
+            return FlipSummoningOrChangingCardPositionConductor.defendingMonsterEffectAnalysis(string);
+        } else if (string.equals("yes") && FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
+            return FlipSummoningOrChangingCardPositionConductor.defendingMonsterEffectAnalysis(string);
+        } else if (string.equals("no") && attackMonsterToMonsterConductor.isGoingToChangeTurnsForChaining()) {
+            return attackMonsterToMonsterConductor.userReplyYesNoForChain(string);
+        } else if (string.equals("yes") && attackMonsterToMonsterConductor.isGoingToChangeTurnsForChaining()) {
+            return attackMonsterToMonsterConductor.userReplyYesNoForChain(string);
         } else if (string.equals("print")) {
             System.out.println(MonsterCard.giveATKDEFConsideringEffects("attack", selectCardController
-                    .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
+                .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
             System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController
-                    .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
+                .getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
         } else if ((string.startsWith("pay") || string.startsWith("destroy"))
-                && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()) {
+            && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()) {
             return phaseController.redirectInputForStandByPhaseSpellCheck(string);
         }
         return "invalid command";
@@ -300,7 +373,7 @@ public class DuelController {
         mainController.exitMenu();
 
         return winnerUser.getName() + " won the whole match with score: "
-                + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + (numberOfRounds * 1000));
+            + ((turn == 1) ? (numberOfRounds * 1000) + " - 0" : "0 - " + (numberOfRounds * 1000));
     }
 
     public ArrayList<Integer> getMaxLifePointOfPlayers() {
