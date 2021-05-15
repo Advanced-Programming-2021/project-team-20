@@ -35,8 +35,8 @@ public class SpellCard extends Card {
     private ArrayList<CardLocation> cardLocationsToWhichEquipSpellIsApplied;
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
-                     int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
-                     HashMap<String, List<String>> enumValues) {
+            int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
+            HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
         this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
@@ -60,14 +60,16 @@ public class SpellCard extends Card {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS);
         } else if (cardName.equals("sword of dark destruction")) {
             equipSpellEffects.add(EquipSpellEffect.FIEND_OR_SPELLCASTER_EQUIPPED_MONSTER_GAINS_400_ATK_LOSE_200_DEF);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_FIEND_OR_SPELLCASTER_MONSTER_OWNER_CONTROLS);
         } else if (cardName.equals("black pendant")) {
             equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_500_ATK);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
         } else if (cardName.equals("united we stand")) {
-            equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_800_ATK_DEF_FOR_EACH_FACE_UP_MONSTER_OWNER_CONTROLS);
+            equipSpellEffects
+                    .add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_800_ATK_DEF_FOR_EACH_FACE_UP_MONSTER_OWNER_CONTROLS);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
         } else if (cardName.equals("magnum shield")) {
@@ -103,9 +105,11 @@ public class SpellCard extends Card {
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK);
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD);
         } else if (cardName.equals("spell absorption")) {
-            continuousSpellCardEffects.add(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS);
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS);
         } else if (cardName.equals("supply squad")) {
-            continuousSpellCardEffects.add(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD);
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD);
         } else if (cardName.equals("pot of greed")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DRAW_2_CARDS);
         } else if (cardName.equals("change of heart")) {
@@ -114,7 +118,8 @@ public class SpellCard extends Card {
 
         } else if (cardName.equals("terraforming")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.ADD_SPELL_FIELD_CARD_FROM_DECK_TO_HAND);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_FIELD_CARD_FROM_OWNER_DECK);
         } else if (cardName.equals("monster reborn")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY);
@@ -122,12 +127,17 @@ public class SpellCard extends Card {
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_EITHER_GY);
         } else if (cardName.equals("advanced ritual art")) {
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_CARDS_WITH_SUM_OF_LEVELS_AT_LEAST_RITUAL_MONSTERS_LEVEL_IN_DECK);
-            ritualSpellEffects.add(RitualSpellEffect.SEND_NORMAL_MONSTERS_WITH_SUM_OF_LEVELS_EQUAL_TO_MONSTERS_LEVEL_FROM_DECK_TO_GRAVEYARD);
+            logicalActivationRequirements.add(
+                    LogicalActivationRequirement.OWNER_MUST_HAVE_CARDS_WITH_SUM_OF_LEVELS_AT_LEAST_RITUAL_MONSTERS_LEVEL_IN_DECK);
+            ritualSpellEffects.add(
+                    RitualSpellEffect.SEND_NORMAL_MONSTERS_WITH_SUM_OF_LEVELS_EQUAL_TO_MONSTERS_LEVEL_FROM_DECK_TO_GRAVEYARD);
             ritualSpellEffects.add(RitualSpellEffect.RITUAL_SUMMON_CHOSEN_MONSTER_FROM_HAND);
-            userReplyForActivations.add(UserReplyForActivation.CHOOSE_NORMAL_MONSTERS_FROM_YOUR_DECK_WITH_SUM_OF_LEVELS_EQUAL_TO_A_RITUAL_MONSTER_LEVEL);
-            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE);
-            userReplyForActivations.add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
+            userReplyForActivations.add(
+                    UserReplyForActivation.CHOOSE_NORMAL_MONSTERS_FROM_YOUR_DECK_WITH_SUM_OF_LEVELS_EQUAL_TO_A_RITUAL_MONSTER_LEVEL);
+            userReplyForActivations.add(
+                    UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE);
+            userReplyForActivations
+                    .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
         }
         if (enumValues != null) {
             setEnumValues(enumValues);
@@ -136,7 +146,7 @@ public class SpellCard extends Card {
 
     public SpellCard(SpellCard spellCard) {
         super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), spellCard.getCardPosition(),
-            spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
+                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
         this.highestNumberOfTurnsOfActivation = spellCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
         this.spellCardValue = spellCard.getSpellCardValue();
@@ -231,7 +241,7 @@ public class SpellCard extends Card {
 
         for (int i = 1; i < enumValues.get("ContinuousSpellCardEffect").size(); i++) {
             continuousSpellCardEffects
-                .add(ContinuousSpellCardEffect.valueOf(enumValues.get("ContinuousSpellCardEffect").get(i)));
+                    .add(ContinuousSpellCardEffect.valueOf(enumValues.get("ContinuousSpellCardEffect").get(i)));
         }
 
         for (int i = 1; i < enumValues.get("EquipSpellEffect").size(); i++) {
@@ -244,7 +254,7 @@ public class SpellCard extends Card {
 
         for (int i = 1; i < enumValues.get("LogicalActivationRequirement").size(); i++) {
             logicalActivationRequirements
-                .add(LogicalActivationRequirement.valueOf(enumValues.get("LogicalActivationRequirement").get(i)));
+                    .add(LogicalActivationRequirement.valueOf(enumValues.get("LogicalActivationRequirement").get(i)));
         }
 
         for (int i = 1; i < enumValues.get("NormalSpellCardEffect").size(); i++) {
@@ -264,7 +274,7 @@ public class SpellCard extends Card {
         }
         for (int i = 1; i < enumValues.get("UserReplyForActivation").size(); i++) {
             userReplyForActivations
-                .add(UserReplyForActivation.valueOf(enumValues.get("UserReplyForActivation").get(i)));
+                    .add(UserReplyForActivation.valueOf(enumValues.get("UserReplyForActivation").get(i)));
         }
 
     }

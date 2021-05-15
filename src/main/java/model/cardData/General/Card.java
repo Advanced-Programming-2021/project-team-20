@@ -5,6 +5,7 @@ import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
 
 public class Card {
+
     protected String cardName;
     protected String realName;
     protected CardType cardType;
