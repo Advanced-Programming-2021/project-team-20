@@ -78,7 +78,6 @@ public class DuelController {
             endGame(turn, 0);
         }
 
-
         // System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()"
         // + normalSummonController.isAreWeLookingForMonstersToBeTributed());
         if (string.startsWith("select") && normalSummonController.isAreWeLookingForMonstersToBeTributed()) {
@@ -346,7 +345,6 @@ public class DuelController {
     }
 
     public void startDuel(int index) {
-
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
         if (turn == 1) {
             phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);

@@ -53,25 +53,6 @@ public class Utility {
         return null;
     }
 
-    public static int considerTurnsForCardIndex(int cardIndex, int turn) {
-        if (turn == 1) {
-            return cardIndex;
-        } else if (turn == 2) {
-            if (cardIndex == 1) {
-                return 1;
-            } else if (cardIndex == 2) {
-                return 3;
-            } else if (cardIndex == 3) {
-                return 2;
-            } else if (cardIndex == 4) {
-                return 5;
-            } else if (cardIndex == 5) {
-                return 4;
-            }
-        }
-        return -1;
-    }
-
     public static int changeYuGiOhIndexToArrayIndex(int cardIndex, RowOfCardLocation rowOfCardLocation) {
         boolean seeminglyChoosingSelf = rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE);
         boolean seeminglyChoosingOther = rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE);
