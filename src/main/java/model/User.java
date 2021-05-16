@@ -17,7 +17,7 @@ public class User {
         this.name = username;
         this.nickname = nickname;
         this.password = password;
-        this.money = 1000000;
+        this.money = 100000;
     }
 
     public User() {
@@ -25,10 +25,6 @@ public class User {
 
     public HashMap<String, Deck> getDecks() {
         return decks;
-    }
-
-    public int getMoney() {
-        return money;
     }
 
     public String getName() {
@@ -47,12 +43,12 @@ public class User {
         return score;
     }
 
-    public ArrayList<String> getAllUselessCards() {
-        return allUselessCards;
+    public int getMoney() {
+        return money;
     }
 
-    public void setDecks(HashMap<String, Deck> decks) {
-        this.decks = decks;
+    public ArrayList<String> getAllUselessCards() {
+        return allUselessCards;
     }
 
     public void setMoney(int money) {
@@ -93,4 +89,5 @@ public class User {
     public void addCardToAllUselessCards(String cardname) {
         allUselessCards.add(cardname);
     }
+
 }

@@ -14,7 +14,6 @@ import model.cardData.General.Card;
 
 public class DeckCommands {
 
-
     private HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
     private HashMap<String, Card> allSpellAndTrapCard = Storage.getAllSpellAndTrapCards();
 
@@ -99,10 +98,12 @@ public class DeckCommands {
 
         if (foundCommands.get("side").contains("-s")) {
             showDeck.append("Side Deck:\nMonsters:");
-            showDeck.append(showCardsInMainOrSideDeck(allDecksOfUser.get(foundCommands.get("show deck with name")).getSideDeck()));
+            showDeck.append(showCardsInMainOrSideDeck(
+                    allDecksOfUser.get(foundCommands.get("show deck with name")).getSideDeck()));
         } else {
             showDeck.append("Main Deck:\nMonsters:");
-            showDeck.append(showCardsInMainOrSideDeck(allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
+            showDeck.append(showCardsInMainOrSideDeck(
+                    allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
         }
 
         return showDeck.toString();
@@ -167,16 +168,18 @@ public class DeckCommands {
             return "deck with name " + foundCommands.get("deck") + " does not exist";
         }
 
-        if (Profile.getOnlineUser().doesCardExistsInUselessCards(foundCommands.get("card"))) {
-            return "card with name " + foundCommands.get("card") + " does not exist";
-        }
-        Profile.getOnlineUser().addCardToAllUselessCards(foundCommands.get("card"));
-        if (foundCommands.get("add card to").contains("-s")) {
+        if (foundCommands.get("delete card from").contains("-s")) {
+            if (!allDecksOfUser.get(foundCommands.get("deck")).getSideDeck().contains(foundCommands.get("card"))) {
+                return "card with name " + foundCommands.get("card") + " does not exist in side deck";
+            } 
             allDecksOfUser.get(foundCommands.get("deck")).deleteCardFromSideDeck(foundCommands.get("card"));
-        } else {
+        } else{
+            if(!allDecksOfUser.get(foundCommands.get("deck")).getMainDeck().contains(foundCommands.get("card"))){
+                return "card with name " + foundCommands.get("card") + " does not exist in main deck";     
+            }
             allDecksOfUser.get(foundCommands.get("deck")).deleteCardFromMainDeck(foundCommands.get("card"));
         }
-        return "card removed form deck successfully";
+        return "card removed from deck successfully";
     }
 
     private String addCardToDeck(HashMap<String, String> foundCommands) {
@@ -226,7 +229,7 @@ public class DeckCommands {
             allDecksOfUser.get(entry.getKey()).setDeckActive(false);
         }
         allDecksOfUser.get(deckname).setDeckActive(true);
-        return "deck activated successfully";
+        return "deck activated successfully!";
     }
 
     private String deleteDeck(String deckname) {
@@ -235,7 +238,7 @@ public class DeckCommands {
             return "deck with name " + deckname + " does not exist";
         }
         Profile.getOnlineUser().deleteDeck(deckname);
-        return "deck deleted successfully";
+        return "deck deleted successfully!";
 
     }
 

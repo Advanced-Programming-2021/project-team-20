@@ -10,35 +10,35 @@ public class DeckCommandsPatterns {
     private Pattern deckDelete = Pattern.compile("deck delete (\\S+)");
     private Pattern deckActivate = Pattern.compile("deck set-activate (\\S+)");
     private Pattern deckAddCard1 = Pattern
-            .compile("deck add-card (-c|--card) (?<card>.+) (-d|--deck) (?<deck>.+)(?<side> -s| --side|)");
+            .compile("deck add-card (-c|--card) (?<card>.+) (-d|--deck) (?<deck>\\S+)(?<side> -s| --side|)");
     private Pattern deckAddCard2 = Pattern
-            .compile("deck add-card (-d|--deck) (?<deck>.+) (-c|--card) (?<card>.+)(?<side> -s| --side|)");
+            .compile("deck add-card (-d|--deck) (?<deck>\\S+) (-c|--card) (?<card>.+)(?<side> -s| --side|)");
     private Pattern deckAddCard3 = Pattern
-            .compile("deck add-card (-d|--deck) (?<deck>.+)(?<side> -s| --side|) (-c|--card) (?<card>.+)");
+            .compile("deck add-card (-d|--deck) (?<deck>\\S+)(?<side> -s| --side|) (-c|--card) (?<card>.+)");
     private Pattern deckAddCard4 = Pattern
-            .compile("deck add-card (-c|--card) (?<card>.+)(?<side> -s| --side|) (-d|--deck) (?<deck>.+)");
+            .compile("deck add-card (-c|--card) (?<card>.+)(?<side> -s| --side|) (-d|--deck) (?<deck>\\S+)");
     private Pattern deckAddCard5 = Pattern
-            .compile("deck add-card(?<side> -s| --side|) (-c|--card) (?<card>.+) (-d|--deck) (?<deck>.+)");
+            .compile("deck add-card(?<side> -s| --side|) (-c|--card) (?<card>.+) (-d|--deck) (?<deck>\\S+)");
     private Pattern deckAddCard6 = Pattern
-            .compile("deck add-card(?<side> -s| --side|) (-d|--deck) (?<deck>.+) (-c|--card) (?<card>.+)");
+            .compile("deck add-card(?<side> -s| --side|) (-d|--deck) (?<deck>\\S+) (-c|--card) (?<card>.+)");
     private Pattern deckDeleteCard1 = Pattern
-            .compile("deck rm-card (-c|--card) (?<card>.+) (-d|--deck) (?<deck>.+)(?<side> -s| --side|)");
+            .compile("deck rm-card (-c|--card) (?<card>.+) (-d|--deck) (?<deck>\\S+)(?<side> -s| --side|)");
     private Pattern deckDeleteCard2 = Pattern
-            .compile("deck rm-card (-d|--deck) (?<deck>.+) (-c|--card) (?<card>.+)(?<side> -s| --side|)");
+            .compile("deck rm-card (-d|--deck) (?<deck>\\S+) (-c|--card) (?<card>.+)(?<side> -s| --side|)");
     private Pattern deckDeleteCard3 = Pattern
-            .compile("deck rm-card (-d|--deck) (?<deck>.+)(?<side> -s| --side|) (-c|--card) (?<card>.+)");
+            .compile("deck rm-card (-d|--deck) (?<deck>\\S+)(?<side> -s| --side|) (-c|--card) (?<card>.+)");
     private Pattern deckDeleteCard4 = Pattern
-            .compile("deck rm-card (-c|--card) (?<card>.+)(?<side> -s| --side|) (-d|--deck) (?<deck>.+)");
+            .compile("deck rm-card (-c|--card) (?<card>.+)(?<side> -s| --side|) (-d|--deck) (?<deck>\\S+)");
     private Pattern deckDeleteCard5 = Pattern
-            .compile("deck rm-card(?<side> -s| --side|) (-c|--card) (?<card>.+) (-d|--deck) (?<deck>.+)");
+            .compile("deck rm-card(?<side> -s| --side|) (-c|--card) (?<card>.+) (-d|--deck) (?<deck>\\S+)");
     private Pattern deckDeleteCard6 = Pattern
-            .compile("deck rm-card(?<side> -s| --side|) (-d|--deck) (?<deck>.+) (-c|--card) (?<card>.+)");
+            .compile("deck rm-card(?<side> -s| --side|) (-d|--deck) (?<deck>\\S+) (-c|--card) (?<card>.+)");
 
     private Pattern deckShowAll = Pattern.compile("deck show (-a|--all)");
     private Pattern deckShowOneDeck1 = Pattern
-            .compile("deck show (-d-n|--deck-name) (?<deckName>.+)(?<side> -s| --side|)");
+            .compile("deck show (-d-n|--deck-name) (?<deckName>\\S+)(?<side> -s| --side|)");
     private Pattern deckShowOneDeck2 = Pattern
-            .compile("deck show(?<side> -s| --side|) (-d-n|--deck-name) (?<deckName>.+)");
+            .compile("deck show(?<side> -s| --side|) (-d-n|--deck-name) (?<deckName>\\S+)");
     private Pattern deckShowCards = Pattern.compile("deck show (-c|--cards)");
 
     private Matcher matcher;
