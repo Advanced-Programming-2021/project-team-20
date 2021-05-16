@@ -20,7 +20,7 @@ public class DuelController {
     private int numberOfRounds;
     private int currentRound;
     private boolean isRoundOver;
-    private boolean isRoundBegin;
+    private boolean isTurnSetedBetweenTwoPlayerWhenRoundBegin;
     private boolean isGameOver;
     private ArrayList<Card> allySideDeckCards = new ArrayList<>();
     private ArrayList<Card> opponentSideDeckCards = new ArrayList<>();
@@ -45,7 +45,7 @@ public class DuelController {
         maxLifePointOfPlayers.add(0);
         usersSummoningOrSettingMonsterOneTime.add(true);
         usersSummoningOrSettingMonsterOneTime.add(true);
-        isRoundBegin = true;
+        isTurnSetedBetweenTwoPlayerWhenRoundBegin = false;
         currentRound = 1;
     }
 
@@ -68,7 +68,7 @@ public class DuelController {
 
         if (isRoundOver) {
             return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
-        } else if (isRoundBegin) {
+        } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
         if (string.startsWith("cheat")) {
@@ -424,12 +424,12 @@ public class DuelController {
         return playingUsers.get(turn - 1);
     }
 
-    public boolean isRoundBegin() {
-        return isRoundBegin;
+    public boolean isTurnSetedBetweenTwoPlayerWhenRoundBegin() {
+        return isTurnSetedBetweenTwoPlayerWhenRoundBegin;
     }
 
-    public void setRoundBegin(boolean isRoundBegin) {
-        this.isRoundBegin = isRoundBegin;
+    public void setTurnSetedBetweenTwoPlayerWhenRoundBegin(boolean isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
+        this.isTurnSetedBetweenTwoPlayerWhenRoundBegin= isTurnSetedBetweenTwoPlayerWhenRoundBegin;
     }
 
     public void setTurn(int turn) {

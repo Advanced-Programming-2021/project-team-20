@@ -41,17 +41,6 @@ public class Storage {
         addTrapCards();
         addSpellCards();
 
-        // User user = getUserByName("mohammad");
-        // Deck deck = user.getDecks().get("myDeck");
-        // System.out.println(deck.getSizeOfMainDeck() + " " + deck.getSizeOfSideDeck());
-
-        // for (Map.Entry<String, Card> a : allMonsterCards.entrySet()) {
-        // System.out.println("shop buy " + a.getValue().getCardName());
-        // }
-        // for (Map.Entry<String, Card> a : allSpellAndTrapCards.entrySet()) {
-        // System.out.println("shop buy " + a.getValue().getCardName());
-        // }
-
     }
 
     public void endProgram() {
@@ -122,6 +111,7 @@ public class Storage {
             String[] nextRecord;
 
             while ((nextRecord = csvReader.readNext()) != null) {
+
                 if (nextRecord[1].equals("Trap")) {
                     allSpellAndTrapCards.put(nextRecord[0],
                             new TrapCard(nextRecord[0], nextRecord[3],
@@ -145,6 +135,7 @@ public class Storage {
             String[] nextRecord;
 
             while ((nextRecord = csvReader.readNext()) != null) {
+
                 if (nextRecord[1].equals("Spell")) {
                     allSpellAndTrapCards.put(nextRecord[0],
                             new SpellCard(nextRecord[0], nextRecord[3],
@@ -201,7 +192,8 @@ public class Storage {
 
             int firstRow = 0;
             while ((nextRecord = csvReader.readNext()) != null) {
-                if (firstRow > 1) {
+
+                if (firstRow > 0) {
 
                     allMonsterCards.put(nextRecord[0],
                             new MonsterCard(Integer.parseInt(nextRecord[5]), Integer.parseInt(nextRecord[6]),

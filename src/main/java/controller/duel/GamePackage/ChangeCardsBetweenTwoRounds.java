@@ -15,7 +15,7 @@ public class ChangeCardsBetweenTwoRounds {
 
     private ArrayList<Card> mainDeckCards;
     private ArrayList<Card> sideDeckCards;
-    private boolean isFirstPlayerChangedHisDeck = true;
+    private boolean isPrimarilyMessageSent = true;
 
     public String changeCardsBetweenTwoRounds(int turn, String input, int index) {
 
@@ -27,8 +27,8 @@ public class ChangeCardsBetweenTwoRounds {
             sideDeckCards = GameManager.getDuelControllerByIndex(index).getOpponentSideDeckCards();
         }
 
-        if (isFirstPlayerChangedHisDeck) {
-            isFirstPlayerChangedHisDeck = false;
+        if (isPrimarilyMessageSent) {
+            isPrimarilyMessageSent = false;
             return "now player 1 can change his main deck";
         }
 
@@ -52,7 +52,7 @@ public class ChangeCardsBetweenTwoRounds {
 
         Matcher matcher;
         matcher = Utility.getCommandMatcher(input,
-                "transfer card to (-sd|--side deck) from (-md|--main deck) (?<cardname>\\S+)");
+                "transfer card to side deck from main deck (?<cardname>\\S+)");
         if (matcher.find()) {
             String cardname = matcher.group("cardname");
             if (addCardToSideDeck(cardname)) {
@@ -63,7 +63,7 @@ public class ChangeCardsBetweenTwoRounds {
         }
 
         matcher = Utility.getCommandMatcher(input,
-                "transfer card to (-md|--main deck) from (-sd|--side deck) (?<cardname>\\S+)");
+                "transfer card to main deck from side deck (?<cardname>\\S+)");
         if (matcher.find()) {
             String cardname = matcher.group("cardname");
             if (addCardToMainDeck(cardname)) {
@@ -72,7 +72,6 @@ public class ChangeCardsBetweenTwoRounds {
             }
             return cardname + " does not exist in side deck";
         }
-
         return "invalid command!";
     }
 
