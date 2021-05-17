@@ -12,9 +12,10 @@ import controller.non_duel.storage.Storage;
 import view.View;
 
 class MainControllerTest {
-    static  MainController mainController;
+    static MainController mainController;
     static View view;
     static Storage storage;
+
     @BeforeAll
     static void startTest() {
         storage = new Storage();
@@ -25,7 +26,7 @@ class MainControllerTest {
         }
         view = new View();
         mainController = MainController.getInstance();
-        
+
     }
 
     @Test
@@ -34,13 +35,13 @@ class MainControllerTest {
         assertEquals("ImportAndExport", View.getCurrentMenu());
         mainController.exitMenu();
         assertEquals("Main Menu", View.getCurrentMenu());
-        mainController.enterMenu("Duel Began"); 
+        mainController.enterMenu("Duel Began");
         assertEquals("Duel Began", View.getCurrentMenu());
         mainController.exitMenu();
         assertEquals("Main Menu", View.getCurrentMenu());
         mainController.enterMenu("Duel");
         assertEquals("Duel", View.getCurrentMenu());
-        mainController.exitMenu(); 
+        mainController.exitMenu();
         mainController.enterMenu("Shop");
         assertEquals("Shop", View.getCurrentMenu());
         mainController.exitMenu();
@@ -58,10 +59,10 @@ class MainControllerTest {
     }
 
     @Test
-    void switchCaseInputTest(){
+    void switchCaseInputTest() {
         String output = "";
         output = mainController.switchCaseInput("user login -p ali -u ali -n ali");
-        assertEquals("user logged in successfully!", output); 
+        assertEquals("user logged in successfully!", output);
         mainController.enterMenu("Deck");
         output = mainController.switchCaseInput("deck create 132");
         assertEquals("deck created successfully!", output);

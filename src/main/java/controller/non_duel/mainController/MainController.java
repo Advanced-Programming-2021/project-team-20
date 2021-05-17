@@ -1,7 +1,6 @@
 package controller.non_duel.mainController;
 
-import controller.duel.Duel;
-import controller.duel.PreliminaryPackage.GameManager;
+import controller.duel.StartDuel;
 import controller.non_duel.deckCommands.DeckCommands;
 import controller.non_duel.importAndExport.ImportAndExport;
 import controller.non_duel.loginMenu.LoginMenu;
@@ -22,7 +21,6 @@ public class MainController {
     private boolean isInProfile;
     private boolean isInImportAndExport;
     private boolean isInDuelMenu;
-    private boolean isDuelBegan;
 
     private LoginMenu loginMenu = new LoginMenu();
     private DeckCommands deckCommands = new DeckCommands();
@@ -30,7 +28,7 @@ public class MainController {
     private Scoreboard scoreboard = new Scoreboard();
     private Shop shop = new Shop();
     private ImportAndExport importAndExport = new ImportAndExport();
-    private Duel duel = new Duel();
+    private StartDuel duel = new StartDuel();
 
     public static MainController getInstance() {
         if (mainController == null) {
@@ -62,8 +60,6 @@ public class MainController {
             return importAndExport.findCommand(command);
         } else if (isInDuelMenu) {
             return duel.findCommand(command);
-        } else if (isDuelBegan) {
-            return GameManager.getDuelControllerByIndex(0).getInput(command);
         }
 
         return "invalid command!";
@@ -127,12 +123,7 @@ public class MainController {
             isInLoginMenu = false;
             View.setCurrentMenu(menuname);
             return true;
-        } else if (menuname.equals("Duel Began")) {
-            isDuelBegan = true;
-            isInMainMenu = false;
-            View.setCurrentMenu("Duel Began");
-            return true;
-        }
+        } 
         return false;
     }
 }
