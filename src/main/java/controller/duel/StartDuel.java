@@ -22,7 +22,7 @@ public class StartDuel {
     public String findCommand(String command) {
 
         if (isDuelStarted) {
-            return GameManager.getDuelControllerByIndex(0).getInput(command);
+            return GameManager.getDuelControllerByIndex(0).getInput(command, true);
         }
 
         StartDuelPatterns startDuelPatterns = new StartDuelPatterns();
