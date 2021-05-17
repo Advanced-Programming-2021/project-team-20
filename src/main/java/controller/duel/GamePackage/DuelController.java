@@ -481,10 +481,6 @@ public class DuelController {
         this.lifePoints.set(turn - 1, this.lifePoints.get(turn - 1) + lifePoints);
     }
 
-    public ArrayList<Boolean> getUsersSummoningOrSettingMonsterOneTime() {
-        return usersSummoningOrSettingMonsterOneTime;
-    }
-
     public boolean canUserNormalSummon(int turn) {
         return usersSummoningOrSettingMonsterOneTime.get(turn - 1);
     }
