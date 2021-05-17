@@ -2,6 +2,7 @@ package controller.duel.PreliminaryPackage;
 
 import java.util.ArrayList;
 
+import controller.duel.GamePackage.AI;
 import controller.duel.GamePackage.Action;
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
@@ -33,6 +34,7 @@ public class GameManager {
     public static ArrayList<SummonSetCommonClass> summonSetCommonClasses = new ArrayList<>();
     public static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
     public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
+    public static ArrayList<AI> ais = new ArrayList<>();
 
     public void addANewGame(ArrayList<Card> firstPlayerMainDeck, ArrayList<Card> firstPlayerSideDeck,
             ArrayList<Card> secondPlayerMainDeck, ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername,
@@ -60,6 +62,7 @@ public class GameManager {
         phaseControllers.add(new PhaseController());
         actions.add(new ArrayList<>());
         uninterruptedActions.add(new ArrayList<>());
+        ais.add(new AI());
     }
 
     public static void removeClassesWhenGameIsOver(int index) {
@@ -164,6 +167,10 @@ public class GameManager {
 
     public static ArrayList<Action> getUninterruptedActionsByIndex(int index) {
         return uninterruptedActions.get(index);
+    }
+
+    public static AI getAIByIndex(int index){
+        return ais.get(index);
     }
 
     public static SummonSetCommonClass getSummonSetCommonClassByIndex(int index) {
