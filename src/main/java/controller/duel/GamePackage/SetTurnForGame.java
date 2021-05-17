@@ -21,14 +21,16 @@ public class SetTurnForGame {
                 player1Selection = Integer.parseInt(input);
                 isFirstPlayerCanSelect = false;
                 isSecondPlayerCanSelect = true;
-                if (!opponentPlayerName.equals("AI"))
+                if (!opponentPlayerName.equals("AI")) {
                     return opponentPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
+                }
+            } else {
+                return "please choose number between 1 to 3\n1.stone\n2.hand\n3.snips";
             }
-            return "please choose number between 1 to 3\n1.stone\n2.hand\n3.snips";
         }
 
         if (opponentPlayerName.equals("AI")) {
-            player2Selection = new Random().nextInt(3);
+            player2Selection = 1 + new Random().nextInt(3);
         } else {
             if (isSecondPlayerCanSelect) {
                 if (input.equals("1") || input.equals("2") || input.equals("3")) {
