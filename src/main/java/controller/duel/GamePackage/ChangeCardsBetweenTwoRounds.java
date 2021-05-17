@@ -28,6 +28,7 @@ public class ChangeCardsBetweenTwoRounds {
         if (input.equals("end")) {
             
             if (turn == 1) {
+                System.out.println(opponentPlayerName);
                 if(opponentPlayerName.equals("AI")){
                     GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
                     GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);

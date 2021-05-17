@@ -1,6 +1,7 @@
 package controller.duel.gamepackage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,12 +30,11 @@ class SetTurnForGameTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
     void AITest() {
-        
+
         ArrayList<Card> cards = new ArrayList<>();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
@@ -43,11 +43,10 @@ class SetTurnForGameTest {
         gameManager = new GameManager();
         gameManager.addANewGame(cards, cards, cards, cards, "firstPlayer", "AI", 1);
         setTurnForGame = new SetTurnForGame();
-
         String output = setTurnForGame.setTurnBetweenTwoPlayer("1", 0);
+        assertNotNull(output);
         System.out.println(output);
     }
-
 
     @Test
     void normalTest1() {
@@ -75,7 +74,7 @@ class SetTurnForGameTest {
         assertEquals("secondPlayer must choose\n1.stone\n2.hand\n3.snips", output);
         output = setTurnForGame.setTurnBetweenTwoPlayer("3", 0);
         assertEquals("secondPlayer must start game", output);
-
+        setTurnForGame.setTurnBetweenTwoPlayer("input", 0);
     }
 
     @Test
@@ -95,5 +94,4 @@ class SetTurnForGameTest {
         assertEquals("firstPlayer must start game", output);
     }
 
-  
 }

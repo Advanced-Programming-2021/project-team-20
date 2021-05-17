@@ -56,7 +56,7 @@ public class Storage {
                 fileWriter.write(toGsonFormat(allUsers.get(i)));
                 fileWriter.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.exit(0);
             }
 
             HashMap<String, Deck> allDecks = allUsers.get(i).getDecks();
@@ -86,7 +86,7 @@ public class Storage {
                 fileWriter.write(wholeDecksOfUser.toString());
                 fileWriter.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.exit(0);
             }
 
         }
@@ -122,7 +122,7 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.exit(0);
         }
     }
 
@@ -146,7 +146,7 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.exit(0);
         }
     }
 
@@ -200,13 +200,13 @@ public class Storage {
                                     Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
                                     MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
                                     MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
-                                    null, 3 , Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord)));
+                                    null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord)));
                 }
                 firstRow++;
             }
             csvReader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.exit(0);
         }
     }
 
@@ -341,8 +341,6 @@ public class Storage {
     }
 
     public static boolean doesCardExist(String cardname) {
-        // System.out.println(cardname + " " + (allMonsterCards.containsKey(cardname) ||
-        // allSpellAndTrapCards.containsKey(cardname)));
         return allMonsterCards.containsKey(cardname) || allSpellAndTrapCards.containsKey(cardname);
     }
 
