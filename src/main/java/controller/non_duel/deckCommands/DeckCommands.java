@@ -171,11 +171,11 @@ public class DeckCommands {
         if (foundCommands.get("delete card from").contains("-s")) {
             if (!allDecksOfUser.get(foundCommands.get("deck")).getSideDeck().contains(foundCommands.get("card"))) {
                 return "card with name " + foundCommands.get("card") + " does not exist in side deck";
-            } 
+            }
             allDecksOfUser.get(foundCommands.get("deck")).deleteCardFromSideDeck(foundCommands.get("card"));
-        } else{
-            if(!allDecksOfUser.get(foundCommands.get("deck")).getMainDeck().contains(foundCommands.get("card"))){
-                return "card with name " + foundCommands.get("card") + " does not exist in main deck";     
+        } else {
+            if (!allDecksOfUser.get(foundCommands.get("deck")).getMainDeck().contains(foundCommands.get("card"))) {
+                return "card with name " + foundCommands.get("card") + " does not exist in main deck";
             }
             allDecksOfUser.get(foundCommands.get("deck")).deleteCardFromMainDeck(foundCommands.get("card"));
         }
@@ -204,9 +204,16 @@ public class DeckCommands {
 
         int numberOfCardsInDeck = allDecksOfUser.get(foundCommands.get("deck"))
                 .numberOfCardsInDeck(foundCommands.get("card"));
-        if (numberOfCardsInDeck == 3) {
-            return "there are already three cards with name " + foundCommands.get("card") + " in deck "
-                    + foundCommands.get("deck");
+        int numberOfAllowedUsages = 0;
+        if (allSpellAndTrapCard.containsKey(foundCommands.get("card"))) {
+            numberOfAllowedUsages = allSpellAndTrapCard.get(foundCommands.get("card")).getNumberOfAllowedUsages();
+        } else if (allMonsterCards.containsKey(foundCommands.get("card"))) {
+            numberOfAllowedUsages = 3;
+        }
+
+        if (numberOfCardsInDeck == numberOfAllowedUsages) {
+            return "there are already" + numberOfAllowedUsages + " cards with name " + foundCommands.get("card")
+                    + " in deck " + foundCommands.get("deck");
         }
 
         Profile.getOnlineUser().deleteCardFromAllUselessCards(foundCommands.get("card"));

@@ -200,7 +200,7 @@ public class Storage {
                                     Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
                                     MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
                                     MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
-                                    null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord)));
+                                    null, 3 , Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord)));
                 }
                 firstRow++;
             }

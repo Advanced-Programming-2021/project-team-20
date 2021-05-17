@@ -1,7 +1,6 @@
 package controller.non_duel.mainController;
 
 import controller.duel.StartDuel;
-import controller.duel.PreliminaryPackage.GameManager;
 import controller.non_duel.deckCommands.DeckCommands;
 import controller.non_duel.importAndExport.ImportAndExport;
 import controller.non_duel.loginMenu.LoginMenu;
