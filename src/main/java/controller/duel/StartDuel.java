@@ -68,6 +68,9 @@ public class StartDuel {
         GameManager gameManager = new GameManager();
         gameManager.addANewGame(firstUserMainDeck, firstUserSideDeck, secondUserMainDeck, secondUserSideDeck,
                 firstUser.getName(), secondUser.getName(), roundsNumber);
+        GameManager.getDuelControllerByIndex(0).startDuel(0);
+        GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
+        GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
 
     }
 

@@ -2,8 +2,6 @@ package controller.non_duel_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,14 +15,8 @@ class ProfileTest {
     static MainController mainController;
 
     @BeforeAll
-    static void statetTest() {
+    static void startTest() {
         storage = new Storage();
-        try {
-            storage.startProgram();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         mainController = MainController.getInstance();
         User user = new User("1", "1", "1");
         User user2 = new User("2", "2", "2");

@@ -6,18 +6,16 @@ import java.util.regex.Matcher;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
 import model.cardData.General.Card;
-import model.cardData.General.CardType;
-import model.cardData.MonsterCardData.MonsterCard;
-import model.cardData.SpellCardData.SpellCard;
-import model.cardData.TrapCardData.TrapCard;
 
 public class ChangeCardsBetweenTwoRounds {
 
     private ArrayList<Card> mainDeckCards;
     private ArrayList<Card> sideDeckCards;
-    private boolean isPrimarilyMessageSent = true;
 
     public String changeCardsBetweenTwoRounds(int turn, String input, int index) {
+
+        String allyPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
+        String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
         if (turn == 1) {
             mainDeckCards = GameManager.getDuelBoardByIndex(index).getAllyCardsInDeck();
@@ -27,92 +25,67 @@ public class ChangeCardsBetweenTwoRounds {
             sideDeckCards = GameManager.getDuelControllerByIndex(index).getOpponentSideDeckCards();
         }
 
-        if (isPrimarilyMessageSent) {
-            isPrimarilyMessageSent = false;
-            return "now player 1 can change his main deck";
-        }
-
         if (input.equals("end")) {
-            if (mainDeckCards.size() < 40) {
-                return "cards in main deck should be at least 40";
-            }
-            if (mainDeckCards.size() > 60) {
-                return "cards in main deck should be at most 60";
-            }
+            
             if (turn == 1) {
+                if(opponentPlayerName.equals("AI")){
+                    GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+                    GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
+                    return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
+                }
                 GameManager.getDuelControllerByIndex(index).setTurn(2);
-                return "now player 2 can change his main deck";
+                return "now " + opponentPlayerName + " can change his deck";
             }
             if (turn == 2) {
-                GameManager.getDuelControllerByIndex(index).startDuel(index);
-                return "next round of duel started";
+                GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
+                GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+                return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
             }
-
         }
 
         Matcher matcher;
         matcher = Utility.getCommandMatcher(input,
-                "transfer card to side deck from main deck (?<cardname>\\S+)");
+                "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
         if (matcher.find()) {
-            String cardname = matcher.group("cardname");
-            if (addCardToSideDeck(cardname)) {
-                transferCardsBetweenSideAndMainDeck(turn, index);
-                return cardname + " added to side deck successfully!";
-            }
-            return cardname + " does not exist in main deck";
+            String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
+            String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");
+            return moveCards(cardToBeMovedToMainDeckStringFormat, cardToBeMovedToSideDeckStringFormat, turn, index);
         }
 
-        matcher = Utility.getCommandMatcher(input,
-                "transfer card to main deck from side deck (?<cardname>\\S+)");
-        if (matcher.find()) {
-            String cardname = matcher.group("cardname");
-            if (addCardToMainDeck(cardname)) {
-                transferCardsBetweenSideAndMainDeck(turn, index);
-                return cardname + " added to main deck successfully!";
-            }
-            return cardname + " does not exist in side deck";
-        }
         return "invalid command!";
     }
 
-    private boolean addCardToMainDeck(String cardname) {
+    private String moveCards(String cardToBeMovedToMainDeckStringFormat, String cardToBeMovedToSideDeckStringFormat,
+            int turn, int index) {
+
+        Card cardToBeMovedToSideDeck = null;
+        Card cardToBeMovedToMainDeck = null;
 
         for (int i = 0; i < sideDeckCards.size(); i++) {
-            if (sideDeckCards.get(i).getCardName().equals(cardname)) {
-                if (sideDeckCards.get(i).getCardType().equals(CardType.MONSTER)) {
-                    MonsterCard monsterCard = (MonsterCard) sideDeckCards.get(i);
-                    mainDeckCards.add(monsterCard);
-                } else if (sideDeckCards.get(i).getCardType().equals(CardType.SPELL)) {
-                    SpellCard spellCard = (SpellCard) sideDeckCards.get(i);
-                    mainDeckCards.add(spellCard);
-                } else if (sideDeckCards.get(i).getCardType().equals(CardType.TRAP)) {
-                    TrapCard trapCard = (TrapCard) sideDeckCards.get(i);
-                    mainDeckCards.add(trapCard);
-                }
-                return true;
+            if (sideDeckCards.get(i).getCardName().equals(cardToBeMovedToMainDeckStringFormat)) {
+                cardToBeMovedToMainDeck = sideDeckCards.get(i);
+                break;
             }
         }
-        return false;
-    }
-
-    private boolean addCardToSideDeck(String cardname) {
 
         for (int i = 0; i < mainDeckCards.size(); i++) {
-            if (mainDeckCards.get(i).getCardName().equals(cardname)) {
-                if (mainDeckCards.get(i).getCardType().equals(CardType.MONSTER)) {
-                    MonsterCard monsterCard = (MonsterCard) mainDeckCards.get(i);
-                    sideDeckCards.add(monsterCard);
-                } else if (mainDeckCards.get(i).getCardType().equals(CardType.SPELL)) {
-                    SpellCard spellCard = (SpellCard) mainDeckCards.get(i);
-                    sideDeckCards.add(spellCard);
-                } else if (mainDeckCards.get(i).getCardType().equals(CardType.TRAP)) {
-                    TrapCard trapCard = (TrapCard) mainDeckCards.get(i);
-                    sideDeckCards.add(trapCard);
-                }
-                return true;
+            if (mainDeckCards.get(i).getCardName().equals(cardToBeMovedToSideDeckStringFormat)) {
+                cardToBeMovedToSideDeck = mainDeckCards.get(i);
+                break;
             }
         }
-        return false;
+
+        if (cardToBeMovedToMainDeck == null)
+            return cardToBeMovedToMainDeckStringFormat + " does not exist in side deck";
+
+        if (cardToBeMovedToSideDeck == null)
+            return cardToBeMovedToSideDeckStringFormat + " does not exist in main deck";
+
+        mainDeckCards.add(cardToBeMovedToMainDeck);
+        sideDeckCards.add(cardToBeMovedToSideDeck);
+        transferCardsBetweenSideAndMainDeck(turn, index);
+        return "cards moved successfully!";
+
     }
 
     private void transferCardsBetweenSideAndMainDeck(int turn, int index) {
