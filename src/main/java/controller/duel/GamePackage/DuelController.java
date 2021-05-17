@@ -83,7 +83,7 @@ public class DuelController {
         DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-/*
+
         if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
             return cheat.findCheatCommand(string, 0);
@@ -98,7 +98,7 @@ public class DuelController {
         }
 
 
- */
+
         // System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()"
         // + normalSummonController.isAreWeLookingForMonstersToBeTributed());
         if (string.startsWith("select") && normalSummonController.isAreWeLookingForMonstersToBeTributed()) {
@@ -373,7 +373,7 @@ public class DuelController {
     }
 
     public void startDuel(int index) {
-        /*
+
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
         if (turn == 1) {
             phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -382,11 +382,11 @@ public class DuelController {
             phaseController.setPhaseInGame(PhaseInGame.OPPONENT_MAIN_PHASE_1);
         }
 
-         */
-        turn = 1;
-        fakeTurn = 1;
-        GameManager.getPhaseControllerByIndex(0).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
-        //GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
+
+        //turn = 1;
+        //fakeTurn = 1;
+        //GameManager.getPhaseControllerByIndex(0).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
+        GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
 
