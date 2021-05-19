@@ -39,7 +39,6 @@ public class View {
                 exitMenu(commands);
                 continue;
             } else if (commands.equals("menu show-current")) {
-               // System.
                 printMethod(currentMenu);
                 continue;
             }

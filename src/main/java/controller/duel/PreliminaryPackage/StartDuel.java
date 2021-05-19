@@ -1,6 +1,5 @@
-package controller.duel;
+package controller.duel.PreliminaryPackage;
 
-import controller.duel.PreliminaryPackage.GameManager;
 import controller.non_duel.profile.Profile;
 import controller.non_duel.storage.Storage;
 import model.Deck;
