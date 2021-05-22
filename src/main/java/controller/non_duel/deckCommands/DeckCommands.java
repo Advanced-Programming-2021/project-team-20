@@ -94,7 +94,7 @@ public class DeckCommands {
         }
 
         StringBuilder showDeck = new StringBuilder();
-        showDeck.append("Deck: " + foundCommands.get("show deck with name\n"));
+        showDeck.append("Deck: " + foundCommands.get("show deck with name") + "\n");
 
         if (foundCommands.get("side").contains("-s")) {
             showDeck.append("Side Deck:\nMonsters:");
@@ -105,7 +105,7 @@ public class DeckCommands {
             showDeck.append(showCardsInMainOrSideDeck(
                     allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
         }
-
+       
         return showDeck.toString();
     }
 
@@ -135,7 +135,7 @@ public class DeckCommands {
         StringBuilder showAllDecks = new StringBuilder();
         showAllDecks.append("Decks:\nActive deck:\n");
         if (allDecksOfUser == null) {
-            showAllDecks.append("Other Decks:\n");
+            showAllDecks.append("Other Decks:");
             return showAllCards();
         }
 
@@ -146,14 +146,14 @@ public class DeckCommands {
                         .append(entry.getKey() + ": main deck " + allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck()
                                 + ", side deck " + allDecksOfUser.get(entry.getKey()).getSizeOfSideDeck() + ", ");
                 showAllDecks
-                        .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() > 40 ? "valid\n" : "invalid\n");
+                        .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ? "valid\n" : "invalid\n");
             } else {
 
                 showOtherDecks.append(
                         "\n" + entry.getKey() + ": main deck " + allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck()
                                 + ", side deck " + allDecksOfUser.get(entry.getKey()).getSizeOfSideDeck() + ", ");
                 showOtherDecks
-                        .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() > 40 ? "valid" : "invalid");
+                        .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ? "valid" : "invalid");
             }
         }
 
@@ -212,7 +212,7 @@ public class DeckCommands {
         }
 
         if (numberOfCardsInDeck == numberOfAllowedUsages) {
-            return "there are already" + numberOfAllowedUsages + " cards with name " + foundCommands.get("card")
+            return "there are already " + numberOfAllowedUsages + " cards with name " + foundCommands.get("card")
                     + " in deck " + foundCommands.get("deck");
         }
 
