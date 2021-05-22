@@ -8,10 +8,11 @@ import model.User;
 
 public class Profile {
 
-    private ProfilePatterns profilePatterns = new ProfilePatterns();
+    private ProfilePatterns profilePatterns;
     private static User onlineUser = new User();
 
     public String findCommands(String command) {
+        profilePatterns = new ProfilePatterns();
         HashMap<String, String> foundCommadns = profilePatterns.findCommands(command);
         if (foundCommadns == null) {
             return "invalid command!";

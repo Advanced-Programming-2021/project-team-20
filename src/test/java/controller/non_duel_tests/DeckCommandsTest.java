@@ -156,19 +156,19 @@ class DeckCommandsTest {
         assertTrue(Profile.getOnlineUser().getDecks().get("129").getIsDeckActive());
     }
 
-    @Test
-    void addCardToDeck() {
-        String output = deckCommands.findCommands("deck add-card -c Suijiin -d 123");
-        assertEquals("card with name Suijiin does not exist", output);
-        output = deckCommands.findCommands("deck add-card -c Suijin -d 1");
-        assertEquals("deck with name 1 does not exist", output);
-        output = deckCommands.findCommands("deck add-card -c Raigeki -d 124");
-        assertEquals("main deck is full", output);
-        output = deckCommands.findCommands("deck add-card -s -c Raigeki -d 124");
-        assertEquals("side deck is full", output);
-        output = deckCommands.findCommands("deck add-card -c Suijin -d 123");
-        assertEquals("there are already three cards with name Suijin in deck 123", output);
-    }
+   // @Test
+    // void addCardToDeck() {
+    //     String output = deckCommands.findCommands("deck add-card -c Suijiin -d 123");
+    //     assertEquals("card with name Suijiin does not exist", output);
+    //     output = deckCommands.findCommands("deck add-card -c Suijin -d 1");
+    //     assertEquals("deck with name 1 does not exist", output);
+    //     output = deckCommands.findCommands("deck add-card -c Raigeki -d 124");
+    //     assertEquals("main deck is full", output);
+    //     output = deckCommands.findCommands("deck add-card -s -c Raigeki -d 124");
+    //     assertEquals("side deck is full", output);
+    //     output = deckCommands.findCommands("deck add-card -c Suijin -d 123");
+    //     assertEquals("there are already three cards with name Suijin in deck 123", output);
+    // }
 
     // @Test
     // void deleteCardFromDeckTest() {

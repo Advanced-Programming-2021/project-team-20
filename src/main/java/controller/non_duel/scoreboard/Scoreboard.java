@@ -11,10 +11,12 @@ import model.User;
 public class Scoreboard {
 
     private ArrayList<User> allUsers;
-    private int rankOfPlayers = 1;
-    private StringBuilder finalResult = new StringBuilder();
+    private int rankOfPlayers;
+    private StringBuilder finalResult;
 
     public String findCommands(String command) {
+        rankOfPlayers = 1;
+        finalResult = new StringBuilder();
         if (command.equals("scoreboard show")) {
             return sortUsers();
         }
@@ -43,6 +45,7 @@ public class Scoreboard {
                 rankOfPlayers += usersWithSameScore.size();
             }
         }
+
         return finalResult.toString();
     }
 
