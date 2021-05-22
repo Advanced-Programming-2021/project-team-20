@@ -21,8 +21,6 @@ public class LoginMenuTest {
         User user2 = new User("2", "2", "2");
         Storage.addUserToAllUsers(user);
         Storage.addUserToAllUsers(user2);
-//        mainController.switchCaseInput("user login -u 1 -p 1 -n 1");
-//        mainController.enterMenu("Profile");
     }
 
 
@@ -34,6 +32,21 @@ public class LoginMenuTest {
 
         Assertions.assertEquals("user with nickname 2 already exists",
             mainController.switchCaseInput("user create -u 11 -p 2 -n 2"));
+
+        Assertions.assertEquals("Username and password didn't match!",
+            mainController.switchCaseInput("user login -u 111 -p 2"));
+
+        Assertions.assertEquals("Username and password didn't match!",
+            mainController.switchCaseInput("user login -u 1 -p 2"));
+
+        Assertions.assertEquals("invalid command",
+            mainController.switchCaseInput("user login -u 1 -pass 2"));
+
+        Assertions.assertEquals("user created successfully!",
+            mainController.switchCaseInput("user create -u 111 -p 2 --nickname 12"));
+
+        Assertions.assertEquals("user logged in successfully!",
+            mainController.switchCaseInput("user login -u 1 -p 1"));
     }
 
 }
