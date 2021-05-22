@@ -12,10 +12,12 @@ public class LoginMenu {
         // find command from login menu patterns
         if (LoginMenuPatterns.isItCreateUserPattern(command)) {
             if (doesUserWithThisUsernameAlreadyExistsCreateMenu(command)) {
-                return "user with username already exists";
+                String username = LoginMenuPatterns.findUsernameCreateUser(command);
+                return "user with username " + username + " already exists";
             }
             if (doesUserWithThisNicknameAlreadyExists(command)) {
-                return "user with nickname <nickname> already exists";
+                String nickname = LoginMenuPatterns.findNicknameCreateUser(command);
+                return "user with nickname " + nickname + " already exists";
             }
             return createUser(command);
         }
