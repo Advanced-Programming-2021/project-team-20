@@ -392,7 +392,7 @@ public class DuelController {
         } else if (Utility.isMatcherCorrectWithoutErrorPrinting(Utility.getCommandMatcher(string, "(?<=\\n|^)card[\\s]+show[\\s]+--selected(?=\\n|$)"))){
             return duelBoard.showSelectedCard(0, fakeTurn);
         }else if (Utility.isMatcherCorrectWithoutErrorPrinting(Utility.getCommandMatcher(string, "(?<=\\n|^)show[\\s]+board(?=\\n|$)"))){
-            return duelBoard.showMainDuelBord(0);
+            return duelBoard.showMainDuelBoard(0);
         }
         return "invalid command!";
     }
