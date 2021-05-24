@@ -421,9 +421,9 @@ public class DuelController {
 
         User winnerUser = Storage.getUserByName(playingUsers.get(turn - 1));
         User loserUser = Storage.getUserByName(playingUsers.get(-turn + 2));
-        winnerUser.setMoney(numberOfRounds * (1000 + maxLifePointOfPlayers.get(turn - 1)));
-        winnerUser.setScore(numberOfRounds * (1000));
-        loserUser.setMoney(numberOfRounds * (100));
+        winnerUser.setMoney(numberOfRounds * (1000 + maxLifePointOfPlayers.get(turn - 1)) + winnerUser.getMoney());
+        winnerUser.setScore(numberOfRounds * (1000) + winnerUser.getScore());
+        loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         MainController mainController = MainController.getInstance();
         mainController.exitMenu();
@@ -440,7 +440,7 @@ public class DuelController {
         turn = 1;
         fakeTurn = 1;
         currentRound += 1;
-        return winnerUser.getName() + " won the whole match with score: "
+        return winnerUser.getName() + " won the game and the score is: "
             + ((turn == 1) ? (1000) + " - 0" : "0 - " + (1000)) + "\n" + "now " + playingUsers.get(0)
             + " can change his deck";
     }
