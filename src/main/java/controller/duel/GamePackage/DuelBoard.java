@@ -29,7 +29,7 @@ public class DuelBoard {
     private ArrayList<Card> opponentMonsterCards;
     private ArrayList<Card> opponentCardsInDeck;
     private ArrayList<Card> opponentCardsInGraveyard;
-    private ArrayList<CardLocation> changedCardPositions;
+    private ArrayList<CardLocation> cardLocationsToBeTakenBackInEndPhase;
 
     public DuelBoard(ArrayList<Card> firstPlayerDeck, ArrayList<Card> secondPlayerDeck) {
         allyCardsInHand = new ArrayList<>();
@@ -44,7 +44,7 @@ public class DuelBoard {
         opponentMonsterCards = new ArrayList<>();
         opponentCardsInDeck = new ArrayList<>();
         opponentCardsInGraveyard = new ArrayList<>();
-        changedCardPositions = new ArrayList<>();
+        cardLocationsToBeTakenBackInEndPhase = new ArrayList<>();
         initializeCardsInDuelBoard(firstPlayerDeck, secondPlayerDeck);
     }
 
@@ -102,6 +102,18 @@ public class DuelBoard {
 
     public void setOpponentCardsInDeck(ArrayList<Card> opponentCardsInDeck) {
         this.opponentCardsInDeck = opponentCardsInDeck;
+    }
+
+    public ArrayList<CardLocation> getCardLocationsToBeTakenBackInEndPhase() {
+        return cardLocationsToBeTakenBackInEndPhase;
+    }
+
+    public void addCardLocationToCardLocationsToBeTakenBackInEndPhase(CardLocation cardLocation){
+        cardLocationsToBeTakenBackInEndPhase.add(cardLocation);
+    }
+
+    public void clearCardLocationsToBeTakenBackInEndPhase(){
+        cardLocationsToBeTakenBackInEndPhase.clear();
     }
 
     public Card getCardByCardLocation(CardLocation cardLocation) {
@@ -365,18 +377,18 @@ public class DuelBoard {
             MonsterCard monsterCard = (MonsterCard) card;
             monsterCard.setOncePerTurnCardEffectUsed(false);
             monsterCard.setCardPositionChanged(false);
-            monsterCard.setCardAttacked(false);
+            monsterCard.setHasCardAlreadyAttacked(false);
             monsterCard.clearEquipSpellEffect();
             monsterCard.clearFieldSpellEffect();
-            monsterCard.setCardPosition(null);
+            monsterCard.setCardPosition(CardPosition.NOT_APPLICABLE);
         } else if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
-            spellCard.setCardPosition(null);
+            spellCard.setCardPosition(CardPosition.NOT_APPLICABLE);
             spellCard.clearCardsToWhichEquipSpellIsApplied();
             spellCard.setNumberOfTurnsForActivation(spellCard.getHighestNumberOfTurnsOfActivation());
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;
-            trapCard.setCardPosition(null);
+            trapCard.setCardPosition(CardPosition.NOT_APPLICABLE);
             trapCard.setNumberOfTurnsForActivation(trapCard.getHighestNumberOfTurnsOfActivation());
         }
     }
@@ -699,6 +711,9 @@ public class DuelBoard {
             return "no card is selected yet";
         }
         Card selectedCard = getCardByCardLocation(cardLocation);
+        if (selectedCard == null){
+            return "there is no card here";
+        }
         if (turn == 1) {
             if (cardLocation.getRowOfCardLocation().toString().startsWith("OPPONENT") && isCardHidden(selectedCard)) {
                 return "card is not visible";

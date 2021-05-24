@@ -11,6 +11,7 @@ import controller.duel.Utility.Utility;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 import model.cardData.General.RowOfCardLocation;
+import model.cardData.MonsterCardData.MonsterCard;
 
 public class DirectAttackController extends BattlePhaseController {
     private CardLocation mainCard;
@@ -49,12 +50,18 @@ public class DirectAttackController extends BattlePhaseController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
         if (turn == 1 && !duelBoard.isZoneEmpty(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-            return "you can't attack the opponent directly";
+            return "you can't attack the opponent directly\n";
         }
         if (turn == 2 && !duelBoard.isZoneEmpty(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
-            return "you can't attack the opponent directly";
+            return "you can't attack the opponent directly\n";
         }
         mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
+        if (((MonsterCard) duelBoard.getCardByCardLocation(mainCard)).isHasCardAlreadyAttacked()) {
+            return "this monster has already attacked this turn\n";
+        }
+        if (GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow() == 1) {
+            return "in the first turn of the game, you can't attack\n";
+        }
         String output = "";
         output = areContinuousSpellTrapOrMonsterEffectsPreventingMonsterFromAttacking(mainCard, null, index);
         if (!output.equals("")) {
@@ -74,11 +81,11 @@ public class DirectAttackController extends BattlePhaseController {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null,null,null, null, null, null, null, null, ""));
-            uninterruptedActions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null,null, null, null,null,null, null, null, null, null, null, ""));
+            actions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null, ""));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null, ""));
+            actions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_DIRECT_ATTACKING, turn, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
         }
     }
 

@@ -69,9 +69,9 @@ public class SpecialSummonConductor {
         if (uninterruptedAction.getCardsToBeDiscarded().size() > 0) {
             ArrayList<CardLocation> cardsToBeDiscarded = uninterruptedAction.getCardsToBeDiscarded();
             int indexOfCardToBeDiscarded = cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1).getIndex();
-            System.out.println(indexOfCardToBeDiscarded);
-            System.out.println(mainMonsterCardLocation.getIndex());
-            System.out.println("kkk");
+            //System.out.println(indexOfCardToBeDiscarded);
+            //System.out.println(mainMonsterCardLocation.getIndex());
+            //System.out.println("kkk");
             uninterruptedAction.setSecondCardInHandAfterFirstCardInHand(indexOfCardToBeDiscarded < mainMonsterCardLocation.getIndex());
         }
     }

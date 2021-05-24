@@ -23,7 +23,7 @@ public class FlipSummoningOrChangingCardPositionConductor {
     private static boolean isActionCanceled = false;
     private static boolean isClassWaitingForPlayerToPickMonsterToDestroy = false;
     private static boolean shouldRedirectConductorToAvoidRepetition = false;
-    private static boolean promptingUserToActivateMonsterEffect;
+    private static boolean promptingUserToActivateMonsterEffect = false;
 
     public static boolean isPromptingUserToActivateMonsterEffect() {
         return promptingUserToActivateMonsterEffect;

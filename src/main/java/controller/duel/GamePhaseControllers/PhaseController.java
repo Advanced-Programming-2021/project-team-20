@@ -45,10 +45,10 @@ public class PhaseController {
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
             if (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1)) {
                 phaseInGame = PhaseInGame.ALLY_BATTLE_PHASE;
-                return "phase: battle phase";
+                return "phase: battle phase\n";
             } else if (phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE)) {
                 phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_2;
-                return "phase: main phase 2";
+                return "phase: main phase 2\n";
             } else if (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
                 phaseInGame = PhaseInGame.ALLY_END_PHASE;
                 String output = "phase: end phase\n" + resetAllVariables(0) + "phase: draw phase\n" + addCardToHand(0);
@@ -59,10 +59,10 @@ public class PhaseController {
                 return output;
             } else if (phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1)) {
                 phaseInGame = PhaseInGame.OPPONENT_BATTLE_PHASE;
-                return "phase: battle phase";
+                return "phase: battle phase\n";
             } else if (phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE)) {
                 phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_2;
-                return "phase: main phase 2";
+                return "phase: main phase 2\n";
             } else if (phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2)) {
                 phaseInGame = PhaseInGame.OPPONENT_END_PHASE;
                 String output = "phase: end phase\n" + resetAllVariables(0) + "phase: draw phase\n" + addCardToHand(0);
@@ -73,7 +73,7 @@ public class PhaseController {
                 return output;
             }
         }
-        return "invalid command";
+        return "invalid command\n";
     }
 
     public PhaseInGame getPhaseInGame() {
@@ -136,7 +136,7 @@ public class PhaseController {
                 }
                 return "phase: main phase 1\n";
             } else {
-                return "decide for your other spell cards\nenter pay or destroy";
+                return "decide for your other spell cards\nenter pay or destroy\n";
             }
         } else if (string.equals("destroy")) {
             numberOfSpellCardsToPayFor -= 1;
@@ -159,22 +159,22 @@ public class PhaseController {
                                 if (turn == 1) {
                                     SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
                                         new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), 0);
-                                    if (numberOfSpellCardsToPayFor == 0){
+                                    if (numberOfSpellCardsToPayFor == 0) {
                                         isClassWaitingForPayingLifePointsOrDestroyingCard = false;
                                         phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
                                         return "phase: main phase 1\n";
                                     } else {
-                                        return "decide for your other spell cards\nenter pay or destroy";
+                                        return "decide for your other spell cards\nenter pay or destroy\n";
                                     }
                                 } else {
                                     SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
                                         new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), 0);
-                                    if (numberOfSpellCardsToPayFor == 0){
+                                    if (numberOfSpellCardsToPayFor == 0) {
                                         isClassWaitingForPayingLifePointsOrDestroyingCard = false;
                                         phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
                                         return "phase: main phase 1\n";
                                     } else {
-                                        return "decide for your other spell cards\nenter pay or destroy";
+                                        return "decide for your other spell cards\nenter pay or destroy\n";
                                     }
                                 }
                             }
@@ -206,7 +206,7 @@ public class PhaseController {
             } else {
                 phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
             }
-            return output + "phase: main phase 1";
+            return output + "phase: main phase 1\n";
         }
         return output;
     }
@@ -248,7 +248,7 @@ public class PhaseController {
         }
         duelBoard.removeCardByCardLocation(cardLocation);
         duelBoard.addCardToHand(card, turn);
-        return "card with name " + card.getCardName() + " is added to hand";
+        return "card with name " + card.getCardName() + " is added to hand\n";
     }
 
     public String addCardToHand(int index) {
@@ -291,12 +291,12 @@ public class PhaseController {
             card = duelBoard.getCardByCardLocation(cardLocation);
             duelBoard.removeCardByCardLocation(cardLocation);
             duelBoard.addCardToHand(card, 3 - turn);
-            duelController.setTurn(3 - turn);
-            duelController.setFakeTurn(3 - turn);
             drawingCardSuccessful = true;
         } else {
             playersProhibitedToDrawCardNextTurn.set(2 - turn, false);
         }
+        duelController.setTurn(3 - turn);
+        duelController.setFakeTurn(3 - turn);
         if (turn == 1) {
             phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
         } else {
@@ -322,8 +322,25 @@ public class PhaseController {
     }
 
     private String resetAllVariables(int index) {
-
+        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        duelController.setTotalTurnsUntilNow(duelController.getTotalTurnsUntilNow()+1);
+        duelController.setCanUserSummonOrSetMonsters(1,true);
+        duelController.setCanUserSummonOrSetMonsters(2, true);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        ArrayList<CardLocation> cardLocationsToBeTakenBackInEndPhase = duelBoard.getCardLocationsToBeTakenBackInEndPhase();
+        for (int i = 0; i < cardLocationsToBeTakenBackInEndPhase.size(); i++) {
+            CardLocation cardLocation = cardLocationsToBeTakenBackInEndPhase.get(i);
+            Card card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null){
+                SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, index);
+                if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+                    duelBoard.addCardToMonsterZone(card, 1);
+                } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
+                    duelBoard.addCardToMonsterZone(card, 2);
+                }
+            }
+        }
+        duelBoard.clearCardLocationsToBeTakenBackInEndPhase();
         ArrayList<Card> allySpellCards = duelBoard.getAllySpellCards();
         ArrayList<Card> allyMonsterCards = duelBoard.getAllyMonsterCards();
         ArrayList<Card> allySpellFieldCard = duelBoard.getAllySpellFieldCard();
@@ -332,6 +349,14 @@ public class PhaseController {
         ArrayList<Card> opponentSpellFieldCard = duelBoard.getOpponentSpellFieldCard();
         resetSetsOfArraylistsWhenTurnsChange(allyMonsterCards, allySpellCards, allySpellFieldCard);
         resetSetsOfArraylistsWhenTurnsChange(opponentMonsterCards, opponentSpellCards, opponentSpellFieldCard);
+        for (int i = 0; i < 5; i++) {
+            if (Card.isCardASpell(allySpellCards.get(i)) && ((SpellCard) allySpellCards.get(i)).getNumberOfTurnsForActivation() == 0) {
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), index);
+            }
+            if (Card.isCardASpell(opponentSpellCards.get(i)) && ((SpellCard) opponentSpellCards.get(i)).getNumberOfTurnsForActivation() == 0) {
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), index);
+            }
+        }
         return "";
 
     }
@@ -357,7 +382,7 @@ public class PhaseController {
             }
             monsterCard.setOncePerTurnCardEffectUsed(false);
             monsterCard.setCardPositionChanged(false);
-            monsterCard.setCardAttacked(false);
+            monsterCard.setHasCardAlreadyAttacked(false);
         } else if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
             spellCard.setOncePerTurnCardEffectUsed(false);

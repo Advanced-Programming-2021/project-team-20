@@ -100,11 +100,11 @@ public class ChangeCardPositionController extends SummonSetCommonClass {
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         if (GameManager.getDuelControllerByIndex(index).getTurn() == 1) {
-            actions.add(new Action(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION, 1, mainCard, null, null, null, null, null, null, null, null, null, null, null, ""));
-            uninterruptedActions.add(new Action(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION, 1, mainCard, null, null, null, null, null, null, null, null, null, null, null, ""));
+            actions.add(new Action(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION, 1, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION, 1, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
         } else {
-            actions.add(new Action(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION, 2, mainCard, null, null, null, null, null, null, null, null, null, null, null, ""));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION, 2, mainCard, null, null, null, null, null, null, null, null, null, null, null, ""));
+            actions.add(new Action(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION, 2, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION, 2, mainCard, null, null, null, null, null, null, null, null, null, null, null, "", null));
         }
     }
 }

@@ -46,7 +46,7 @@ class ChangeCardsBetweenTwoRoundsTest {
         assertEquals("cards moved successfully!", output);
         output = changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(1, "end", 0);
         assertEquals("next round of duel started\nfirstPlayer must choose\n1.stone\n2.hand\n3.snips", output);
-        
+
     }
 
     @Test

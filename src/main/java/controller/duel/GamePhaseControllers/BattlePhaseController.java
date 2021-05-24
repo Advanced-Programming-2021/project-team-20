@@ -46,7 +46,7 @@ public class BattlePhaseController extends ChainController {
 
     protected String checkAlreadyAttacked(Card card, int index) {
         MonsterCard monsterCard = (MonsterCard) card;
-        if (monsterCard.isCardAttacked()) {
+        if (monsterCard.isHasCardAlreadyAttacked()) {
             return "this card already attacked";
         } else {
             return "";
@@ -89,14 +89,16 @@ public class BattlePhaseController extends ChainController {
     }
 
     private String areMonsterWithATK1500OrMoreEligibleToAttack(ArrayList<Card> spellCards, CardLocation allyCardLocation) {
-        System.out.println("GIVE ME INFO " + allyCardLocation.getRowOfCardLocation() + " II " + allyCardLocation.getIndex());
+        //System.out.println("GIVE ME INFO " + allyCardLocation.getRowOfCardLocation() + " II " + allyCardLocation.getIndex());
         if (MonsterCard.giveATKDEFConsideringEffects("attack", allyCardLocation, 0) >= 1500) {
             for (int i = 0; i < spellCards.size(); i++) {
                 if (spellCards.get(i) != null && Card.isCardASpell(spellCards.get(i))) {
                     SpellCard spellCard = (SpellCard) spellCards.get(i);
                     ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                     if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK)) {
-                        return "this monster card has at least 1500 ATK, so it can't attack.";
+                        if (spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
+                            return "this monster card has at least 1500 ATK, so it can't attack.";
+                        }
                     }
                 }
             }
@@ -128,7 +130,8 @@ public class BattlePhaseController extends ChainController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         MonsterCard opponentMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(opponentMonsterCardLocation);
         ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = opponentMonsterCard.getContinuousMonsterEffects();
-        if (continuousMonsterEffects.contains(ContinuousMonsterEffect.CANNOT_BE_ATTACKED_IF_YOU_CONTROL_ANOTHER_MONSTER)) {
+        if (continuousMonsterEffects.contains(ContinuousMonsterEffect.CANNOT_BE_ATTACKED_IF_YOU_CONTROL_ANOTHER_MONSTER) &&
+            (opponentMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) || opponentMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
             int numberOfMonsters = 0;
             for (int i = 0; i < opponentMonsterCards.size(); i++) {
                 if (opponentMonsterCards.get(i) != null) {

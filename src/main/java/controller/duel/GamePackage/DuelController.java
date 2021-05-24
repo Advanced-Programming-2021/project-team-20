@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
+import controller.duel.GamePackage.ActionConductors.NormalSummonConductor;
+import controller.duel.GamePackage.ai.AI;
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
+import controller.duel.Utility.Utility;
 import controller.duel.cheat.Cheat;
 import controller.non_duel.mainController.MainController;
 import controller.non_duel.storage.Storage;
@@ -15,6 +18,7 @@ import model.cardData.MonsterCardData.MonsterCard;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
+    private int totalTurnsUntilNow;
     private int turn;
     private int fakeTurn;
     private int numberOfRounds;
@@ -31,7 +35,7 @@ public class DuelController {
     private ArrayList<Integer> maxLifePointOfPlayers = new ArrayList<>();
     private ArrayList<Integer> numberOfRoundsPlayersWon = new ArrayList<>();
     private ArrayList<Integer> playersScores = new ArrayList<>();
-    private ArrayList<Boolean> usersSummoningOrSettingMonsterOneTime = new ArrayList<>();
+    private ArrayList<Boolean> canUserSummonOrSetMonsters = new ArrayList<>();
     private ArrayList<String> allInputs = new ArrayList<>();
     private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
     private SetTurnForGame setTurnForGame = new SetTurnForGame();
@@ -51,8 +55,8 @@ public class DuelController {
         numberOfRoundsPlayersWon.add(0);
         playersScores.add(0);
         playersScores.add(0);
-        usersSummoningOrSettingMonsterOneTime.add(true);
-        usersSummoningOrSettingMonsterOneTime.add(true);
+        canUserSummonOrSetMonsters.add(true);
+        canUserSummonOrSetMonsters.add(true);
         currentRound = 1;
         isAIPlaying = false;
         aiTurn = 0;
@@ -63,11 +67,15 @@ public class DuelController {
             aiTurn = 2;
             isAIPlaying = true;
         }
+        totalTurnsUntilNow = 1;
     }
 
     public String getInput(String string, boolean needToMediate) {
-
         allInputs.add(string);
+        String appropriateInput = isThisInputAppropriateAccordingToPhase(string);
+        if (!appropriateInput.equals("yes")){
+            return appropriateInput;
+        }
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
         ActivateMonsterController activateMonsterController = GameManager.getActivateMonsterControllerByIndex(0);
         NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
@@ -149,6 +157,16 @@ public class DuelController {
             } else {
                 System.out.println("A4.5");
                 return mediateOutputBeforeSendingToGameManager(FlipSummoningOrChangingCardPositionConductor.checkGivenInputForMonsterToDestroy(0), needToMediate);
+            }
+        } else if (string.startsWith("select")
+            && NormalSummonConductor.isIsClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
+            String output = selectCardController.selectCardInputAnalysis(string);
+            if (!output.equals("card selected")) {
+                System.out.println("B4.8");
+                return output;
+            } else {
+                System.out.println("A4.8");
+                return mediateOutputBeforeSendingToGameManager(NormalSummonConductor.checkGivenInputForMonsterToSpecialSummon(0), needToMediate);
             }
         } else if (string.startsWith("select")
             && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToDestroy()) {
@@ -305,7 +323,7 @@ public class DuelController {
             return mediateOutputBeforeSendingToGameManager(tributeSummonController.tributeSummonInputAnalysis(string), needToMediate);
         } else if (string.startsWith("special")) {
             return mediateOutputBeforeSendingToGameManager(specialSummonController.specialSummonInputAnalysis(string), needToMediate);
-        } else if (string.equals("set")) {
+        } else if (Utility.isMatcherCorrectWithoutErrorPrinting(Utility.getCommandMatcher(string, "(?<=\\n|^)set(?=\\n|$)"))) {
             return mediateOutputBeforeSendingToGameManager(setCardController.setCardControllerInputAnalysis(string), needToMediate);
         } else if (string.startsWith("set")) {
             ChangeCardPositionController changeCardPositionController = GameManager.getChangeCardPositionController(0);
@@ -354,11 +372,14 @@ public class DuelController {
             return mediateOutputBeforeSendingToGameManager(attackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string), needToMediate);
         } else if (string.equals("yes") && attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()) {
             return mediateOutputBeforeSendingToGameManager(attackMonsterToMonsterConductor.defendingMonsterEffectAnalysis(string), needToMediate);
-        } else if (string.equals("no")
-            && FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
+        } else if (string.equals("no") && FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
             return mediateOutputBeforeSendingToGameManager(FlipSummoningOrChangingCardPositionConductor.defendingMonsterEffectAnalysis(string), needToMediate);
         } else if (string.equals("yes") && FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
             return mediateOutputBeforeSendingToGameManager(FlipSummoningOrChangingCardPositionConductor.defendingMonsterEffectAnalysis(string), needToMediate);
+        } else if (string.equals("no") && NormalSummonConductor.isPromptingUserToActivateMonsterEffect()) {
+            return mediateOutputBeforeSendingToGameManager(NormalSummonConductor.normalSummonedMonsterEffectAnalysis(string), needToMediate);
+        } else if (string.equals("yes") && NormalSummonConductor.isPromptingUserToActivateMonsterEffect()) {
+            return mediateOutputBeforeSendingToGameManager(NormalSummonConductor.normalSummonedMonsterEffectAnalysis(string), needToMediate);
         } else if (string.equals("no") && attackMonsterToMonsterConductor.isGoingToChangeTurnsForChaining()) {
             return mediateOutputBeforeSendingToGameManager(attackMonsterToMonsterConductor.userReplyYesNoForChain(string), needToMediate);
         } else if (string.equals("yes") && attackMonsterToMonsterConductor.isGoingToChangeTurnsForChaining()) {
@@ -368,6 +389,10 @@ public class DuelController {
             System.out.println(MonsterCard.giveATKDEFConsideringEffects("defense", selectCardController.getSelectedCardLocations().get(selectCardController.getSelectedCardLocations().size() - 1), 0));
         } else if ((string.startsWith("pay") || string.startsWith("destroy")) && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()) {
             return mediateOutputBeforeSendingToGameManager(phaseController.redirectInputForStandByPhaseSpellCheck(string), needToMediate);
+        } else if (Utility.isMatcherCorrectWithoutErrorPrinting(Utility.getCommandMatcher(string, "(?<=\\n|^)card[\\s]+show[\\s]+--selected(?=\\n|$)"))){
+            return duelBoard.showSelectedCard(0, fakeTurn);
+        }else if (Utility.isMatcherCorrectWithoutErrorPrinting(Utility.getCommandMatcher(string, "(?<=\\n|^)show[\\s]+board(?=\\n|$)"))){
+            return duelBoard.showMainDuelBord(0);
         }
         return "invalid command!";
     }
@@ -381,11 +406,6 @@ public class DuelController {
         if (turn == 2) {
             phaseController.setPhaseInGame(PhaseInGame.OPPONENT_MAIN_PHASE_1);
         }
-
-
-        //turn = 1;
-        //fakeTurn = 1;
-        //GameManager.getPhaseControllerByIndex(0).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
         GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
@@ -409,12 +429,12 @@ public class DuelController {
     }
 
     public String endOneRoundOfDuel(int turn) {
-
         User winnerUser = Storage.getUserByName(playingUsers.get(turn - 1));
         playersScores.set(turn - 1, playersScores.get(turn - 1) + 1000);
         isPlayersChangedDecks = false;
         turn = 1;
         fakeTurn = 1;
+        currentRound += 1;
         return winnerUser.getName() + " won the whole match with score: "
             + ((turn == 1) ? (1000) + " - 0" : "0 - " + (1000)) + "\n" + "now " + playingUsers.get(0)
             + " can change his deck";
@@ -426,13 +446,104 @@ public class DuelController {
         }
         AI ai = GameManager.getAIByIndex(0);
         String aiString = "";
+        String nothing = "";
         while (isAIPlaying && fakeTurn == aiTurn) {
+            //System.out.println("aiTurn is "+fakeTurn);
             aiString = ai.getCommand();
-            string += (aiString + getInput(aiString, false));
+            System.out.println("AI COMMAND! AI COMMAND! is" + aiString + ".");
+            nothing = getInput(aiString, false);
+            System.out.println("AI RESULT OF SAYING " + nothing);
+            string += (aiString + nothing);
         }
+        /*
+        if (GameManager.getDuelControllerByIndex(0).getTurn() != aiTurn){
+            AIBattlePhaseMind.numberOfActions = 0;
+        }
+         */
         return string;
     }
 
+    private String isThisInputAppropriateAccordingToPhase(String string) {
+        PhaseController phaseController = GameManager.getPhaseControllerByIndex(0);
+        ActivateMonsterController activateMonsterController = GameManager.getActivateMonsterControllerByIndex(0);
+        NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
+        FlipSummonController flipSummonController = GameManager.getFlipSummonControllerByIndex(0);
+        SpecialSummonController specialSummonController = GameManager.getSpecialSummonControllerByIndex(0);
+        TributeSummonController tributeSummonController = GameManager.getTributeSummonControllerByIndex(0);
+        SetCardController setCardController = GameManager.getSetCardControllerByIndex(0);
+        AttackMonsterToMonsterController attackMonsterToMonsterController = GameManager
+            .getAttackMonsterToMonsterControllerByIndex(0);
+        AttackMonsterToMonsterConductor attackMonsterToMonsterConductor = GameManager
+            .getAttackMonsterToMonsterConductorsByIndex(0);
+        DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
+        ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
+        if (!string.startsWith("select") && normalSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            return "you should choose tributes for your summon right now";
+        } else if (!string.startsWith("select") && setCardController.isAreWeLookingForMonstersToBeTributed()) {
+            return "you should choose tributes in order to set right now";
+        } else if (!string.startsWith("select") && attackMonsterToMonsterController.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && directAttackController.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && FlipSummoningOrChangingCardPositionConductor.isClassWaitingForPlayerToPickMonsterToDestroy()) {
+            return "you should choose a monster to destroy right now";
+        } else if (!string.startsWith("select") && NormalSummonConductor.isIsClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
+            return "you should a monster to special summon right now";
+        } else if (!string.startsWith("select") && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToDestroy()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && attackMonsterToMonsterConductor.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && normalSummonController.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
+            return "you should give input for activating your trap or spell right now";
+        } else if (!string.startsWith("select") && activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && flipSummonController.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && specialSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            return "you should choose tributes for your special summon right now";
+        } else if (!string.startsWith("select") && specialSummonController.isClassWaitingForCardToBeDiscarded()) {
+            return "you should choose card to discard right now";
+        } else if (!string.startsWith("select") && specialSummonController.isClassWaitingForChainCardToBeSelected()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.startsWith("select") && tributeSummonController.isAreWeLookingForMonstersToBeTributed()) {
+            return "you should choose tributes for your tribute summon right now";
+        } else if (!string.startsWith("select") && activateMonsterController.isClassWaitingForUserToDiscardOneCard()) {
+            return "you should choose a card to discard right now";
+        } else if (!string.startsWith("select") && activateMonsterController.isClassWaitingForUserToChooseMonsterFromGraveyard()) {
+            return "you should choose a monster from your graveyard right now";
+        } else if (!string.startsWith("select") && activateMonsterController.isClassWaitingForUserToChooseMonsterFromOpponentGraveyard()) {
+            return "you should choose a monster from your graveyard right now";
+        } else if (!string.equals("no") && !string.equals("yes") && attackMonsterToMonsterController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && directAttackController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && activateSpellTrapController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && normalSummonController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && flipSummonController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && specialSummonController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && tributeSummonController.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && NormalSummonConductor.isPromptingUserToActivateMonsterEffect()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!string.equals("no") && !string.equals("yes") && attackMonsterToMonsterConductor.isGoingToChangeTurnsForChaining()) {
+            return "it's not your turn to play this kind of moves";
+        } else if (!(string.startsWith("pay") || string.startsWith("destroy")) && phaseController.isClassWaitingForPayingLifePointsOrDestroyingCard()) {
+            return "you must enter pay or destroy right now";
+        }
+        return "yes";
+    }
 
     public ArrayList<Integer> getMaxLifePointOfPlayers() {
         return maxLifePointOfPlayers;
@@ -460,6 +571,14 @@ public class DuelController {
 
     public ArrayList<Card> getOpponentSideDeckCards() {
         return opponentSideDeckCards;
+    }
+
+    public int getTotalTurnsUntilNow() {
+        return totalTurnsUntilNow;
+    }
+
+    public void setTotalTurnsUntilNow(int totalTurnsUntilNow) {
+        this.totalTurnsUntilNow = totalTurnsUntilNow;
     }
 
     public int getTurn() {
@@ -518,12 +637,12 @@ public class DuelController {
         this.lifePoints.set(turn - 1, this.lifePoints.get(turn - 1) + lifePoints);
     }
 
-    public boolean canUserNormalSummon(int turn) {
-        return usersSummoningOrSettingMonsterOneTime.get(turn - 1);
+    public boolean canUserSummonOrSetMonsters(int turn) {
+        return canUserSummonOrSetMonsters.get(turn - 1);
     }
 
-    public void setUsersSummoningOneTime(int fakeTurn, boolean bool) {
-        usersSummoningOrSettingMonsterOneTime.set(fakeTurn, bool);
+    public void setCanUserSummonOrSetMonsters(int turn, boolean bool) {
+        canUserSummonOrSetMonsters.set(turn - 1, bool);
     }
 
     public void setNumberOfRounds(int numberOfRounds) {

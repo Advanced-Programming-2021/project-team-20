@@ -31,10 +31,15 @@ public class DirectAttackConductor {
             attackingMonsterCardLocation = action.getMainCardLocation();
             Card attackingCard = duelBoard.getCardByCardLocation(attackingMonsterCardLocation);
             attackingMonsterCard = (MonsterCard) attackingCard;
-            playersLifePointsChange.set(2-actionTurn, MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterCardLocation, 0));
-            duelController.increaseLifePoints(playersLifePointsChange.get(0)*(-1), 1);
-            duelController.increaseLifePoints(playersLifePointsChange.get(1)*(-1), 2);
+            playersLifePointsChange.set(2 - actionTurn, MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterCardLocation, 0));
+            duelController.increaseLifePoints(playersLifePointsChange.get(0) * (-1), 1);
+            duelController.increaseLifePoints(playersLifePointsChange.get(1) * (-1), 2);
+            attackingMonsterCard.setHasCardAlreadyAttacked(true);
             return "your opponent receives" + playersLifePointsChange.get(2 - actionTurn) + " battle damage";
+        } else {
+            if (attackingMonsterCard != null){
+                attackingMonsterCard.setHasCardAlreadyAttacked(true);
+            }
         }
         return "action was canceled.";
     }

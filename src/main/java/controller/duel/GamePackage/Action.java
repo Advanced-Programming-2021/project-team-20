@@ -25,8 +25,10 @@ public class Action {
     private ArrayList<CardLocation> cardsToTakeControlOf;
     private ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard;
     private ArrayList<CardLocation> cardsToBeRitualSummoned;
+    private ArrayList<CardPosition> cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition;
     private CardPosition cardPositionOfMainCard;
     private String optionalCardNameInput;
+    private boolean damageInflictionIsPossible;
     private static int currentActionConducting = 0;
     private static String outputSentUntilNow = "";
 
@@ -34,7 +36,8 @@ public class Action {
         , ArrayList<CardLocation> cardsToBeDiscarded, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo
         , ArrayList<CardLocation> cardsToBeSpecialSummoned, ArrayList<CardLocation> cardsToBeChosenFromDeckAndAddedToHand
         , ArrayList<CardLocation> cardsToBeDestroyed, ArrayList<CardLocation> cardsToTakeControlOf
-        , ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, ArrayList<CardLocation> cardsToBeRitualSummoned, CardPosition cardPosition, String optionalCardNameInput) {
+        , ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, ArrayList<CardLocation> cardsToBeRitualSummoned
+        , CardPosition cardPosition, String optionalCardNameInput, ArrayList<CardPosition> cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition) {
         this.spendingCards = new ArrayList<>();
         this.targetingCards = new ArrayList<>();
         this.mainCardLocation = mainCardLocation;
@@ -48,10 +51,12 @@ public class Action {
         this.cardsToTakeControlOf = new ArrayList<>();
         this.cardsToBeChosenFromDeckAndSentToGraveyard = new ArrayList<>();
         this.cardsToBeRitualSummoned = new ArrayList<>();
+        this.cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition = new ArrayList<>();
         this.actionType = actionType;
         this.actionTurn = actionTurn;
         this.isActionCanceled = false;
         this.isSecondCardInHandAfterFirstCardInHand = false;
+        this.damageInflictionIsPossible = true;
         this.optionalCardNameInput = optionalCardNameInput;
         if (spendingCards != null) {
             this.spendingCards.addAll(spendingCards);
@@ -82,6 +87,9 @@ public class Action {
         }
         if (cardsToBeRitualSummoned != null) {
             this.cardsToBeRitualSummoned.addAll(cardsToBeRitualSummoned);
+        }
+        if (cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition != null) {
+            this.cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition.addAll(cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition);
         }
     }
 /*
@@ -138,6 +146,10 @@ public class Action {
         return isSecondCardInHandAfterFirstCardInHand;
     }
 
+    public boolean isDamageInflictionIsPossible() {
+        return damageInflictionIsPossible;
+    }
+
     public String getOptionalCardNameInput() {
         return optionalCardNameInput;
     }
@@ -166,6 +178,10 @@ public class Action {
         return cardsToBeRitualSummoned;
     }
 
+    public ArrayList<CardPosition> getCardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition() {
+        return cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition;
+    }
+
     public ArrayList<CardLocation> getCardsToBeDestroyed() {
         return cardsToBeDestroyed;
     }
@@ -184,6 +200,10 @@ public class Action {
 
     public void setSecondCardInHandAfterFirstCardInHand(boolean secondCardInHandAfterFirstCardInHand) {
         this.isSecondCardInHandAfterFirstCardInHand = secondCardInHandAfterFirstCardInHand;
+    }
+
+    public void setDamageInflictionIsPossible(boolean damageInflictionIsPossible) {
+        this.damageInflictionIsPossible = damageInflictionIsPossible;
     }
 
     public static String conductAllActions(int index) {
@@ -232,9 +252,21 @@ public class Action {
             outputSentUntilNow = output.toString();
             if (attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToDestroy() || attackMonsterToMonsterConductor.isClassWaitingForPlayerToPickMonsterToSpecialSummon()
                 || attackMonsterToMonsterConductor.isClassWaitingForUserToChooseAttackPositionOrDefensePosition() || attackMonsterToMonsterConductor.isPromptingUserToActivateMonsterEffect()
-            || FlipSummoningOrChangingCardPositionConductor.isClassWaitingForPlayerToPickMonsterToDestroy() || FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()) {
+                || FlipSummoningOrChangingCardPositionConductor.isClassWaitingForPlayerToPickMonsterToDestroy() || FlipSummoningOrChangingCardPositionConductor.isPromptingUserToActivateMonsterEffect()
+                || NormalSummonConductor.isPromptingUserToActivateMonsterEffect() || NormalSummonConductor.isIsClassWaitingForPlayerToPickMonsterToSpecialSummon()) {
                 breakStatement = true;
             } else {
+                String isGameOver = isGameOver(output, index, action);
+                if (!isGameOver.equals("")) {
+                    return isGameOver;
+                }
+                if (actions.size() > 1) {
+                    System.out.println("NOW AN ACTION IS BEING PROCESSES WITH ACTION TURN " + action.getActionTurn());
+                    System.out.println("THE ACTION TO BE PROCESSED HAS ACTION TURN " + actions.get(actions.size() - 2).getActionTurn());
+                } else {
+                    System.out.println("ACTION SIZE WAS 1");
+                }
+
                 if (actions.size() > 1 && action.getActionTurn() != actions.get(actions.size() - 2).getActionTurn()) {
                     GameManager.getDuelControllerByIndex(index).changeFakeTurn();
                 }
@@ -258,6 +290,29 @@ public class Action {
 
          */
         return output.toString();
+    }
+
+    public static String isGameOver(StringBuilder output, int index, Action action) {
+        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        if (duelController.getLifePoints().get(2 - action.getActionTurn()) <= 0) {
+            if (duelController.getNumberOfRounds() == 1 && duelController.getCurrentRound() == 1) {
+                return output.toString() + duelController.endGame(action.getActionTurn(), index);
+            } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 2) {
+                return output.toString() + duelController.endGame(action.getActionTurn(), index);
+            } else {
+                return output.toString() + duelController.endOneRoundOfDuel(action.getActionTurn());
+            }
+        } else if (duelController.getLifePoints().get(action.getActionTurn() - 1) <= 0) {
+            if (duelController.getNumberOfRounds() == 1 && duelController.getCurrentRound() == 1) {
+                return output.toString() + duelController.endGame(3 - action.getActionTurn(), index);
+            } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 2) {
+                return output.toString() + duelController.endGame(3 - action.getActionTurn(), index);
+            } else {
+                return output.toString() + duelController.endOneRoundOfDuel(3 - action.getActionTurn());
+            }
+        } else {
+            return "";
+        }
     }
 
     public static String conductUninterruptedAction(int index) {

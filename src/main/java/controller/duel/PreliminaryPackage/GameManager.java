@@ -2,7 +2,7 @@ package controller.duel.PreliminaryPackage;
 
 import java.util.ArrayList;
 
-import controller.duel.GamePackage.AI;
+import controller.duel.GamePackage.ai.AI;
 import controller.duel.GamePackage.Action;
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
@@ -23,7 +23,7 @@ public class GameManager {
     public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
     public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
     public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
-    public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
+    //public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
     public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
     public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
     public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
@@ -51,7 +51,7 @@ public class GameManager {
         changeCardPositionControllers.add(new ChangeCardPositionController());
         directAttackControllers.add(new DirectAttackController());
         continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
-        mainPhaseControllers.add(new MainPhaseController());
+        //mainPhaseControllers.add(new MainPhaseController());
         normalSummonControllers.add(new NormalSummonController());
         flipSummonControllers.add(new FlipSummonController());
         specialSummonControllers.add(new SpecialSummonController());
@@ -76,7 +76,7 @@ public class GameManager {
         changeCardPositionControllers.remove(index);
         directAttackControllers.remove(index);
         continuousMonsterEffectControllers.remove(index);
-        mainPhaseControllers.remove(index);
+        //mainPhaseControllers.remove(index);
         normalSummonControllers.remove(index);
         flipSummonControllers.remove(index);
         specialSummonControllers.remove(index);
@@ -135,10 +135,6 @@ public class GameManager {
 
     public static ContinuousMonsterEffectController getContinuousMonsterEffectControllersByIndex(int index) {
         return continuousMonsterEffectControllers.get(index);
-    }
-
-    public static MainPhaseController getMainPhaseControllerByIndex(int index) {
-        return mainPhaseControllers.get(index);
     }
 
     public static NormalSummonController getNormalSummonControllerByIndex(int index) {

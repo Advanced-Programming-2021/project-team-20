@@ -31,7 +31,7 @@ public class MonsterCard extends Card {
     private int defensePowerConsideringEffects;
     private int level;
     private boolean cardPositionChanged;
-    private boolean cardAttacked;
+    private boolean hasCardAlreadyAttacked;
     private boolean oncePerTurnCardEffectUsed;
     private MonsterCardAttribute monsterCardAttribute;
     private MonsterCardFamily monsterCardFamily;
@@ -59,7 +59,7 @@ public class MonsterCard extends Card {
         this.level = level;
         this.oncePerTurnCardEffectUsed = false;
         this.cardPositionChanged = false;
-        this.cardAttacked = false;
+        this.hasCardAlreadyAttacked = false;
         this.monsterCardAttribute = attribute;
         this.monsterCardFamily = monsterCardFamily;
         this.monsterCardValue = monsterCardValue;
@@ -102,7 +102,16 @@ public class MonsterCard extends Card {
             summoningRequirements.add(SummoningRequirement.CAN_BE_RITUAL_SUMMONED);
         }
         if (cardName.equals("beast king barbaros")) {
-
+            summoningRequirements.add(
+                SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+            summoningRequirements
+                .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+            uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_NORMAL_SUMMONED);
+            uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
+            uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
+        }
+        if (cardName.equals("terratiger, the empowered warrior")) {
+            uponSummoningEffects.add(UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
         }
         if (cardName.equals("the tricky")) {
             summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
@@ -163,7 +172,7 @@ public class MonsterCard extends Card {
         this.level = monster.getLevel();
         this.oncePerTurnCardEffectUsed = monster.isOncePerTurnCardEffectUsed();
         this.cardPositionChanged = false;
-        this.cardAttacked = false;
+        this.hasCardAlreadyAttacked = false;
         this.monsterCardAttribute = monster.getMonsterCardAttribute();
         this.monsterCardFamily = monster.getMonsterCardFamily();
         this.monsterCardValue = monster.getMonsterCardValue();
@@ -219,8 +228,8 @@ public class MonsterCard extends Card {
         return cardPositionChanged;
     }
 
-    public boolean isCardAttacked() {
-        return cardAttacked;
+    public boolean isHasCardAlreadyAttacked() {
+        return hasCardAlreadyAttacked;
     }
 
     public void setCardPositionChanged(boolean cardPositionChanged) {
@@ -231,8 +240,8 @@ public class MonsterCard extends Card {
         this.oncePerTurnCardEffectUsed = oncePerTurnCardEffectUsed;
     }
 
-    public void setCardAttacked(boolean cardAttacked) {
-        this.cardAttacked = cardAttacked;
+    public void setHasCardAlreadyAttacked(boolean hasCardAlreadyAttacked) {
+        this.hasCardAlreadyAttacked = hasCardAlreadyAttacked;
     }
 
     public ArrayList<SummoningRequirement> getSummoningRequirements() {

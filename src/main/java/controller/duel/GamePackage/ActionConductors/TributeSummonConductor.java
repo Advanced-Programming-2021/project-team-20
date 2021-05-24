@@ -26,24 +26,24 @@ public class TributeSummonConductor{
         int turn = 0;
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER)) {
             turn = 1;
-            System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getRowOfCardLocation() + " !!!");
-            System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getIndex() + " !!!");
+            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getRowOfCardLocation() + " !!!");
+            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getIndex() + " !!!");
             uninterruptedAction.setFinalMainCardLocation(
                 new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getRowOfCardLocation(),
                     duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getIndex() + 1)
             );
-            System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
-            System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
+            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
+            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
         } else if (uninterruptedAction.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
             turn = 2;
-            System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getRowOfCardLocation() + " !!!");
-            System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getIndex() + " !!!");
+            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getRowOfCardLocation() + " !!!");
+            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getIndex() + " !!!");
             uninterruptedAction.setFinalMainCardLocation(
                 new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getRowOfCardLocation(),
                     duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getIndex() + 1)
             );
-            System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
-            System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
+            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
+            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
         }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());
@@ -51,6 +51,7 @@ public class TributeSummonConductor{
         mainCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
         MonsterCard monsterCard = (MonsterCard) mainCard;
         monsterCard.setCardPositionChanged(true);
+        GameManager.getDuelControllerByIndex(index).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
         return "tribute summoned successfully";
         //}
         //return "normal summoning action was interrupted and therefore, canceled.";

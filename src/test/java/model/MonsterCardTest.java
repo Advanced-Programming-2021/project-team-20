@@ -39,10 +39,10 @@ class MonsterCardTest {
         monsterCard.getDefensePowerConsideringEffects();
         monsterCard.isOncePerTurnCardEffectUsed();
         monsterCard.isCardPositionChanged();
-        monsterCard.isCardAttacked();
+        monsterCard.isHasCardAlreadyAttacked();
         monsterCard.setCardPositionChanged(true);
         monsterCard.setOncePerTurnCardEffectUsed(true);
-        monsterCard.setCardAttacked(true);
+        monsterCard.setHasCardAlreadyAttacked(true);
         monsterCard.getSummoningRequirements();
         monsterCard.getUponSummoningEffects();
         monsterCard.getAttackerEffects();
@@ -104,14 +104,14 @@ class MonsterCardTest {
      * cardLocationOfSecondSpellFieldCard, index, "attack"); finalDefensePower +=
      * giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
      * cardLocationOfSecondSpellFieldCard, index, "defense");
-     * 
+     *
      * } finalAttackPower +=
      * giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("attack",
      * cardLocation, index); finalDefensePower +=
      * giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("defense",
      * cardLocation, index); if (string.equals("attack")) { return finalAttackPower;
      * } if (string.equals("defense")) { return finalDefensePower; } return 0; }
-     * 
+     *
      * private static int
      * giveChangesOnATKDEFConsideringEquipSpellEffects(CardLocation
      * monsterCardLocation, int index, String attackOrDefense) { DuelBoard duelBoard
@@ -165,7 +165,7 @@ class MonsterCardTest {
      * FACE_UP_ATTACK_POSITION)) { finalAttackPower += 800; finalDefensePower +=
      * 800; } } } } } if (attackOrDefense.equals("attack")) { return
      * finalAttackPower; } return finalDefensePower; }
-     * 
+     *
      * private static int
      * giveChangesInATKDEFConsideringContinuousMonsterEffect(CardLocation
      * cardLocation, int index, String attackOrDefense) { DuelBoard duelBoard =
@@ -192,7 +192,7 @@ class MonsterCardTest {
      * sumOfLevels += ((MonsterCard) card).getLevel(); } } } finalAttackPower += 300
      * * sumOfLevels; } if (attackOrDefense.equals("attack")) { return
      * finalAttackPower; } return finalDefensePower; }
-     * 
+     *
      * private static int
      * giveChangesInATKDEFConsideringOtherContinuousMonsterEffects(String string,
      * CardLocation cardLocation, int index) { if (string.equals("defense")) {
@@ -208,7 +208,7 @@ class MonsterCardTest {
      * OPPONENT_MONSTER_ZONE)) { attackChanges +=
      * giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(
      * opponentMonsterCards, index); } return attackChanges; }
-     * 
+     *
      * private static int
      * giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(ArrayList<Card>
      * monsterCards, int index) { DuelBoard duelBoard =
@@ -226,7 +226,7 @@ class MonsterCardTest {
      * sampleMonsterCard.getCardPosition().equals(CardPosition.
      * FACE_UP_DEFENSE_POSITION))) { attackChanges += 400; } } } return
      * attackChanges; }
-     * 
+     *
      * private static int
      * giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(CardLocation
      * monsterCardLocation, CardLocation spellFieldCardLocation, int index, String
@@ -284,7 +284,7 @@ class MonsterCardTest {
      * (Card.isCardAMonster(cardsInGraveyard.get(i))) { finalAttackPower += 100; } }
      * } } if (attackOrDefense.equals("attack")) { return finalAttackPower; } return
      * finalDefensePower; }
-     * 
+     *
      * private static boolean isSpellFieldCardOnOurSide(CardLocation
      * monsterCardLocation, CardLocation spellFieldCardLocation) { RowOfCardLocation
      * monsterRowOfCardLocation = monsterCardLocation.getRowOfCardLocation();
@@ -296,7 +296,7 @@ class MonsterCardTest {
      * (monsterRowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) &&
      * spellFieldCardRowOfCardLocation.equals(RowOfCardLocation.
      * OPPONENT_SPELL_FIELD_ZONE)) { return true; } return false; }
-     * 
+     *
      * private static CardLocation giveLocationOfPossibleSpellFieldCard(int index,
      * int turn) { DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
      * Card possibleCard = null; CardLocation possibleCardLocation = null; if (turn
@@ -307,6 +307,6 @@ class MonsterCardTest {
      * = duelBoard.getCardByCardLocation(possibleCardLocation); if
      * (!Card.isCardASpell(possibleCard)) { return null; } return
      * possibleCardLocation; }
-     * 
+     *
      */
 }

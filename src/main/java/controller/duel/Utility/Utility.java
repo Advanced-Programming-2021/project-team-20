@@ -84,6 +84,32 @@ public class Utility {
         return cardIndex;
     }
 
+    public static int changeArrayIndexFromOneToFiveToYuGiOhIndex(int cardIndex, boolean choosingSelf) {
+        if (!choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 2 || choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
+            if (cardIndex == 1) {
+                return 5;
+            } else if (cardIndex == 2) {
+                return 3;
+            } else if (cardIndex == 3) {
+                return 1;
+            } else if (cardIndex == 4) {
+                return 2;
+            }
+            return 5;
+        } else {
+            if (cardIndex == 1) {
+                return 4;
+            } else if (cardIndex == 2) {
+                return 2;
+            } else if (cardIndex == 3) {
+                return 1;
+            } else if (cardIndex == 4) {
+                return 3;
+            }
+            return 5;
+        }
+    }
+
     public static String isACardSelected(int index, String stringUsedInOutput, boolean continueChecking) {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         if (!selectCardController.doesSelectedCardLocationsHaveCard()) {

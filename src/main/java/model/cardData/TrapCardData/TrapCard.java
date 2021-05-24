@@ -11,6 +11,7 @@ import model.cardData.General.CardType;
 public class TrapCard extends Card {
     private int highestNumberOfTurnsOfActivation;
     private int numberOfTurnsForActivation;
+    private int turnCardWasSet;
     private TrapCardValue trapCardValue;
     private ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects;
     private ArrayList<FlipSummonTrapCardEffect> flipSummonTrapCardEffects;
@@ -30,6 +31,7 @@ public class TrapCard extends Card {
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
             HashMap<String, List<String>> enumValues) {
         super(cardName, CardType.TRAP, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
+        this.turnCardWasSet = 0;
         this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.trapCardValue = trapCardValue;
@@ -210,6 +212,14 @@ public class TrapCard extends Card {
 
     public void setNumberOfTurnsForActivation(int numberOfTurnsForActivation) {
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
+    }
+
+    public int getTurnCardWasSet() {
+        return turnCardWasSet;
+    }
+
+    public void setTurnCardWasSet(int turnCardWasSet) {
+        this.turnCardWasSet = turnCardWasSet;
     }
 
     private void setEnumValues(HashMap<String, List<String>> enumValues) {

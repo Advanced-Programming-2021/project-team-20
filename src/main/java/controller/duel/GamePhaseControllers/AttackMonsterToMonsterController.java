@@ -51,7 +51,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             } else {
                 Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
                 resultOfChecking = checkAttackWithCard(card, 0);
-                System.out.println("result of checking was " + resultOfChecking);
+                //System.out.println("result of checking was " + resultOfChecking);
                 if (!resultOfChecking.equals("")) {
                     return resultOfChecking;
                 } else {
@@ -79,7 +79,7 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         ArrayList<CardLocation> selectCardLocations = selectCardController.getSelectedCardLocations();
         //System.out.println("turn is "+turn);
         //System.out.println("card name is "+card.getCardName());
-        System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
+        //System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
         if (indexOfAttackedMonster < 1 || indexOfAttackedMonster > 5) {
             return "there is no card to attack here";
         } else {
@@ -90,16 +90,22 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
                 rowOfCardLocation = RowOfCardLocation.ALLY_MONSTER_ZONE;
             }
             indexOfAttackedMonster = Utility.changeYuGiOhIndexToArrayIndex(indexOfAttackedMonster, rowOfCardLocation);
-            System.out.println("rowOfCardLocation is " + rowOfCardLocation);
-            System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
+            //System.out.println("rowOfCardLocation is " + rowOfCardLocation);
+            //System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
             CardLocation opponentCardLocation = new CardLocation(rowOfCardLocation, indexOfAttackedMonster);
             Card attackedMonster = duelBoard.getCardByCardLocation(opponentCardLocation);
             if (!(Card.isCardAMonster(attackedMonster))) {
                 return "there is no card to attack here";
             } else {
-                System.out.println("attackedMonster name is " + attackedMonster.getCardName());
+                //System.out.println("attackedMonster name is " + attackedMonster.getCardName());
                 String output = "";
                 mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
+                if (((MonsterCard)duelBoard.getCardByCardLocation(mainCard)).isHasCardAlreadyAttacked()){
+                    return "this monster has already attacked this turn\n";
+                }
+                if (GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow() == 1) {
+                    return "in the first turn of the game, you can't attack\n";
+                }
                 output = areContinuousSpellTrapOrMonsterEffectsPreventingMonsterFromAttacking(mainCard, opponentCardLocation, index);
                 if (!output.equals("")) {
                     return output;
@@ -123,95 +129,14 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
         targetingCards.add(opponentCardLocation);
         if (turn == 1) {
-            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
-            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
+            actions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, "", null));
+            uninterruptedActions.add(new Action(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER, 1, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, "", null));
         } else if (turn == 2) {
-            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, ""));
+            actions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, "", null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER, 2, mainCard, targetingCards, null, null, null, null, null, null, null, null, null, null, "", null));
         }
         targetingCards.clear();
     }
 
-/*
-    public String isSelectedCardCorrectForChainActivation(String string, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(index);
-        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
-        ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
-        CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
-        Card card = duelBoard.getCardByCardLocation(cardLocation);
-        boolean isAlreadyActivated;
-        if (Card.isCardASpell(card)) {
-            SpellCard spellCard = (SpellCard) card;
-            isAlreadyActivated = spellCard.isCardAlreadyActivated();
-        } else if (Card.isCardATrap(card)) {
-            TrapCard trapCard = (TrapCard) card;
-            isAlreadyActivated = trapCard.isCardAlreadyActivated();
-        }
-
-        */
-
-
-        /*
-        else if (Card.isCardAMonster(card)) {
-            MonsterCard monsterCard = (MonsterCard) card;
-            ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();
-            if (beingAttackedEffects.contains(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN) &&
-                beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN) &&
-                !monsterCard.isOncePerTurnCardEffectUsed()) {
-                monsterCard.setOncePerTurnCardEffectUsed(true);
-                return "select a card from your graveyard, hand, or deck to special summon";
-            }
-            // add suijin effect here too
-            else {
-                return "you can't choose this card for chain activation.\nselect another card";
-            }
-        }
-        */
-
-
-
-    /*
-         else {
-             return "you can't choose this card for chain activation.\nselect another card";
-        }
-        if (isAlreadyActivated) {
-            return "you have already activated this card\nselect another card";
-        } else {
-            String output = activateSpellTrapController.arePreparationsCompleteForSpellTrapActivation(index);
-            System.out.println("output is " + output);
-            if (output.startsWith("preparations for this")) {
-                return output + "\nselect another card";
-            } else if (!output.equals("nothing needed")) {
-                activateSpellTrapController.setAreWeLookingForFurtherInputToActivateSpellTrap(true);
-                activateSpellTrapController.setMainCardLocation(cardLocation);
-                //activateSpellTrapController.setRedirectInputBeingProcessesInChain(true);
-                selectCardController.resetSelectedCardLocationList();
-                isClassWaitingForChainCardToBeSelected = false;
-                return output;
-                //This is when user has chosen the spell/trap he wants to activate but we have to prompt him to enter more input to activate his card
-            } else {
-                activateSpellTrapController.setMainCardLocation(cardLocation);
-                System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName() + " is being activated");
-                isClassWaitingForChainCardToBeSelected = false;
-                activateSpellTrapController.createActionForActivatingSpellTrap(index);
-                selectCardController.resetSelectedCardLocationList();
-                String canChainingOccur = activateSpellTrapController.canChainingOccur(index);
-                //duelController.changeFakeTurn();
-                //used to give fakeTurn as input
-                if (canChainingOccur.equals("")) {
-                    return Action.conductUninterruptedAction(index) + Action.conductAllActions(index);
-                }
-                //activateSpellTrapController.setGoingToChangeTurnsForChaining(true);
-                return Action.conductUninterruptedAction(index) + canChainingOccur;
-                //create Action For Spell Trap Activation
-                //reset selections
-                // check if chaining can occur again
-            }
-
-        }
-    }
-
-     */
 
 }

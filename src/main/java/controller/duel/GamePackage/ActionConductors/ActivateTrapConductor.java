@@ -13,7 +13,6 @@ import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
 import controller.duel.GamePackage.PhaseInGame;
 import controller.duel.GamePhaseControllers.PhaseController;
-import controller.duel.GamePhaseControllers.TributeSummonController;
 import controller.duel.PreliminaryPackage.GameManager;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
@@ -56,6 +55,9 @@ public class ActivateTrapConductor {
     }
 
     public static String switchCaseAmongAllTrapEffects(int index, TrapCard trapCard, int numberInListOfActions) {
+        if (trapCard == null){
+            return "\nactivation of trap was canceled";
+        }
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects = trapCard.getContinuousTrapCardEffects();
@@ -180,7 +182,9 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.INFLICT_DAMAGE_TO_OPPONENT_EQUAL_TO_MONSTERS_ATK) && isPreviousUninterruptedActionMonsterAttacking) {
-            dealDamageToOpponentEqualToMonstersATK(action, index);
+            if (thisUninterruptedAction.isDamageInflictionIsPossible()) {
+                dealDamageToOpponentEqualToMonstersATK(action, index);
+            }
         }
         if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.DESTROY_ALL_OPPONENT_ATTACK_POSITION_MONSTERS) && isPreviousUninterruptedActionMonsterAttacking) {
             destroyAllFaceUpOpponentMonsterCards(uninterruptedAction, index);
@@ -190,7 +194,7 @@ public class ActivateTrapConductor {
             endBattlePhase(index);
         }
         if (spellCardActivationTrapCardEffects.contains(SpellCardActivationTrapCardEffect.DISCARD_1_CARD_NEGATE_DESTROY_CARD) && isPreviousUninterruptedActionSpellActivating) {
-            System.out.println("extraordinary!");
+            //System.out.println("extraordinary!");
             discardCard(index, numberInListOfActions);
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
@@ -274,9 +278,9 @@ public class ActivateTrapConductor {
     }
 
     public static boolean doesExistACardWithGivenNameInGivenArrayList(ArrayList<Card> arrayList, String cardName) {
-        System.out.println("POOR CARD NAME IS " + cardName);
+        //System.out.println("POOR CARD NAME IS " + cardName);
         for (int i = 0; i < arrayList.size(); i++) {
-            System.out.println("CANDIDATES " + arrayList.get(i).getCardName());
+            //System.out.println("CANDIDATES " + arrayList.get(i).getCardName());
             if (arrayList.get(i).getCardName().equals(cardName)) {
                 return true;
             }
@@ -291,7 +295,7 @@ public class ActivateTrapConductor {
         while (shouldContinue) {
             boolean firstOccurence = false;
             for (int i = 0; i < arrayList.size(); i++) {
-                if (!firstOccurence){
+                if (!firstOccurence) {
                     String sampleCardName = duelBoard.getCardByCardLocation(arrayList.get(i)).getCardName();
                     if (sampleCardName.equals(cardName)) {
                         SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(arrayList.get(i).getRowOfCardLocation(), arrayList.get(i).getIndex()), index);
@@ -300,17 +304,17 @@ public class ActivateTrapConductor {
                     }
                 }
             }
-            if (arrayList.size() == 0){
+            if (arrayList.size() == 0) {
                 shouldContinue = false;
             } else {
-                if (arrayList.get(0).getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)){
+                if (arrayList.get(0).getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
                     ArrayList<Card> allyCardsInHand = duelBoard.getAllyCardsInHand();
-                    if (!doesExistACardWithGivenNameInGivenArrayList(allyCardsInHand, cardName)){
+                    if (!doesExistACardWithGivenNameInGivenArrayList(allyCardsInHand, cardName)) {
                         shouldContinue = false;
                     }
                 } else {
                     ArrayList<Card> opponentCardsInHand = duelBoard.getOpponentCardsInHand();
-                    if (!doesExistACardWithGivenNameInGivenArrayList(opponentCardsInHand, cardName)){
+                    if (!doesExistACardWithGivenNameInGivenArrayList(opponentCardsInHand, cardName)) {
                         shouldContinue = false;
                     }
                 }
@@ -335,7 +339,7 @@ public class ActivateTrapConductor {
     }
 
     public static void cancelPreviousAction(Action action) {
-        System.out.println("CANCELLING :)))");
+        //System.out.println("CANCELLING :)))");
         action.setActionCanceled(true);
     }
 
@@ -453,7 +457,7 @@ public class ActivateTrapConductor {
         if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
             ArrayList<UponSummoningEffect> uponSummoningEffects = monsterCard.getUponSummoningEffects();
-            if (uponSummoningEffects.contains(UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_MONSTER_FROM_HAND_IN_DEFENSE_POSITION)) {
+            if (uponSummoningEffects.contains(UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION)) {
                 return true;
             }
             CardLocation defendingMonsterCardLocation = uninterruptedAction.getTargetingCards().get(uninterruptedAction.getTargetingCards().size() - 1);

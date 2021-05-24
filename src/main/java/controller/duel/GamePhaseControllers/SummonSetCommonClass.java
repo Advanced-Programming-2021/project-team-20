@@ -100,7 +100,7 @@ public class SummonSetCommonClass extends ChainController {
     public static String hasUserAlreadySummonedSet(int index) {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();
-        if (!duelController.canUserNormalSummon(turn)) {
+        if (!duelController.canUserSummonOrSetMonsters(turn)) {
             return "you already normal summoned on this turn";
         }
         return "";
