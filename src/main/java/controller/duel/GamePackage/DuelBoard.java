@@ -603,16 +603,16 @@ public class DuelBoard {
                 "\t\t" + otherTurnUser.getNickname() + " : " + duelController.getLifePoints().get(-turn + 2) + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(-turn + 3).reverse().toString() + "\n");
         builderDuelBoard.append(reverseWords(toShowInDuelBoardFormatCardsInDeck(-turn + 3).toString()) + "\n");
-        builderDuelBoard.append((toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3).toString()) + "\n");
-        builderDuelBoard.append((toShowInDuelBoardFormatMonsterCards(-turn + 3).toString() + "\n"));
+        builderDuelBoard.append((toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3)) + "\n");
+        builderDuelBoard.append((toShowInDuelBoardFormatMonsterCards(-turn + 3) + "\n"));
         builderDuelBoard
                 .append(reverseWords(toShowInDuelBoardFormatGraveyardAndFieldZone(-turn + 3).toString()) + "\n");
 
         builderDuelBoard.append("---------------------------------------------------\n");
 
         builderDuelBoard.append(toShowInDuelBoardFormatGraveyardAndFieldZone(turn).toString() + "\n");
-        builderDuelBoard.append(toShowInDuelBoardFormatMonsterCards(turn).toString() + "\n");
-        builderDuelBoard.append(toShowInDuelBoardFormatSpellAndTrapCards(turn).toString() + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatMonsterCards(turn) + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatSpellAndTrapCards(turn) + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInDeck(turn).toString() + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(turn).toString() + "\n");
         builderDuelBoard
@@ -636,6 +636,18 @@ public class DuelBoard {
         return result;
     }
 
+    public String reverseWordsWhenTurnIs2(String input) {
+        // System.out.println(input + " input");
+        String words[]=input.split("\\s");  
+        String reverseWord="";  
+        for(String w:words){  
+            StringBuilder sb=new StringBuilder(w);  
+            sb.reverse();  
+            reverseWord+=sb.toString()+"\t";  
+        }  
+        return reverseWord;  
+    }
+
     private StringBuilder toShowInDuelBoardFormatGraveyardAndFieldZone(int whichPlayer) {
         StringBuilder showGraveyardAndFieldZoneSize = new StringBuilder();
         if (whichPlayer == 2) {
@@ -649,7 +661,7 @@ public class DuelBoard {
         return showGraveyardAndFieldZoneSize;
     }
 
-    private StringBuilder toShowInDuelBoardFormatMonsterCards(int whichPlayer) {
+    private String toShowInDuelBoardFormatMonsterCards(int whichPlayer) {
         StringBuilder showMonsterCards = new StringBuilder();
         showMonsterCards.append("\t");
         if (whichPlayer == 2) {
@@ -663,8 +675,8 @@ public class DuelBoard {
         }
         int turn = GameManager.getDuelControllerByIndex(0).getTurn();
         if (turn == 2)
-            showMonsterCards.reverse();
-        return showMonsterCards;
+           return reverseWordsWhenTurnIs2(showMonsterCards.reverse().toString());
+        return showMonsterCards.toString();
     }
 
     private String toShowInDuelBoardFormatSpellAndTrapCards(int whichPlayer) {
@@ -682,7 +694,7 @@ public class DuelBoard {
 
         int turn = GameManager.getDuelControllerByIndex(0).getTurn();
         if (turn == 2)
-           return (showSpellAndTrapCards.reverse().toString());
+            return reverseWordsWhenTurnIs2(showSpellAndTrapCards.reverse().toString());
         return showSpellAndTrapCards.toString();
     }
 
