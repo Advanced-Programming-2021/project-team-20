@@ -595,36 +595,34 @@ public class DuelBoard {
 
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();
-        User myTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(turn - 1));
-        User otherTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(-turn + 2));
+        User myTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(turn));
+        User otherTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(-turn + 3));
         StringBuilder builderDuelBoard = new StringBuilder();
 
-        builderDuelBoard
-                .append(otherTurnUser.getNickname() + " : " + duelController.getLifePoints().get(-turn + 2) + "\n");
+        builderDuelBoard.append(
+                "\t\t" + otherTurnUser.getNickname() + " : " + duelController.getLifePoints().get(-turn + 2) + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(-turn + 3).reverse().toString() + "\n");
         builderDuelBoard.append(reverseWords(toShowInDuelBoardFormatCardsInDeck(-turn + 3).toString()) + "\n");
-        builderDuelBoard
-                .append("    " + reverseWords(toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3).toString()) + "\n");
-        builderDuelBoard
-                .append("    " + reverseWords(toShowInDuelBoardFormatMonsterCards(-turn + 3).toString() + "\n"));
+        builderDuelBoard.append((toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3).toString()) + "\n");
+        builderDuelBoard.append((toShowInDuelBoardFormatMonsterCards(-turn + 3).toString() + "\n"));
         builderDuelBoard
                 .append(reverseWords(toShowInDuelBoardFormatGraveyardAndFieldZone(-turn + 3).toString()) + "\n");
 
-        builderDuelBoard.append("-------------------------------------");
+        builderDuelBoard.append("---------------------------------------------------\n");
 
         builderDuelBoard.append(toShowInDuelBoardFormatGraveyardAndFieldZone(turn).toString() + "\n");
-        builderDuelBoard.append("    " + reverseWords(toShowInDuelBoardFormatMonsterCards(turn).toString() + "\n"));
-        builderDuelBoard
-                .append("    " + reverseWords(toShowInDuelBoardFormatSpellAndTrapCards(turn).toString()) + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatMonsterCards(turn).toString() + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatSpellAndTrapCards(turn).toString() + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInDeck(turn).toString() + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(turn).toString() + "\n");
-        builderDuelBoard.append(myTurnUser.getNickname() + " : " + duelController.getLifePoints().get(turn - 1));
+        builderDuelBoard
+                .append("\t\t" + myTurnUser.getNickname() + " : " + duelController.getLifePoints().get(turn - 1));
 
         return builderDuelBoard.toString();
     }
 
     private String reverseWords(String input) {
-
+        // System.out.println(input + " input");
         String[] temp = input.split(" ");
         String result = "";
 
@@ -634,6 +632,7 @@ public class DuelBoard {
             else
                 result = " " + temp[i] + result;
         }
+        // System.out.println(result + " result");
         return result;
     }
 
@@ -652,7 +651,7 @@ public class DuelBoard {
 
     private StringBuilder toShowInDuelBoardFormatMonsterCards(int whichPlayer) {
         StringBuilder showMonsterCards = new StringBuilder();
-
+        showMonsterCards.append("\t");
         if (whichPlayer == 2) {
             for (int i = 0; i < 5; i++) {
                 showMonsterCards.append(howPlacedInZone(opponentMonsterCards.get(i)) + "\t");
@@ -662,13 +661,15 @@ public class DuelBoard {
                 showMonsterCards.append(howPlacedInZone(allyMonsterCards.get(i)) + "\t");
             }
         }
-
+        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        if (turn == 2)
+            showMonsterCards.reverse();
         return showMonsterCards;
     }
 
-    private StringBuilder toShowInDuelBoardFormatSpellAndTrapCards(int whichPlayer) {
+    private String toShowInDuelBoardFormatSpellAndTrapCards(int whichPlayer) {
         StringBuilder showSpellAndTrapCards = new StringBuilder();
-
+        showSpellAndTrapCards.append("\t");
         if (whichPlayer == 2) {
             for (int i = 0; i < 5; i++) {
                 showSpellAndTrapCards.append(howPlacedInZone(opponentSpellCards.get(i)) + "\t");
@@ -679,7 +680,10 @@ public class DuelBoard {
             }
         }
 
-        return showSpellAndTrapCards;
+        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        if (turn == 2)
+           return (showSpellAndTrapCards.reverse().toString());
+        return showSpellAndTrapCards.toString();
     }
 
     private String howPlacedInZone(Card card) {
@@ -703,7 +707,7 @@ public class DuelBoard {
             return "DH";
         }
         // NOT_APPLICABLE
-        return "E";
+        return "kgf";
 
     }
 

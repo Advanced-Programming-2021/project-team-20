@@ -47,13 +47,37 @@ class DuelBoardTest {
 
     @Test
     void testWholeClass() {
+
         CardLocation cardLocation = new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, 1);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+        ArrayList<Card> cards = new ArrayList<>();
+        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
+            cards.add(entry.getValue());
+        }
+
         duelBoard.shuffleMainDecks();
         assertEquals(duelBoard.getAllyMonsterCards().get(0), duelBoard.getCardByCardLocation(cardLocation));
         cardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, 1);
         assertEquals(duelBoard.getAllySpellCards().get(0), duelBoard.getCardByCardLocation(cardLocation));
-      //  cardLocation = new CardLocation(rowOfCardLocations, index);
+        // turn == 1
+        GameManager.getDuelControllerByIndex(0).setTurn(1);
+        duelBoard.addCardToHand(cards.get(5), 1);
+        duelBoard.addCardToHand(cards.get(5), 2);
+        duelBoard.addCardToGraveyard(cards.get(2), 1);
+        duelBoard.addCardToGraveyard(cards.get(2), 1);
+        duelBoard.addCardToSpellZone(cards.get(5), 1);
+        
+        duelBoard.addCardToSpellZone(cards.get(5), 1);
+        duelBoard.addCardToSpellZone(cards.get(5), 2);
+        duelBoard.addCardToSpellZone(cards.get(5), 2);
+        duelBoard.addCardToMonsterZone(cards.get(1), 2);
+        duelBoard.addCardToMonsterZone(cards.get(1), 1);
 
+        System.out.println(duelBoard.showMainDuelBoard(0));
+        // turn == 2
+        GameManager.getDuelControllerByIndex(0).setTurn(2);
+
+        System.out.println("\n\n" + duelBoard.showMainDuelBoard(0));
     }
 }
