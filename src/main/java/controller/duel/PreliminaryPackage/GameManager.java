@@ -12,29 +12,29 @@ import controller.duel.GamePhaseControllers.*;
 import model.cardData.General.Card;
 
 public class GameManager {
-    public static ArrayList<DuelController> duelControllerList = new ArrayList<>();
-    public static ArrayList<DuelBoard> duelBoardList = new ArrayList<>();
-    public static ArrayList<ActivateSpellTrapController> activateSpellTrapControllers = new ArrayList<>();
-    public static ArrayList<ActivateMonsterController> activateMonsterControllers = new ArrayList<>();
-    public static ArrayList<AttackMonsterToMonsterController> attackMonsterToMonsterControllers = new ArrayList<>();
-    public static ArrayList<AttackMonsterToMonsterConductor> attackMonsterToMonsterConductors = new ArrayList<>();
-    public static ArrayList<BattlePhaseController> battlePhaseControllers = new ArrayList<>();
-    public static ArrayList<ChainController> chainControllers = new ArrayList<>();
-    public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
-    public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
-    public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
-    public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
-    public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
-    public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
-    public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
-    public static ArrayList<TributeSummonController> tributeSummonControllers = new ArrayList<>();
-    public static ArrayList<PhaseController> phaseControllers = new ArrayList<>();
-    public static ArrayList<SelectCardController> selectCardControllers = new ArrayList<>();
-    public static ArrayList<SetCardController> setCardControllers = new ArrayList<>();
-    public static ArrayList<SummonSetCommonClass> summonSetCommonClasses = new ArrayList<>();
-    public static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
-    public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
-    public static ArrayList<AI> ais = new ArrayList<>();
+    private static ArrayList<DuelController> duelControllerList = new ArrayList<>();
+    private static ArrayList<DuelBoard> duelBoardList = new ArrayList<>();
+    private static ArrayList<ActivateSpellTrapController> activateSpellTrapControllers = new ArrayList<>();
+    private static ArrayList<ActivateMonsterController> activateMonsterControllers = new ArrayList<>();
+    private static ArrayList<AttackMonsterToMonsterController> attackMonsterToMonsterControllers = new ArrayList<>();
+    private static ArrayList<AttackMonsterToMonsterConductor> attackMonsterToMonsterConductors = new ArrayList<>();
+    private static ArrayList<BattlePhaseController> battlePhaseControllers = new ArrayList<>();
+    private static ArrayList<ChainController> chainControllers = new ArrayList<>();
+    private static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
+    private static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
+    private static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
+    private static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
+    private static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
+    private static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
+    private static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
+    private static ArrayList<TributeSummonController> tributeSummonControllers = new ArrayList<>();
+    private static ArrayList<PhaseController> phaseControllers = new ArrayList<>();
+    private static ArrayList<SelectCardController> selectCardControllers = new ArrayList<>();
+    private static ArrayList<SetCardController> setCardControllers = new ArrayList<>();
+    private static ArrayList<SummonSetCommonClass> summonSetCommonClasses = new ArrayList<>();
+    private static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
+    private static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
+    private static ArrayList<AI> ais = new ArrayList<>();
 
     public void addANewGame(ArrayList<Card> firstPlayerMainDeck, ArrayList<Card> firstPlayerSideDeck,
             ArrayList<Card> secondPlayerMainDeck, ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername,
@@ -169,7 +169,7 @@ public class GameManager {
         return uninterruptedActions.get(index);
     }
 
-    public static AI getAIByIndex(int index){
+    public static AI getAIByIndex(int index) {
         return ais.get(index);
     }
 
