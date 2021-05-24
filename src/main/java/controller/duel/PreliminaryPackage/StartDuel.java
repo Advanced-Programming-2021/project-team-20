@@ -35,7 +35,7 @@ public class StartDuel {
         }
         User secondUser = Storage.getUserByName(foundCommands.get("secondPlayer"));
         User firstUser = Profile.getOnlineUser();
-
+        int numberOfRounds = Integer.parseInt(foundCommands.get("rounds"));
         if (getActiveDeck(firstUser) == null) {
             return firstUser.getName() + " has no active deck";
         }
@@ -48,13 +48,13 @@ public class StartDuel {
         if (!isThisDeckValid(secondUser)) {
             return secondUser.getName() + "’s deck is invalid";
         }
-        if (!isItsRoundNumberCorrect(command)) {
+        if (!isItsRoundNumberCorrect(numberOfRounds)) {
             return "number of rounds is not supported";
         }
 
-        startNewGame(firstUser, secondUser, StartDuelPatterns.getRoundsNumber(command));
+        startNewGame(firstUser, secondUser, numberOfRounds);
         isDuelStarted = true;
-        return "duel successfully started!\n\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
+        return "duel successfully started!\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
     }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber) {
@@ -67,7 +67,6 @@ public class StartDuel {
         GameManager gameManager = new GameManager();
         gameManager.addANewGame(firstUserMainDeck, firstUserSideDeck, secondUserMainDeck, secondUserSideDeck,
                 firstUser.getName(), secondUser.getName(), roundsNumber);
-        GameManager.getDuelControllerByIndex(0).startDuel(0);
         GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
         GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
 
@@ -131,8 +130,7 @@ public class StartDuel {
         return true;
     }
 
-    private boolean isItsRoundNumberCorrect(String command) {
-        int number = StartDuelPatterns.getRoundsNumber(command);
+    private boolean isItsRoundNumberCorrect(int number) {
         if (number == 1 || number == 3)
             return true;
         return false;

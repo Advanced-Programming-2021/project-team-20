@@ -53,12 +53,14 @@ public class SetTurnForGame {
             GameManager.getDuelControllerByIndex(index).setTurn(1);
             GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             setFieldsOfClassLikeForNextRound();
+            GameManager.getDuelControllerByIndex(index).startDuel(index);
             return allyPlayerName + " must start game";
         }
 
         GameManager.getDuelControllerByIndex(index).setTurn(2);
         GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
         setFieldsOfClassLikeForNextRound();
+        GameManager.getDuelControllerByIndex(index).startDuel(index);
         return opponentPlayerName + " must start game";
 
     }
