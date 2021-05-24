@@ -41,15 +41,6 @@ public class Storage {
         addTrapCards();
         addSpellCards();
 
-        User user = new User("JsutMonster", "abcd", "1");
-        Deck deck = new Deck("JsutMonster");
-        deck.setDeckActive(true);
-        user.addDeckToAllDecks("JsutMonster", deck);
-        for (int i = 0; i < 40; i++) {
-            deck.addCardToMainDeck("Alexandrite Dragon");
-        }
-        allUsers.add(user);
-
     }
 
     public void endProgram() {
