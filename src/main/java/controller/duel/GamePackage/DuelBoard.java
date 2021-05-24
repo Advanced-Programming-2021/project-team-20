@@ -561,7 +561,7 @@ public class DuelBoard {
         Collections.shuffle(opponentCardsInDeck);
     }
 
-    public String showMainDuelBord(int index) {
+    public String showMainDuelBoard(int index) {
 
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();

@@ -17,26 +17,25 @@ import model.cardData.General.Card;
 
 class ChangeCardsBetweenTwoRoundsTest {
     static Storage storage;
+    static HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+    static ArrayList<Card> cards = new ArrayList<>();
 
     @BeforeAll
     static void startTest() {
-
-        storage = new Storage();
+        Storage storage = new Storage();
         try {
             storage.startProgram();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
+            cards.add(entry.getValue());
         }
     }
 
     @Test
     void AITest() {
 
-        ArrayList<Card> cards = new ArrayList<>();
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
-            cards.add(entry.getValue());
-        }
         GameManager gameManager = new GameManager();
         gameManager.addANewGame(cards, cards, cards, cards, "firstPlayer", "AI", 1);
         ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
@@ -79,7 +78,6 @@ class ChangeCardsBetweenTwoRoundsTest {
         assertEquals("cards moved successfully!", output);
         output = changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(2, "end", 0);
         assertEquals("next round of duel started\nfirstPlayer must choose\n1.stone\n2.hand\n3.snips", output);
-
+        GameManager.removeClassesWhenGameIsOver(0);
     }
-
 }

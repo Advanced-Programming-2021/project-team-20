@@ -1,5 +1,6 @@
 package view;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,12 +39,24 @@ public class View {
                 exitMenu(commands);
                 continue;
             } else if (commands.equals("menu show-current")) {
-                System.out.println(currentMenu);
+                printMethod(currentMenu);
                 continue;
             }
-            System.out.println(mainController.switchCaseInput(commands));
+            // try {
+            //     if (System.getProperty("os.name").contains("Windows"))
+            //         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            //     else
+            //         Runtime.getRuntime().exec("clear");
+            // } catch (IOException | InterruptedException ex) {
+                
+            // }
+           printMethod(mainController.switchCaseInput(commands));
         }
         input.close();
+    }
+
+    private void printMethod(String string){
+        System.out.println(string);
     }
 
     public static void setCurrentMenu(String currentMenu) {
@@ -57,7 +70,7 @@ public class View {
     private void exitMenu(String command) {
 
         if (!command.equals("menu exit")) {
-            System.out.println(invalidCommand);
+            printMethod(invalidCommand);
             return;
         }
         mainController.exitMenu();
@@ -73,21 +86,21 @@ public class View {
         if (matcher.find()) {
             menuname = matcher.group(1);
         } else {
-            System.out.println(invalidCommand);
+            printMethod(invalidCommand);
             return;
         }
 
         if (currentMenu.equals(loginMenu)) {
-            System.out.println("please login first");
+            printMethod("please login first");
             return;
         }
 
         if (currentMenu.equals("Main Menu")) {
             if (!mainController.enterMenu(menuname)) {
-                System.out.println(invalidCommand);
+                printMethod(invalidCommand);
             }
         } else {
-            System.out.println("menu navigation is not possible");
+            printMethod("menu navigation is not possible");
         }
     }
 }

@@ -56,6 +56,7 @@ public class Storage {
                 fileWriter.write(toGsonFormat(allUsers.get(i)));
                 fileWriter.close();
             } catch (IOException e) {
+                System.out.println("some troubles");
                 System.exit(0);
             }
 
@@ -86,6 +87,7 @@ public class Storage {
                 fileWriter.write(wholeDecksOfUser.toString());
                 fileWriter.close();
             } catch (IOException e) {
+                System.out.println("some troubles");
                 System.exit(0);
             }
 
@@ -122,6 +124,8 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
+            System.out.println("some troubles");
+            e.printStackTrace();
             System.exit(0);
         }
     }
@@ -146,6 +150,7 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
+            System.out.println("some troubles");
             System.exit(0);
         }
     }
@@ -206,6 +211,7 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
+            System.out.println("some troubles");
             System.exit(0);
         }
     }

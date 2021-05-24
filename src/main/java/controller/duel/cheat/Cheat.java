@@ -35,12 +35,12 @@ public class Cheat {
             return increaseMoney(Integer.parseInt(matcher.group("amount")), index);
         }
 
-        matcher = Utility.getCommandMatcher(input, "cheat select (-h|--hand) (?<cardname>\\S+) (-f|--force)");
+        matcher = Utility.getCommandMatcher(input, "cheat select (-h|--hand) (?<cardname>.+) (-f|--force)");
         if (matcher.find()) {
             return addAdditionCardToHand(matcher.group("cardname"), index);
         }
 
-        matcher = Utility.getCommandMatcher(input, "cheat select (-f|--force) (-h|--hand) (?<cardname>\\S+)");
+        matcher = Utility.getCommandMatcher(input, "cheat select (-f|--force) (-h|--hand) (?<cardname>.+)");
         if (matcher.find()) {
             return addAdditionCardToHand(matcher.group("cardname"), index);
         }
@@ -55,7 +55,7 @@ public class Cheat {
             return increaseDefensePower(Integer.parseInt(matcher.group(1)), index);
         }
 
-        matcher = Utility.getCommandMatcher(input, "cheat get card from graveyard (\\S+)");
+        matcher = Utility.getCommandMatcher(input, "cheat get card from graveyard (.+)");
         if (matcher.find()) {
             return getCardFromGraveyard(matcher.group(1), index);
         }
@@ -75,6 +75,7 @@ public class Cheat {
         for (int i = 0; i < cardsInGraveYard.size(); i++) {
             if (cardsInGraveYard.get(i).getCardName().equals(cardname)) {
                 GameManager.getDuelBoardByIndex(index).addCardToHand(cardsInGraveYard.get(i), turn);
+                cardsInGraveYard.remove(i);
                 return cardname + " added to hand successfully!";
             }
         }
@@ -83,35 +84,39 @@ public class Cheat {
 
     private String increaseDefensePower(int amount, int index) {
 
-        ArrayList<Card> monsterCards;
+        ArrayList<Card> cardsInHand;
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
 
         if (turn == 1) {
-            monsterCards = GameManager.getDuelBoardByIndex(index).getAllyMonsterCards();
+            cardsInHand = GameManager.getDuelBoardByIndex(index).getAllyCardsInHand();
         } else {
-            monsterCards = GameManager.getDuelBoardByIndex(index).getOpponentMonsterCards();
+            cardsInHand = GameManager.getDuelBoardByIndex(index).getOpponentCardsInHand();
         }
 
-        for (int i = 0; i < monsterCards.size(); i++) {
-            MonsterCard monsterCard = (MonsterCard) monsterCards.get(i);
-            monsterCard.setDefensePower(amount + monsterCard.getDefensePower());
+        for (int i = 0; i < cardsInHand.size(); i++) {
+            if (cardsInHand.get(i) != null && cardsInHand.get(i).getCardType().equals(CardType.MONSTER)) {
+                MonsterCard monsterCard = (MonsterCard) cardsInHand.get(i);
+                monsterCard.setDefensePower(amount + monsterCard.getDefensePower());
+            }
         }
         return "defensePower of Monsters increased " + amount + " successfully!";
     }
 
     private String increaseAttackPower(int amount, int index) {
-        ArrayList<Card> monsterCards;
+        ArrayList<Card> cardsInHand;
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
 
         if (turn == 1) {
-            monsterCards = GameManager.getDuelBoardByIndex(index).getAllyMonsterCards();
+            cardsInHand = GameManager.getDuelBoardByIndex(index).getAllyCardsInHand();
         } else {
-            monsterCards = GameManager.getDuelBoardByIndex(index).getOpponentMonsterCards();
+            cardsInHand = GameManager.getDuelBoardByIndex(index).getOpponentCardsInHand();
         }
 
-        for (int i = 0; i < monsterCards.size(); i++) {
-            MonsterCard monsterCard = (MonsterCard) monsterCards.get(i);
-            monsterCard.setAttackPower(amount + monsterCard.getAttackPower());
+        for (int i = 0; i < cardsInHand.size(); i++) {
+            if (cardsInHand.get(i) != null && cardsInHand.get(i).getCardType().equals(CardType.MONSTER)) {
+                MonsterCard monsterCard = (MonsterCard) cardsInHand.get(i);
+                monsterCard.setAttackPower(amount + monsterCard.getAttackPower());
+            }
         }
         return "attackPower of Monsters increased " + amount + " successfully!";
     }
@@ -142,7 +147,8 @@ public class Cheat {
 
     private String increaseMoney(int amount, int index) {
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
-        Storage.getUserByName(GameManager.getDuelControllerByIndex(0).getPlayingUsernameByTurn(turn)).setMoney(amount);
+        User user = Storage.getUserByName(GameManager.getDuelControllerByIndex(0).getPlayingUsernameByTurn(turn));
+        user.setMoney(user.getMoney() + amount);
         return "money increased " + amount + " successfully!";
     }
 

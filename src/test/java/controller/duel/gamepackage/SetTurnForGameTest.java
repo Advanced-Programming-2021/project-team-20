@@ -45,7 +45,6 @@ class SetTurnForGameTest {
         setTurnForGame = new SetTurnForGame();
         String output = setTurnForGame.setTurnBetweenTwoPlayer("1", 0);
         assertNotNull(output);
-        System.out.println(output);
     }
 
     @Test

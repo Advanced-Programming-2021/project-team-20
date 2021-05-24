@@ -1,4 +1,4 @@
-package controller.duel;
+package controller.duel.PreliminaryPackage;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
