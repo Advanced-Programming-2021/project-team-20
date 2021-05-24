@@ -57,6 +57,8 @@ public class DuelController {
         playersScores.add(0);
         canUserSummonOrSetMonsters.add(true);
         canUserSummonOrSetMonsters.add(true);
+        isPlayersChangedDecks = true;
+        isTurnSetedBetweenTwoPlayerWhenRoundBegin = true;
         currentRound = 1;
         isAIPlaying = false;
         aiTurn = 0;
@@ -104,6 +106,8 @@ public class DuelController {
         } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
+
+
 
 
 
@@ -398,7 +402,8 @@ public class DuelController {
     }
 
     public void startDuel(int index) {
-
+        turn = 1;
+        fakeTurn = 1;
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
         if (turn == 1) {
             phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);

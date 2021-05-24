@@ -364,12 +364,15 @@ public class Effect {
         boolean actionTypeCorrect = actionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || actionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)
             || actionType.equals(ActionType.ALLY_DIRECT_ATTACKING) || actionType.equals(ActionType.OPPONENT_DIRECT_ATTACKING);
         if (Card.isCardASpell(spellTrapCard)) {
+            /*
             ArrayList<QuickSpellEffect> quickSpellEffects = ((SpellCard) spellTrapCard).getQuickSpellEffects();
             if (quickSpellEffects.contains(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY) && actionTypeCorrect) {
                 return true;
             } else if (quickSpellEffects.contains(QuickSpellEffect.DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY) && actionTypeCorrect) {
                 return true;
             }
+
+             */
         } else if (Card.isCardATrap(spellTrapCard)) {
             ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects = ((TrapCard) spellTrapCard).getMonsterAttackingTrapCardEffects();
             if (monsterAttackingTrapCardEffects.size() > 0) {
