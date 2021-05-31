@@ -3,10 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.View.ScoreboardController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #123;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.View.ScoreboardController">
    <children>
-      <Button layoutX="274.0" layoutY="32.0" mnemonicParsing="false" onAction="#fillLabel" text="Show" />
+      <Button layoutX="238.0" layoutY="29.0" mnemonicParsing="false" onAction="#fillLabel" prefHeight="33.0" prefWidth="125.0" style="-fx-background-color: #222;" text="Show" textFill="#b21010" />
       <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" layoutX="221.0" layoutY="127.0" prefHeight="146.0" prefWidth="159.0" textAlignment="CENTER" />
-      <Button fx:id="returnBtn" layoutX="293.0" layoutY="334.0" mnemonicParsing="false" text="return" onAction="#returnToMainMenu" />
+      <Button fx:id="returnBtn" layoutX="238.0" layoutY="335.0" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="24.0" prefWidth="125.0" style="-fx-background-color: #222;" text="return" textFill="#d71515" />
    </children>
 </AnchorPane>
