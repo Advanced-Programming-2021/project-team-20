@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -30,25 +31,28 @@ public class MainMenuController implements Initializable {
     }
 
     public void duelMenu() {
-
+        System.out.println("duel");
         // TODO
     }
 
     public void deckMenu() {
+        System.out.println("deck");
         // TODO
     }
 
     public void shopMenu() {
-
+        System.out.println("shop");
         // TODO
     }
 
     public void profileMenu() {
+        System.out.println("profile");
 
         // TODO
     }
 
     public void importAndExportMenu() {
+        System.out.println("import ...");
 
         // TODO
     }

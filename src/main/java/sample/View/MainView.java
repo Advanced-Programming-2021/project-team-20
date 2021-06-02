@@ -16,9 +16,11 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sample.controller.non_duel.storage.Storage;
 
 public class MainView extends Application {
     private static Stage stage;
+    private static Storage storage;
 
     @Override
     public void start(Stage stage) throws IOException {
