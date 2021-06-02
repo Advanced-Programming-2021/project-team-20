@@ -3,7 +3,6 @@ package sample.controller.non_duel.mainController;
 import sample.controller.duel.PreliminaryPackage.StartDuel;
 import sample.controller.non_duel.deckCommands.DeckCommands;
 import sample.controller.non_duel.importAndExport.ImportAndExport;
-import sample.controller.non_duel.loginMenu.LoginMenu;
 import sample.controller.non_duel.profile.Profile;
 import sample.controller.non_duel.scoreboard.Scoreboard;
 import sample.controller.non_duel.shop.Shop;
@@ -22,7 +21,6 @@ public class MainController {
     private boolean isInImportAndExport;
     private boolean isInDuelMenu;
 
-    private LoginMenu loginMenu = new LoginMenu();
     private DeckCommands deckCommands = new DeckCommands();
     private Profile profile = new Profile();
     private Scoreboard scoreboard = new Scoreboard();
@@ -40,14 +38,7 @@ public class MainController {
 
     public String switchCaseInput(String command) {
 
-        if (isInLoginMenu) {
-            String resultOfLoginUser = loginMenu.findCommand(command);
-            if (resultOfLoginUser.equals("user logged in successfully!")) {
-                View.setCurrentMenu("Main Menu");
-                isInLoginMenu = false;
-            }
-            return resultOfLoginUser;
-        }
+       
         if (isInDeckCommands) {
             return deckCommands.findCommands(command);
         } else if (isInProfile) {
@@ -57,7 +48,7 @@ public class MainController {
         } else if (isInShop) {
             return shop.findCommand(command);
         } else if (isInImportAndExport) {
-            return importAndExport.findCommand(command);
+         //   return importAndExport.findCommand(command);
         } else if (isInDuelMenu) {
             return duel.findCommand(command);
         }

@@ -61,4 +61,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    public void goToProfile(){
+        try {
+            new MainView().changeView("/sample/fxml/profile.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    } 
+
 }

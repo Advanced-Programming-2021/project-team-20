@@ -8,7 +8,7 @@
       <Button fx:id="duelbtn" layoutX="215.0" layoutY="82.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="Duel" />
       <Button fx:id="deckbtn" layoutX="214.0" layoutY="129.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="Deck" />
       <Button fx:id="shopbtn" layoutX="215.0" layoutY="167.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="shop" />
-      <Button fx:id="profilebtn" layoutX="215.0" layoutY="210.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="Profile" />
+      <Button fx:id="profilebtn" layoutX="215.0" layoutY="210.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="25.0" prefWidth="195.0" text="Profile" />
       <Button fx:id="importAndExportbtn" layoutX="215.0" layoutY="253.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="ImportAndExport" />
       <Button fx:id="backToLoginPagebtn" layoutX="214.0" layoutY="300.0" mnemonicParsing="false" onAction="#backToLoginPage" prefHeight="25.0" prefWidth="195.0" text="Back" />
    </children>

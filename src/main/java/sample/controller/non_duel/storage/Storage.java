@@ -98,6 +98,7 @@ public class Storage {
         jsonObject.addProperty("name", user.getName());
         jsonObject.addProperty("nickname", user.getNickname());
         jsonObject.addProperty("password", user.getPassword());
+        jsonObject.addProperty("imagePath", user.getImagePath());
         jsonObject.addProperty("score", user.getScore());
         jsonObject.addProperty("money", user.getMoney());
         return jsonObject.toString();
@@ -266,7 +267,7 @@ public class Storage {
 
                 JsonObject details = rootNode.getAsJsonObject();
                 User user = new User(details.get("name").getAsString(), details.get("nickname").getAsString(),
-                        details.get("password").getAsString());
+                        details.get("password").getAsString(), details.get("imagePath").getAsString());
                 user.setScore(details.get("score").getAsInt());
                 user.setMoney(details.get("money").getAsInt());
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
