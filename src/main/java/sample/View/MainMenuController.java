@@ -16,6 +16,8 @@ public class MainMenuController implements Initializable {
     @FXML
     Button importAndExportbtn;
     @FXML
+    Button scoreboardBtn;
+    @FXML
     Button profilebtn;
     @FXML
     Button shopbtn;
@@ -45,16 +47,10 @@ public class MainMenuController implements Initializable {
         // TODO
     }
 
-    public void profileMenu() {
-        System.out.println("profile");
-
-        // TODO
-    }
+   
 
     public void importAndExportMenu() {
-        System.out.println("import ...");
-
-        // TODO
+      
     }
 
     public void backToLoginPage() {
@@ -72,5 +68,9 @@ public class MainMenuController implements Initializable {
             e.printStackTrace();
         }
     } 
+
+    public void scoreBoardPage(){
+
+    }
 
 }
