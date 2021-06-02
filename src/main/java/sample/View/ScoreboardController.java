@@ -10,6 +10,8 @@ import java.io.IOException;
 public class ScoreboardController {
     @FXML
     private Label label;
+    @FXML
+    private Label listView;
     public void fillLabel() {
         label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
         label.setText(new Scoreboard().findCommands("scoreboard show"));

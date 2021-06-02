@@ -8,13 +8,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.controller.non_duel.storage.Storage;
 
 public class MainView extends Application {
     private static Stage stage;
+    private static Storage storage;
 
     @Override
     public void start(Stage stage) throws IOException {
         MainView.stage = stage;
+
         URL welcomeUrl = getClass().getResource("/sample/fxml/loginPage.fxml");
         Parent root = FXMLLoader.load(welcomeUrl);
 
@@ -25,6 +28,8 @@ public class MainView extends Application {
     }
 
     public static void main(String[] args) throws IOException {
+        MainView.storage = new Storage();
+        storage.startProgram();
         launch(args);
     }
 
