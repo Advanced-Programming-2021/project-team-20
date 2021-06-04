@@ -1,8 +1,10 @@
 package sample.View;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -52,14 +54,21 @@ public class RegisterController implements Initializable {
             label.setText("NICKNAME IS REPEATED");
             return;
         }
-        Storage.addUserToAllUsers(new User(usernameField.getText(), nicknameField.getText(), passwordField.getText()));
+
+        createUser();
+
         try {
-            LoginController.setUpLabel();
+            
             new MainView().changeView("/sample/fxml/loginPage.fxml");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void createUser() {
+        Storage.addUserToAllUsers(new User(usernameField.getText(), nicknameField.getText(), passwordField.getText(),
+                chooseRandomImageForUser()));
     }
 
     private boolean doesUserWithThisUsernameAlreadyExists() {
@@ -83,6 +92,12 @@ public class RegisterController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String chooseRandomImageForUser() {
+        File dir = new File("src\\main\\resources\\sample\\images\\Characters\\radomCharacters");
+        File[] images = dir.listFiles();
+        return images[new Random().nextInt(images.length)].getPath();
     }
 
 }

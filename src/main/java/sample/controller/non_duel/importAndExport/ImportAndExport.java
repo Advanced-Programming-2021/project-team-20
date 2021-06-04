@@ -25,25 +25,25 @@ import sample.model.cardData.TrapCardData.TrapCardValue;
 
 public class ImportAndExport {
 
-    public String findCommand(String command) {
+    // public String findCommand(String command) {
 
-        Pattern importPattern = Pattern.compile("import card (.+)");
-        Pattern exportPattern = Pattern.compile("export card (.+)");
-        Matcher matcher;
-        matcher = importPattern.matcher(command);
-        if (matcher.find()) {
-            return importCard(matcher.group(1));
-        }
+    //     Pattern importPattern = Pattern.compile("import card (.+)");
+    //     Pattern exportPattern = Pattern.compile("export card (.+)");
+    //     Matcher matcher;
+    //     matcher = importPattern.matcher(command);
+    //     if (matcher.find()) {
+    //         return importCard(matcher.group(1));
+    //     }
 
-        matcher = exportPattern.matcher(command);
-        if (matcher.find()) {
-            return exportCard(matcher.group(1));
-        }
+    //     matcher = exportPattern.matcher(command);
+    //     if (matcher.find()) {
+    //         return exportCard(matcher.group(1));
+    //     }
 
-        return "invalid command!";
-    }
+    //     return "invalid command!";
+    // }
 
-    private String exportCard(String cardname) {
+    public String importCard(String cardname) {
 
         File file = new File("Resourses\\ImportedCards\\" + cardname + ".json");
         //System.out.println(file.exists() + " " + cardname);
@@ -58,7 +58,6 @@ public class ImportAndExport {
             }
             return "card exported successfully!";
         }
-
         return "card does not exist!";
     }
 
@@ -127,7 +126,7 @@ public class ImportAndExport {
         }
     }
 
-    private String importCard(String cardname) {
+    public String exportCard(String cardname) {
 
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         if (allMonsterCards.containsKey(cardname)) {

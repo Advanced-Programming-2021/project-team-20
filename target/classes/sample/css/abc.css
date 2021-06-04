@@ -1,14 +1,20 @@
-.bodybg{
-     -fx-background-image: url("147.JPG");
-     -fx-background-size: 100% 100%;    
-     
-  }
-  .chart-plot-background {
-   -fx-background-image: url("/src/main/resources/sample/images/147.JPG");
+
+.chart-plot-background {
+   -fx-background-image: url("welcomepage.PNG");
+   -fx-background-size: 100%  100%;
 }
-  .background {
-   -fx-background-color: #147d14;
+
+.chart-plot-background1{
+   -fx-background-image: url('profile.PNG');
+   -fx-background-size: 100%  100%;
+
 }
+.chart-plot-background2{
+   -fx-background-image: url('importAndExport.PNG');
+   -fx-background-size: 100%  100%;
+
+}
+ 
 
 .label {
    -fx-font-size: 11pt;
@@ -16,6 +22,7 @@
    -fx-text-fill: white;
    -fx-opacity: 0.6;
 }
+
 
 .label-bright {
    -fx-font-size: 11pt;
