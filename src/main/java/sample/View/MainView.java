@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.google.gson.GsonBuilder;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,6 +55,8 @@ public class MainView extends Application {
         // anotherBackSlash.append(imagePath.charAt(i));
         // }
         // System.out.println(anotherBackSlash);
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        gsonBuilder.create();
         launch(args);
         System.out.println("dasdasd");
     }
