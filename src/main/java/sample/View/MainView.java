@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.google.gson.GsonBuilder;
-
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
