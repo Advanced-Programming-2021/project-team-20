@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.google.gson.GsonBuilder;
+
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,26 +36,18 @@ public class MainView extends Application {
         // stage.setHeight(primaryScreenBounds.getHeight());
         stage.setResizable(true);
         Scene scene = new Scene(root);
-        // File file = new File("src\\main\\resources\\sample\\images\\passwordLabel.png");
+        // File file = new
+        // File("src\\main\\resources\\sample\\images\\passwordLabel.png");
         // System.out.println(file.exists());
-        // Image imageCursor = new Image("src\\main\\resources\\sample\\images\\passwordLabel.png");
+        // Image imageCursor = new
+        // Image("src\\main\\resources\\sample\\images\\passwordLabel.png");
         // System.out.println(imageCursor.getUrl());
         stage.setScene(scene);
         stage.show();
     }
 
     public static void main(String[] args) throws IOException {
-        // File dir = new File("src\\main\\resources\\sample\\images\\Characters");
-        // File[] images = dir.listFiles();
-        // String imagePath = images[new Random().nextInt(images.length)].getPath();
-        // StringBuilder anotherBackSlash = new StringBuilder();
-        // for (int i = 0; i < imagePath.length(); i++) {
-        // if (imagePath.charAt(i) == '\\') {
-        // anotherBackSlash.append(imagePath.charAt(i));
-        // }
-        // anotherBackSlash.append(imagePath.charAt(i));
-        // }
-        // System.out.println(anotherBackSlash);
+      //  Gson
         launch(args);
         System.out.println("dasdasd");
     }
