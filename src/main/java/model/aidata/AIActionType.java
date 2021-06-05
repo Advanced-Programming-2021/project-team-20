@@ -1,4 +1,4 @@
-package model;
+package model.aidata;
 
 public enum AIActionType {
     ACTIVATE_EFFECT,

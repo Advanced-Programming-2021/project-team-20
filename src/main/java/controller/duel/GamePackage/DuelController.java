@@ -8,6 +8,7 @@ import controller.duel.GamePackage.ActionConductors.NormalSummonConductor;
 import controller.duel.GamePackage.ai.AI;
 import controller.duel.GamePhaseControllers.*;
 import controller.duel.PreliminaryPackage.GameManager;
+import controller.duel.PreliminaryPackage.StartDuel;
 import controller.duel.Utility.Utility;
 import controller.duel.cheat.Cheat;
 import controller.non_duel.mainController.MainController;
@@ -492,6 +493,7 @@ public class DuelController {
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         MainController mainController = MainController.getInstance();
+        mainController.setDuel(new StartDuel());
         mainController.exitMenu();
 
         return winnerUser.getName() + " won the whole match with score: "

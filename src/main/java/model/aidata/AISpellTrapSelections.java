@@ -1,4 +1,4 @@
-package model;
+package model.aidata;
 
 public enum AISpellTrapSelections {
     SELECT_A_SPECIAL_SUMMONING_TRAP_CARD_IN_BOARD,

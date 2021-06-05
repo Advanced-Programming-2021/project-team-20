@@ -1,9 +1,9 @@
 package controller.duel.GamePackage.ai;
 
 import controller.duel.PreliminaryPackage.GameManager;
-import model.AIActionType;
-import model.AIFurtherActivationInput;
-import model.AISpellTrapSelections;
+import model.aidata.AIActionType;
+import model.aidata.AIFurtherActivationInput;
+import model.aidata.AISpellTrapSelections;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 

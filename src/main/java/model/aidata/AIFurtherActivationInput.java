@@ -1,4 +1,4 @@
-package model;
+package model.aidata;
 
 public enum AIFurtherActivationInput {
     SELECT_A_CARD_FROM_YOUR_HAND_TO_DISCARD,

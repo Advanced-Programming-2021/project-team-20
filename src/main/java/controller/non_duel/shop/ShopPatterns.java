@@ -12,7 +12,7 @@ public class ShopPatterns {
     }
 
     public static boolean isItShowAllPattern(String command) {
-        Pattern pattern = Pattern.compile("^shop show --all$");
+        Pattern pattern = Pattern.compile("^shop show (-a|--all)$");
         Matcher matcher = pattern.matcher(command);
         return matcher.find();
     }

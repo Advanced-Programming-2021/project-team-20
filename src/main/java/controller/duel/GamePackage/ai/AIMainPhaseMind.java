@@ -8,7 +8,7 @@ import controller.duel.CardEffects.TrapEffectEnums.NormalTrapCardEffect;
 import controller.duel.GamePackage.*;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
-import model.AIFurtherActivationInput;
+import model.aidata.AIFurtherActivationInput;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 import model.cardData.General.RowOfCardLocation;

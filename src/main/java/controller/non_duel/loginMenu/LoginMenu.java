@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class LoginMenu {
 
     public String findCommand(String command) {
-        // find command from login menu patterns
+
         if (LoginMenuPatterns.isItCreateUserPattern(command)) {
             if (doesUserWithThisUsernameAlreadyExistsCreateMenu(command)) {
                 String username = LoginMenuPatterns.findUsernameCreateUser(command);

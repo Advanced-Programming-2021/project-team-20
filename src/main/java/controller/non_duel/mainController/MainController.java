@@ -126,4 +126,8 @@ public class MainController {
         } 
         return false;
     }
+
+    public void setDuel(StartDuel duel) {
+        this.duel = duel;
+    }
 }

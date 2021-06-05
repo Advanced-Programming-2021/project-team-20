@@ -11,7 +11,7 @@ import controller.duel.CardEffects.TrapEffectEnums.*;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
 import controller.duel.PreliminaryPackage.GameManager;
-import model.AIBoardAnalysis;
+import model.aidata.AIBoardAnalysis;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
 import model.cardData.General.CardPosition;

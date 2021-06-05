@@ -1,6 +1,6 @@
 package controller.duel.GamePackage.ai;
 
-import model.AIBoardAnalysis;
+import model.aidata.AIBoardAnalysis;
 
 public class AIKeyVariablesUpdater {
     //private boolean doesOpponentHaveMonstersWIthHighAttackInHisGraveyard;
