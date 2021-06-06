@@ -5,7 +5,7 @@ module Graphic.Copy {
     requires gson;
     requires opencsv;
     
-    opens sample.View to javafx.fxml;
+    opens project.View to javafx.fxml;
 
-    exports sample.View;
+    exports project.View;
 }
