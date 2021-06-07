@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.gson.*;
 import com.opencsv.CSVReader;
@@ -41,7 +39,6 @@ public class ImportAndExport {
             if (checkValidJsonCard(chosenFile)) {
                 return "card exists";
             } else {
-                System.out.println("in json");
                 return "this card does not exist";
             }
         } else if (fileType.equals(".csv")) {
@@ -112,102 +109,165 @@ public class ImportAndExport {
         return false;
     }
 
-    private void getValuesOfCardFromFile(String cardInformation) {
+    // private void getValuesOfCardFromFile(String cardInformation) {
 
-        JsonParser parser = new JsonParser();
-        JsonElement rootNode = parser.parse(cardInformation);
-        if (rootNode.isJsonObject()) {
-            JsonObject detailsOfCards = rootNode.getAsJsonObject();
-            String cardName = detailsOfCards.get("Name").getAsString();
-            String cardType = detailsOfCards.get("Card Type").getAsString();
-            String cardDesciption = detailsOfCards.get("Description").getAsString();
-            int price = detailsOfCards.get("Price").getAsInt();
+    //     JsonParser parser = new JsonParser();
+    //     JsonElement rootNode = parser.parse(cardInformation);
+    //     if (rootNode.isJsonObject()) {
+    //         JsonObject detailsOfCards = rootNode.getAsJsonObject();
+    //         String cardName = detailsOfCards.get("Name").getAsString();
+    //         String cardType = detailsOfCards.get("Card Type").getAsString();
+    //         String cardDesciption = detailsOfCards.get("Description").getAsString();
+    //         int price = detailsOfCards.get("Price").getAsInt();
 
-            if (Storage.getAllMonsterCards().containsKey(cardName)) {
-                addMonsterToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
-            } else if (Storage.getAllSpellAndTrapCards().containsKey(cardName)) {
-                addSpellAndTrapCardToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
+    //         if (Storage.getAllMonsterCards().containsKey(cardName)) {
+    //             addMonsterToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
+    //         } else if (Storage.getAllSpellAndTrapCards().containsKey(cardName)) {
+    //             addSpellAndTrapCardToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
+    //         }
+
+    //         try {
+    //             FileWriter fileWriter = new FileWriter("Resourses\\ExportedCards\\" + cardName + ".json");
+    //             fileWriter.write(cardDesciption);
+    //             fileWriter.close();
+    //         } catch (Exception e) {
+    //             e.printStackTrace();
+    //         }
+    //     }
+    // }
+
+    // private void addMonsterToAllCards(JsonObject detailsOfCards, String cardName, String cardType,
+    //         String cardDescription, int cardPrice) {
+
+    //     int level = detailsOfCards.get("Level").getAsInt();
+    //     String attribute = detailsOfCards.get("Attribute").getAsString();
+    //     String monsterType = detailsOfCards.get("Monster Type").getAsString();
+    //     int attackPower = detailsOfCards.get("Attack Power").getAsInt();
+    //     int defensePower = detailsOfCards.get("Defence Power").getAsInt();
+    //     // new MonsterCard(attackPower, defensePower, level,
+    //     // MonsterCardAttribute.valueOf(attribute),
+    //     // MonsterCardFamily.valueOf(formatterStringToEnum(monsterType)),
+    //     // MonsterCardValue.valueOf(cardType), cardName, cardDescription, null, 3,
+    //     // cardPrice, null, );
+    // }
+
+    // private String formatterStringToEnum(String string) {
+
+    //     if (string.contains("-")) {
+    //         string = string.replace('-', '_');
+    //     }
+    //     if (string.contains(" ")) {
+    //         string = string.replace(' ', '_');
+    //     }
+    //     return string.toUpperCase();
+    // }
+
+    // private void addSpellAndTrapCardToAllCards(JsonObject detailsOfCards, String cardName, String cardType,
+    //         String cardDescription, int cardPrice) {
+    //     String cardProperty = detailsOfCards.get("Card Property").getAsString();
+    //     String status = detailsOfCards.get("Status").getAsString();
+    //     // if (cardType.equals("Trap")) {
+    //     // new TrapCard(cardName, cardDescription,
+    //     // TrapCardValue.valueOf(cardProperty.toUpperCase()), null,
+    //     // status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
+    //     // } else {
+    //     // new SpellCard(cardName, cardDescription,
+    //     // SpellCardValue.valueOf(cardProperty), null,
+    //     // status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
+    //     // }
+    // }
+
+    public String exportCard(String cardname, File file) {
+
+        String fileType = file.getName().substring(file.getName().lastIndexOf("."), file.getName().length());
+        System.out.println(file.getAbsolutePath() + " " + cardname); 
+        if (fileType.equals(".json")) {
+            if (writeFileInJsonFormat(cardname, file)) {
+                return "card exported successfully";
+            } else {
+                return "ERROR";
             }
+        } else if (fileType.equals(".csv")) {
+            if (writeFileInCSVFormat(cardname, file)) {
+                return "card exported successfully";
+            } else {
+                return "ERROR";
+            }
+        }
+        return "ERROR";
+    }
 
+    private boolean writeFileInCSVFormat(String cardname, File file) {
+
+        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        if (allMonsterCards.containsKey(cardname)) {
+            FileWriter csvWriter;
             try {
-                FileWriter fileWriter = new FileWriter("Resourses\\ExportedCards\\" + cardName + ".json");
-                fileWriter.write(cardDesciption);
-                fileWriter.close();
+                csvWriter = new FileWriter(file.getAbsolutePath());
+                List<List<String>> wholeCSVFile = toCSVFormatMonsterCard(allMonsterCards.get(cardname));
+                for (List<String> rowData : wholeCSVFile) {
+                    csvWriter.append(String.join(",", rowData));
+                    csvWriter.append("\n");
+                }
+                csvWriter.flush();
+                csvWriter.close();
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
         }
-    }
 
-    private void addMonsterToAllCards(JsonObject detailsOfCards, String cardName, String cardType,
-            String cardDescription, int cardPrice) {
-
-        int level = detailsOfCards.get("Level").getAsInt();
-        String attribute = detailsOfCards.get("Attribute").getAsString();
-        String monsterType = detailsOfCards.get("Monster Type").getAsString();
-        int attackPower = detailsOfCards.get("Attack Power").getAsInt();
-        int defensePower = detailsOfCards.get("Defence Power").getAsInt();
-        // new MonsterCard(attackPower, defensePower, level,
-        // MonsterCardAttribute.valueOf(attribute),
-        // MonsterCardFamily.valueOf(formatterStringToEnum(monsterType)),
-        // MonsterCardValue.valueOf(cardType), cardName, cardDescription, null, 3,
-        // cardPrice, null, );
-    }
-
-    private String formatterStringToEnum(String string) {
-
-        if (string.contains("-")) {
-            string = string.replace('-', '_');
+        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
+        if (allSpellAndTrapCards.containsKey(cardname)) {
+            FileWriter csvWriter;
+            try {
+                csvWriter = new FileWriter(file.getAbsolutePath());
+                List<List<String>> wholeCSVFile = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(cardname));
+                for (List<String> rowData : wholeCSVFile) {
+                    csvWriter.append(String.join(",", rowData));
+                    csvWriter.append("\n");
+                }
+                csvWriter.flush();
+                csvWriter.close();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
-        if (string.contains(" ")) {
-            string = string.replace(' ', '_');
-        }
-        return string.toUpperCase();
+        return false;
     }
 
-    private void addSpellAndTrapCardToAllCards(JsonObject detailsOfCards, String cardName, String cardType,
-            String cardDescription, int cardPrice) {
-        String cardProperty = detailsOfCards.get("Card Property").getAsString();
-        String status = detailsOfCards.get("Status").getAsString();
-        // if (cardType.equals("Trap")) {
-        // new TrapCard(cardName, cardDescription,
-        // TrapCardValue.valueOf(cardProperty.toUpperCase()), null,
-        // status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
-        // } else {
-        // new SpellCard(cardName, cardDescription,
-        // SpellCardValue.valueOf(cardProperty), null,
-        // status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
-        // }
-    }
-
-    public String exportCard(String cardname) {
-
+    private boolean writeFileInJsonFormat(String cardname, File file) {
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         if (allMonsterCards.containsKey(cardname)) {
             FileWriter fileWriter;
             try {
-                fileWriter = new FileWriter("Resourses\\ImportedCards\\" + cardname + ".json");
+                fileWriter = new FileWriter(file.getAbsolutePath());
                 fileWriter.write(toJsonFormatMonsterCard(allMonsterCards.get(cardname)));
                 fileWriter.close();
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
-            return "card imported successfully!";
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         if (allSpellAndTrapCards.containsKey(cardname)) {
             FileWriter fileWriter;
             try {
-                fileWriter = new FileWriter("Resourses\\ImportedCards\\" + cardname + ".json");
+                fileWriter = new FileWriter(file.getAbsolutePath());
                 fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(cardname)));
                 fileWriter.close();
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
-            return "card imported successfuly!";
         }
-        return "card does not exist!";
+        return false;
     }
 
     private List<List<String>> toCSVFormatMonsterCard(Card card) {

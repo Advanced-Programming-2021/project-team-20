@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 public class MainMenuController implements Initializable {
@@ -50,7 +51,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void importAndExportMenu() {
-        Pane pane = null;
+        AnchorPane pane = null;
         try {
             pane = FXMLLoader.load(getClass().getResource("/project/fxml/importAndExport.fxml"));
         } catch (IOException e) {
