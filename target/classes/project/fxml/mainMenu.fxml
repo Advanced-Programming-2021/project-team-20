@@ -11,6 +11,6 @@
       <Button fx:id="profilebtn" layoutX="403.0" layoutY="385.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="25.0" prefWidth="195.0" text="Profile" />
       <Button fx:id="importAndExportbtn" layoutX="403.0" layoutY="429.0" mnemonicParsing="false" onAction="#importAndExportMenu" prefHeight="25.0" prefWidth="195.0" text="ImportAndExport" />
       <Button fx:id="backToLoginPagebtn" layoutX="402.0" layoutY="474.0" mnemonicParsing="false" onAction="#backToLoginPage" prefHeight="25.0" prefWidth="195.0" text="Back" />
-      <Button fx:id="scoreboardBtn" layoutX="403.0" layoutY="257.0" mnemonicParsing="false" onAction="#scoreBoardPage" prefHeight="25.0" prefWidth="195.0" text="ScoreBoard" />
+      <Button fx:id="scoreboardBtn" layoutX="403.0" layoutY="257.0" mnemonicParsing="false" onAction="#scoreboardPage" prefHeight="25.0" prefWidth="195.0" text="ScoreBoard" />
    </children>
 </AnchorPane>

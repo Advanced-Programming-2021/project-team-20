@@ -42,18 +42,18 @@ public class LoginController implements Initializable {
         if (Storage.getUserByName(usernameField.getText()) == null) {
             downLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             downLabel.setText("THIS USER DOES NOT EXIST");
-        } else if (Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
+        } else if (!Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
             downLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            downLabel.setText("THIS USER DOES NOT EXIST");
+            downLabel.setText("INCORRECT PASSWORD");
+        } else {
+            System.out.println("hi");
+            User.setOnlineUser(Storage.getUserByName(usernameField.getText()));
+            try {
+                new MainView().changeView("/project/fxml/mainMenu.fxml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        
-        User.setOnlineUser(Storage.getUserByName(usernameField.getText()));
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void signUpUser() {
