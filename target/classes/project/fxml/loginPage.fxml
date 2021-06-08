@@ -8,20 +8,27 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.LoginController">
    <children>
-      <Button fx:id="signUpButton" layoutX="450.0" layoutY="425.0" mnemonicParsing="false" onAction="#signUpUser" prefHeight="33.0" prefWidth="101.0" text="Sign Up" translateX="1.0" translateY="1.0" translateZ="1.0" />
-      <TextField fx:id="usernameField" layoutX="384.0" layoutY="244.0" onAction="#signUpUser" prefHeight="41.0" prefWidth="232.0" promptText="username" />
-      <PasswordField fx:id="passwordField" layoutX="386.0" layoutY="297.0" prefHeight="41.0" prefWidth="232.0" promptText="password" />
-      <Button fx:id="logInButton" layoutX="451.0" layoutY="384.0" mnemonicParsing="false" onAction="#loginUser" prefHeight="33.0" prefWidth="101.0" text="Log In" />
-      <Label fx:id="downLabel" layoutX="217.0" layoutY="230.0" prefHeight="33.0" prefWidth="232.0" />
-      <ImageView fitHeight="23.0" fitWidth="49.0" layoutX="567.0" layoutY="307.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="signUpButton" layoutX="415.0" layoutY="425.0" mnemonicParsing="false" onAction="#signUpUser" prefHeight="33.0" prefWidth="136.0" text="sign up" translateX="1.0" translateY="1.0" translateZ="1.0" />
+      <TextField fx:id="usernameField" layoutX="341.0" layoutY="244.0" onAction="#signUpUser" prefHeight="41.0" prefWidth="287.0" promptText="username">
+         <font>
+            <Font size="22.0" />
+         </font></TextField>
+      <PasswordField fx:id="passwordField" layoutX="341.0" layoutY="297.0" prefHeight="41.0" prefWidth="287.0" promptText="password">
+         <font>
+            <Font name="Old English Text MT" size="22.0" />
+         </font></PasswordField>
+      <Button fx:id="logInButton" layoutX="416.0" layoutY="384.0" mnemonicParsing="false" onAction="#loginUser" prefHeight="33.0" prefWidth="136.0" text="log in" />
+      <Label fx:id="downLabel" layoutX="386.0" layoutY="194.0" prefHeight="33.0" prefWidth="232.0" />
+      <ImageView fitHeight="23.0" fitWidth="49.0" layoutX="579.0" layoutY="307.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/passwordLabel.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="35.0" fitWidth="41.0" layoutX="575.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="35.0" fitWidth="41.0" layoutX="587.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/userLabel.jpg" />
          </image>

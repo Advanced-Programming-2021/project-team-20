@@ -59,7 +59,10 @@
       <Button fx:id="backbtn" layoutX="73.0" layoutY="644.0" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
       <Button fx:id="previousCardsbtn" layoutX="325.0" layoutY="527.0" mnemonicParsing="false" onAction="#previousPage" text="Previous" />
       <Button fx:id="importbtn" layoutX="814.0" layoutY="634.0" mnemonicParsing="false" onAction="#importFiles" text="Import" />
-      <Button fx:id="exportbtn" layoutX="427.0" layoutY="644.0" mnemonicParsing="false" onAction="#exportFiles" text="Export" />
+      <Button fx:id="exportbtn" alignment="CENTER" layoutX="427.0" layoutY="644.0" mnemonicParsing="false" onAction="#exportFiles" text="Export" textAlignment="CENTER">
+         <font>
+            <Font name="Old English Text MT" size="28.0" />
+         </font></Button>
       <Button fx:id="nextCardsbtn" layoutX="525.0" layoutY="527.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="33.0" prefWidth="103.0" text="Next" />
       <ImageView fitHeight="278.0" fitWidth="20.0" layoutX="705.0" layoutY="-12.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -117,9 +120,9 @@
          </image>
       </ImageView>
       <Rectangle fx:id="exportRectangle" arcHeight="5.0" arcWidth="5.0" height="385.0" layoutX="24.0" layoutY="140.0" opacity="0.07" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="213.0" />
-      <Label fx:id="exportLabel" layoutX="366.0" layoutY="10.0" prefHeight="41.0" prefWidth="213.0">
+      <Label fx:id="exportLabel" layoutX="388.0" layoutY="10.0" prefHeight="41.0" prefWidth="307.0">
          <font>
-            <Font size="24.0" />
+            <Font name="System Bold Italic" size="25.0" />
          </font>
       </Label>
       <Label fx:id="importLabel" layoutX="743.0" layoutY="10.0" prefHeight="41.0" prefWidth="246.0">
