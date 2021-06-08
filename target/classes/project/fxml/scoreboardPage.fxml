@@ -5,8 +5,9 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #123;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.ScoreboardController">
    <children>
-      <Button fx:id="showButton" layoutX="440.0" layoutY="30.0" mnemonicParsing="false" onAction="#fillLabel" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #40C606;" text="Show" textFill="#171515" />
-      <Button fx:id="returnBtn" layoutX="440.0" layoutY="600.0" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #40c606;" text="return" textFill="#1e1d1d" />
-      <ListView fx:id="listView1" layoutX="150.0" layoutY="85.0" prefHeight="470.0" prefWidth="700.0" />
+      <Button layoutX="438.0" layoutY="41.0" mnemonicParsing="false" onAction="#fillLabel" prefHeight="33.0" prefWidth="125.0" style="-fx-background-color: #45e00c;" text="Show" textFill="#221e1e" />
+      <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" layoutX="221.0" layoutY="127.0" prefHeight="146.0" prefWidth="159.0" textAlignment="CENTER" />
+      <Button fx:id="returnBtn" layoutX="440.0" layoutY="650.0" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #45e00c;" text="return" textFill="#282727" />
+      <ListView layoutX="62.0" layoutY="99.0" prefHeight="530.0" prefWidth="877.0" />
    </children>
 </AnchorPane>

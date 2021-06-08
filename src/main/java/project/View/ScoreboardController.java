@@ -9,12 +9,11 @@ import java.io.IOException;
 
 public class ScoreboardController {
     @FXML
-    private Label label;
-    @FXML
-    private Label listView;
+    private Label listView11;
     public void fillLabel() {
-        label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-        label.setText(new Scoreboard().findCommands("scoreboard show"));
+//        label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
+//        label.setText(new Scoreboard().findCommands("scoreboard show"));
+//        listView1.setText("Hello");
     }
 
     public void returnToMainMenu(ActionEvent actionEvent) {
