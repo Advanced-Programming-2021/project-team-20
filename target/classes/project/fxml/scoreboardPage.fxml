@@ -3,15 +3,69 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #123;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.ScoreboardController">
    <children>
       <Button layoutX="438.0" layoutY="41.0" mnemonicParsing="false" onAction="#fillLabel" prefHeight="33.0" prefWidth="125.0" style="-fx-background-color: #45e00c;" text="Show" textFill="#221e1e" />
-      <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" layoutX="221.0" layoutY="127.0" prefHeight="146.0" prefWidth="159.0" textAlignment="CENTER" />
       <Button fx:id="returnBtn" layoutX="440.0" layoutY="650.0" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #45e00c;" text="return" textFill="#282727" />
       <ListView layoutX="62.0" layoutY="99.0" prefHeight="530.0" prefWidth="877.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="100.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="110.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="240.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="500.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="780.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+      <Label layoutX="115.0" layoutY="130.0" text="Ranking" textFill="#1fe12c">
+         <font>
+            <Font name="Constantia Bold" size="25.0" />
+         </font></Label>
+      <Label layoutX="160.0" layoutY="180.0" text="1" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="220.0" text="2" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="260.0" text="3" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="300.0" text="4" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="340.0" text="5" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="385.0" text="6" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="420.0" text="7" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="465.0" text="8" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="160.0" layoutY="505.0" text="9" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="155.0" layoutY="555.0" text="10" textFill="#1e1e1e">
+         <font>
+            <Font name="Constantia Bold" size="47.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
