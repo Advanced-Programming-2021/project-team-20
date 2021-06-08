@@ -35,12 +35,21 @@ public class ScoreboardController {
         System.out.println("hi");
         final ObservableList<Person> data = FXCollections.observableArrayList(
                 new Person(1, "ALI", 12),
-                new Person(2, "Mohammad", 10)
+                new Person(2, "Mohammad", 10),
+                new Person(3, "ALI", 9),
+                new Person(4, "Mohammad", 8),
+                new Person(5, "ALI", 7),
+                new Person(6, "Mohammad", 6),
+                new Person(7, "ALI", 5),
+                new Person(8, "Mohammad", 4),
+                new Person(9, "ALI", 3),
+                new Person(10, "Mohammad", 0)
         );
         TableColumn<Person, Integer> rankingColumn = new TableColumn<>("RANKING");
         rankingColumn.setCellValueFactory(new PropertyValueFactory<>("ranking"));
         rankingColumn.setStyle( "-fx-alignment: CENTER;");
-        rankingColumn.setMinWidth(100);
+        rankingColumn.setMinWidth(97);
+
 
         TableColumn<Person, String> usernameColumn = new TableColumn<>("USERNAME");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -58,14 +67,6 @@ public class ScoreboardController {
         tableView.setItems(data);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableView.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
-
-//        tableView.getColumns().add(rankingColumn);
-//        tableView.getColumns().add(usernameColumn);
-//        tableView.getColumns().add(scoreboardColumn);
-//
-//
-//        tableView.getItems().add(new Person(1, "John", 12));
-//        tableView.getItems().add(new Person(2, "Jane", 9));
 
     }
 

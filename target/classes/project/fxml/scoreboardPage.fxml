@@ -7,7 +7,7 @@
    <children>
       <Button fx:id="fillButton" layoutX="438.0" layoutY="41.0" mnemonicParsing="false" onAction="#fillLabel" prefHeight="33.0" prefWidth="125.0" style="-fx-background-color: #45e00c;" text="Show" textFill="#221e1e" />
       <Button fx:id="returnButton" layoutX="440.0" layoutY="650.0" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #45e00c;" text="return" textFill="#282727" />
-      <TableView fx:id="tableView" layoutX="200.0" layoutY="100.0" prefHeight="500.0" prefWidth="600.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="100.0">
+      <TableView fx:id="tableView" layoutX="200.0" layoutY="100.0" prefHeight="267.0" prefWidth="600.0">
         <columns>
 <!--          <TableColumn fx:id="rankingColumn" prefWidth="100.0" text="RANKING" />-->
 <!--          <TableColumn fx:id="usernameColumn" prefWidth="400.0" text="USERNAME" />-->
