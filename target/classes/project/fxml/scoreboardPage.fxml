@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #123;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.ScoreboardController">
    <children>
@@ -9,5 +10,8 @@
       <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" layoutX="221.0" layoutY="127.0" prefHeight="146.0" prefWidth="159.0" textAlignment="CENTER" />
       <Button fx:id="returnBtn" layoutX="440.0" layoutY="650.0" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #45e00c;" text="return" textFill="#282727" />
       <ListView layoutX="62.0" layoutY="99.0" prefHeight="530.0" prefWidth="877.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="100.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="240.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="500.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" layoutX="780.0" layoutY="110.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
    </children>
 </AnchorPane>
