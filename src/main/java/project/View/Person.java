@@ -3,15 +3,15 @@ package project.View;
 public class Person {
 
     private int ranking;
-    private String username = null;
+    private String nickname = null;
     private int score;
 
     public Person() {
     }
 
-    public Person(int ranking, String username, int score) {
+    public Person(int ranking, String nickname, int score) {
         this.ranking = ranking;
-        this.username = username;
+        this.nickname = nickname;
         this.score = score;
     }
 
@@ -31,12 +31,12 @@ public class Person {
         this.score = score;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String firstName) {
-        this.username = firstName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
 }

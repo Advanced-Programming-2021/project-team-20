@@ -32,18 +32,17 @@ public class ScoreboardController {
     private TableColumn<Person, Integer> scoreColumn;
 
     public void fillLabel() {
-        System.out.println("hi");
+        String allPeople = new Scoreboard().findCommands("scoreboard show");
+        String[] allPeopleSplited = allPeople.split(",");
+        Person[] person = new Person[allPeopleSplited.length/3];
+        for (int i = 0; i < person.length; i++) {
+            int ranking = Integer.parseInt(allPeopleSplited[i*3]);
+            String nickname = allPeopleSplited[i*3 + 1];
+            int score = Integer.parseInt(allPeopleSplited[i*3 + 2]);
+            person[i] = new Person(ranking, nickname, score);
+        }
         final ObservableList<Person> data = FXCollections.observableArrayList(
-                new Person(1, "ALI", 12),
-                new Person(2, "Mohammad", 10),
-                new Person(3, "ALI", 9),
-                new Person(4, "Mohammad", 8),
-                new Person(5, "ALI", 7),
-                new Person(6, "Mohammad", 6),
-                new Person(7, "ALI", 5),
-                new Person(8, "Mohammad", 4),
-                new Person(9, "ALI", 3),
-                new Person(10, "Mohammad", 0)
+                person
         );
         TableColumn<Person, Integer> rankingColumn = new TableColumn<>("RANKING");
         rankingColumn.setCellValueFactory(new PropertyValueFactory<>("ranking"));
@@ -51,8 +50,8 @@ public class ScoreboardController {
         rankingColumn.setMinWidth(97);
 
 
-        TableColumn<Person, String> usernameColumn = new TableColumn<>("USERNAME");
-        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        TableColumn<Person, String> usernameColumn = new TableColumn<>("NICKNAME");
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
         usernameColumn.setStyle( "-fx-alignment: CENTER;");
         usernameColumn.setMinWidth(400);
 
