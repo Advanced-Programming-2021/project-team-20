@@ -361,4 +361,14 @@ public class Storage {
         return allMonsterCards.containsKey(cardname) || allSpellAndTrapCards.containsKey(cardname);
     }
 
+    public static Card getCardByName(String cardName) {
+        if (allMonsterCards.containsKey(cardName)) {
+            return allMonsterCards.get(cardName);
+        }
+        if (allSpellAndTrapCards.containsKey(cardName)) {
+            return allSpellAndTrapCards.get(cardName);
+        }
+        return null;
+    }
+
 }

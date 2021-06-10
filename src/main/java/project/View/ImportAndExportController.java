@@ -124,7 +124,7 @@ public class ImportAndExportController implements Initializable {
                 rectangle.setFill(new ImagePattern(image));
                 rectangle.setArcHeight(20);
                 rectangle.setArcWidth(20);
-                rectangle.setId("arg0");
+                //rectangle.setId("arg0");
                 // rectangle.setText
                 DropShadow e = new DropShadow();
                 e.setWidth(6);
@@ -148,8 +148,16 @@ public class ImportAndExportController implements Initializable {
 
     public void createSceneAndCardPictures(AnchorPane pane) {
         setAnchorPane(pane);
-        pane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsPlaying));
-        new MainView().changeScene(pane);
+        MainView.changeScene(pane);
+        for (int i = 0; i < allCardsInDifferentPages.get(whichPageIsPlaying).size(); i++) {
+            pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsPlaying).get(i));
+            MainView.changeScene(pane);
+            // try {
+            //     Thread.sleep(500);
+            // } catch (Exception e) {
+            //     System.out.println("TODO: handle exception");
+            // }
+        }
     }
 
     public void nextPage() {
@@ -216,7 +224,7 @@ public class ImportAndExportController implements Initializable {
             exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             exportLabel.setText("FILE CANNOT BE EXPORTED");
             return;
-        } 
+        }
         exportLabel.setStyle("-fx-text-fill:green;-fx-padding:4 0 8 0;-fx-font-weight:bold");
         exportLabel.setText("FILE EXPORTED SUCCESSFULLY");
     }

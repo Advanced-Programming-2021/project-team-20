@@ -54,10 +54,9 @@ public class ProfileController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        User user = Storage.getAllUsers().get(0);
-        showImage((user.getImagePath()));
-        nicknameLabel.setText(user.getNickname());
-        usernameLabel.setText(user.getName());
+        showImage((LoginController.getOnlineUser().getImagePath()));
+        nicknameLabel.setText(LoginController.getOnlineUser().getNickname());
+        usernameLabel.setText(LoginController.getOnlineUser().getName());
     }
 
     private void showImage(String path) {
@@ -92,9 +91,8 @@ public class ProfileController implements Initializable {
     }
 
     private String makeImageAndGetItsPath() {
-        User user = Storage.getAllUsers().get(0);
         String imagePath = "src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\" + imageName
-                + user.getName() + ".png";
+                + LoginController.getOnlineUser().getName() + ".png";
         try {
             File file = new File(imagePath);
             FileWriter fileWriter = new FileWriter(file);
@@ -113,7 +111,7 @@ public class ProfileController implements Initializable {
             // label.setText("FILL FIELDS");
             // return;
         }
-        if (!User.getOnlineUser().getPassword().equals(currentPasswordField.getText())) {
+        if (!LoginController.getOnlineUser().getPassword().equals(currentPasswordField.getText())) {
             // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             // label.setText("CURRENT PASSWORD IS WRONG");
             // return;
@@ -124,7 +122,7 @@ public class ProfileController implements Initializable {
             // return;
         }
 
-        User.getOnlineUser().setPassword(newPasswordField.getText());
+        LoginController.getOnlineUser().setPassword(newPasswordField.getText());
 
     }
 
@@ -140,7 +138,7 @@ public class ProfileController implements Initializable {
             // return;
         }
 
-        Storage.getAllUsers().get(0).setNickname(newNicknameField.getText());
+        LoginController.getOnlineUser().setNickname(newNicknameField.getText());
 
     }
 

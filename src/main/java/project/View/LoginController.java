@@ -28,6 +28,8 @@ public class LoginController implements Initializable {
     @FXML
     private Label downLabel;
 
+    private static User onlineUser;
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         //
@@ -47,7 +49,7 @@ public class LoginController implements Initializable {
             downLabel.setText("THIS USER DOES NOT EXIST");
         }
         
-        User.setOnlineUser(Storage.getUserByName(usernameField.getText()));
+        setOnlineUser(Storage.getUserByName(usernameField.getText()));
         try {
             new MainView().changeView("/project/fxml/mainMenu.fxml");
         } catch (IOException e) {
@@ -63,5 +65,13 @@ public class LoginController implements Initializable {
             e.printStackTrace();
         }
     }  
+
+    public static void setOnlineUser(User onlineUser) {
+        LoginController.onlineUser = onlineUser;
+    }
+
+    public static User getOnlineUser() {
+        return null;
+    }
 
 }

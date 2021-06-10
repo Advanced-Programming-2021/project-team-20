@@ -57,8 +57,7 @@ public class RegisterController implements Initializable {
 
         createUser();
 
-        try {
-            
+        try {    
             new MainView().changeView("/project/fxml/loginPage.fxml");
         } catch (IOException e) {
             e.printStackTrace();

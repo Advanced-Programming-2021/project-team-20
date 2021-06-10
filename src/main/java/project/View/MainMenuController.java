@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
 public class MainMenuController implements Initializable {
 
@@ -41,8 +39,13 @@ public class MainMenuController implements Initializable {
     }
 
     public void deckMenu() {
-        System.out.println("deck");
-        // TODO
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("/project/fxml/oneDeckPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new DeckMenuController().showPage(pane, null);
     }
 
     public void shopMenu() {
@@ -57,7 +60,7 @@ public class MainMenuController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-      new ImportAndExportController().createSceneAndCardPictures(pane);
+        new ImportAndExportController().createSceneAndCardPictures(pane);
     }
 
     public void backToLoginPage() {

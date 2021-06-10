@@ -1,5 +1,6 @@
 package project.model.cardData.General;
 
+import javafx.scene.image.Image;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
@@ -14,6 +15,7 @@ public class Card {
     protected CardPosition cardPosition;
     protected int numberOfAllowedUsages;
     protected int cardPrice;
+    protected Image image;
 
     public Card(String cardName, CardType cardType, String cardDescription, CardPosition cardPosition,
             int numberOfAllowedUsages, int cardPrice, String imagePath) {
@@ -29,6 +31,10 @@ public class Card {
         this.numberOfAllowedUsages = numberOfAllowedUsages;
         this.cardPrice = cardPrice;
         this.imagePath = imagePath;
+    }
+
+    public Image getImage() {
+        return image;
     }
 
     public String getImagePath() {
@@ -69,6 +75,14 @@ public class Card {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void setCardType(CardType cardType) {

@@ -13,7 +13,6 @@ public class User {
     private int money;
     private HashMap<String, Deck> decks = new HashMap<>();
     private ArrayList<String> allUselessCards = new ArrayList<>();
-    private static User onlineUser; 
 
     public User(String username, String nickname, String password, String imagePath) {
         this.name = username;
@@ -99,13 +98,6 @@ public class User {
 
     public void addCardToAllUselessCards(String cardname) {
         allUselessCards.add(cardname);
-    }
-
-    public static void setOnlineUser(User user){
-        onlineUser = user;
-    }
-    public static User getOnlineUser(){
-        return onlineUser;
     }
 
 }

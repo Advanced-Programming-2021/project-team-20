@@ -14,29 +14,15 @@
    -fx-background-size: 100%  100%;
 
 }
- 
 
-.label {
-  
-   -fx-font-family: "Old English Text MT";
-   -fx-text-fill: white;
-   -fx-font-size: 24pt;
-   -fx-opacity: 1;
-}
+.scroll-pane .viewport {
+   -fx-background-image: url("importAndExport.PNG");
+} 
 
+.chart-plot-background3{
+   -fx-background-image: url('deckPackground.PNG');
+   -fx-background-size: 100%  100%;
 
-.label-bright {
-   -fx-font-size: 11pt;
-   -fx-font-family: "Segoe UI Semibold";
-   -fx-text-fill: white;
-   -fx-opacity: 1;
-}
-
-.label-header {
-   -fx-font-size: 32pt;
-   -fx-font-family: "Segoe UI Light";
-   -fx-text-fill: white;
-   -fx-opacity: 1;
 }
 
 .table-view {
@@ -105,7 +91,6 @@
 }
 
 .text-field {
-  
    -fx-font-family: "Old English Text MT";
 }
 
