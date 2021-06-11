@@ -50,7 +50,7 @@ public class ImportAndExportController implements Initializable {
     private Label exportLabel;
     private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Rectangle>> allCardsInDifferentPages;
-    private int whichPageIsPlaying = 0;
+    private int whichPageIsShowing = 0;
     private static AnchorPane anchorPane;
     private Rectangle chosenRectangleForExport;
 
@@ -73,19 +73,17 @@ public class ImportAndExportController implements Initializable {
                 allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards, (i + 1))));
             }
         }
-
         setEffectOfpreviousAndnextCardsbtn();
     }
 
     private void setEffectOfpreviousAndnextCardsbtn() {
-        System.out.println(whichPageIsPlaying + 1 + " " + allCardsInDifferentPages.size());
-        if (whichPageIsPlaying + 1 == allCardsInDifferentPages.size()) {
+        if (whichPageIsShowing + 1 == allCardsInDifferentPages.size()) {
             nextCardsbtn.setDisable(true);
         } else {
             nextCardsbtn.setDisable(false);
         }
 
-        if (whichPageIsPlaying == 0) {
+        if (whichPageIsShowing == 0) {
             previousCardsbtn.setDisable(true);
         } else {
             previousCardsbtn.setDisable(false);
@@ -149,8 +147,8 @@ public class ImportAndExportController implements Initializable {
     public void createSceneAndCardPictures(AnchorPane pane) {
         setAnchorPane(pane);
         MainView.changeScene(pane);
-        for (int i = 0; i < allCardsInDifferentPages.get(whichPageIsPlaying).size(); i++) {
-            pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsPlaying).get(i));
+        for (int i = 0; i < allCardsInDifferentPages.get(whichPageIsShowing).size(); i++) {
+            pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsShowing).get(i));
             MainView.changeScene(pane);
             // try {
             //     Thread.sleep(500);
@@ -161,17 +159,17 @@ public class ImportAndExportController implements Initializable {
     }
 
     public void nextPage() {
-        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsPlaying));
-        whichPageIsPlaying++;
+        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        whichPageIsShowing++;
         setEffectOfpreviousAndnextCardsbtn();
-        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsPlaying));
+        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
     }
 
     public void previousPage() {
-        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsPlaying));
-        whichPageIsPlaying--;
+        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        whichPageIsShowing--;
         setEffectOfpreviousAndnextCardsbtn();
-        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsPlaying));
+        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
     }
 
     public void importFiles() {

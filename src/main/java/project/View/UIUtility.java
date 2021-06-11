@@ -26,12 +26,38 @@ public class UIUtility {
     private static List<Rectangle> allSideDeckRectangle;
     private static List<Rectangle> allScrollBarRectangle;
     private static List<Rectangle> allScrollBarBackGroundRectangles;
+    private static List<Rectangle> fourRectangleToShowDecks;
+    private static Image validDeckImage;
+    private static Image invalidDeckImage;
     private static ArrayList<Card> allCards = new ArrayList<>();
     private static List<Label> allScrollBarLabels = new ArrayList<>();
     private static Card unknownCard;
     private static List<Label> numberOfCardslabels = new ArrayList<>();
 
     private static List<Label> allCardDiscriptionLabels;
+
+    public static void createPreliminaryToStartProgram() {
+        createAllCardDiscriptionLabels();
+        createAllCards();
+        createAllScrooBarLabels();
+        createFourRectangleToShowDecks();
+        // createImage(cardName);
+        createLabelToShowSizeOfCardsInDeck();
+        createNmaeOfCards();
+        createOneRectangleForEachCard();
+        validDeckImage = createValidAndInvalidDeckImage("validDeck");
+        invalidDeckImage = createValidAndInvalidDeckImage("invalidDeck");
+    }
+
+    private static Image createValidAndInvalidDeckImage(String imagename) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream("src\\main\\resources\\project\\images\\deckpage\\" + imagename + ".PNG");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Image(stream);
+    }
 
     protected static void createOneRectangleForEachCard() {
 
@@ -85,6 +111,14 @@ public class UIUtility {
             rectangle.setStrokeWidth(5);
             rectangle.setFill(Color.CORAL);
             allScrollBarBackGroundRectangles.add(rectangle);
+        }
+    }
+
+    public static void createFourRectangleToShowDecks() {
+        fourRectangleToShowDecks = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Rectangle rectangle = new Rectangle(290, 190);
+            fourRectangleToShowDecks.add(rectangle);
         }
     }
 
@@ -223,13 +257,11 @@ public class UIUtility {
         InputStream stream = null;
         try {
             stream = new FileInputStream(
-                    "src\\main\\resources\\project\\images\\Cards\\123\\" + cardName.replaceAll("\\s", "") + ".jpg");
+                    "src\\main\\resources\\project\\images\\Cards\\" + cardName.replaceAll("\\s", "") + ".jpg");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Image image = new Image(stream);
-
-        return image;
+        return new Image(stream);
     }
 
     public static Card getCardByName(String cardName) {
@@ -293,5 +325,17 @@ public class UIUtility {
 
     public static List<Rectangle> getAllScrollBarBackGroundRectangles() {
         return allScrollBarBackGroundRectangles;
+    }
+
+    public static Image getValidDeckImage() {
+        return validDeckImage;
+    }
+
+    public static Image getInvalidDeckImage() {
+        return invalidDeckImage;
+    }
+
+    public static List<Rectangle> getFourRectangleToShowDecks() {
+        return fourRectangleToShowDecks;
     }
 }

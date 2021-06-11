@@ -49,11 +49,17 @@ public class MainView extends Application {
 
     
     public static void main(String[] args) throws IOException {
-        UIUtility.createOneRectangleForEachCard();
-        UIUtility.createAllCards();
-        UIUtility.createAllCardDiscriptionLabels();
-        UIUtility.createAllScrooBarLabels();
-        UIUtility.createLabelToShowSizeOfCardsInDeck();
+        // for (int i = 0; i < 1000000000; i++) {
+        //     for (int j = 0; j < 2000000000; j++) {
+        //         for (int j2 = 0; j2 < 2000000000; j2++) {
+        //             for (int k = 0; k < 1; k++) {
+        //                 //
+        //             }
+        //         }
+        //     }
+        //     System.out.println("sla");
+        // }
+        UIUtility.createPreliminaryToStartProgram();
         launch(args);
         System.out.println("dasdasd");
     }

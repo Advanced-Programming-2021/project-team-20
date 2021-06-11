@@ -108,7 +108,6 @@ public class DeckCommands {
             showDeck.append(showCardsInMainOrSideDeck(
                     allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
         }
-
         return showDeck.toString();
     }
 
@@ -128,12 +127,10 @@ public class DeckCommands {
                         + allSpellAndTrapCard.get(cardsInDeck.get(i)).getCardDescription());
             }
         }
-
         return monsterCardsBuilder.toString() + "\nSpell and Traps:" + spellAndTrapCardsBuilder.toString();
     }
 
     private String showAllDecks() {
-
         HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
         StringBuilder showAllDecks = new StringBuilder();
         showAllDecks.append("Decks:\nActive deck:\n");
@@ -159,7 +156,6 @@ public class DeckCommands {
                         .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ? "valid" : "invalid");
             }
         }
-
         showAllDecks.append("Other Decks:" + showOtherDecks.toString());
         return showAllDecks.toString();
     }
@@ -219,21 +215,21 @@ public class DeckCommands {
         return "deck activated successfully!";
     }
 
-    private String deleteDeck(String deckname) {
+    public String deleteDeck(String deckname) {
         HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
         if (allDecksOfUser == null || !allDecksOfUser.containsKey(deckname)) {
-            return "deck with name " + deckname + " does not exist";
+            return "deck does not exist";
         }
         Profile.getOnlineUser().deleteDeck(deckname);
         return "deck deleted successfully!";
 
     }
 
-    private String createDeck(String deckname) {
+    public String createDeck(String deckname) {
 
         HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
         if (allDecksOfUser != null && allDecksOfUser.containsKey(deckname)) {
-            return "deck with name " + deckname + " already exists";
+            return "deck already exists";
         }
         Profile.getOnlineUser().addDeckToAllDecks(deckname, new Deck(deckname));
         return "deck created successfully!";
@@ -246,6 +242,8 @@ public class DeckCommands {
         List<String> mainDeckCards = LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
         sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
+        sizeOfEachPart.put("sideDeckSize",
+                LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfSideDeck());
         for (int i = 0; i < mainDeckCards.size(); i++) {
             if (allMonsterCards.containsKey(mainDeckCards.get(i))) {
                 numberOfMonsterCards++;
@@ -262,5 +260,4 @@ public class DeckCommands {
         sizeOfEachPart.put("trapsSize", numberOfTrapCards);
         return sizeOfEachPart;
     }
-
 }

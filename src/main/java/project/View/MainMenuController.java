@@ -29,7 +29,6 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-
         // TODO
     }
 
@@ -38,14 +37,14 @@ public class MainMenuController implements Initializable {
         // TODO
     }
 
-    public void deckMenu() {
+    public void goToDeckMenu() {
         AnchorPane pane = null;
         try {
-            pane = FXMLLoader.load(getClass().getResource("/project/fxml/oneDeckPage.fxml"));
+            pane = FXMLLoader.load(getClass().getResource("/project/fxml/wholeDecksPage.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new DeckMenuController().showPage(pane, null);
+        new wholeDeckPageMenuController().showPage(pane);
     }
 
     public void shopMenu() {
@@ -53,7 +52,7 @@ public class MainMenuController implements Initializable {
         // TODO
     }
 
-    public void importAndExportMenu() {
+    public void goToImportAndExportMenu() {
         AnchorPane pane = null;
         try {
             pane = FXMLLoader.load(getClass().getResource("/project/fxml/importAndExport.fxml"));
@@ -79,7 +78,7 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    public void scoreboardPage() {
+    public void scoreBoardPage() {
         try {
             new MainView().changeView("/project/fxml/scoreboardPage.fxml");
         } catch (IOException e) {

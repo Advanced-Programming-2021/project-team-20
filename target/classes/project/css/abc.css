@@ -15,8 +15,12 @@
 
 }
 
-.scroll-pane .viewport {
+.scroll-pane .viewport1 {
    -fx-background-image: url("importAndExport.PNG");
+} 
+
+.scroll-pane .viewport2 {
+   
 } 
 
 .chart-plot-background3{
