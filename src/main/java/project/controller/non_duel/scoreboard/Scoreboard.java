@@ -33,11 +33,11 @@ public class Scoreboard {
             ArrayList<User> usersWithSameScore = getUserByScore(scoreOfUsers.get(i));
 
             if (i > 0) {
-                finalResult.append("\n");
+                finalResult.append(",");
             }
 
             if (usersWithSameScore.size() == 1) {
-                finalResult.append(rankOfPlayers + "-" + usersWithSameScore.get(0).getNickname() + ": ");
+                finalResult.append(rankOfPlayers + "," + usersWithSameScore.get(0).getNickname() + ",");
                 finalResult.append(usersWithSameScore.get(0).getScore());
                 rankOfPlayers++;
             } else {
@@ -60,12 +60,12 @@ public class Scoreboard {
 
         for (int i = 0; i < nicknames.size(); i++) {
             if (i > 0) {
-                finalResult.append("\n");
+                finalResult.append(",");
             }
             for (int j = 0; j < nicknames.size(); j++) {
                 if (usersWithSameScroe.get(i).getNickname().equals(nicknames.get(j))) {
-                    finalResult.append(rankOfPlayers + "-" + usersWithSameScroe.get(i).getNickname());
-                    finalResult.append(": " + usersWithSameScroe.get(i).getScore());
+                    finalResult.append(rankOfPlayers + "," + usersWithSameScroe.get(i).getNickname());
+                    finalResult.append("," + usersWithSameScroe.get(i).getScore());
                     break;
                 }
             }

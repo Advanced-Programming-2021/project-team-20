@@ -79,8 +79,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    public void scoreBoardPage() {
-
+    public void scoreboardPage() {
+        try {
+            new MainView().changeView("/project/fxml/scoreboardPage.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
