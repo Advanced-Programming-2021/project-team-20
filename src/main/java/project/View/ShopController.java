@@ -1,7 +1,9 @@
 package project.View;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
@@ -18,12 +20,12 @@ import java.util.ResourceBundle;
 public class ShopController implements Initializable {
     @FXML
     GridPane gameBoard;
-    private CardView[][] cards;
-    private CardForShow[][] board;
+    private static CardView[][] cards;
+    private static CardForShow[][] board;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.board = new CardForShow[5][8];
+        board = new CardForShow[5][8];
         fillBoard();
         showCards(board);
     }
@@ -32,13 +34,26 @@ public class ShopController implements Initializable {
         cards = new CardView[board.length][board[0].length];
         for (int i = 0 ; i < board.length ; i++) {
             for (int j = 0 ; j < board[i].length ; j++) {
-                CardView rectangle = getCardRectangle(board[i][j]);
+//                CardView rectangle = getCardRectangle(board[i][j]);
+                CardView rectangle = (CardView) getNodeByRowColumnIndex(i, j, gameBoard);
                 gameBoard.add(rectangle, j, i);
                 //doesn't work, how to add fill with picture?
-//                cards[i][j].setFill(board[i][j].getFrontImage());
+                rectangle.setFill(board[i][j].getFrontImage());
                 cards[i][j] = rectangle;
             }
         }
+    }
+
+    public static Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+        Node result = null;
+        ObservableList<Node> children = gridPane.getChildren();
+        for (Node node : children) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+        return result;
     }
 
     private CardView getCardRectangle(CardForShow card) {
@@ -52,8 +67,7 @@ public class ShopController implements Initializable {
 
     private void fillBoard() {
         String[] labels = new String[]{
-                "C:/Users/98993/Desktop/Intellij Projects/project-team-203333333333/src/main/"
-                        + "resources/project/css/Monsters/AlexandriteDragon.jpg",
+                ShopController.class.getResource("/project/css/Monsters/AlexandriteDragon.jpg").toExternalForm(),
         };
         List<String> fronts =  Arrays.asList(labels);
         for (int i = 0 ; i < board.length ; i++) {
