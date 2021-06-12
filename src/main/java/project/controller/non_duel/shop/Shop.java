@@ -18,7 +18,6 @@ public class Shop {
             }
             Card card = getCardWithName(cardName);
             int cardAmount = card.getCardPrice();
-        //    System.out.println(userAmount + "  " + cardAmount);
             if (cardAmount > userAmount) {
                 return "not enough money";
             }

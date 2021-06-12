@@ -1,18 +1,13 @@
 package project.View;
 
-import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-import javafx.stage.Stage;
 import project.controller.non_duel.scoreboard.Scoreboard;
+import project.View.Components.Person;
 
 import java.io.IOException;
 
@@ -41,16 +36,20 @@ public class ScoreboardController {
             int score = Integer.parseInt(allPeopleSplited[i * 3 + 2]);
             person[i] = new Person(ranking, nickname, score);
         }
-        final ObservableList<Person> data = FXCollections.observableArrayList(person);
+        final ObservableList<Person> data = FXCollections.observableArrayList(
+                person
+        );
         TableColumn<Person, Integer> rankingColumn = new TableColumn<>("RANKING");
         rankingColumn.setCellValueFactory(new PropertyValueFactory<>("ranking"));
         rankingColumn.setStyle("-fx-alignment: CENTER;");
         rankingColumn.setMinWidth(97);
 
+
         TableColumn<Person, String> usernameColumn = new TableColumn<>("NICKNAME");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
         usernameColumn.setStyle("-fx-alignment: CENTER;");
         usernameColumn.setMinWidth(400);
+
 
         TableColumn<Person, Integer> scoreColumn = new TableColumn<>("SCORE");
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
