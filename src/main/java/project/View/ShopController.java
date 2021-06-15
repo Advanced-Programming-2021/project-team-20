@@ -56,90 +56,18 @@ public class ShopController implements Initializable {
 //    private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Rectangle>> allCardsInDifferentPages;
     private int whichPageIsShowing = 0;
-    private static AnchorPane anchorPane1;
+    private static AnchorPane anchorPane;
     private Rectangle chosenRectangleForExport;
-    private static HashMap<String, Card> allCards;
-    private static int cardNumber;
-    static {
-        allCards = new HashMap<>();
-        cardNumber = 0;
-    }
 //    private static ArrayList<String> allCardNamesFirstPage;
 //    private static ArrayList<String> allCardNamesSecondPage;
 //    private static ArrayList<String> allCardNamesThirdPage;
 //    static {
-//        String staticString = "src\\main\\resources\\project\\images\\Cards\\";
-//        allCardNamesFirstPage = new ArrayList<>();
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//        allCardNamesFirstPage.add(staticString + "");
-//    }
+
 
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-//        HashMap<String, Card> allCards = new HashMap<>();
+        HashMap<String, Card> allCards = new HashMap<>();
         allCards.putAll(Storage.getAllMonsterCards());
         allCards.putAll(Storage.getAllSpellAndTrapCards());
         System.out.println(allCards.size());
@@ -206,12 +134,15 @@ public class ShopController implements Initializable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println(allCards.size());
+//                System.out.println(allCards.size());
 //                cardNumber++;
+                //?
+                assert stream != null;
                 Image image = new Image(stream);
                 rectangle.setFill(new ImagePattern(image));
                 rectangle.setArcHeight(20);
                 rectangle.setArcWidth(20);
+                rectangle.setId("aa");
                 //rectangle.setId("arg0");
                 // rectangle.setText
                 DropShadow e = new DropShadow();
@@ -226,6 +157,9 @@ public class ShopController implements Initializable {
                         exportRectangle.setFill(rectangle.getFill());
                         exportRectangle.setOpacity(1);
                         chosenRectangleForExport = rectangle;
+                        System.out.println(rectangle.getId());
+//                        System.out.println(rectangle.toString());
+//                        System.out.println("qqq");
                     }
                 });
                 allCardsInOnePage.add(rectangle);
@@ -249,17 +183,17 @@ public class ShopController implements Initializable {
     }
 
     public void nextPage() {
-        anchorPane1.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
         whichPageIsShowing++;
         setEffectOfpreviousAndnextCardsbtn();
-        anchorPane1.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
     }
 
     public void previousPage() {
-        anchorPane1.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
         whichPageIsShowing--;
         setEffectOfpreviousAndnextCardsbtn();
-        anchorPane1.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
     }
 
     public void importFiles() {
@@ -278,17 +212,20 @@ public class ShopController implements Initializable {
         String filename = file.getName().substring(0, file.getName().lastIndexOf("."));
 
         importRectangle.setStroke(Color.DARKRED);
-        InputStream stream = null;
+//        InputStream stream = null;
+        Image image = null;
         try {
             if (Storage.getAllMonsterCards().containsKey(filename)) {
-                stream = new FileInputStream(Storage.getAllMonsterCards().get(filename).getImagePath());
+//                stream = new FileInputStream(Storage.getAllMonsterCards().get(filename).getImagePath());
+                image = Storage.getAllMonsterCards().get(filename).getImage();
             } else {
-                stream = new FileInputStream(Storage.getAllSpellAndTrapCards().get(filename).getImagePath());
+//                stream = new FileInputStream(Storage.getAllSpellAndTrapCards().get(filename).getImagePath());
+                image = Storage.getAllSpellAndTrapCards().get(filename).getImage();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Image image = new Image(stream);
+//        image = new Image(stream);
         importRectangle.setFill(new ImagePattern(image));
         importRectangle.setEffect(new DropShadow(+25000d, 0d, +2d, Color.BLACK));
     }
@@ -600,8 +537,8 @@ public class ShopController implements Initializable {
         }
     }
 
-    public static void setAnchorPane(AnchorPane anchorPane1) {
-        ShopController.anchorPane1 = anchorPane1;
+    public static void setAnchorPane(AnchorPane anchorPane) {
+        ShopController.anchorPane = anchorPane;
     }
 
 }
