@@ -1,34 +1,15 @@
 package project.View;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
-import java.util.Stack;
-
-import com.google.gson.GsonBuilder;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import project.controller.non_duel.storage.Storage;
 
 public class MainView extends Application {
     private static Stage stage;
@@ -40,8 +21,6 @@ public class MainView extends Application {
         root = FXMLLoader.load(welcomeUrl);
         MainView.stage = stage;
         stage.setResizable(false);
-       // ScrollPane scrollPane = new ScrollPane();
-       // scrollPane.setContent(abs());
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.show();
@@ -49,19 +28,11 @@ public class MainView extends Application {
 
     
     public static void main(String[] args) throws IOException {
-        // for (int i = 0; i < 1000000000; i++) {
-        //     for (int j = 0; j < 2000000000; j++) {
-        //         for (int j2 = 0; j2 < 2000000000; j2++) {
-        //             for (int k = 0; k < 1; k++) {
-        //                 //
-        //             }
-        //         }
-        //     }
-        //     System.out.println("sla");
-        // }
+        Storage storage = new Storage();
+        storage.startProgram();
         UIUtility.createPreliminaryToStartProgram();
         launch(args);
-        System.out.println("dasdasd");
+        storage.endProgram();
     }
 
     public void changeView(String fxml) throws IOException {

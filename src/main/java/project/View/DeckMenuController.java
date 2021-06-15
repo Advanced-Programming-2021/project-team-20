@@ -3,7 +3,6 @@ package project.View;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -28,12 +26,13 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import project.controller.non_duel.deckCommands.DeckCommands;
+import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 
 public class DeckMenuController implements Initializable {
+    
     @FXML
     private Button backbtn;
-
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
     private static List<Rectangle> allScrollBarRectangle;
@@ -48,6 +47,7 @@ public class DeckMenuController implements Initializable {
     private static Label sizeOfAllMonsterCardsLabel;
     private static Label sizeOfAllSpellCardsLabel;
     private static Label sizeOfAllTrapCardsLabel;
+    private static boolean isAddedNecessaryThingsForTheFirstTime = false;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -59,15 +59,18 @@ public class DeckMenuController implements Initializable {
         this.deckname = deckname;
         allScrollBarLabels = UIUtility.getAllScrollBarLabels();
         allCardDiscriptionLabels = UIUtility.getAllCardDiscriptionLabels();
-        initializeLabesForShowSizeOfDeck();
-        addDragAndDropEffect();
-        createAllCardToRectangle();
+        if (!isAddedNecessaryThingsForTheFirstTime) {
+            initializeLabesForShowSizeOfDeck();
+            addDragAndDropEffect();
+        }
+        // check createAllCardToRectangle
+        getRectanglesFromUIUtilityForPanes();
         createScrollPaneWithAllUselessCards();
         createMainDeck();
         createSideDeck();
         showNmberOfCardsInLabels();
         shownCardRectangle = (Rectangle) pane.getChildren().get(0);
-        shownCardRectangle.setFill(new ImagePattern(UIUtility.getUnknownCard().getImage()));
+        shownCardRectangle.setFill(new ImagePattern(Storage.getUnknownCard().getImage()));
         MainView.changeScene(pane);
     }
 
@@ -76,7 +79,6 @@ public class DeckMenuController implements Initializable {
         sizeOfAllMonsterCardsLabel = UIUtility.getNumberOfCardslabels().get(1);
         sizeOfAllSpellCardsLabel = UIUtility.getNumberOfCardslabels().get(2);
         sizeOfAllTrapCardsLabel = UIUtility.getNumberOfCardslabels().get(3);
-        /// System.out.println(UIUtility.getNumberOfCardslabels().size());
         anchorPane.getChildren().add(sizeOfMainDeckLabel);
         anchorPane.getChildren().add(sizeOfAllMonsterCardsLabel);
         anchorPane.getChildren().add(sizeOfAllSpellCardsLabel);
@@ -84,17 +86,17 @@ public class DeckMenuController implements Initializable {
     }
 
     private void showNmberOfCardsInLabels() {
-        // HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
-        // sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(deckname);
-        // if (sizeOfEachPart.get("mainDeckSize") < 40) {
-        // sizeOfMainDeckLabel.setTextFill(Color.RED);
-        // } else {
-        // sizeOfMainDeckLabel.setTextFill(Color.BLACK);
-        // }
-        // sizeOfMainDeckLabel.setText(sizeOfEachPart.get("mainDeckSize") + "");
-        // sizeOfAllMonsterCardsLabel.setText("" + sizeOfEachPart.get("monstersSize"));
-        // sizeOfAllSpellCardsLabel.setText("" + sizeOfEachPart.get("spellsSize"));
-        // sizeOfAllTrapCardsLabel.setText("" + sizeOfEachPart.get("trapsSize"));
+        HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
+        sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(deckname);
+        if (sizeOfEachPart.get("mainDeckSize") < 40) {
+            sizeOfMainDeckLabel.setTextFill(Color.RED);
+        } else {
+            sizeOfMainDeckLabel.setTextFill(Color.BLACK);
+        }
+        sizeOfMainDeckLabel.setText(sizeOfEachPart.get("mainDeckSize") + "");
+        sizeOfAllMonsterCardsLabel.setText("" + sizeOfEachPart.get("monstersSize"));
+        sizeOfAllSpellCardsLabel.setText("" + sizeOfEachPart.get("spellsSize"));
+        sizeOfAllTrapCardsLabel.setText("" + sizeOfEachPart.get("trapsSize"));
     }
 
     private void addDragAndDropEffect() {
@@ -206,32 +208,24 @@ public class DeckMenuController implements Initializable {
     }
 
     private boolean canTransfateToMainDeck(DragEvent e) {
-        // return
-        // LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfMainDeck()
-        // < 60;
         Pane pane = (Pane) anchorPane.getChildren().get(3);
         Rectangle rectangle = (Rectangle) e.getGestureSource();
-        boolean isSizeDeckValid = UIUtility.getMainDeck().size() < 60;
+        boolean isSizeDeckValid = LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfMainDeck() < 60;
         boolean isCardFromThisPart = pane.getChildren().contains(rectangle);
-        // boolean canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname,
-        // rectangle.getId());
-        return isSizeDeckValid && !isCardFromThisPart;
+        boolean canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname, rectangle.getId());
+        return isSizeDeckValid && !isCardFromThisPart && canAddAnotherCardToDeck;
     }
 
     private boolean canTransfateToSideDeck(DragEvent e) {
-        // return
-        // LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfMainDeck()
-        // < 15;
         Pane pane = (Pane) anchorPane.getChildren().get(4);
         Rectangle rectangle = (Rectangle) e.getGestureSource();
-        boolean isSizeDeckValid = UIUtility.getSideDeck().size() < 15;
+        boolean isSizeDeckValid = LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfMainDeck() < 15;
         boolean isCardFromThisPart = pane.getChildren().contains(rectangle);
-        // boolean canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname,
-        // rectangle.getId());
-        return isSizeDeckValid && !isCardFromThisPart;
+        boolean canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname, rectangle.getId());
+        return isSizeDeckValid && !isCardFromThisPart && canAddAnotherCardToDeck;
     }
 
-    private void createAllCardToRectangle() {
+    private void getRectanglesFromUIUtilityForPanes() {
         allMainDeckRectangle = UIUtility.getAllMainDeckRectangle();
         allScrollBarRectangle = UIUtility.getAllScrollBarRectangle();
         allSideDeckRectangle = UIUtility.getAllSideDeckRectangle();
@@ -240,9 +234,8 @@ public class DeckMenuController implements Initializable {
 
     private void createMainDeck() {
 
-        // List<String> allCardsInMainDeck =
-        // LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
-        List<Card> mainDeckCards = UIUtility.getMainDeck();
+        List<String> allCardsInMainDeck = LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
+        List<Card> mainDeckCards = getListOfCards(allCardsInMainDeck);
         Pane mainDeckPane = (Pane) anchorPane.getChildren().get(3);
         outer: for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 10; j++) {
@@ -261,11 +254,19 @@ public class DeckMenuController implements Initializable {
         }
     }
 
+    private List<Card> getListOfCards(List<String> stringFormatCardInputs) {
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < stringFormatCardInputs.size(); i++) {
+            cards.add(Storage.getCardByName(stringFormatCardInputs.get(i)));
+        }
+        return cards;
+    }
+
     private void createSideDeck() {
-        // List<String> allCardsInSideDeck =
-        // LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
-        List<Card> sideDeckCards = UIUtility.getSideDeck();
+        List<String> allCardsInSideDeck = LoginController.getOnlineUser().getDecks().get(deckname).getSideDeck();
+        List<Card> sideDeckCards = getListOfCards(allCardsInSideDeck);
         Pane sideDeckPane = (Pane) anchorPane.getChildren().get(4);
+
         outer: for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 10; j++) {
                 if (i * 10 + j == sideDeckCards.size()) {
@@ -284,7 +285,7 @@ public class DeckMenuController implements Initializable {
     }
 
     private void createScrollPaneWithAllUselessCards() {
-        List<Card> scrollCards = UIUtility.getAllCards();
+        List<Card> scrollCards = UIUtility.getAllTypeOfCards().get("allCards");
         Pane pane = new AnchorPane();
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         for (int i = 0; i < scrollCards.size(); i++) {
@@ -328,46 +329,12 @@ public class DeckMenuController implements Initializable {
     }
 
     private int countNumberOfCardsInUselessCards(String cardname) {
-        // List<String> allUseLessCards =
-        // LoginController.getOnlineUser().getAllUselessCards();
-        // return Collections.frequency(allUseLessCards, cardname);
-        List<String> allUseLessCards = new ArrayList<>();
-        allUseLessCards.add("Curtain of the dark ones");
-        allUseLessCards.add("Man-Eater Bug");
-        allUseLessCards.add("Texchanger");
-        allUseLessCards.add("Spiral Serpent");
-        allUseLessCards.add("Wattaildragon");
-        allUseLessCards.add("Feral Imp");
-        allUseLessCards.add("Gate Guardian");
-        allUseLessCards.add("Fireyarou");
-        allUseLessCards.add("The Calculator");
-        allUseLessCards.add("Baby dragon");
-        allUseLessCards.add("Crab Turtle");
-        allUseLessCards.add("The Calculator");
-        allUseLessCards.add("Baby dragon");
-        allUseLessCards.add("Crab Turtle");
-        allUseLessCards.add("The Calculator");
-        allUseLessCards.add("Baby dragon");
-        allUseLessCards.add("Crab Turtle");
+        List<String> allUseLessCards = LoginController.getOnlineUser().getAllUselessCards();
         return Collections.frequency(allUseLessCards, cardname);
     }
 
     private boolean doesCardExistInUseLessCards(String cardname) {
-        // List<String> allUseLessCards =
-        // LoginController.getOnlineUser().getAllUselessCards();
-        List<String> allUseLessCards = new ArrayList<>();
-        allUseLessCards.add("Curtain of the dark ones");
-        allUseLessCards.add("Man-Eater Bug");
-        allUseLessCards.add("Texchanger");
-        allUseLessCards.add("Spiral Serpent");
-        allUseLessCards.add("Wattaildragon");
-        allUseLessCards.add("Feral Imp");
-        allUseLessCards.add("Gate Guardian");
-        allUseLessCards.add("Fireyarou");
-        allUseLessCards.add("The Calculator");
-        allUseLessCards.add("Baby dragon");
-        allUseLessCards.add("Crab Turtle");
-        return allUseLessCards.contains(cardname);
+        return LoginController.getOnlineUser().getAllUselessCards().contains(cardname);
     }
 
     private void addOnDragDetectedEffectForCard(Rectangle rectangle) {
@@ -422,12 +389,10 @@ public class DeckMenuController implements Initializable {
             }
         }
         // deckCommands.deleteCardFromAllUselessCards(transfferdRectangle.getId());
-
     }
 
     private void addCardDescription(String cardName) {
-        // Card card = Storage.getCardByName(cardname);
-        Card card = UIUtility.getCardByName(cardName);
+        Card card = Storage.getCardByName(cardName);
         String cardDiscription = card.getCardDescription();
         Pane pane = new Pane();
         Label label = allCardDiscriptionLabels.get(0);

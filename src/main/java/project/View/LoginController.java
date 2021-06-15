@@ -44,9 +44,11 @@ public class LoginController implements Initializable {
         if (Storage.getUserByName(usernameField.getText()) == null) {
             downLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             downLabel.setText("THIS USER DOES NOT EXIST");
+            return;
         } else if (Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
             downLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             downLabel.setText("INCORRECT PASSWORD");
+            return;
         }
         
         setOnlineUser(Storage.getUserByName(usernameField.getText()));

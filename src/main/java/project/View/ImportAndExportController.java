@@ -191,9 +191,9 @@ public class ImportAndExportController implements Initializable {
         InputStream stream = null;
         try {
             if (Storage.getAllMonsterCards().containsKey(filename)) {
-                stream = new FileInputStream(Storage.getAllMonsterCards().get(filename).getImagePath());
+//stream = new FileInputStream(Storage.getAllMonsterCards().get(filename).getImagePath());
             } else {
-                stream = new FileInputStream(Storage.getAllSpellAndTrapCards().get(filename).getImagePath());
+                // stream = new FileInputStream(Storage.getAllSpellAndTrapCards().get(filename).getImagePath());
             }
         } catch (Exception e) {
             e.printStackTrace();
