@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.scene.image.Image;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
@@ -36,8 +37,8 @@ public class SpellCard extends Card {
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
-            HashMap<String, List<String>> enumValues, String imagePath) {
-        super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, imagePath);
+            HashMap<String, List<String>> enumValues, Image image) {
+        super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, image);
         this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.oncePerTurnCardEffectUsed = false;
@@ -152,7 +153,7 @@ public class SpellCard extends Card {
 
     public SpellCard(SpellCard spellCard) {
         super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), spellCard.getCardPosition(),
-                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice(), spellCard.getImagePath());
+                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice(), spellCard.getImage());
         this.highestNumberOfTurnsOfActivation = spellCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
         this.spellCardValue = spellCard.getSpellCardValue();

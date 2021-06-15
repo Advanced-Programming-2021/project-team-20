@@ -1,7 +1,6 @@
 package project.View;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream.PutField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,16 +12,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import project.controller.non_duel.deckCommands.DeckCommands;
 import project.model.Deck;
 
@@ -38,7 +34,6 @@ public class wholeDeckPageMenuController implements Initializable {
     private Button nextPagebtn;
     @FXML
     private Button previousPagebtn;
-
     private TextField createdDeckNameField;
     private static List<Rectangle> fourRectangleToShowDecks;
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
@@ -47,10 +42,13 @@ public class wholeDeckPageMenuController implements Initializable {
     private DeckCommands deckCommands = new DeckCommands();
     private String chosenDeck = "";
     private int currentPageToShowDecks = 0;
+    private static Button equalToNextPagebtn;
+    private static Button equalToPreviousPagebtn;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        // TODO Auto-generated method stub
+        equalToNextPagebtn = nextPagebtn;
+        equalToPreviousPagebtn = previousPagebtn;
     }
 
     public void showPage(AnchorPane pane) {
@@ -59,85 +57,18 @@ public class wholeDeckPageMenuController implements Initializable {
             addEffectsToFourRectangleToShowDeck();
         }
         addDecksToPage();
-        if (labelsToShowInformationOfDeck == null) {
-            initializeLabelsToShowInfornationOfDeck();
-        }
+        addInformationLabelsOfDeckToPane();
         setEffectOfpreviousAndnextCardsbtn();
         MainView.changeScene(pane);
     }
 
-    private void initializeLabelsToShowInfornationOfDeck() {
-        labelsToShowInformationOfDeck = new HashMap<>();
-        Label label = new Label();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForDeckname(label, i, j);
-                labelsToShowInformationOfDeck.put("deckname" + i + "" + j, label);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 0, 0);
-                labelsToShowInformationOfDeck.put("mainDeck" + i + "" + j, label);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 90, 0);
-                labelsToShowInformationOfDeck.put("sideDeck" + i + "" + j, label);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, -50, 60);
-                labelsToShowInformationOfDeck.put("monstersSize" + i + "" + j, label);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 50, 60);
-                labelsToShowInformationOfDeck.put("spellsSize" + i + "" + j, label);
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 150, 60);
-                labelsToShowInformationOfDeck.put("trapsSize" + i + "" + j, label);
-            }
-        }
-    }
-
-    private void createLabelForDeckname(Label label, int row, int column) {
-        label.setPrefSize(270, 50);
-        label.setFont(new Font(20));
-        label.setLayoutX(10 + 310 * column);
-        label.setLayoutY(210 * row);
-        label.setAlignment(Pos.CENTER);
+    private void addInformationLabelsOfDeckToPane() {
+        labelsToShowInformationOfDeck = UIUtility.getLabelsToShowInformationOfDeck();
         AnchorPane pane = (AnchorPane) anchorPane.getChildren().get(4);
-        label.setText("arg0 my best deck");
-        pane.getChildren().add(label);
-    }
 
-    private void createLabelForSizeOfOtherParts(Label label, int row, int column, int translateX, int translateY) {
-        label.setPrefSize(100, 50);
-        label.setFont(new Font(20));
-        label.setLayoutY(51 + 210 * row + translateY);
-        label.setLayoutX(52 + 310 * column + translateX);
-        label.setAlignment(Pos.CENTER);
-        AnchorPane pane = (AnchorPane) anchorPane.getChildren().get(4);
-        label.setText("49");
-        pane.getChildren().add(label);
+        for (Map.Entry<String, Label> entry : labelsToShowInformationOfDeck.entrySet()) {
+            pane.getChildren().add(entry.getValue());
+        }
     }
 
     private void addEffectsToFourRectangleToShowDeck() {
@@ -163,37 +94,31 @@ public class wholeDeckPageMenuController implements Initializable {
 
     private void addDecksToPage() {
         AnchorPane pane = (AnchorPane) anchorPane.getChildren().get(4);
-        // HashMap<String, Deck> allDecksOfUser =
-        // LoginController.getOnlineUser().getDecks();
-        // if (decksInDifferentPages == null) {
-        // createPacksOfDecksForEachPage(allDecksOfUser);
-        // }
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
+        if (decksInDifferentPages == null) {
+            createPacksOfDecksForEachPage(allDecksOfUser);
+        }
 
         for (int i = 0; i < 4; i++) {
-            fourRectangleToShowDecks.get(i).setX(7 + 310 * (i % 2));
-            fourRectangleToShowDecks.get(i).setY(5 + 210 * (i / 2));
-            // if (i >= decksInDifferentPages.get(currentPageToShowDecks).size()) {
-            // fourRectangleToShowDecks.get(i).setOpacity(0);
-            // fourRectangleToShowDecks.get(i).setId("");
-            // } else {
-            // fourRectangleToShowDecks.get(i)
-            // .setId(decksInDifferentPages.get(currentPageToShowDecks).get(i).getDeckname());
-            // if
-            // (decksInDifferentPages.get(currentPageToShowDecks).get(i).getSizeOfMainDeck()
-            // < 40) {
-            // fourRectangleToShowDecks.get(i).setFill(new
-            // ImagePattern(UIUtility.getInvalidDeckImage()));
-            // } else {
-            // fourRectangleToShowDecks.get(i).setFill(new
-            // ImagePattern(UIUtility.getValidDeckImage()));
-            // }
-            // fourRectangleToShowDecks.get(i).setOpacity(1);
-            // }
+            if (i >= decksInDifferentPages.get(currentPageToShowDecks).size()) {
+                fourRectangleToShowDecks.get(i).setOpacity(0);
+                fourRectangleToShowDecks.get(i).setId("");
+            } else {
+                fourRectangleToShowDecks.get(i)
+                        .setId(decksInDifferentPages.get(currentPageToShowDecks).get(i).getDeckname());
+                if (decksInDifferentPages.get(currentPageToShowDecks).get(i).getSizeOfMainDeck() < 40) {
+                    fourRectangleToShowDecks.get(i).setFill(new ImagePattern(UIUtility.getInvalidDeckImage()));
+                } else {
+                    fourRectangleToShowDecks.get(i).setFill(new ImagePattern(UIUtility.getValidDeckImage()));
+                }
+                fourRectangleToShowDecks.get(i).setOpacity(1);
+            }
             pane.getChildren().add(fourRectangleToShowDecks.get(i));
         }
     }
 
     private void createPacksOfDecksForEachPage(HashMap<String, Deck> allDecksOfUser) {
+        decksInDifferentPages = new ArrayList<>();
         int deckCounter = 0;
         List<Deck> decksInOnePage = new ArrayList<>();
         for (Map.Entry<String, Deck> e : allDecksOfUser.entrySet()) {
@@ -203,6 +128,9 @@ public class wholeDeckPageMenuController implements Initializable {
                 decksInDifferentPages.add(decksInOnePage);
                 decksInOnePage = new ArrayList<>();
             }
+        }
+        if (!decksInDifferentPages.contains(decksInOnePage)) {
+            decksInDifferentPages.add(decksInOnePage);
         }
     }
 
@@ -244,23 +172,24 @@ public class wholeDeckPageMenuController implements Initializable {
     }
 
     private void setEffectOfpreviousAndnextCardsbtn() {
+        
         if (currentPageToShowDecks + 1 == decksInDifferentPages.size()) {
-            nextPagebtn.setDisable(true);
+            equalToNextPagebtn.setDisable(true);
         } else {
-            nextPagebtn.setDisable(false);
+            equalToNextPagebtn.setDisable(false);
         }
 
         if (currentPageToShowDecks == 0) {
-            previousPagebtn.setDisable(true);
+            equalToPreviousPagebtn.setDisable(true);
         } else {
-            previousPagebtn.setDisable(false);
+            equalToPreviousPagebtn.setDisable(false);
         }
     }
 
     public void goToNextPage() {
         currentPageToShowDecks++;
-    //    changePage();
-        setEffectOfpreviousAndnextCardsbtn(); 
+        changePage();
+        setEffectOfpreviousAndnextCardsbtn();
     }
 
     private void changePage() {
@@ -300,8 +229,8 @@ public class wholeDeckPageMenuController implements Initializable {
 
     public void backToPreviousPage() {
         currentPageToShowDecks--;
-      //  changePage();
-        setEffectOfpreviousAndnextCardsbtn(); 
+        changePage();
+        setEffectOfpreviousAndnextCardsbtn();
     }
 
     public void backToMainMenu() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.scene.image.Image;
 import project.controller.duel.CardEffects.TrapEffectEnums.*;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardPosition;
@@ -30,8 +31,8 @@ public class TrapCard extends Card {
 
     public TrapCard(String cardName, String cardDescription, TrapCardValue trapCardValue, CardPosition cardPosition,
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
-            HashMap<String, List<String>> enumValues, String imagePath) {
-        super(cardName, CardType.TRAP, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, imagePath);
+            HashMap<String, List<String>> enumValues, Image image) {
+        super(cardName, CardType.TRAP, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, image);
         this.turnCardWasSet = 0;
         this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
@@ -124,7 +125,7 @@ public class TrapCard extends Card {
 
     public TrapCard(TrapCard trapCard) {
         super(trapCard.getCardName(), CardType.TRAP, trapCard.getCardDescription(), trapCard.getCardPosition(),
-                trapCard.getNumberOfAllowedUsages(), trapCard.getCardPrice(), trapCard.getImagePath());
+                trapCard.getNumberOfAllowedUsages(), trapCard.getCardPrice(), trapCard.getImage());
         this.highestNumberOfTurnsOfActivation = trapCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = trapCard.getNumberOfTurnsForActivation();
         this.trapCardValue = trapCard.getTrapCardValue();

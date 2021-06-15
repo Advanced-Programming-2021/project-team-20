@@ -1,10 +1,12 @@
 package project.controller.non_duel.storage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.Scanner;
 import com.google.gson.*;
 import com.opencsv.*;
 
+import javafx.scene.image.Image;
 import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;
@@ -32,6 +35,7 @@ public class Storage {
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static HashMap<String, Card> allMonsterCards = new HashMap<>();
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
+    private static Card unknownCard;
     private String addressOfStorage = "Resourses\\";
 
     public void startProgram() throws IOException {
@@ -40,6 +44,9 @@ public class Storage {
         addMonsterCards();
         addTrapCards();
         addSpellCards();
+
+        unknownCard = new Card("cardName", null, "", null, 10, 125, null);
+        unknownCard.setImage(createImageOfCards("Unknown"));
 
     }
 
@@ -120,7 +127,7 @@ public class Storage {
                             new TrapCard(nextRecord[0], nextRecord[3],
                                     TrapCardValue.valueOf(nextRecord[2].toUpperCase()), null,
                                     nextRecord[4].equals("Unlimited") ? 3 : 1, 0, Integer.parseInt(nextRecord[5]),
-                                    addEffectsTrapCards(nextRecord), findImagePathOfSpellAndTraps(nextRecord[0])));
+                                    addEffectsTrapCards(nextRecord), createImageOfCards(nextRecord[0])));
                 }
             }
             csvReader.close();
@@ -146,7 +153,7 @@ public class Storage {
                             new SpellCard(nextRecord[0], nextRecord[3],
                                     SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
                                     nextRecord[4].equals("Unlimited") ? 3 : 1, 0, Integer.parseInt(nextRecord[5]),
-                                    addEffectsSpellCards(nextRecord), findImagePathOfSpellAndTraps(nextRecord[0])));
+                                    addEffectsSpellCards(nextRecord), createImageOfCards(nextRecord[0])));
                 }
             }
             csvReader.close();
@@ -206,7 +213,7 @@ public class Storage {
                                     MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
                                     MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
                                     null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord),
-                                    findImagePathOfMonsters(nextRecord[0])));
+                                    createImageOfCards(nextRecord[0])));
                 }
                 firstRow++;
             }
@@ -217,14 +224,15 @@ public class Storage {
         }
     }
 
-    private String findImagePathOfMonsters(String cardname) {
-        String PreliminaryPath = "src\\main\\resources\\sample\\images\\Cards\\Monsters";
-        return PreliminaryPath + cardname.replaceAll("\\s", "");
-    }
-
-    private String findImagePathOfSpellAndTraps(String cardname) {
-        String PreliminaryPath = "src\\main\\resources\\sample\\images\\Cards\\SpellTrap";
-        return PreliminaryPath + cardname.replaceAll("\\s", "");
+    private Image createImageOfCards(String cardname) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(
+                    "src\\main\\resources\\project\\images\\Cards\\" + cardname.replaceAll("\\s", "") + ".jpg");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Image(stream);
     }
 
     private HashMap<String, List<String>> addEffectsMonsterCards(String[] cardValues) {
@@ -371,4 +379,7 @@ public class Storage {
         return null;
     }
 
+    public static Card getUnknownCard() {
+        return unknownCard;
+    }
 }

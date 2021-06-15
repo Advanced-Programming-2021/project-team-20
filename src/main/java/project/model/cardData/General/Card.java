@@ -9,7 +9,6 @@ public class Card {
 
     protected String cardName;
     protected String realName;
-    protected String imagePath;
     protected CardType cardType;
     protected String cardDescription;
     protected CardPosition cardPosition;
@@ -18,7 +17,7 @@ public class Card {
     protected Image image;
 
     public Card(String cardName, CardType cardType, String cardDescription, CardPosition cardPosition,
-            int numberOfAllowedUsages, int cardPrice, String imagePath) {
+            int numberOfAllowedUsages, int cardPrice,  Image image){
         this.cardName = cardName;
         this.realName = cardName;
         this.cardType = cardType;
@@ -30,17 +29,14 @@ public class Card {
         }
         this.numberOfAllowedUsages = numberOfAllowedUsages;
         this.cardPrice = cardPrice;
-        this.imagePath = imagePath;
+        this.image = image;
     }
 
     public Image getImage() {
         return image;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
-
+   
     public String getCardName() {
         return cardName;
     }
@@ -81,10 +77,7 @@ public class Card {
         this.image = image;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
+ 
     public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }

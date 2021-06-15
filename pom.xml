@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example</groupId>
+  <groupId>project</groupId>
   <artifactId>demo</artifactId>
   <version>grafic3</version>
 
@@ -17,7 +17,26 @@
         <javafx.version>16</javafx.version>
         <javafx.maven.plugin.version>0.0.6</javafx.maven.plugin.version>
     </properties>
+    
     <dependencies>
+    <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.4.0.redhat-2</version>
+</dependency>
+
+    <dependency>
+    <groupId>commons-lang</groupId>
+    <artifactId>commons-lang</artifactId>
+    <version>2.6</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.8</version>
+</dependency>
+
     <dependency>
     <groupId>net.imagej</groupId>
     <artifactId>ij</artifactId>
@@ -31,7 +50,7 @@
      <dependency>
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
-      <version>4.1</version>
+      <version>3.9</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

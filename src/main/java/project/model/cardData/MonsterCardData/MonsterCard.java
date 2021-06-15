@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.scene.image.Image;
 import project.controller.duel.CardEffects.MonsterEffectEnums.AttackerEffect;
 import project.controller.duel.CardEffects.MonsterEffectEnums.BeingAttackedEffect;
 import project.controller.duel.CardEffects.MonsterEffectEnums.ContinuousMonsterEffect;
@@ -50,8 +51,8 @@ public class MonsterCard extends Card {
     public MonsterCard(int attackPower, int defensePower, int level, MonsterCardAttribute attribute,
             MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
             String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice,
-            HashMap<String, List<String>> enumValues, String imagePath) {
-        super(cardName, CardType.MONSTER, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, imagePath);
+            HashMap<String, List<String>> enumValues, Image image) {
+        super(cardName, CardType.MONSTER, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, image);
         this.attackPower = attackPower;
         this.defensePower = defensePower;
         this.attackPowerConsideringEffects = 0;
@@ -165,7 +166,7 @@ public class MonsterCard extends Card {
 
     public MonsterCard(MonsterCard monster) {
         super(monster.getCardName(), CardType.MONSTER, monster.getCardDescription(), monster.getCardPosition(),
-                monster.getNumberOfAllowedUsages(), monster.getCardPrice(), monster.getImagePath());
+                monster.getNumberOfAllowedUsages(), monster.getCardPrice(), monster.getImage());
         this.attackPower = monster.getAttackPower();
         this.defensePower = monster.getDefensePower();
         this.attackPowerConsideringEffects = 0;
