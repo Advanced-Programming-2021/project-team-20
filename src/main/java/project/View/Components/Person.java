@@ -1,4 +1,4 @@
-package project.View;
+package project.View.Components;
 
 public class Person {
 

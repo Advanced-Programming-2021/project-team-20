@@ -48,8 +48,11 @@ public class MainMenuController implements Initializable {
     }
 
     public void shopMenu() {
-        System.out.println("shop");
-        // TODO
+        try {
+            new MainView().changeView("/project/fxml/shopPage.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void goToImportAndExportMenu() {
