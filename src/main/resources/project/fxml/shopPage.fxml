@@ -58,8 +58,7 @@
       </ImageView>
       <Button fx:id="backbtn" layoutX="73.0" layoutY="644.0" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
       <Button fx:id="previousCardsbtn" layoutX="325.0" layoutY="527.0" mnemonicParsing="false" onAction="#previousPage" text="Previous" />
-      <Button fx:id="importbtn" layoutX="814.0" layoutY="634.0" mnemonicParsing="false" onAction="#importFiles" text="Import" />
-      <Button fx:id="exportbtn" alignment="CENTER" layoutX="427.0" layoutY="644.0" mnemonicParsing="false" onAction="#exportFiles" text="Export" textAlignment="CENTER">
+      <Button fx:id="exportbtn" alignment="CENTER" layoutX="427.0" layoutY="644.0" mnemonicParsing="false" onAction="#buyCard" text="Buy" textAlignment="CENTER">
          <font>
             <Font name="Old English Text MT" size="28.0" />
          </font></Button>

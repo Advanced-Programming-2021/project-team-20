@@ -23,6 +23,7 @@ import javafx.stage.FileChooser;
 import project.View.Components.CardForShow;
 import project.View.Components.CardView;
 import project.controller.non_duel.importAndExport.ImportAndExport;
+import project.controller.non_duel.shop.Shop;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
@@ -56,6 +57,12 @@ public class ShopController implements Initializable {
 //    private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Rectangle>> allCardsInDifferentPages;
     private int whichPageIsShowing = 0;
+    private static int upToWhichCardAreShown;
+    private static String chosenCardName;
+    private String[] names;
+    static {
+        upToWhichCardAreShown = 0;
+    }
     private static AnchorPane anchorPane;
     private Rectangle chosenRectangleForExport;
 //    private static ArrayList<String> allCardNamesFirstPage;
@@ -71,6 +78,12 @@ public class ShopController implements Initializable {
         allCards.putAll(Storage.getAllMonsterCards());
         allCards.putAll(Storage.getAllSpellAndTrapCards());
         System.out.println(allCards.size());
+//        ArrayList<String> names = new ArrayList<>();
+        names = allCards.keySet().toArray(new String[0]);
+//        Collections.sort(names);
+//        for (int i = 0; i < allCards.size(); i++) {
+//            System.out.println(names[i].replaceAll(" ", ""));
+//        }
         int sizeOfWholeCards = allCards.size();
         if (allCardsInDifferentPages == null) {
             allCardsInDifferentPages = new ArrayList<>();
@@ -119,20 +132,24 @@ public class ShopController implements Initializable {
 
     private List<Rectangle> generateRectangleCardsInOnPage(List<Card> onePackOfCard) {
         List<Rectangle> allCardsInOnePage = new ArrayList<>();
-        for (int j = 0; j < 8; j++) {
-            for (int k = 0; k < 8; k++) {
-                Rectangle rectangle = new Rectangle(35, 45);
-                rectangle.setX(290 + 50 * j);
-                rectangle.setY(110 + 50 * k);
+        for (int j = 0; j < 6; j++) {
+            for (int k = 0; k < 6; k++) {
+                Rectangle rectangle = new Rectangle(55, 65);
+                rectangle.setX(290 + 65 * j);
+                rectangle.setY(110 + 65 * k);
                 InputStream stream = null;
 //                System.out.println(allCards.get(cardNumber).getCardName());
 //                cardNumber++;
+                String id = names[upToWhichCardAreShown].replaceAll(" ", "");
+
                 try {
-                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\Unknown.jpg");
+                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
+                    + id + ".jpg");
 //                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
 //                            + allCardsInOnePage.get(cardNumber).get + ".jpg");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.out.println(id);
+//                    e.printStackTrace();
                 }
 //                System.out.println(allCards.size());
 //                cardNumber++;
@@ -142,7 +159,9 @@ public class ShopController implements Initializable {
                 rectangle.setFill(new ImagePattern(image));
                 rectangle.setArcHeight(20);
                 rectangle.setArcWidth(20);
-                rectangle.setId("aa");
+
+                rectangle.setId(names[upToWhichCardAreShown]);
+                if (upToWhichCardAreShown < 73) upToWhichCardAreShown++;
                 //rectangle.setId("arg0");
                 // rectangle.setText
                 DropShadow e = new DropShadow();
@@ -158,6 +177,8 @@ public class ShopController implements Initializable {
                         exportRectangle.setOpacity(1);
                         chosenRectangleForExport = rectangle;
                         System.out.println(rectangle.getId());
+                        chosenCardName = rectangle.getId();
+                        System.out.println("Chosen is : " + chosenCardName);
 //                        System.out.println(rectangle.toString());
 //                        System.out.println("qqq");
                     }
@@ -196,338 +217,21 @@ public class ShopController implements Initializable {
         anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
     }
 
-    public void importFiles() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("CHOOSE YOUR CARD");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Card", "*.csv"));
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Card", "*.json"));
-        File file = fileChooser.showOpenDialog(MainView.getStage());
-        String result = importCard(file);
-        if (result.equals("this card does not exist")) {
-            importLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            importLabel.setFont(new Font(24));
-            importLabel.setText("THIS FILE NOT A CARD");
-            return;
+
+    public void buyCard() {
+        System.out.println("Trying to buy");
+        if (chosenCardName == null) {
+            System.out.println("Please choose a card first!");
         }
-        String filename = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-        importRectangle.setStroke(Color.DARKRED);
-//        InputStream stream = null;
-        Image image = null;
-        try {
-            if (Storage.getAllMonsterCards().containsKey(filename)) {
-//                stream = new FileInputStream(Storage.getAllMonsterCards().get(filename).getImagePath());
-                image = Storage.getAllMonsterCards().get(filename).getImage();
-            } else {
-//                stream = new FileInputStream(Storage.getAllSpellAndTrapCards().get(filename).getImagePath());
-                image = Storage.getAllSpellAndTrapCards().get(filename).getImage();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        image = new Image(stream);
-        importRectangle.setFill(new ImagePattern(image));
-        importRectangle.setEffect(new DropShadow(+25000d, 0d, +2d, Color.BLACK));
-    }
-
-    public void exportFiles() {
-
-        exportLabel.setFont(new Font(24.0));
-        if (chosenRectangleForExport == null) {
+        else {
             exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            exportLabel.setText("CHOOSE A CARD");
-            return;
+            String answerOfShop = new Shop().findCommand("shop buy " + chosenCardName);
+            exportLabel.setText(answerOfShop);
         }
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("EXPORT CARD");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Card", "*.csv"));
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Card", "*.json"));
-        File file = fileChooser.showSaveDialog(MainView.getStage());
-        String cardRectangle = chosenRectangleForExport.getId();
-        if (exportCard(cardRectangle, file).equals("ERROR")) {
-            exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            exportLabel.setText("FILE CANNOT BE EXPORTED");
-            return;
-        }
-        exportLabel.setStyle("-fx-text-fill:green;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-        exportLabel.setText("FILE EXPORTED SUCCESSFULLY");
-    }
-
-    public String importCard(File chosenFile) {
-
-        if (!Storage.doesCardExist(chosenFile.getName().substring(0, chosenFile.getName().lastIndexOf(".")))) {
-            return "this card does not exist";
-        }
-        String fileType = chosenFile.getName().substring(chosenFile.getName().lastIndexOf("."),
-                chosenFile.getName().length());
-
-        if (fileType.equals(".json")) {
-            if (checkValidJsonCard(chosenFile)) {
-                return "card exists";
-            } else {
-                return "this card does not exist";
-            }
-        } else if (fileType.equals(".csv")) {
-            if (checkValidCSVFormat(chosenFile)) {
-                return "card exists";
-            } else {
-                return "this card does not exist";
-            }
-        }
-        return "this card does not exist";
-    }
-
-    private boolean checkValidCSVFormat(File file) {
-
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-
-        List<List<String>> validInfornationOfCard = new ArrayList<>();
-        if (allMonsterCards.containsKey(file.getName())) {
-            validInfornationOfCard = toCSVFormatMonsterCard(allMonsterCards.get(file.getName()));
-        } else {
-            validInfornationOfCard = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(file.getName()));
-        }
-
-        try {
-            FileReader fileReader = new FileReader(file.getAbsolutePath());
-            CSVReader csvReader = new CSVReader(fileReader);
-            List<String[]> csvFileInformation = csvReader.readAll();
-            csvReader.close();
-
-            for (int i = 0; i < csvFileInformation.size(); i++) {
-                for (int j = 0; j < csvFileInformation.get(i).length; j++) {
-                    if (!csvFileInformation.get(i)[j].equals(validInfornationOfCard.get(i).get(j))) {
-                        return false;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkValidJsonCard(File file) {
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        StringBuilder fileInputs = new StringBuilder();
-
-        try {
-            Scanner fileScanner = new Scanner(file);
-            while (fileScanner.hasNextLine()) {
-                fileInputs.append(fileScanner.nextLine());
-            }
-            fileScanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        if (fileInputs.toString().equals(toJsonFormatMonsterCard(allMonsterCards.get(file.getName())))) {
-            return true;
-        }
-
-        if (fileInputs.toString().equals(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(file.getName())))) {
-            return true;
-        }
-
-        return false;
     }
 
 
-    public String exportCard(String cardname, File file) {
 
-        String fileType = file.getName().substring(file.getName().lastIndexOf("."), file.getName().length());
-        System.out.println(file.getAbsolutePath() + " " + cardname);
-        if (fileType.equals(".json")) {
-            if (writeFileInJsonFormat(cardname, file)) {
-                return "card exported successfully";
-            } else {
-                return "ERROR";
-            }
-        } else if (fileType.equals(".csv")) {
-            if (writeFileInCSVFormat(cardname, file)) {
-                return "card exported successfully";
-            } else {
-                return "ERROR";
-            }
-        }
-        return "ERROR";
-    }
-
-    private boolean writeFileInCSVFormat(String cardname, File file) {
-
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allMonsterCards.containsKey(cardname)) {
-            FileWriter csvWriter;
-            try {
-                csvWriter = new FileWriter(file.getAbsolutePath());
-                List<List<String>> wholeCSVFile = toCSVFormatMonsterCard(allMonsterCards.get(cardname));
-                for (List<String> rowData : wholeCSVFile) {
-                    csvWriter.append(String.join(",", rowData));
-                    csvWriter.append("\n");
-                }
-                csvWriter.flush();
-                csvWriter.close();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(cardname)) {
-            FileWriter csvWriter;
-            try {
-                csvWriter = new FileWriter(file.getAbsolutePath());
-                List<List<String>> wholeCSVFile = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(cardname));
-                for (List<String> rowData : wholeCSVFile) {
-                    csvWriter.append(String.join(",", rowData));
-                    csvWriter.append("\n");
-                }
-                csvWriter.flush();
-                csvWriter.close();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private boolean writeFileInJsonFormat(String cardname, File file) {
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allMonsterCards.containsKey(cardname)) {
-            FileWriter fileWriter;
-            try {
-                fileWriter = new FileWriter(file.getAbsolutePath());
-                fileWriter.write(toJsonFormatMonsterCard(allMonsterCards.get(cardname)));
-                fileWriter.close();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(cardname)) {
-            FileWriter fileWriter;
-            try {
-                fileWriter = new FileWriter(file.getAbsolutePath());
-                fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(cardname)));
-                fileWriter.close();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private List<List<String>> toCSVFormatMonsterCard(Card card) {
-
-        List<String> firstRowVariables = new ArrayList<>();
-        firstRowVariables.add("Name");
-        firstRowVariables.add("Type");
-        firstRowVariables.add("Icon (Property)");
-        firstRowVariables.add("Description");
-        firstRowVariables.add("Status");
-        firstRowVariables.add("Price");
-
-        List<String> secondRowVariables = new ArrayList<>();
-        secondRowVariables.add(card.getCardName());
-        secondRowVariables.add(card.getCardType() + "");
-        if (card.getCardType().equals(CardType.TRAP)) {
-            TrapCard trapCard = (TrapCard) card;
-            secondRowVariables.add(trapCard.getTrapCardValue() + "");
-        } else {
-            SpellCard spellCard = (SpellCard) card;
-            secondRowVariables.add(spellCard.getSpellCardValue() + "");
-        }
-        secondRowVariables.add(card.getCardDescription());
-        secondRowVariables.add(card.getNumberOfAllowedUsages() == 3 ? "Unlimited" : "Limited");
-        secondRowVariables.add(card.getCardPrice() + "");
-
-        List<List<String>> wholeCSVFile = new ArrayList<>();
-        wholeCSVFile.add(firstRowVariables);
-        wholeCSVFile.add(secondRowVariables);
-
-        return wholeCSVFile;
-    }
-
-    private List<List<String>> toCSVFormatSpellTrapCard(Card card) {
-
-        MonsterCard monsterCard = (MonsterCard) card;
-
-        List<String> firstRowVariables = new ArrayList<>();
-        firstRowVariables.add("Name");
-        firstRowVariables.add("Level");
-        firstRowVariables.add("Attribute");
-        firstRowVariables.add("Monster Type");
-        firstRowVariables.add("Card Type");
-        firstRowVariables.add("Atk");
-        firstRowVariables.add("Def");
-        firstRowVariables.add("Description");
-        firstRowVariables.add("Price");
-
-        List<String> secondRowVariables = new ArrayList<>();
-        secondRowVariables.add(monsterCard.getCardName());
-        secondRowVariables.add(monsterCard.getLevel() + "");
-        secondRowVariables.add(monsterCard.getMonsterCardAttribute() + "");
-        secondRowVariables.add(monsterCard.getMonsterCardFamily() + "");
-        secondRowVariables.add(monsterCard.getMonsterCardValue() + "");
-        secondRowVariables.add(monsterCard.getAttackPower() + "");
-        secondRowVariables.add(monsterCard.getDefensePower() + "");
-        secondRowVariables.add(monsterCard.getCardDescription());
-        secondRowVariables.add(monsterCard.getCardPrice() + "");
-
-        List<List<String>> wholeCSVFile = new ArrayList<>();
-        wholeCSVFile.add(firstRowVariables);
-        wholeCSVFile.add(secondRowVariables);
-
-        return wholeCSVFile;
-    }
-
-    private String toJsonFormatMonsterCard(Card card) {
-
-        MonsterCard monsterCard = (MonsterCard) card;
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("Name", monsterCard.getCardName());
-        jsonObject.addProperty("Level", monsterCard.getLevel());
-        jsonObject.addProperty("Attribute", monsterCard.getMonsterCardAttribute().toString());
-        jsonObject.addProperty("Monster Type", monsterCard.getMonsterCardFamily().toString());
-        jsonObject.addProperty("Card Type", monsterCard.getMonsterCardValue().toString());
-        jsonObject.addProperty("Attack Power", monsterCard.getAttackPower());
-        jsonObject.addProperty("Defence Power", monsterCard.getDefensePower());
-        jsonObject.addProperty("Description", monsterCard.getCardDescription());
-        jsonObject.addProperty("Price", monsterCard.getCardPrice());
-        return jsonObject.toString();
-
-    }
-
-    private String toJsonFormatSpellAndTrapCard(Card card) {
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("Name", card.getCardName());
-        jsonObject.addProperty("Card Type", card.getCardType().toString());
-        if (card.getCardType().equals(CardType.TRAP)) {
-            TrapCard trapCard = (TrapCard) card;
-            jsonObject.addProperty("Card Property", trapCard.getTrapCardValue().toString());
-        } else {
-            SpellCard spellCard = (SpellCard) card;
-            jsonObject.addProperty("Card Property", spellCard.getSpellCardValue().toString());
-        }
-        jsonObject.addProperty("Description", card.getCardDescription());
-        jsonObject.addProperty("Status", card.getNumberOfAllowedUsages() == 3 ? "Unlimited" : "Limited");
-        jsonObject.addProperty("Price", card.getCardPrice());
-        return jsonObject.toString();
-    }
 
     public void backToMainMenu() {
         try {
