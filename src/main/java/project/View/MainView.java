@@ -17,7 +17,7 @@ public class MainView extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        URL welcomeUrl = getClass().getResource("/project/fxml/mainMenu.fxml");
+        URL welcomeUrl = getClass().getResource("/project/fxml/rockPaperScissorPage.fxml");
         root = FXMLLoader.load(welcomeUrl);
         MainView.stage = stage;
         stage.setResizable(false);
@@ -26,11 +26,11 @@ public class MainView extends Application {
         stage.show();
     }
 
-    
     public static void main(String[] args) throws IOException {
         Storage storage = new Storage();
         storage.startProgram();
         UIUtility.createPreliminaryToStartProgram();
+        LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
         storage.endProgram();
     }

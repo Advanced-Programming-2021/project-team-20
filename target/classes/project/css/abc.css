@@ -19,14 +19,29 @@
    -fx-background-image: url("importAndExport.PNG");
 } 
 
-.scroll-pane .viewport2 {
-   
-} 
-
 .chart-plot-background3{
    -fx-background-image: url('deckPackground.PNG');
    -fx-background-size: 100%  100%;
+}
 
+.chart-plot-background4{
+   -fx-background-image: url('mainDeckBackground.PNG');
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background5{
+   -fx-background-image: url('sideDeckBackground.PNG');
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background6{
+   -fx-background-image: url('backGroundOfScrollPane.png');
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background7{
+   -fx-background-image: url('backGroundOfCardsInImportAndExport.PNG');
+   -fx-background-size: 100%  100%;
 }
 
 .table-view {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import project.View.LoginController;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
@@ -34,7 +35,7 @@ public class StartDuel {
             return "there is no player with this username";
         }
         User secondUser = Storage.getUserByName(foundCommands.get("secondPlayer"));
-        User firstUser = Profile.getOnlineUser();
+        User firstUser = LoginController.getOnlineUser();
         int numberOfRounds = Integer.parseInt(foundCommands.get("rounds"));
         if (getActiveDeck(firstUser) == null) {
             return firstUser.getName() + " has no active deck";

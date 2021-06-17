@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.List;
@@ -15,10 +16,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -48,30 +51,39 @@ public class ImportAndExportController implements Initializable {
     private Label importLabel;
     @FXML
     private Label exportLabel;
+
     private ImportAndExport importAndExport = new ImportAndExport();
-    private static List<List<Rectangle>> allCardsInDifferentPages;
+    private static List<List<Card>> allCardsInDifferentPages;
+    private static List<Rectangle> rectanglesToShowCards;
+    private List<Label> allCardDiscriptionLabelsForExport;
+    private List<Label> allCardDiscriptionLabelsForImport;
     private int whichPageIsShowing = 0;
     private static AnchorPane anchorPane;
-    private Rectangle chosenRectangleForExport;
+    private String cardNameForExport = "";
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        HashMap<String, Card> allCards = new HashMap<>();
-        allCards.putAll(Storage.getAllMonsterCards());
-        allCards.putAll(Storage.getAllSpellAndTrapCards());
-        int sizeOfWholeCards = allCards.size();
-        if (allCardsInDifferentPages == null) {
-            allCardsInDifferentPages = new ArrayList<>();
-            for (int i = 0; i < Math.floorDiv(sizeOfWholeCards, 64) + 1; i++) {
-                allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards, (i + 1))));
-            }
+
+        if (rectanglesToShowCards == null) {
+            rectanglesToShowCards = UIUtility.getRectanglesToShowCardsInImportAndExportClass();
+            addEffectsToRectanglesThatShowCards();
         }
 
-        if (sizeOfWholeCards > allCardsInDifferentPages.size() * 64) {
-            allCardsInDifferentPages = new ArrayList<>();
-            for (int i = 0; i < Math.floorDiv(sizeOfWholeCards, 64) + 1; i++) {
-                allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards, (i + 1))));
-            }
+        allCardDiscriptionLabelsForExport = new ArrayList<>();
+        allCardDiscriptionLabelsForExport = List.copyOf(UIUtility.getAllCardDiscriptionLabels1());
+        allCardDiscriptionLabelsForImport = new ArrayList<>();
+        allCardDiscriptionLabelsForImport = List.copyOf(UIUtility.getAllCardDiscriptionLabels2());
+        if (allCardsInDifferentPages == null) {
+            createPacksOfCardsForEachPage();
+        }
+
+        int sizeOfCardsInDifferentPages = 0;
+        for (int i = 0; i < allCardsInDifferentPages.size(); i++) {
+            sizeOfCardsInDifferentPages += allCardsInDifferentPages.get(i).size();
+        }
+
+        if (sizeOfCardsInDifferentPages != UIUtility.getAllTypeOfCards().get("allCards").size()) {
+            createPacksOfCardsForEachPage();
         }
         setEffectOfpreviousAndnextCardsbtn();
     }
@@ -90,86 +102,130 @@ public class ImportAndExportController implements Initializable {
         }
     }
 
-    private List<Card> generateOnePackOfCards(HashMap<String, Card> allCards, int pageNumber) {
-        List<Card> onePackOfCard = new ArrayList<>();
-        int counterCard = 0;
-        for (Map.Entry<String, Card> e : allCards.entrySet()) {
-            if (counterCard > (pageNumber - 1) * 64) {
-                onePackOfCard.add(e.getValue());
+    private void createPacksOfCardsForEachPage() {
+        allCardsInDifferentPages = new ArrayList<>();
+        List<Card> allCards = UIUtility.getAllTypeOfCards().get("allCards");
+        List<Card> cardsInOnePage = new ArrayList<>();
+
+        for (int i = 0; i < Math.floorDiv(allCards.size(), 30) + 1; i++) {
+            for (int j = 0; j < rectanglesToShowCards.size(); j++) {
+                if (i * 30 + j >= allCards.size()) {
+                    break;
+                }
+                cardsInOnePage.add(allCards.get(i * 30 + j));
             }
-            counterCard++;
-            if (counterCard >= 64 * pageNumber) {
-                break;
-            }
+            allCardsInDifferentPages.add(cardsInOnePage);
+            cardsInOnePage = new ArrayList<>();
         }
-        return onePackOfCard;
     }
 
-    private List<Rectangle> generateRectangleCardsInOnPage(List<Card> onePackOfCard) {
-        List<Rectangle> allCardsInOnePage = new ArrayList<>();
-        for (int j = 0; j < 8; j++) {
-            for (int k = 0; k < 8; k++) {
-                Rectangle rectangle = new Rectangle(35, 45);
-                rectangle.setX(290 + 50 * j);
-                rectangle.setY(110 + 50 * k);
-                InputStream stream = null;
-                try {
-                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\Unknown.jpg");
-                } catch (Exception e) {
-                    e.printStackTrace();
+    private void addEffectsToRectanglesThatShowCards() {
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            Rectangle rectangle = rectanglesToShowCards.get(i);
+            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent t) {
+                    exportRectangle.setFill(rectangle.getFill());
+                    exportRectangle.setOpacity(1);
+                    cardNameForExport = rectangle.getId();
+                    addCardDescription(rectangle.getId(), true);
                 }
-                Image image = new Image(stream);
-                rectangle.setFill(new ImagePattern(image));
-                rectangle.setArcHeight(20);
-                rectangle.setArcWidth(20);
-                //rectangle.setId("arg0");
-                // rectangle.setText
-                DropShadow e = new DropShadow();
-                e.setWidth(6);
-                e.setHeight(6);
-                e.setOffsetX(4);
-                e.setOffsetY(4);
-                rectangle.setEffect(e);
-                rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent t) {
-                        exportRectangle.setFill(rectangle.getFill());
-                        exportRectangle.setOpacity(1);
-                        chosenRectangleForExport = rectangle;
-                    }
-                });
-                allCardsInOnePage.add(rectangle);
-            }
+            });
         }
-        return allCardsInOnePage;
+    }
+
+    private void addCardDescription(String cardName, boolean isExportCard) {
+
+        Card card = Storage.getCardByName(cardName);
+        String cardDiscription = card.getCardDescription();
+        Pane pane = new Pane();
+        List<Label> allCardDiscriptionLabels = new ArrayList<>();
+        if(isExportCard){
+           allCardDiscriptionLabels = allCardDiscriptionLabelsForExport;
+        } else {
+            allCardDiscriptionLabels = allCardDiscriptionLabelsForImport;
+        }
+        Label label = allCardDiscriptionLabels.get(0);
+        label.setText(" " + cardName);
+        label.setTextFill(Color.YELLOW);
+        label.setFont(new Font(13));
+        pane.getChildren().add(label);
+        List<String> shortCardDescription = new ArrayList<>();
+        shortCardDescription = Arrays.asList(cardDiscription.split(" "));
+        StringBuilder sentencesForEachLabel = new StringBuilder();
+        int numberOfLabelUsed = 0;
+        for (int i = 0; i < shortCardDescription.size(); i++) {
+            label = allCardDiscriptionLabels.get(i + 1);
+            if (sentencesForEachLabel.length() >= 20) {
+                addEffectToLabel(label, sentencesForEachLabel.toString());
+                sentencesForEachLabel.setLength(0);
+                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                pane.getChildren().add(label);
+                numberOfLabelUsed++;
+            }
+            if (i == shortCardDescription.size()) {
+                addEffectToLabel(label, sentencesForEachLabel.toString());
+                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                pane.getChildren().add(label);
+            }
+
+            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
+        }
+
+        ScrollPane scrollPane = null;
+        if (isExportCard) {
+            scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
+        } else {
+            scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
+        }
+        scrollPane.setContent(pane);
+    }
+
+    private void addEffectToLabel(Label label, String text) {
+        label.setText("  " + text);
+        label.setTextFill(Color.BLACK);
     }
 
     public void createSceneAndCardPictures(AnchorPane pane) {
         setAnchorPane(pane);
-        MainView.changeScene(pane);
-        for (int i = 0; i < allCardsInDifferentPages.get(whichPageIsShowing).size(); i++) {
-            pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsShowing).get(i));
-            MainView.changeScene(pane);
-            // try {
-            //     Thread.sleep(500);
-            // } catch (Exception e) {
-            //     System.out.println("TODO: handle exception");
-            // }
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
+        List<Card> allCards = UIUtility.getAllTypeOfCards().get("allCards");
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            Rectangle rectangle = rectanglesToShowCards.get(i);
+            rectangle.setFill(new ImagePattern(allCards.get(i).getImage()));
+            rectangle.setId(allCards.get(i).getCardName());
+            backgroundPane.getChildren().add(rectangle);
         }
+        MainView.changeScene(pane);
     }
 
     public void nextPage() {
-        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
         whichPageIsShowing++;
         setEffectOfpreviousAndnextCardsbtn();
-        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            if (i >= allCardsInDifferentPages.get(whichPageIsShowing).size()) {
+                backgroundPane.getChildren().remove(rectanglesToShowCards.get(i));
+                continue;
+            }
+            rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
+            rectanglesToShowCards.get(i)
+                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+        }
     }
 
     public void previousPage() {
-        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
         whichPageIsShowing--;
         setEffectOfpreviousAndnextCardsbtn();
-        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            if (i >= backgroundPane.getChildren().size()) {
+                backgroundPane.getChildren().add(rectanglesToShowCards.get(i));
+            }
+            rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
+            rectanglesToShowCards.get(i)
+                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+        }
     }
 
     public void importFiles() {
@@ -185,28 +241,18 @@ public class ImportAndExportController implements Initializable {
             importLabel.setText("THIS FILE NOT A CARD");
             return;
         }
-        String filename = file.getName().substring(0, file.getName().lastIndexOf("."));
 
         importRectangle.setStroke(Color.DARKRED);
-        InputStream stream = null;
-        try {
-            if (Storage.getAllMonsterCards().containsKey(filename)) {
-//stream = new FileInputStream(Storage.getAllMonsterCards().get(filename).getImagePath());
-            } else {
-                // stream = new FileInputStream(Storage.getAllSpellAndTrapCards().get(filename).getImagePath());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Image image = new Image(stream);
+        Image image = Storage.getCardByName(result).getImage();
         importRectangle.setFill(new ImagePattern(image));
+        importRectangle.setOpacity(1);
+        addCardDescription(result, false);
         importRectangle.setEffect(new DropShadow(+25000d, 0d, +2d, Color.BLACK));
     }
 
     public void exportFiles() {
-
         exportLabel.setFont(new Font(24.0));
-        if (chosenRectangleForExport == null) {
+        if (cardNameForExport.equals("")) {
             exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             exportLabel.setText("CHOOSE A CARD");
             return;
@@ -217,8 +263,8 @@ public class ImportAndExportController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Card", "*.csv"));
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Card", "*.json"));
         File file = fileChooser.showSaveDialog(MainView.getStage());
-        String cardRectangle = chosenRectangleForExport.getId();
-        if (importAndExport.exportCard(cardRectangle, file).equals("ERROR")) {
+
+        if (importAndExport.exportCard(cardNameForExport, file).equals("ERROR")) {
             exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             exportLabel.setText("FILE CANNOT BE EXPORTED");
             return;

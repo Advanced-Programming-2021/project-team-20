@@ -42,7 +42,7 @@ public class MainController {
         if (isInDeckCommands) {
            // return deckCommands.findCommands(command);
         } else if (isInProfile) {
-            return profile.findCommands(command);
+            //return profile.findCommands(command);
         } else if (isInScoreBoard) {
             return scoreboard.findCommands(command);
         } else if (isInShop) {

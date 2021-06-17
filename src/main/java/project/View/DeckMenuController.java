@@ -1,5 +1,6 @@
 package project.View;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,15 +32,19 @@ import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 
 public class DeckMenuController implements Initializable {
-    
+
     @FXML
     private Button backbtn;
+    @FXML
+    private Button activateDeckbtn;
+    @FXML
+    private Label activatedStatusLabel;
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
     private static List<Rectangle> allScrollBarRectangle;
     private static List<Rectangle> allScrollBarBackGroundRectangles;
     private static AnchorPane anchorPane;
-    private String deckname;
+    private static String deckname = new String();
     private Rectangle shownCardRectangle;
     private static List<Label> allCardDiscriptionLabels;
     private DeckCommands deckCommands = new DeckCommands();
@@ -48,20 +54,22 @@ public class DeckMenuController implements Initializable {
     private static Label sizeOfAllSpellCardsLabel;
     private static Label sizeOfAllTrapCardsLabel;
     private static boolean isAddedNecessaryThingsForTheFirstTime = false;
+    private static Label equalActivatedStatusLabel;
+    private static Button equalActivateDeckbtn;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        //
+        equalActivatedStatusLabel = activatedStatusLabel;
+        equalActivateDeckbtn = activateDeckbtn;
     }
 
-    public void showPage(AnchorPane pane, String deckname) {
+    public void showPage(AnchorPane pane, String chosenDeck) {
         setAnchorPane(pane);
-        this.deckname = deckname;
+        deckname = "" + chosenDeck;
         allScrollBarLabels = UIUtility.getAllScrollBarLabels();
-        allCardDiscriptionLabels = UIUtility.getAllCardDiscriptionLabels();
+        allCardDiscriptionLabels = UIUtility.getAllCardDiscriptionLabels1();
         if (!isAddedNecessaryThingsForTheFirstTime) {
             initializeLabesForShowSizeOfDeck();
-            addDragAndDropEffect();
         }
         // check createAllCardToRectangle
         getRectanglesFromUIUtilityForPanes();
@@ -69,6 +77,16 @@ public class DeckMenuController implements Initializable {
         createMainDeck();
         createSideDeck();
         showNmberOfCardsInLabels();
+        addDragAndDropEffect();
+
+        if (LoginController.getOnlineUser().getDecks().get(deckname).getIsDeckActive()) {
+            equalActivatedStatusLabel.setTextFill(Color.GREEN);
+            equalActivatedStatusLabel.setText("activated");
+            equalActivateDeckbtn.setDisable(true);
+        } else {
+            equalActivatedStatusLabel.setTextFill(Color.RED);
+            equalActivatedStatusLabel.setText("inActivated");
+        }
         shownCardRectangle = (Rectangle) pane.getChildren().get(0);
         shownCardRectangle.setFill(new ImagePattern(Storage.getUnknownCard().getImage()));
         MainView.changeScene(pane);
@@ -108,10 +126,8 @@ public class DeckMenuController implements Initializable {
         });
 
         mainDeckPane.setOnDragDropped(e -> {
-            if (canTransfateToMainDeck(e)) {
-                transferCardToMainOrSideDeck(e, mainDeckPane, true);
-                showNmberOfCardsInLabels();
-            }
+            transferCardToMainOrSideDeck(e, mainDeckPane, true);
+            showNmberOfCardsInLabels();
         });
 
         Pane sideDeckPane = (Pane) anchorPane.getChildren().get(4);
@@ -122,66 +138,68 @@ public class DeckMenuController implements Initializable {
         });
 
         sideDeckPane.setOnDragDropped(e -> {
-            if (canTransfateToSideDeck(e)) {
-                transferCardToMainOrSideDeck(e, sideDeckPane, false);
-                showNmberOfCardsInLabels();
-            }
+            transferCardToMainOrSideDeck(e, sideDeckPane, false);
+            showNmberOfCardsInLabels();
         });
 
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         scrollPane.setOnDragOver(e -> {
-            if (true) {
+            Pane pane = (Pane) scrollPane.getContent();
+            if (!pane.getChildren().contains(e.getGestureSource())) {
                 e.acceptTransferModes(TransferMode.MOVE);
             }
         });
 
         scrollPane.setOnDragDropped(e -> {
-            if (true) {
-                transferCardToScrollBar(e);
-                showNmberOfCardsInLabels();
-            }
+            transferCardToScrollBar(e);
+            showNmberOfCardsInLabels();
         });
     }
 
     private void transferCardToScrollBar(DragEvent e) {
 
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
-        deleteDraggedCard(transfferdRectangle);
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         Pane pane = (Pane) scrollPane.getContent();
         Rectangle equalRectangleInScrollBar = null;
         for (int i = 0; i < pane.getChildren().size(); i++) {
-            if (pane.getChildren().get(i).getId().equals(transfferdRectangle.getId())) {
+            String IdOfchildOfPane = pane.getChildren().get(i).getId();
+            if (IdOfchildOfPane == null) {
+                continue;
+            }
+            if (IdOfchildOfPane.equals(transfferdRectangle.getId() + "scrollBar")) {
                 equalRectangleInScrollBar = (Rectangle) pane.getChildren().get(i);
                 equalRectangleInScrollBar.setOpacity(1);
                 addOnDragDetectedEffectForCard(equalRectangleInScrollBar);
             }
-            if (pane.getChildren().get(i).getId().equals(transfferdRectangle.getId() + "label")) {
+            if (IdOfchildOfPane.replace("scrollBar", "").equals(transfferdRectangle.getId() + "label")) {
                 Label label = (Label) pane.getChildren().get(i);
                 label.setText((Integer.parseInt(label.getText()) + 1) + "");
             }
         }
-        // deckCommands.addCardToAllUselessCards(transfferdRectangle.getId());
+        deleteDraggedCard(transfferdRectangle);
+        deckCommands.addCardToAllUselessCards(transfferdRectangle.getId());
     }
 
     private void transferCardToMainOrSideDeck(DragEvent e, Pane pane, boolean isTransferToMainDeck) {
-
-        int numberOdCardsInMainDeck = pane.getChildren().size();
+        int numberOdCardsInMainoRSideDeck = pane.getChildren().size();
         Rectangle addedRectangle = null;
         if (isTransferToMainDeck) {
-            addedRectangle = allMainDeckRectangle.get(numberOdCardsInMainDeck);
+            addedRectangle = allMainDeckRectangle.get(numberOdCardsInMainoRSideDeck);
         } else {
-            addedRectangle = allSideDeckRectangle.get(numberOdCardsInMainDeck);
+            addedRectangle = allSideDeckRectangle.get(numberOdCardsInMainoRSideDeck);
         }
-        addedRectangle.setX((numberOdCardsInMainDeck % 10) * 40);
-        addedRectangle.setY(65 * (numberOdCardsInMainDeck / 10));
 
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
         copyPropertyToTransferredCard(transfferdRectangle, addedRectangle);
         pane.getChildren().add(addedRectangle);
         deleteDraggedCard(transfferdRectangle);
-        // deckCommands.addCardToMainOrSideDeck(deckname, addedRectangle.getId(),
-        // isTransferToMainDeck);
+
+        String nameOfAddedCard = addedRectangle.getId();
+        if (nameOfAddedCard.contains("scrollBar")) {
+            nameOfAddedCard = nameOfAddedCard.replace("scrollBar", "");
+        }
+        deckCommands.addCardToMainOrSideDeck(deckname, nameOfAddedCard, isTransferToMainDeck);
     }
 
     private void deleteDraggedCard(Rectangle transfferdRectangle) {
@@ -212,16 +230,24 @@ public class DeckMenuController implements Initializable {
         Rectangle rectangle = (Rectangle) e.getGestureSource();
         boolean isSizeDeckValid = LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfMainDeck() < 60;
         boolean isCardFromThisPart = pane.getChildren().contains(rectangle);
-        boolean canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname, rectangle.getId());
+        boolean canAddAnotherCardToDeck = true;
+        if (rectangle.getId().contains("scrollBar")) {
+            canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname,
+                    rectangle.getId().replace("scrollBar", ""));
+        }
         return isSizeDeckValid && !isCardFromThisPart && canAddAnotherCardToDeck;
     }
 
     private boolean canTransfateToSideDeck(DragEvent e) {
         Pane pane = (Pane) anchorPane.getChildren().get(4);
         Rectangle rectangle = (Rectangle) e.getGestureSource();
-        boolean isSizeDeckValid = LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfMainDeck() < 15;
+        boolean isSizeDeckValid = LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfSideDeck() < 15;
         boolean isCardFromThisPart = pane.getChildren().contains(rectangle);
-        boolean canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname, rectangle.getId());
+        boolean canAddAnotherCardToDeck = true;
+        if (rectangle.getId().contains("scrollBar")) {
+            canAddAnotherCardToDeck = deckCommands.canAddCardToDeck(deckname,
+                    rectangle.getId().replace("scrollBar", ""));
+        }
         return isSizeDeckValid && !isCardFromThisPart && canAddAnotherCardToDeck;
     }
 
@@ -245,8 +271,6 @@ public class DeckMenuController implements Initializable {
                 Rectangle rectangle = allMainDeckRectangle.get(i * 10 + j);
                 rectangle.setFill(new ImagePattern(mainDeckCards.get(i * 10 + j).getImage()));
                 rectangle.setId(mainDeckCards.get(i * 10 + j).getCardName());
-                rectangle.setX(40 * j);
-                rectangle.setY(65 * i);
                 addOnDragDetectedEffectForCard(rectangle);
                 addOnMouseClickedEffectForCard(rectangle);
                 mainDeckPane.getChildren().add(rectangle);
@@ -275,8 +299,6 @@ public class DeckMenuController implements Initializable {
                 Rectangle rectangle = allSideDeckRectangle.get(i * 10 + j);
                 rectangle.setFill(new ImagePattern(sideDeckCards.get(i * 10 + j).getImage()));
                 rectangle.setId(sideDeckCards.get(i * 10 + j).getCardName());
-                rectangle.setX(40 * j);
-                rectangle.setY(65 * i);
                 addOnDragDetectedEffectForCard(rectangle);
                 addOnMouseClickedEffectForCard(rectangle);
                 sideDeckPane.getChildren().add(rectangle);
@@ -286,13 +308,13 @@ public class DeckMenuController implements Initializable {
 
     private void createScrollPaneWithAllUselessCards() {
         List<Card> scrollCards = UIUtility.getAllTypeOfCards().get("allCards");
-        Pane pane = new AnchorPane();
+        Pane pane = new Pane();
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         for (int i = 0; i < scrollCards.size(); i++) {
             Rectangle rectangle = allScrollBarRectangle.get(i);
             Rectangle backGrouRectangle = allScrollBarBackGroundRectangles.get(i);
             rectangle.setFill(new ImagePattern(scrollCards.get(i).getImage()));
-            rectangle.setId(scrollCards.get(i).getCardName());
+            rectangle.setId(scrollCards.get(i).getCardName() + "scrollBar");
             addOnDragDetectedEffectForCard(rectangle);
             addOnMouseClickedEffectForCard(rectangle);
             rectangle.setX(10);
@@ -328,9 +350,29 @@ public class DeckMenuController implements Initializable {
         scrollPane.setContent(pane);
     }
 
+    private void deleteCardFromScrollBar(Rectangle transfferdRectangle) {
+        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
+        Pane pane = (Pane) scrollPane.getContent();
+        for (int i = 0; i < pane.getChildren().size(); i++) {
+            String childOfPaneId = pane.getChildren().get(i).getId();
+            if (childOfPaneId == null) {
+                continue;
+            }
+            if (childOfPaneId.equals(transfferdRectangle.getId().replace("scrollBar", "") + "label")) {
+                Label label = (Label) pane.getChildren().get(i);
+                label.setText((Integer.parseInt(label.getText()) - 1) + "");
+                if (label.getText().equals("0")) {
+                    transfferdRectangle.setOpacity(0.5);
+                    transfferdRectangle.setOnDragDetected(null);
+                }
+            }
+        }
+        deckCommands.deleteCardFromAllUselessCards(transfferdRectangle.getId().replace("scrollBar", ""));
+    }
+
     private int countNumberOfCardsInUselessCards(String cardname) {
         List<String> allUseLessCards = LoginController.getOnlineUser().getAllUselessCards();
-        return Collections.frequency(allUseLessCards, cardname);
+        return Collections.frequency(allUseLessCards, cardname.replace("scrollBar", ""));
     }
 
     private boolean doesCardExistInUseLessCards(String cardname) {
@@ -352,14 +394,20 @@ public class DeckMenuController implements Initializable {
             @Override
             public void handle(MouseEvent t) {
                 shownCardRectangle.setFill(rectangle.getFill());
-                addCardDescription(rectangle.getId());
+                String cardName = "";
+                if (rectangle.getId().contains("scrollBar")) {
+                    cardName = rectangle.getId().replace("scrollBar", "");
+                    addCardDescription(cardName);
+                } else {
+                    addCardDescription(rectangle.getId());
+                }
             }
         });
     }
 
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
-        // deckCommands.deleteCardFromMainOrSideDeck(deckname,
-        // transfferdRectangle.getId(), isDeleteFromMainDeck);
+
+        deckCommands.deleteCardFromMainOrSideDeck(deckname, transfferdRectangle.getId(), isDeleteFromMainDeck);
         int indexOfRemovedRectanlge = pane.getChildren().indexOf(transfferdRectangle);
         for (int i = indexOfRemovedRectanlge; i < pane.getChildren().size() - 1; i++) {
             Rectangle rectangle = (Rectangle) pane.getChildren().get(i);
@@ -368,27 +416,6 @@ public class DeckMenuController implements Initializable {
             rectangle.setId(rectangle2.getId());
         }
         pane.getChildren().remove(pane.getChildren().size() - 1);
-    }
-
-    private void deleteCardFromScrollBar(Rectangle transfferdRectangle) {
-        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
-        Pane pane = (Pane) scrollPane.getContent();
-        // Rectangle equalRectangle = null;
-        for (int i = 0; i < pane.getChildren().size(); i++) {
-            // Rectangle rectangle = (Rectangle) pane.getChildren().get(i);
-            // if (rectangle.getId().equals(transfferdRectangle.getId())) {
-            // equalRectangle = rectangle;
-            // equalRectangle.setOpacity(0.5);
-            // }
-            if (pane.getChildren().get(i).getId().equals(transfferdRectangle.getId() + "label")) {
-                Label label = (Label) pane.getChildren().get(i);
-                label.setText((Integer.parseInt(label.getText()) - 1) + "");
-                if (label.getText().equals("0")) {
-                    transfferdRectangle.setOpacity(0.5);
-                }
-            }
-        }
-        // deckCommands.deleteCardFromAllUselessCards(transfferdRectangle.getId());
     }
 
     private void addCardDescription(String cardName) {
@@ -408,9 +435,9 @@ public class DeckMenuController implements Initializable {
             label = allCardDiscriptionLabels.get(i + 1);
             if (sentencesForEachLabel.length() >= 20) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
+                sentencesForEachLabel.setLength(0);
                 label.setLayoutY(20 * (numberOfLabelUsed + 1));
                 pane.getChildren().add(label);
-                sentencesForEachLabel.setLength(0);
                 numberOfLabelUsed++;
             }
             if (i == shortCardDescription.size()) {
@@ -418,15 +445,23 @@ public class DeckMenuController implements Initializable {
                 label.setLayoutY(20 * (numberOfLabelUsed + 1));
                 pane.getChildren().add(label);
             }
+
             sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
         }
+
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(5);
         scrollPane.setContent(pane);
     }
 
     private void addEffectToLabel(Label label, String text) {
-        label.setText(" " + text);
-        label.setTextFill(Color.WHITE);
+        label.setText("  " + text);
+        label.setTextFill(Color.BLACK);
+    }
+
+    public void activeDeck() {
+        equalActivatedStatusLabel.setTextFill(Color.GREEN);
+        equalActivatedStatusLabel.setText("activated");
+        deckCommands.activateDeck(deckname);
     }
 
     public static void setAnchorPane(AnchorPane anchorPane) {
@@ -434,10 +469,12 @@ public class DeckMenuController implements Initializable {
     }
 
     public void backToMainMenu() {
+        AnchorPane pane = null;
         try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
+            pane = FXMLLoader.load(getClass().getResource("/project/fxml/wholeDecksPage.fxml"));
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        new wholeDeckPageMenuController().showPage(pane);
     }
 }

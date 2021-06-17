@@ -62,13 +62,13 @@ public class DeckCommands {
     // }
 
     private String showAllCards() {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         List<String> allCards = new ArrayList<>();
         for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
             allCards.addAll(entry.getValue().getMainDeck());
             allCards.addAll(entry.getValue().getSideDeck());
         }
-        allCards.addAll(Profile.getOnlineUser().getAllUselessCards());
+        allCards.addAll(LoginController.getOnlineUser().getAllUselessCards());
 
         allCards = allCards.stream().distinct().collect(Collectors.toList());
         Collections.sort(allCards);
@@ -91,7 +91,7 @@ public class DeckCommands {
 
     private String showOneDeck(HashMap<String, String> foundCommands) {
 
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         if (allDecksOfUser == null || !allDecksOfUser.containsKey(foundCommands.get("show deck with name"))) {
             return "deck with name " + foundCommands.get("show deck with name") + " does not exist";
         }
@@ -131,7 +131,7 @@ public class DeckCommands {
     }
 
     private String showAllDecks() {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         StringBuilder showAllDecks = new StringBuilder();
         showAllDecks.append("Decks:\nActive deck:\n");
         if (allDecksOfUser == null) {
@@ -161,16 +161,16 @@ public class DeckCommands {
     }
 
     public void deleteCardFromMainOrSideDeck(String deckname, String cardname, boolean isDeleteFromMainDeck) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         if (isDeleteFromMainDeck) {
-            allDecksOfUser.get(deckname).deleteCardFromSideDeck(cardname);
+            allDecksOfUser.get(deckname).deleteCardFromMainDeck(cardname);
         } else {
             allDecksOfUser.get(deckname).deleteCardFromSideDeck(cardname);
         }
     }
 
     public void addCardToMainOrSideDeck(String deckname, String cardname, boolean isCardAddedToMainDeck) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         if (isCardAddedToMainDeck) {
             allDecksOfUser.get(deckname).addCardToMainDeck(cardname);
         } else {
@@ -188,7 +188,7 @@ public class DeckCommands {
 
     public boolean canAddCardToDeck(String deckname, String cardname) {
 
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
 
         int numberOfCardsInDeck = allDecksOfUser.get(deckname).numberOfCardsInDeck(cardname);
         int numberOfAllowedUsages = 0;
@@ -203,35 +203,27 @@ public class DeckCommands {
         return true;
     }
 
-    private String activateDeck(String deckname) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
-        if (allDecksOfUser == null || !allDecksOfUser.containsKey(deckname)) {
-            return "deck with name " + deckname + " does not exist";
-        }
+    public String activateDeck(String deckname) {
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
-            allDecksOfUser.get(entry.getKey()).setDeckActive(false);
+            entry.getValue().setDeckActive(false);
         }
         allDecksOfUser.get(deckname).setDeckActive(true);
         return "deck activated successfully!";
     }
 
     public String deleteDeck(String deckname) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
-        if (allDecksOfUser == null || !allDecksOfUser.containsKey(deckname)) {
-            return "deck does not exist";
-        }
-        Profile.getOnlineUser().deleteDeck(deckname);
+    
+        LoginController.getOnlineUser().deleteDeck(deckname);
         return "deck deleted successfully!";
-
     }
 
     public String createDeck(String deckname) {
-
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         if (allDecksOfUser != null && allDecksOfUser.containsKey(deckname)) {
             return "deck already exists";
         }
-        Profile.getOnlineUser().addDeckToAllDecks(deckname, new Deck(deckname));
+        LoginController.getOnlineUser().addDeckToAllDecks(deckname, new Deck(deckname));
         return "deck created successfully!";
     }
 

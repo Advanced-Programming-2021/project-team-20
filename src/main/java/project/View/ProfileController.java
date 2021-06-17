@@ -25,6 +25,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 
@@ -49,31 +50,18 @@ public class ProfileController implements Initializable {
     private PasswordField newPasswordField;
     @FXML
     private TextField newNicknameField;
-
-    private String imageName;
+    private Profile profile = new Profile();
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        showImage((LoginController.getOnlineUser().getImagePath()));
+        showImage((LoginController.getOnlineUser().getImage()));
         nicknameLabel.setText(LoginController.getOnlineUser().getNickname());
         usernameLabel.setText(LoginController.getOnlineUser().getName());
     }
 
-    private void showImage(String path) {
-        InputStream stream = null;
-        try {
-            stream = new FileInputStream(path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Image image = new Image(stream);
+    private void showImage(Image image) {
         rectangleImage.setFill(new ImagePattern(image));
         rectangleImage.setEffect(new DropShadow(+25000d, 0d, +2d, Color.BLACK));
-        rectangleImage.setOpacity(1);
-        rectangleImage.setArcHeight(25);
-        rectangleImage.setArcWidth(25);
-        
-
     }
 
     public void changeImage(ActionEvent actionEvent) {
@@ -85,23 +73,8 @@ public class ProfileController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("images", "*.PNG"));
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("images", "*.JPG"));
         File file = fileChooser.showOpenDialog(MainView.getStage());
-        imageName = file.getName();
-        User user = Storage.getAllUsers().get(0);
-        user.setImagePath(makeImageAndGetItsPath());
-    }
-
-    private String makeImageAndGetItsPath() {
-        String imagePath = "src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\" + imageName
-                + LoginController.getOnlineUser().getName() + ".png";
-        try {
-            File file = new File(imagePath);
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write("str");
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return imagePath;
+        profile.changeImage(file.getAbsolutePath());
+        rectangleImage.setFill(new ImagePattern(LoginController.getOnlineUser().getImage()));
     }
 
     public void changePassword(ActionEvent actionEvent) {
@@ -109,46 +82,47 @@ public class ProfileController implements Initializable {
         if (currentPasswordField.getText().equals("") || newPasswordField.getText().equals("")) {
             // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             // label.setText("FILL FIELDS");
-            // return;
+            currentPasswordField.setText("");
+            newPasswordField.setText("");
+            return;
         }
-        if (!LoginController.getOnlineUser().getPassword().equals(currentPasswordField.getText())) {
+        String result = profile.changePassword(currentPasswordField.getText(), newPasswordField.getText());
+        if (result.equals("current password is invalid")) {
             // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             // label.setText("CURRENT PASSWORD IS WRONG");
-            // return;
-        }
-        if (newPasswordField.getText().equals(currentPasswordField.getText())) {
+
+        } else if (result.equals("please enter a new password")) {
             // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             // label.setText("ENTER NEW PASSWORD");
-            // return;
+
         }
 
-        LoginController.getOnlineUser().setPassword(newPasswordField.getText());
+        currentPasswordField.setText("");
+        newPasswordField.setText("");
+        // else {} show successful change password message
 
     }
 
     public void changeNickname(ActionEvent actionEvent) {
+
         if (newNicknameField.getText().equals("")) {
             // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             // label.setText("FILL FIELDS");
-            // return;
+            return;
         }
-        if (doesUserWithThisNicknameAlreadyExists()) {
+
+        String result = profile.changeNickname(newNicknameField.getText());
+        if (result.equals("user with nickname already exists")) {
             // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             // label.setText("NEW NICKNAME IS REPEATED");
-            // return;
+            newNicknameField.setText("");
+            return;
         }
 
-        LoginController.getOnlineUser().setNickname(newNicknameField.getText());
+        nicknameLabel.setText(newNicknameField.getText());
+        newNicknameField.setText("");
 
-    }
-
-    private boolean doesUserWithThisNicknameAlreadyExists() {
-        ArrayList<User> allUsers = Storage.getAllUsers();
-        for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getNickname().equals(newNicknameField.getText()))
-                return true;
-        }
-        return false;
+        // show successful message
     }
 
     public void backToMainMenu() {

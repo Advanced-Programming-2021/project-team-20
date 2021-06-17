@@ -71,7 +71,6 @@ public class Storage {
             JsonArray allDecksJson = new JsonArray();
 
             if (allDecks != null) {
-
                 for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
                     JsonObject wholeDeckJson = new JsonObject();
                     wholeDeckJson.addProperty("deckname", entry.getValue().getDeckname());
@@ -97,7 +96,6 @@ public class Storage {
                 System.out.println("some troubles");
                 System.exit(0);
             }
-
         }
     }
 
@@ -197,16 +195,13 @@ public class Storage {
     private void addMonsterCards() {
 
         try {
-
             FileReader filereader = new FileReader(addressOfStorage + "CSV\\Monster.csv");
             CSVReader csvReader = new CSVReader(filereader);
             String[] nextRecord;
 
             int firstRow = 0;
             while ((nextRecord = csvReader.readNext()) != null) {
-
                 if (firstRow > 0) {
-
                     allMonsterCards.put(nextRecord[0],
                             new MonsterCard(Integer.parseInt(nextRecord[5]), Integer.parseInt(nextRecord[6]),
                                     Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
@@ -289,9 +284,20 @@ public class Storage {
                         details.get("password").getAsString(), details.get("imagePath").getAsString());
                 user.setScore(details.get("score").getAsInt());
                 user.setMoney(details.get("money").getAsInt());
+                user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
             }
         }
+    }
+
+    private Image createImageOfUsers(String path) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(path );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Image(stream);
     }
 
     private void addDecksAndUselessCardsToUser(User user, String filename) throws FileNotFoundException {
