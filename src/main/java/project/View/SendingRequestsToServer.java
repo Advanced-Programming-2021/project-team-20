@@ -1,0 +1,363 @@
+package project.View;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.scene.control.Alert;
+import project.controller.duel.PreliminaryPackage.GameManager;
+import project.model.cardData.General.CardLocation;
+import project.model.cardData.General.CardPosition;
+import project.model.cardData.General.RowOfCardLocation;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.scene.control.Alert;
+import project.controller.duel.PreliminaryPackage.GameManager;
+import project.model.cardData.General.CardLocation;
+import project.model.cardData.General.CardPosition;
+import project.model.cardData.General.RowOfCardLocation;
+import project.model.modelsforview.CardView;
+
+public class SendingRequestsToServer {
+
+    public void sendNormalSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        System.out.println();
+        System.out.println();
+        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&" + output);
+        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("normal summon", true);
+        System.out.println("*" + output);
+        if (output.contains("successfully")) {
+            System.out.println("Am i really summoning");
+            DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
+        } else {
+            DuelView.setCardLocationToSendCardTo(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Normal Summoning Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+
+        }
+    }
+
+    public void sendTributeSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&" + output);
+        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("tribute summon", true);
+        if (output.contains("successfully")) {
+            DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
+        } else {
+            DuelView.setCardLocationToSendCardTo(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Tribute Summoning Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+        }
+    }
+
+    public void sendSpecialSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&" + output);
+        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("special summon", true);
+        System.out.println("*" + output);
+        if (output.contains("successfully")) {
+            DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
+        } else {
+            DuelView.setCardLocationToSendCardTo(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Special Summoning Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+        }
+    }
+
+    public void sendRitualSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&" + output);
+        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("ritual summon", true);
+        System.out.println("*" + output);
+        if (output.contains("successfully")) {
+            DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
+        } else {
+            DuelView.setCardLocationToSendCardTo(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Ritual Summoning Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+        }
+    }
+
+    public void sendSettingRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&&&&" + output);
+        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("set", true);
+        System.out.println("*" + output);
+        if (output.contains("successfully")) {
+            DuelView.getTransition().applyTransitionForSettingCard(cardView);
+        } else {
+            DuelView.setCardLocationToSendCardTo(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Setting Card Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+        }
+    }
+
+    public void sendActivateEffectRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&" + output);
+        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("activate effect", true);
+        System.out.println("*" + output);
+        if (output.contains("activated")) {
+            DuelView.getTransition().applyTransitionForActivatingSpellTrap(cardView);
+        } else {
+            DuelView.setCardLocationToSendCardTo(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Activate Effect Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+        }
+    }
+
+    public void sendAttackMonsterToMonsterRequestToServer(CardLocation cardLocationSelecting, CardLocation finalCardLocation, int yugiohIndex) {
+        System.out.println("ZENOS IS ATTACKING MONSTER TO MONSTER :select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&&&&" + output);
+        //controllerForView.getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        int yugiohOpponentMonsterIndex;
+        if (finalCardLocation == null) {
+            yugiohOpponentMonsterIndex = yugiohIndex;
+        } else {
+            yugiohOpponentMonsterIndex = changeArrayIndexFromOneToFiveToYuGiOhIndex(finalCardLocation.getIndex(), finalCardLocation.getRowOfCardLocation());
+        }
+        System.out.println("yugioh index is " + yugiohOpponentMonsterIndex);
+        output = GameManager.getDuelControllerByIndex(0).getInput("attack " + yugiohOpponentMonsterIndex, true);
+        System.out.println("*" + output);
+        //  if (output.contains("successfully")) {
+        //      transition.applyTransitionForSettingCard(cardView);
+        //  } else {
+        DuelView.setCardLocationToSendCardTo(null);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText("Attack Monster To Monster Message");
+        alert.setContentText(output);
+        alert.showAndWait();
+        if (output.contains("your opponent's monster is destroyed") || output.contains("the defense position monster is destroyed")) {
+
+        } else if (output.contains("your monster card is destroyed")) {
+            DestroyCardTransition destroyCardTransition = new DestroyCardTransition(DuelView.getDraggingObject());
+            destroyCardTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    destroyCardTransition.getCardView().setShouldBeInvisible(false);
+                    destroyCardTransition.getCardView().setX(DuelView.getBattleFieldView().getUpperLeftX() + DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() + 3 * (CardView.getCardWidth() + 20.5) - 5);
+                    destroyCardTransition.getCardView().setY(510 + 123 - 5 - 3);
+
+                    //controllerForView.sendCardToGraveyardZone(destroyCardTransition.getCardView()).play();
+                    Bounds bounds = destroyCardTransition.getCardView().localToScene(destroyCardTransition.getCardView().getBoundsInLocal());
+                    System.out.println("whrere is our card x = " + bounds.getMinX() + " y = " + bounds.getMinY());
+                }
+            });
+            destroyCardTransition.play();
+        }
+
+        //   }
+    }
+
+    public void sendAttackDirectRequestToServer(CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+        System.out.println("&&&&" + output);
+        //controllerForView.getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        output = GameManager.getDuelControllerByIndex(0).getInput("attack direct", true);
+        System.out.println("*" + output);
+        //  if (output.contains("successfully")) {
+        //      transition.applyTransitionForSettingCard(cardView);
+        //  } else {
+        DuelView.setCardLocationToSendCardTo(null);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText("Direct Attack Message");
+        alert.setContentText(output);
+        alert.showAndWait();
+        //   }
+    }
+
+    public void sendFlipSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        System.out.println("&&&&" + output);
+        output = GameManager.getDuelControllerByIndex(0).getInput("flip-summon", true);
+        System.out.println("*" + output);
+        if (!output.equals("")) {
+            if (output.contains("successfully")) {
+                DuelView.getTransition().applyTransitionForFlipSummoning(cardView);
+            } else {
+                DuelView.setCardLocationToSendCardTo(null);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText("Flip Summoning Message");
+                alert.setContentText(output);
+                alert.showAndWait();
+            }
+        }
+    }
+
+    public void sendChangingCardPositionRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        System.out.println("&&&&" + output);
+        CardPosition cardPosition = cardView.getCard().getCardPosition();
+        output = "";
+        boolean finallyAttackPosition = false;
+        if (cardPosition.equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
+            output = GameManager.getDuelControllerByIndex(0).getInput("set --position defense", true);
+        } else if (cardPosition.equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
+            finallyAttackPosition = true;
+            output = GameManager.getDuelControllerByIndex(0).getInput("set --position attack", true);
+        }
+        System.out.println("*" + output);
+        if (!output.equals("")) {
+            if (output.contains("successfully")) {
+                if (finallyAttackPosition) {
+                    DuelView.getTransition().applyTransitionForChangingMonsterPositionToFaceUpAttackPosition(cardView);
+                } else {
+                    DuelView.getTransition().applyTransitionForChangingMonsterPositionToFaceUpDefensePosition(cardView);
+                }
+            } else {
+                DuelView.setCardLocationToSendCardTo(null);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText("Change Card Position Message");
+                alert.setContentText(output);
+                alert.showAndWait();
+            }
+        }
+    }
+
+    public static int changeArrayIndexFromOneToFiveToYuGiOhIndex(int cardIndex, RowOfCardLocation rowOfCardLocation) {
+        boolean seeminglyChoosingSelf = rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE);
+        boolean seeminglyChoosingOther = rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE);
+        if (seeminglyChoosingSelf) {
+            if (cardIndex == 1) {
+                return 5;
+            } else if (cardIndex == 2) {
+                return 3;
+            } else if (cardIndex == 3) {
+                return 1;
+            } else if (cardIndex == 4) {
+                return 2;
+            }
+            return 4;
+        } else if (seeminglyChoosingOther) {
+            if (cardIndex == 1) {
+                return 4;
+            } else if (cardIndex == 2) {
+                return 2;
+            } else if (cardIndex == 3) {
+                return 1;
+            } else if (cardIndex == 4) {
+                return 3;
+            }
+            return 5;
+        }
+        return cardIndex;
+    }
+
+    public static String giveStringToGiveToServerByCardLocation(CardLocation cardLocation) {
+        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)) {
+            if (turn == 1) {
+                return "--spell " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            } else {
+                return "--opponent --spell " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
+            if (turn == 1) {
+                return "--monster " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            } else {
+                return "--opponent --monster " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
+            if (turn == 1) {
+                return "--field ";
+            } else {
+                return "--opponent --field ";
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)) {
+            if (turn == 1) {
+                return "--graveyard " + cardLocation.getIndex();
+            } else {
+                return "--opponent --graveyard " + cardLocation.getIndex();
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
+            if (turn == 1) {
+                return "--hand " + cardLocation.getIndex();
+            } else {
+                return "--opponent --hand " + cardLocation.getIndex();
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_DECK_ZONE)) {
+            if (turn == 1) {
+                return "--deck " + cardLocation.getIndex();
+            } else {
+                return "--opponent --deck " + cardLocation.getIndex();
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {
+            if (turn == 1) {
+                return "--opponent --spell " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            } else {
+                return "--spell " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+            if (turn == 1) {
+                return "--opponent --monster " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            } else {
+                return "--monster " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
+            if (turn == 1) {
+                return "--opponent --field";
+            } else {
+                return "--field";
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)) {
+            if (turn == 1) {
+                return "--opponent --graveyard " + cardLocation.getIndex();
+            } else {
+                return "--graveyard " + cardLocation.getIndex();
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+            if (turn == 1) {
+                return "--opponent --hand " + cardLocation.getIndex();
+            } else {
+                return "--hand " + cardLocation.getIndex();
+            }
+        } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_DECK_ZONE)) {
+            if (turn == 1) {
+                return "--opponent --deck " + cardLocation.getIndex();
+            } else {
+                return "--deck " + cardLocation.getIndex();
+            }
+        } else {
+            return "";
+        }
+    }
+}

@@ -48,11 +48,13 @@ public class MainMenuController implements Initializable {
     }
 
     public void shopMenu() {
+        AnchorPane pane = null;
         try {
-            new MainView().changeView("/project/fxml/shopPage.fxml");
+            pane = FXMLLoader.load(getClass().getResource("/project/fxml/shopPage.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new ShopController().createSceneAndCardPictures(pane);
     }
 
     public void goToImportAndExportMenu() {
