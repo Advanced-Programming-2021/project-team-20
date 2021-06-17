@@ -173,9 +173,6 @@ public class MoreCardInfoSection {
                 vBox.getChildren().add(label);
                 sentencesForEachLabel.setLength(0);
                 numberOFLabelUsed++;
-                for (int i = 0; i < vBox.getChildren().size(); i++) {
-                    System.out.println("mother fucker " + vBox.getChildren().get(i));
-                }
                 ScrollPane scrollPaneForCardMoreInfo = DuelView.getScrollPaneForCardMoreInfo();
                 scrollPaneForCardMoreInfo.setPannable(true);
                 scrollPaneForCardMoreInfo.setLayoutY(battleFieldView.getUpperLeftY() + 486 + 30 + 30 + 60);
