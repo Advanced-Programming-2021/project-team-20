@@ -9,14 +9,14 @@ class ViewTestClass {
 
     View view;
 
-    @BeforeAll
-    void startView() {
-        view = new View();
-        View.setCurrentMenu("Main Menu");
-    }
+    // @BeforeAll
+    // void startView() {
+    //     view = new View();
+    //     View.setCurrentMenu("Main Menu");
+    // }
 
-    @Test
-    void currentMenuTest() {
-        assertEquals("Main Menu", View.getCurrentMenu());
-    }
+    // @Test
+    // void currentMenuTest() {
+    //     assertEquals("Main Menu", View.getCurrentMenu());
+    // }
 }

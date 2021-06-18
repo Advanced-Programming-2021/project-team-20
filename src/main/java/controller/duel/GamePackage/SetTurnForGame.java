@@ -1,13 +1,11 @@
 package controller.duel.GamePackage;
 
-import java.util.Random;
-
 import controller.duel.PreliminaryPackage.GameManager;
 
 public class SetTurnForGame {
 
-    private boolean isFirstPlayerCanSelect = true;
-    private boolean isSecondPlayerCanSelect = false;
+    private boolean canFirstPlayerSelect = true;
+    private boolean canSecondPlayerSelect = false;
     private int player1Selection;
     private int player2Selection;
 
@@ -16,11 +14,11 @@ public class SetTurnForGame {
         String allyPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
         String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
-        if (isFirstPlayerCanSelect) {
+        if (canFirstPlayerSelect) {
             if (input.equals("1") || input.equals("2") || input.equals("3")) {
                 player1Selection = Integer.parseInt(input);
-                isFirstPlayerCanSelect = false;
-                isSecondPlayerCanSelect = true;
+                canFirstPlayerSelect = false;
+                canSecondPlayerSelect = true;
                 if (!opponentPlayerName.equals("AI")) {
                     return opponentPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
                 }
@@ -30,20 +28,25 @@ public class SetTurnForGame {
         }
 
         if (opponentPlayerName.equals("AI")) {
-            player2Selection = 1 + new Random().nextInt(3);
+            if (player1Selection == 1) {
+                player2Selection = 3;
+            } else {
+                player2Selection = player1Selection - 1;
+            }
         } else {
-            if (isSecondPlayerCanSelect) {
+            if (canSecondPlayerSelect) {
                 if (input.equals("1") || input.equals("2") || input.equals("3")) {
                     player2Selection = Integer.parseInt(input);
-                    isSecondPlayerCanSelect = false;
+                    canSecondPlayerSelect = false;
                 } else {
                     return "please choose number between 1 to 3\n1.stone\n2.hand\n3.snips";
                 }
             }
         }
+
         if (player1Selection == player2Selection) {
-            isFirstPlayerCanSelect = true;
-            isSecondPlayerCanSelect = false;
+            canFirstPlayerSelect = true;
+            canSecondPlayerSelect = false;
             return "both player select similar choice\ndo this action again\n" + allyPlayerName
                     + " must choose\n1.stone\n2.hand\n3.snips";
         }
@@ -62,12 +65,11 @@ public class SetTurnForGame {
         setFieldsOfClassLikeForNextRound();
         GameManager.getDuelControllerByIndex(index).startDuel(index);
         return opponentPlayerName + " must start game";
-
     }
 
     private void setFieldsOfClassLikeForNextRound() {
-        isFirstPlayerCanSelect = true;
-        isSecondPlayerCanSelect = false;
+        canFirstPlayerSelect = true;
+        canSecondPlayerSelect = false;
         player1Selection = 0;
         player2Selection = 0;
     }

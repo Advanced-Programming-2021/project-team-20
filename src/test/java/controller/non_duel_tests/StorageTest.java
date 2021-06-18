@@ -39,12 +39,12 @@ class StorageTest {
 
     @Test
     void getAllSpellAndTrapCardSizeTest() {
-        assertEquals(35, Storage.getAllSpellAndTrapCards().size());
+        assertEquals(33, Storage.getAllSpellAndTrapCards().size());
     }
 
     @Test
     void getMonsterCardSizeTest() {
-        assertEquals(40, Storage.getAllMonsterCards().size());
+        assertEquals(41, Storage.getAllMonsterCards().size());
     }
 
     @Test
