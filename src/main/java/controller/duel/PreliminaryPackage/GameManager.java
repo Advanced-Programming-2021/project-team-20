@@ -9,6 +9,7 @@ import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectContr
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
 import controller.duel.GamePhaseControllers.*;
+import model.Deck;
 import model.cardData.General.Card;
 
 public class GameManager {
@@ -36,11 +37,12 @@ public class GameManager {
     public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
     public static ArrayList<AI> ais = new ArrayList<>();
 
-    public void addANewGame(ArrayList<Card> firstPlayerMainDeck, ArrayList<Card> firstPlayerSideDeck,
-            ArrayList<Card> secondPlayerMainDeck, ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername,
-            String secondPlayerUsername, int numberOfRounds) {
-        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, firstPlayerSideDeck,
-                secondPlayerSideDeck, numberOfRounds));
+    public void addANewGame(Deck firstPlayerActiveDeck, ArrayList<Card> firstPlayerMainDeck,
+    ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
+    ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
+    int numberOfRounds) {
+duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername,firstPlayerActiveDeck, firstPlayerSideDeck,
+      secondPlayerActiveDeck , secondPlayerSideDeck, numberOfRounds));
         duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
         activateMonsterControllers.add(new ActivateMonsterController());

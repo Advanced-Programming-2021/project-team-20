@@ -24,7 +24,7 @@ public class FakeMain {
         ArrayList<Card> secondPlayerDeck = new ArrayList<>();
         addCardsToFirstPlayer(firstPlayerDeck);
         addCardsToSecondPlayer(secondPlayerDeck);
-        gameManager.addANewGame(firstPlayerDeck, null,secondPlayerDeck,null, "zenos", "aii",1);
+    //    gameManager.addANewGame(firstPlayerDeck, null,secondPlayerDeck,null, "zenos", "aii",1);
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
         duelController.startDuel(0);
         //System.out.println(duelController.startDuel(0));

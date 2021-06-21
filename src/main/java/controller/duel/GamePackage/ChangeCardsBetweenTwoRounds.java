@@ -1,16 +1,15 @@
 package controller.duel.GamePackage;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
-import model.cardData.General.Card;
 
 public class ChangeCardsBetweenTwoRounds {
 
-    private ArrayList<Card> mainDeckCards;
-    private ArrayList<Card> sideDeckCards;
+    private List<String> mainDeckCards;
+    private List<String> sideDeckCards;
 
     public String changeCardsBetweenTwoRounds(int turn, String input, int index) {
 
@@ -18,17 +17,15 @@ public class ChangeCardsBetweenTwoRounds {
         String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
         if (turn == 1) {
-            mainDeckCards = GameManager.getDuelBoardByIndex(index).getAllyCardsInDeck();
-            sideDeckCards = GameManager.getDuelControllerByIndex(index).getAllySideDeckCards();
+            mainDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getMainDeck();
+            sideDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getSideDeck();
         } else if (turn == 2) {
-            mainDeckCards = GameManager.getDuelBoardByIndex(index).getOpponentCardsInDeck();
-            sideDeckCards = GameManager.getDuelControllerByIndex(index).getOpponentSideDeckCards();
+            mainDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getMainDeck();
+            sideDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getSideDeck();
         }
 
         if (input.equals("end")) {
-
             if (turn == 1) {
-                // System.out.println(opponentPlayerName);
                 if (opponentPlayerName.equals("AI")) {
                     GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
                     GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
@@ -50,54 +47,26 @@ public class ChangeCardsBetweenTwoRounds {
         if (matcher.find()) {
             String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
             String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");
-            return moveCards(cardToBeMovedToMainDeckStringFormat, cardToBeMovedToSideDeckStringFormat, turn, index);
+            return moveCards(cardToBeMovedToMainDeckStringFormat, cardToBeMovedToSideDeckStringFormat, index);
         }
 
         return "invalid command!";
     }
 
     private String moveCards(String cardToBeMovedToMainDeckStringFormat, String cardToBeMovedToSideDeckStringFormat,
-            int turn, int index) {
+            int index) {
 
-        Card cardToBeMovedToSideDeck = null;
-        Card cardToBeMovedToMainDeck = null;
-
-        for (int i = 0; i < sideDeckCards.size(); i++) {
-            if (sideDeckCards.get(i).getCardName().equals(cardToBeMovedToMainDeckStringFormat)) {
-                sideDeckCards.remove(i);
-                cardToBeMovedToMainDeck = sideDeckCards.get(i);
-                break;
-            }
-        }
-
-        for (int i = 0; i < mainDeckCards.size(); i++) {
-            if (mainDeckCards.get(i).getCardName().equals(cardToBeMovedToSideDeckStringFormat)) {
-                mainDeckCards.remove(i);
-                cardToBeMovedToSideDeck = mainDeckCards.get(i);
-                break;
-            }
-        }
-
-        if (cardToBeMovedToMainDeck == null)
+        if (!sideDeckCards.contains(cardToBeMovedToMainDeckStringFormat))
             return cardToBeMovedToMainDeckStringFormat + " does not exist in side deck";
 
-        if (cardToBeMovedToSideDeck == null)
+        if (!mainDeckCards.contains(cardToBeMovedToSideDeckStringFormat))
             return cardToBeMovedToSideDeckStringFormat + " does not exist in main deck";
 
-        mainDeckCards.add(cardToBeMovedToMainDeck);
-        sideDeckCards.add(cardToBeMovedToSideDeck);
-        transferCardsBetweenSideAndMainDeck(turn, index);
+        sideDeckCards.remove(cardToBeMovedToMainDeckStringFormat);
+        mainDeckCards.add((cardToBeMovedToMainDeckStringFormat));
+
+        mainDeckCards.remove(cardToBeMovedToSideDeckStringFormat);
+        sideDeckCards.add(cardToBeMovedToSideDeckStringFormat);
         return "cards moved successfully!";
-
-    }
-
-    private void transferCardsBetweenSideAndMainDeck(int turn, int index) {
-        if (turn == 1) {
-            GameManager.getDuelBoardByIndex(index).setAllyCardsInDeck(mainDeckCards);
-            GameManager.getDuelControllerByIndex(index).setAllySideDeckCards(sideDeckCards);
-        } else if (turn == 2) {
-            GameManager.getDuelBoardByIndex(index).setOpponentCardsInDeck(mainDeckCards);
-            GameManager.getDuelControllerByIndex(index).setOpponentSideDeckCards(sideDeckCards);
-        }
     }
 }

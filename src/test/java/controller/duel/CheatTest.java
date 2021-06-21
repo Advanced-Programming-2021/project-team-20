@@ -41,7 +41,7 @@ class CheatTest {
             cards.add(entry.getValue());
         }
         gameManager = new GameManager();
-        gameManager.addANewGame(cards, cards, cards, cards, "1", "AI", 1);
+        gameManager.addANewGame(null,cards, cards,null, cards, cards, "1", "AI", 1);
 
     }
 
@@ -113,7 +113,7 @@ class CheatTest {
         for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
             cards.add(entry.getValue());
         }
-        gameManager.addANewGame(cards, cards, cards, cards, "1", "AI", 1);
+        gameManager.addANewGame(null,cards, cards,null, cards, cards, "1", "AI", 1);
         actual = cheat.findCheatCommand("cheat duel set-winner AI", 0);
         assertEquals("AI won the whole match with score: 0 - 1000", actual);
 

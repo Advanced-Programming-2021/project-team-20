@@ -42,7 +42,7 @@ class DuelBoardTest {
             cards.add(entry.getValue());
         }
         gameManager = new GameManager();
-        gameManager.addANewGame(cards, cards, cards, cards, "1", "2", 1);
+        gameManager.addANewGame(null,cards, cards,null, cards, cards, "1", "2", 1);
     }
 
     @Test

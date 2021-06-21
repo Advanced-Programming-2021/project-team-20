@@ -3,6 +3,7 @@ package controller.duel.GamePackage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
 import controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
@@ -558,8 +559,8 @@ public class DuelBoard {
     }
 
     public void shuffleMainDecks() {
-        Collections.shuffle(allyCardsInDeck);
-        Collections.shuffle(opponentCardsInDeck);
+        Collections.shuffle(GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getMainDeck());
+        Collections.shuffle(GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getMainDeck());
     }
 
     public void resetCards(int player1Or2) {
@@ -568,23 +569,28 @@ public class DuelBoard {
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
 
         ArrayList<Card> allCardsInDeck = null;
+        List<String> allCardsInMainDeck = null;
         if (player1Or2 == 1) {
             allCardsInDeck = allyCardsInDeck;
+            allCardsInMainDeck = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getMainDeck();
         }
         if (player1Or2 == 2) {
             allCardsInDeck = opponentCardsInDeck;
+            allCardsInMainDeck = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getMainDeck();
         }
 
-        for (int i = 0; i < allCardsInDeck.size(); i++) {
-            if (allMonsterCards.containsKey(allCardsInDeck.get(i).getCardName())) {
-                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(allCardsInDeck.get(i).getCardName());
+        allCardsInDeck.clear();
+
+        for (int i = 0; i < allCardsInMainDeck.size(); i++) {
+            if (allMonsterCards.containsKey(allCardsInMainDeck.get(i))) {
+                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(allCardsInMainDeck.get(i));
                 allCardsInDeck.set(i, (MonsterCard) monsterCard.clone());
-            } else if (allSpellAndTrapCards.containsKey(allCardsInDeck.get(i).getCardName())) {
-                if (Card.isCardASpell(allCardsInDeck.get(i))) {
-                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(allCardsInDeck.get(i).getCardName());
+            } else if (allSpellAndTrapCards.containsKey(allCardsInMainDeck.get(i))) {
+                if (Card.isCardASpell(allSpellAndTrapCards.get(allCardsInMainDeck.get(i)))) {
+                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(allCardsInMainDeck.get(i));
                     allCardsInDeck.set(i, (SpellCard) spellCard.clone());
                 } else {
-                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(allCardsInDeck.get(i).getCardName());
+                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(allCardsInMainDeck.get(i));
                     allCardsInDeck.set(i, (TrapCard) trapCard.clone());
                 }
             }

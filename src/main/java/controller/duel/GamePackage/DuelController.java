@@ -1,6 +1,7 @@
 package controller.duel.GamePackage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
@@ -13,6 +14,7 @@ import controller.duel.Utility.Utility;
 import controller.duel.cheat.Cheat;
 import controller.non_duel.mainController.MainController;
 import controller.non_duel.storage.Storage;
+import model.Deck;
 import model.User;
 import model.cardData.General.Card;
 import model.cardData.MonsterCardData.MonsterCard;
@@ -29,6 +31,7 @@ public class DuelController {
     private boolean isGameOver;
     private boolean isAIPlaying;
     private int aiTurn;
+    private ArrayList<Deck> decksOfPlayers = new ArrayList<>();
     private ArrayList<Card> allySideDeckCards = new ArrayList<>();
     private ArrayList<Card> opponentSideDeckCards = new ArrayList<>();
     private ArrayList<String> playingUsers = new ArrayList<>();
@@ -41,8 +44,8 @@ public class DuelController {
     private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
     private SetTurnForGame setTurnForGame = new SetTurnForGame();
 
-    public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
-            ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
+    public DuelController(String firstUser, String secondUser, Deck allyActiveDeck, ArrayList<Card> allySideDeckCards,
+            Deck opponentActiveDeck, ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
         this.allySideDeckCards = allySideDeckCards;
         this.opponentSideDeckCards = opponentSideDeckCards;
@@ -50,6 +53,8 @@ public class DuelController {
         playingUsers.add(secondUser);
         lifePoints.add(8000);
         lifePoints.add(8000);
+        decksOfPlayers.add(allyActiveDeck);
+        decksOfPlayers.add(opponentActiveDeck);
         maxLifePointOfPlayers.add(0);
         maxLifePointOfPlayers.add(0);
         numberOfRoundsPlayersWon.add(0);
@@ -768,4 +773,8 @@ public class DuelController {
     public void setMaxLifePointOfPlayers(ArrayList<Integer> maxLifePointOfPlayers) {
         this.maxLifePointOfPlayers = maxLifePointOfPlayers;
     }
+
+   public ArrayList<Deck> getDecksOfPlayers() {
+       return decksOfPlayers;
+   }
 }

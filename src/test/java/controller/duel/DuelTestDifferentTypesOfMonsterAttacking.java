@@ -53,27 +53,27 @@ public class DuelTestDifferentTypesOfMonsterAttacking {
 
     }
 
-    @BeforeAll
-    static void startGame() {
-        GameManager gameManager = new GameManager();
-        ArrayList<Card> firstPlayerDeck = new ArrayList<>();
-        ArrayList<Card> secondPlayerDeck = new ArrayList<>();
-        addCardsToFirstPlayer(firstPlayerDeck);
-        addCardsToSecondPlayer(secondPlayerDeck);
-        gameManager.addANewGame(firstPlayerDeck, null, secondPlayerDeck, null, "zenos", "exdeath", 1);
-        DuelController duelController = GameManager.getDuelControllerByIndex(0);
-        duelController.getLifePoints().set(0, 8000);
-        duelController.getLifePoints().set(1, 8000);
-        duelController.setTurn(1);
-        duelController.setFakeTurn(1);
-        GameManager.getPhaseControllerByIndex(0).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
-        //duelController.startDuel(0);
-        //System.out.println(duelController.startDuel(0));i
-        //DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-        //System.out.println(duelBoard.showDuelBoard(0));
-        //boolean continueInput = true;
-        //String input;
-    }
+    // @BeforeAll
+    // static void startGame() {
+    //     GameManager gameManager = new GameManager();
+    //     ArrayList<Card> firstPlayerDeck = new ArrayList<>();
+    //     ArrayList<Card> secondPlayerDeck = new ArrayList<>();
+    //     addCardsToFirstPlayer(firstPlayerDeck);
+    //     addCardsToSecondPlayer(secondPlayerDeck);
+    //     gameManager.addANewGame(firstPlayerDeck, null, secondPlayerDeck, null, "zenos", "exdeath", 1);
+    //     DuelController duelController = GameManager.getDuelControllerByIndex(0);
+    //     duelController.getLifePoints().set(0, 8000);
+    //     duelController.getLifePoints().set(1, 8000);
+    //     duelController.setTurn(1);
+    //     duelController.setFakeTurn(1);
+    //     GameManager.getPhaseControllerByIndex(0).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
+    //     //duelController.startDuel(0);
+    //     //System.out.println(duelController.startDuel(0));i
+    //     //DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+    //     //System.out.println(duelBoard.showDuelBoard(0));
+    //     //boolean continueInput = true;
+    //     //String input;
+    // }
 
     @Test
     void battle() {
