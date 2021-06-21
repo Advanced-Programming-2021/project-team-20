@@ -10,7 +10,7 @@ public class LoginMenu {
 
     public String findCommand(String command) {
 
-        if (LoginMenuPatterns.isItCreateUserPattern(command)) {
+       if (LoginMenuPatterns.isItCreateUserPattern(command)) {
             if (doesUserWithThisUsernameAlreadyExistsCreateMenu(command)) {
                 String username = LoginMenuPatterns.findUsernameCreateUser(command);
                 return "user with username " + username + " already exists";

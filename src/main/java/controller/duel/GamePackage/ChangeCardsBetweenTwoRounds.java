@@ -26,10 +26,10 @@ public class ChangeCardsBetweenTwoRounds {
         }
 
         if (input.equals("end")) {
-            
+
             if (turn == 1) {
-            //    System.out.println(opponentPlayerName);
-                if(opponentPlayerName.equals("AI")){
+                // System.out.println(opponentPlayerName);
+                if (opponentPlayerName.equals("AI")) {
                     GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
                     GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
                     return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
@@ -64,6 +64,7 @@ public class ChangeCardsBetweenTwoRounds {
 
         for (int i = 0; i < sideDeckCards.size(); i++) {
             if (sideDeckCards.get(i).getCardName().equals(cardToBeMovedToMainDeckStringFormat)) {
+                sideDeckCards.remove(i);
                 cardToBeMovedToMainDeck = sideDeckCards.get(i);
                 break;
             }
@@ -71,6 +72,7 @@ public class ChangeCardsBetweenTwoRounds {
 
         for (int i = 0; i < mainDeckCards.size(); i++) {
             if (mainDeckCards.get(i).getCardName().equals(cardToBeMovedToSideDeckStringFormat)) {
+                mainDeckCards.remove(i);
                 cardToBeMovedToSideDeck = mainDeckCards.get(i);
                 break;
             }
