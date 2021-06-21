@@ -584,14 +584,14 @@ public class DuelBoard {
         for (int i = 0; i < allCardsInMainDeck.size(); i++) {
             if (allMonsterCards.containsKey(allCardsInMainDeck.get(i))) {
                 MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(allCardsInMainDeck.get(i));
-                allCardsInDeck.set(i, (MonsterCard) monsterCard.clone());
+                allCardsInDeck.add((MonsterCard) monsterCard.clone());
             } else if (allSpellAndTrapCards.containsKey(allCardsInMainDeck.get(i))) {
                 if (Card.isCardASpell(allSpellAndTrapCards.get(allCardsInMainDeck.get(i)))) {
                     SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(allCardsInMainDeck.get(i));
-                    allCardsInDeck.set(i, (SpellCard) spellCard.clone());
+                    allCardsInDeck.add((SpellCard) spellCard.clone());
                 } else {
                     TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(allCardsInMainDeck.get(i));
-                    allCardsInDeck.set(i, (TrapCard) trapCard.clone());
+                    allCardsInDeck.add((TrapCard) trapCard.clone());
                 }
             }
         }
@@ -644,14 +644,14 @@ public class DuelBoard {
 
     public String reverseWordsWhenTurnIs2(String input) {
         // System.out.println(input + " input");
-        String words[]=input.split("\\s");  
-        String reverseWord="";  
-        for(String w:words){  
-            StringBuilder sb=new StringBuilder(w);  
-            sb.reverse();  
-            reverseWord+=sb.toString()+"\t";  
-        }  
-        return reverseWord;  
+        String words[] = input.split("\\s");
+        String reverseWord = "";
+        for (String w : words) {
+            StringBuilder sb = new StringBuilder(w);
+            sb.reverse();
+            reverseWord += sb.toString() + "\t";
+        }
+        return reverseWord;
     }
 
     private StringBuilder toShowInDuelBoardFormatGraveyardAndFieldZone(int whichPlayer) {
@@ -681,7 +681,7 @@ public class DuelBoard {
         }
         int turn = GameManager.getDuelControllerByIndex(0).getTurn();
         if (turn == 2)
-           return reverseWordsWhenTurnIs2(showMonsterCards.reverse().toString());
+            return reverseWordsWhenTurnIs2(showMonsterCards.reverse().toString());
         return showMonsterCards.toString();
     }
 
