@@ -8,28 +8,27 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.animation.FadeTransition;
-import javafx.animation.FillTransition;
-import javafx.animation.PathTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.View.transitions.RockPaperScissorTransition;
+import project.controller.duel.PreliminaryPackage.GameManager;
 
 public class RockPaperScissorController implements Initializable {
 
+    private static final AlertType CONFIRMATION = null;
     @FXML
     private Rectangle scissor2Rectangle;
     @FXML
@@ -59,8 +58,8 @@ public class RockPaperScissorController implements Initializable {
     private boolean didPlayer2Select = false;
     private int player1Selection;
     private int player2Selection;
-    private static String palyer1name;
-    private static String player2Name;
+    private static String allyPlayerName;
+    private static String opponentPlayerName;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -77,6 +76,12 @@ public class RockPaperScissorController implements Initializable {
         rotateRectangles(scissor2Rectangle, 6);
         determineInitialCoordinates(scissor2Rectangle);
         fillRectangles();
+        determineUsers();
+    }
+
+    private void determineUsers() {
+        allyPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
+        opponentPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
     }
 
     private void determineInitialCoordinates(Rectangle rect) {
@@ -99,7 +104,6 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void rotateRectangles(Rectangle rec, int abc) {
-        // allTransitions = new HashMap<>();
         RockPaperScissorTransition moveRectangles = new RockPaperScissorTransition(rec);
         moveRectangles.play();
         if (abc == 1) {
@@ -115,15 +119,10 @@ public class RockPaperScissorController implements Initializable {
         } else if (abc == 6) {
             transition6 = moveRectangles;
         }
-        // System.out.println(rec.getId());
-        // allTransitions.put(rec.getId(), moveRectangles);
     }
 
     public void clickedRectangles(MouseEvent mouseEvent) {
         Rectangle rectangle = (Rectangle) mouseEvent.getSource();
-        // System.out.println(rectangle.getX() + " " + rectangle.getY() + "               ddddddddddddddddddddddddddddddd");
-        // System.out.println(rectangle.getLayoutX() + " " + rectangle.getLayoutY() + "               sssssssssssssssssssssssssssss");
-        
         int selection;
         if (rectangle.getId().contains("stone")) {
             selection = 1;
@@ -135,7 +134,10 @@ public class RockPaperScissorController implements Initializable {
         if (!canSecondPlayerSelect) {
             player1Selection = selection;
             canSecondPlayerSelect = true;
-        } else if (canSecondPlayerSelect) {
+            if (opponentPlayerName.equals("AI")) {
+                handleAIPlayerSelection();
+            }
+        } else {
             player2Selection = selection;
             didPlayer2Select = true;
             pauseTransition();
@@ -143,48 +145,74 @@ public class RockPaperScissorController implements Initializable {
         }
     }
 
-    private void handleResult() {
-        // for (Map.Entry<Rectangle, List<Double>> entry : initialCoordinates.entrySet()) {
-        //     TranslateTransition translate = new TranslateTransition();
-        //     translate.setFromX(-100);
-        //     translate.setFromY(0);
-        //     translate.setToX(entry.getValue().get(0) -100);
-        //     translate.setToY(entry.getValue().get(1) - 200);
-        //     translate.setDuration(Duration.millis(1000));
-        //     translate.setCycleCount(20);
-        //     translate.setNode(entry.getKey());
-        //     translate.play();
+    private void handleAIPlayerSelection() {
+        // try {
+        //     Thread.sleep(500);
+        // } catch (InterruptedException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
         // }
+        if (player1Selection == 1) {
+            player2Selection = 3;
+        } else {
+            player2Selection = player1Selection - 1;
+        }
+        didPlayer2Select = true;
+        pauseTransition();
+        handleResult();
+    }
+
+    private void handleResult() {
+        // for (Map.Entry<Rectangle, List<Double>> entry :
+        // initialCoordinates.entrySet()) {
+        // TranslateTransition translate = new TranslateTransition();
+        // double moveX = entry.getValue().get(0) - entry.getKey().getX();
+        // double moveY = entry.getValue().get(1) - entry.getKey().getY();
+        // translate.setToX(moveX);
+        // translate.setToY(moveY);
+        // translate.setDuration(Duration.millis(1000));
+        // translate.setCycleCount(1);
+        // translate.setNode(entry.getKey());
+        // translate.setOnFinished(new EventHandler<ActionEvent>() {
+        // @Override
+        // public void handle(ActionEvent arg0) {
+        // attackChosenRectangles();
+        // Rectangle rectangle = (Rectangle) translate.getNode();
+        // for (Map.Entry<Rectangle, List<Double>> entry :
+        // initialCoordinates.entrySet()) {
+        // if (entry.getKey().equals(rectangle)) {
+        // rectangle.setX(-moveX);
+        // rectangle.setY(-moveY);
+        // }
+        // }
+        // }
+        // });
+        // translate.play();
+        // }
+
         backRectanglesToFirstPlace();
         attackChosenRectangles();
         if (player1Selection == player2Selection) {
-            // show message
+            showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN");
+            player1Selection = 0;
+            player2Selection = 0;
+            didPlayer2Select = false;
+            canSecondPlayerSelect = false;
+            startTransition();
         } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
                 || (player1Selection == 3 && player2Selection == 2)) {
-
+            GameManager.getDuelControllerByIndex(0).setTurn(1);
+            GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(0).startDuel(0);
+            showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME");
+            new DuelView().start(new Stage());
         } else {
-
+            GameManager.getDuelControllerByIndex(0).setTurn(1);
+            GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(0).startDuel(0);
+            showAlert("PLAYER " + opponentPlayerName + " WON THE GAME AND MUST START GAME");
+            new DuelView().start(new Stage());
         }
-    }
-
-    private void attackChosenRectangles() {
-        player1SelectionRectangle.setOpacity(1);
-        player2SelectionRectangle.setOpacity(1);
-        if (player1Selection == 1) {
-            player1SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("stone")));
-        } else if (player1Selection == 2) {
-            player1SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("paper")));
-        } else {
-            player1SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("scissor")));
-        }
-        if (player2Selection == 1) {
-            player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("stone")));
-        } else if (player1Selection == 2) {
-            player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("paper")));
-        } else {
-            player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("scissor")));
-        }
-
     }
 
     private void backRectanglesToFirstPlace() {
@@ -192,9 +220,70 @@ public class RockPaperScissorController implements Initializable {
             entry.getKey().setX(entry.getValue().get(0));
             entry.getKey().setY(entry.getValue().get(1));
         }
-        // didPlayer2Select = false;
-        // canSecondPlayerSelect = false;
-        // startTransition();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(CONFIRMATION, message, ButtonType.OK);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    }
+
+    private void attackChosenRectangles() {
+        player1SelectionRectangle.setOpacity(1);
+        player2SelectionRectangle.setOpacity(1);
+        if (player1Selection == 1) {
+            player1SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterdStone")));
+        } else if (player1Selection == 2) {
+            player1SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterePaper")));
+        } else {
+            player1SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterdScissorBaz")));
+        }
+        if (player2Selection == 1) {
+            player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterdStone")));
+        } else if (player1Selection == 2) {
+            player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterePaper")));
+        } else {
+            player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterdScissorBaz")));
+        }
+
+        TranslateTransition transitionPlayer1Selection = createAttackTransition(player1SelectionRectangle, 324);
+        TranslateTransition transitionPlayer2Selection = createAttackTransition(player2SelectionRectangle, -324);
+
+        transitionPlayer1Selection.play();
+        transitionPlayer2Selection.play();
+
+    }
+
+    private TranslateTransition createAttackTransition(Rectangle rec, double position) {
+
+        TranslateTransition transitionPlayerSelection = new TranslateTransition();
+        transitionPlayerSelection.setDuration(Duration.millis(500));
+        transitionPlayerSelection.setFromX(rec.getX());
+        transitionPlayerSelection.setToX(position);
+        transitionPlayerSelection.setCycleCount(2);
+        transitionPlayerSelection.setNode(rec);
+
+        transitionPlayerSelection.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                createFadeTransition(transitionPlayerSelection.getNode());
+            }
+
+        });
+        transitionPlayerSelection.setAutoReverse(true);
+        return transitionPlayerSelection;
+    }
+
+    private void createFadeTransition(Node node) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), node);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
     }
 
     public void enterdToRectangles(MouseEvent mouseEvent) {
@@ -231,7 +320,6 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void startTransition() {
-        System.out.println(didPlayer2Select);
         if (!didPlayer2Select) {
             transition1.play();
             transition2.play();

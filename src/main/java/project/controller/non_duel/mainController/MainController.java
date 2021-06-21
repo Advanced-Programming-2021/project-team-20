@@ -1,7 +1,7 @@
 package project.controller.non_duel.mainController;
 
 import project.View.View;
-import project.controller.duel.PreliminaryPackage.StartDuel;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.non_duel.deckCommands.DeckCommands;
 import project.controller.non_duel.importAndExport.ImportAndExport;
 import project.controller.non_duel.profile.Profile;
@@ -26,7 +26,7 @@ public class MainController {
     private Scoreboard scoreboard = new Scoreboard();
     private Shop shop = new Shop();
     private ImportAndExport importAndExport = new ImportAndExport();
-    private StartDuel duel = new StartDuel();
+    private DuelStarter duel = new DuelStarter();
 
     public static MainController getInstance() {
         if (mainController == null) {
@@ -118,7 +118,7 @@ public class MainController {
         return false;
     }
 
-    public void setDuel(StartDuel duel) {
+    public void setDuel(DuelStarter duel) {
         this.duel = duel;
     }
 }

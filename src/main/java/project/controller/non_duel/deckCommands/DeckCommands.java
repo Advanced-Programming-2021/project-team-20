@@ -11,6 +11,7 @@ import project.View.LoginController;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
+import project.model.User;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 
@@ -160,8 +161,10 @@ public class DeckCommands {
         return showAllDecks.toString();
     }
 
-    public void deleteCardFromMainOrSideDeck(String deckname, String cardname, boolean isDeleteFromMainDeck) {
-        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
+    public void deleteCardFromMainOrSideDeck(String deckname, String cardname, boolean isDeleteFromMainDeck,
+            String playerName) {
+        User user = Storage.getUserByName(playerName);
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isDeleteFromMainDeck) {
             allDecksOfUser.get(deckname).deleteCardFromMainDeck(cardname);
         } else {
@@ -169,8 +172,10 @@ public class DeckCommands {
         }
     }
 
-    public void addCardToMainOrSideDeck(String deckname, String cardname, boolean isCardAddedToMainDeck) {
-        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
+    public void addCardToMainOrSideDeck(String deckname, String cardname, boolean isCardAddedToMainDeck,
+            String playerName) {
+        User user = Storage.getUserByName(playerName);
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isCardAddedToMainDeck) {
             allDecksOfUser.get(deckname).addCardToMainDeck(cardname);
         } else {
@@ -178,17 +183,19 @@ public class DeckCommands {
         }
     }
 
-    public void deleteCardFromAllUselessCards(String cardname) {
-        LoginController.getOnlineUser().deleteCardFromAllUselessCards(cardname);
+    public void deleteCardFromAllUselessCards(String cardname, String playerName) {
+        User user = Storage.getUserByName(playerName);
+        user.deleteCardFromAllUselessCards(cardname);
     }
 
-    public void addCardToAllUselessCards(String cardname) {
-        LoginController.getOnlineUser().addCardToAllUselessCards(cardname);
+    public void addCardToAllUselessCards(String cardname, String playerName) {
+        User user = Storage.getUserByName(playerName);
+        user.addCardToAllUselessCards(cardname);
     }
 
-    public boolean canAddCardToDeck(String deckname, String cardname) {
+    public boolean canAddCardToDeck(String deckname, String cardname, String playerName) {
 
-        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
 
         int numberOfCardsInDeck = allDecksOfUser.get(deckname).numberOfCardsInDeck(cardname);
         int numberOfAllowedUsages = 0;
@@ -203,8 +210,8 @@ public class DeckCommands {
         return true;
     }
 
-    public String activateDeck(String deckname) {
-        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
+    public String activateDeck(String deckname, String playerName) {
+        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
         for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
             entry.getValue().setDeckActive(false);
         }
@@ -212,26 +219,26 @@ public class DeckCommands {
         return "deck activated successfully!";
     }
 
-    public String deleteDeck(String deckname) {
-    
-        LoginController.getOnlineUser().deleteDeck(deckname);
+    public String deleteDeck(String deckname, String playerName) {
+
+        Storage.getUserByName(playerName).deleteDeck(deckname);
         return "deck deleted successfully!";
     }
 
-    public String createDeck(String deckname) {
-        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
+    public String createDeck(String deckname, String playerName) {
+        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
         if (allDecksOfUser != null && allDecksOfUser.containsKey(deckname)) {
             return "deck already exists";
         }
-        LoginController.getOnlineUser().addDeckToAllDecks(deckname, new Deck(deckname));
+        Storage.getUserByName(playerName).addDeckToAllDecks(deckname, new Deck(deckname));
         return "deck created successfully!";
     }
 
-    public HashMap<String, Integer> getNumberOfEachTypeOfCardsInDeck(String deckname) {
+    public HashMap<String, Integer> getNumberOfEachTypeOfCardsInDeck(String deckname, String playerName) {
         int numberOfMonsterCards = 0;
         int numberOfSpellCards = 0;
         int numberOfTrapCards = 0;
-        List<String> mainDeckCards = LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
+        List<String> mainDeckCards = Storage.getUserByName(playerName).getDecks().get(deckname).getMainDeck();
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
         sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
         sizeOfEachPart.put("sideDeckSize",

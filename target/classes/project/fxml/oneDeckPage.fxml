@@ -124,9 +124,9 @@
       </Rectangle>
       <Button fx:id="activateDeckbtn" layoutX="395.0" layoutY="645.0" mnemonicParsing="false" onAction="#activeDeck" prefHeight="31.0" prefWidth="116.0" text="activate " />
       <Button fx:id="confirm" layoutX="656.0" layoutY="645.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="116.0" text="confirm" />
-      <Label fx:id="activatedStatusLabel" alignment="CENTER" layoutX="38.0" layoutY="6.0" prefHeight="47.0" prefWidth="168.0" textFill="WHITE">
+      <Label fx:id="activatedStatusLabel" alignment="CENTER" layoutX="26.0" layoutY="14.0" prefHeight="45.0" prefWidth="200.0">
          <font>
-            <Font size="29.0" />
+            <Font size="24.0" />
          </font>
       </Label>
    </children>

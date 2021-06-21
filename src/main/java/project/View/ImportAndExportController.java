@@ -11,6 +11,9 @@ import java.util.ResourceBundle;
 import java.util.List;
 import java.util.Map;
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,8 +29,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.util.Duration;
 import project.controller.non_duel.importAndExport.ImportAndExport;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
@@ -85,10 +90,10 @@ public class ImportAndExportController implements Initializable {
         if (sizeOfCardsInDifferentPages != UIUtility.getAllTypeOfCards().get("allCards").size()) {
             createPacksOfCardsForEachPage();
         }
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectsOfButtons();
     }
 
-    private void setEffectOfpreviousAndnextCardsbtn() {
+    private void setEffectsOfButtons() {
         if (whichPageIsShowing + 1 == allCardsInDifferentPages.size()) {
             nextCardsbtn.setDisable(true);
         } else {
@@ -99,6 +104,12 @@ public class ImportAndExportController implements Initializable {
             previousCardsbtn.setDisable(true);
         } else {
             previousCardsbtn.setDisable(false);
+        }
+
+        if(cardNameForExport.equals("")){
+            exportbtn.setDisable(true);
+        } else {
+            exportbtn.setDisable(false);
         }
     }
 
@@ -120,18 +131,37 @@ public class ImportAndExportController implements Initializable {
     }
 
     private void addEffectsToRectanglesThatShowCards() {
+        
         for (int i = 0; i < rectanglesToShowCards.size(); i++) {
             Rectangle rectangle = rectanglesToShowCards.get(i);
             rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent t) {
+                    cardNameForExport = rectangle.getId();
+                    setEffectsOfButtons();
+                }
+            });
+
+            rectangle.setOnMouseEntered(new EventHandler<Event>() {
+                @Override
+                public void handle(Event arg0) {
                     exportRectangle.setFill(rectangle.getFill());
                     exportRectangle.setOpacity(1);
-                    cardNameForExport = rectangle.getId();
                     addCardDescription(rectangle.getId(), true);
+                    flipRectangle(exportRectangle);
                 }
             });
         }
+    }
+
+    private void flipRectangle(Rectangle rectangle) {
+        RotateTransition rotator = new RotateTransition(Duration.millis(1000), rectangle);
+        rotator.setAxis(Rotate.Y_AXIS);
+        rotator.setFromAngle(180);
+        rotator.setToAngle(0);
+        rotator.setInterpolator(Interpolator.LINEAR);
+        rotator.setCycleCount(1);
+        rotator.play();
     }
 
     private void addCardDescription(String cardName, boolean isExportCard) {
@@ -140,8 +170,8 @@ public class ImportAndExportController implements Initializable {
         String cardDiscription = card.getCardDescription();
         Pane pane = new Pane();
         List<Label> allCardDiscriptionLabels = new ArrayList<>();
-        if(isExportCard){
-           allCardDiscriptionLabels = allCardDiscriptionLabelsForExport;
+        if (isExportCard) {
+            allCardDiscriptionLabels = allCardDiscriptionLabelsForExport;
         } else {
             allCardDiscriptionLabels = allCardDiscriptionLabelsForImport;
         }
@@ -202,7 +232,7 @@ public class ImportAndExportController implements Initializable {
     public void nextPage() {
         AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
         whichPageIsShowing++;
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectsOfButtons();
         for (int i = 0; i < rectanglesToShowCards.size(); i++) {
             if (i >= allCardsInDifferentPages.get(whichPageIsShowing).size()) {
                 backgroundPane.getChildren().remove(rectanglesToShowCards.get(i));
@@ -217,7 +247,7 @@ public class ImportAndExportController implements Initializable {
     public void previousPage() {
         AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
         whichPageIsShowing--;
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectsOfButtons();
         for (int i = 0; i < rectanglesToShowCards.size(); i++) {
             if (i >= backgroundPane.getChildren().size()) {
                 backgroundPane.getChildren().add(rectanglesToShowCards.get(i));
@@ -248,6 +278,7 @@ public class ImportAndExportController implements Initializable {
         importRectangle.setOpacity(1);
         addCardDescription(result, false);
         importRectangle.setEffect(new DropShadow(+25000d, 0d, +2d, Color.BLACK));
+        flipRectangle(importRectangle);
     }
 
     public void exportFiles() {
@@ -271,6 +302,8 @@ public class ImportAndExportController implements Initializable {
         }
         exportLabel.setStyle("-fx-text-fill:green;-fx-padding:4 0 8 0;-fx-font-weight:bold");
         exportLabel.setText("FILE EXPORTED SUCCESSFULLY");
+        cardNameForExport = "";
+        setEffectsOfButtons();
     }
 
     public void backToMainMenu() {

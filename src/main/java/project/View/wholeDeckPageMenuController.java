@@ -124,7 +124,7 @@ public class wholeDeckPageMenuController implements Initializable {
             //
             return;
         }
-        deckCommands.deleteDeck(chosenDeck);
+        deckCommands.deleteDeck(chosenDeck, LoginController.getOnlineUser().getName());
         if (decksInDifferentPages.get(currentPageToShowDecks).size() == 1) {
             if (currentPageToShowDecks != 0) {
                 decksInDifferentPages.remove(currentPageToShowDecks);
@@ -175,7 +175,7 @@ public class wholeDeckPageMenuController implements Initializable {
 
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
-        String result = deckCommands.createDeck(createdDeckName);
+        String result = deckCommands.createDeck(createdDeckName, LoginController.getOnlineUser().getName());
         if (result.equals("deck already exists")) {
             //
             createdDeckNameField.setText("");
@@ -239,7 +239,7 @@ public class wholeDeckPageMenuController implements Initializable {
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
                     HashMap<String, Integer> sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(
-                            decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
+                            decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(), LoginController.getOnlineUser().getName());
 
                     labelsToShowInformationOfDeck.get("deckname" + i + "" + j)
                             .setText(sizeOfEachPart.get("mainDeckSize") + "");

@@ -231,9 +231,9 @@ public class DuelView extends Application {
 
     }
 
-    public static void main(String args[]) {
-        launch(args);
-    }
+    // public static void main(String args[]) {
+    //     launch(args);
+    // }
 
     public static Stage getStage() {
         return stage;

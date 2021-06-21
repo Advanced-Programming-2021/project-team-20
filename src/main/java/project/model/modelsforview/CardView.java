@@ -133,17 +133,19 @@ public class CardView extends Rectangle {
         } else if (canBeSeen) {
             if (card.getCardType().equals(CardType.MONSTER)) {
                 if (shouldBeSeen180DegreesReversed) {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm()),
+                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName.replaceAll("\\s+", "") + ".jpg").toExternalForm()),
                             upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false));
                 } else {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm())));
+                    System.out.println(cardName);
+                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName.replaceAll("\\s+", "") + ".jpg").toExternalForm())));
                 }
             } else {
                 if (shouldBeSeen180DegreesReversed) {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm()),
+                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName.replaceAll("\\s+", "") + ".jpg").toExternalForm()),
                             upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false));
                 } else {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm())));
+                    System.out.println(cardName + " 148");
+                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName.replaceAll("\\s+", "") + ".jpg").toExternalForm())));
                 }
             }
         } else {

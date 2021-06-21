@@ -9,6 +9,7 @@ import project.controller.duel.GamePackage.ActionConductors.AttackMonsterToMonst
 import project.controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
 import project.controller.duel.GamePackage.ai.AI;
 import project.controller.duel.GamePhaseControllers.*;
+import project.model.Deck;
 import project.model.cardData.General.Card;
 
 public class GameManager {
@@ -23,7 +24,8 @@ public class GameManager {
     public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
     public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
     public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
-    //public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
+    // public static ArrayList<MainPhaseController> mainPhaseControllers = new
+    // ArrayList<>();
     public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
     public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
     public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
@@ -36,11 +38,12 @@ public class GameManager {
     public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
     public static ArrayList<AI> ais = new ArrayList<>();
 
-    public void addANewGame(ArrayList<Card> firstPlayerMainDeck, ArrayList<Card> firstPlayerSideDeck,
-            ArrayList<Card> secondPlayerMainDeck, ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername,
-            String secondPlayerUsername, int numberOfRounds) {
-        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, firstPlayerSideDeck,
-                secondPlayerSideDeck, numberOfRounds));
+    public void addANewGame(Deck firstPlayerActiveDeck, ArrayList<Card> firstPlayerMainDeck,
+            ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
+            ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
+            int numberOfRounds) {
+        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername,firstPlayerActiveDeck, firstPlayerSideDeck,
+              secondPlayerActiveDeck , secondPlayerSideDeck, numberOfRounds));
         duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
         activateMonsterControllers.add(new ActivateMonsterController());
@@ -51,7 +54,7 @@ public class GameManager {
         changeCardPositionControllers.add(new ChangeCardPositionController());
         directAttackControllers.add(new DirectAttackController());
         continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
-        //mainPhaseControllers.add(new MainPhaseController());
+        // mainPhaseControllers.add(new MainPhaseController());
         normalSummonControllers.add(new NormalSummonController());
         flipSummonControllers.add(new FlipSummonController());
         specialSummonControllers.add(new SpecialSummonController());
@@ -76,7 +79,7 @@ public class GameManager {
         changeCardPositionControllers.remove(index);
         directAttackControllers.remove(index);
         continuousMonsterEffectControllers.remove(index);
-        //mainPhaseControllers.remove(index);
+        // mainPhaseControllers.remove(index);
         normalSummonControllers.remove(index);
         flipSummonControllers.remove(index);
         specialSummonControllers.remove(index);
@@ -165,7 +168,7 @@ public class GameManager {
         return uninterruptedActions.get(index);
     }
 
-    public static AI getAIByIndex(int index){
+    public static AI getAIByIndex(int index) {
         return ais.get(index);
     }
 

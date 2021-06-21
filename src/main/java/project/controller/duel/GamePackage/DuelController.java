@@ -8,11 +8,12 @@ import project.controller.duel.GamePackage.ActionConductors.NormalSummonConducto
 import project.controller.duel.GamePackage.ai.AI;
 import project.controller.duel.GamePhaseControllers.*;
 import project.controller.duel.PreliminaryPackage.GameManager;
-import project.controller.duel.PreliminaryPackage.StartDuel;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.Utility.Utility;
 import project.controller.duel.cheat.Cheat;
 import project.controller.non_duel.mainController.MainController;
 import project.controller.non_duel.storage.Storage;
+import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;
 import project.model.cardData.MonsterCardData.MonsterCard;
@@ -29,6 +30,7 @@ public class DuelController {
     private boolean isGameOver;
     private boolean isAIPlaying;
     private int aiTurn;
+    private ArrayList<Deck> decksOfPlayers = new ArrayList<>();
     private ArrayList<Card> allySideDeckCards = new ArrayList<>();
     private ArrayList<Card> opponentSideDeckCards = new ArrayList<>();
     private ArrayList<String> playingUsers = new ArrayList<>();
@@ -38,11 +40,11 @@ public class DuelController {
     private ArrayList<Integer> playersScores = new ArrayList<>();
     private ArrayList<Boolean> canUserSummonOrSetMonsters = new ArrayList<>();
     private ArrayList<String> allInputs = new ArrayList<>();
-    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
+    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds;
     private SetTurnForGame setTurnForGame = new SetTurnForGame();
 
-    public DuelController(String firstUser, String secondUser, ArrayList<Card> allySideDeckCards,
-            ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
+    public DuelController(String firstUser, String secondUser, Deck allyActiveDeck, ArrayList<Card> allySideDeckCards,
+            Deck opponentActiveDeck, ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
         this.allySideDeckCards = allySideDeckCards;
         this.opponentSideDeckCards = opponentSideDeckCards;
@@ -54,6 +56,8 @@ public class DuelController {
         maxLifePointOfPlayers.add(0);
         numberOfRoundsPlayersWon.add(0);
         numberOfRoundsPlayersWon.add(0);
+        decksOfPlayers.add(allyActiveDeck);
+        decksOfPlayers.add(opponentActiveDeck);
         playersScores.add(0);
         playersScores.add(0);
         canUserSummonOrSetMonsters.add(true);
@@ -103,7 +107,7 @@ public class DuelController {
         }
 
         if (!isPlayersChangedDecks) {
-            return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
+        //    return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(turn, string, 0);
         } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
@@ -481,7 +485,6 @@ public class DuelController {
         GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
-
     }
 
     public String endGame(int turn, int index) {
@@ -493,7 +496,7 @@ public class DuelController {
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         MainController mainController = MainController.getInstance();
-        mainController.setDuel(new StartDuel());
+        mainController.setDuel(new DuelStarter());
         mainController.exitMenu();
 
         return winnerUser.getName() + " won the whole match with score: "
@@ -767,5 +770,9 @@ public class DuelController {
 
     public void setMaxLifePointOfPlayers(ArrayList<Integer> maxLifePointOfPlayers) {
         this.maxLifePointOfPlayers = maxLifePointOfPlayers;
+    }
+
+    public ArrayList<Deck> getDecksOfPlayers() {
+        return decksOfPlayers;
     }
 }
