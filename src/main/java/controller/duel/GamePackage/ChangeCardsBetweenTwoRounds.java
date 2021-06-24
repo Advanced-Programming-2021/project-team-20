@@ -5,11 +5,19 @@ import java.util.regex.Matcher;
 
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.duel.Utility.Utility;
+import model.Deck;
 
 public class ChangeCardsBetweenTwoRounds {
 
+    private Deck allyPlayerDeck;
+    private Deck opponentPlayerDeck;
     private List<String> mainDeckCards;
     private List<String> sideDeckCards;
+
+    public ChangeCardsBetweenTwoRounds(Deck allyPlayerDeck, Deck opponentPlayerDeck) {
+        this.allyPlayerDeck = allyPlayerDeck;
+        this.opponentPlayerDeck = opponentPlayerDeck;
+    }
 
     public String changeCardsBetweenTwoRounds(int turn, String input, int index) {
 
@@ -17,11 +25,11 @@ public class ChangeCardsBetweenTwoRounds {
         String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
         if (turn == 1) {
-            mainDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getMainDeck();
-            sideDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getSideDeck();
+            mainDeckCards = allyPlayerDeck.getMainDeck();
+            sideDeckCards = allyPlayerDeck.getSideDeck();
         } else if (turn == 2) {
-            mainDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getMainDeck();
-            sideDeckCards = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getSideDeck();
+            mainDeckCards = opponentPlayerDeck.getMainDeck();
+            sideDeckCards = opponentPlayerDeck.getSideDeck();
         }
 
         if (input.equals("end")) {
@@ -68,5 +76,13 @@ public class ChangeCardsBetweenTwoRounds {
         mainDeckCards.remove(cardToBeMovedToSideDeckStringFormat);
         sideDeckCards.add(cardToBeMovedToSideDeckStringFormat);
         return "cards moved successfully!";
+    }
+
+    public Deck getAllyPlayerDeck() {
+        return allyPlayerDeck;
+    }
+
+    public Deck getOpponentPlayerDeck() {
+        return opponentPlayerDeck;
     }
 }

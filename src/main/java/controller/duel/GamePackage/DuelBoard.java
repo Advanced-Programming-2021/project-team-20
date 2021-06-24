@@ -559,8 +559,8 @@ public class DuelBoard {
     }
 
     public void shuffleMainDecks() {
-        Collections.shuffle(GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getMainDeck());
-        Collections.shuffle(GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getMainDeck());
+        Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck());
+        Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getMainDeck());
     }
 
     public void resetCards(int player1Or2) {
@@ -572,11 +572,11 @@ public class DuelBoard {
         List<String> allCardsInMainDeck = null;
         if (player1Or2 == 1) {
             allCardsInDeck = allyCardsInDeck;
-            allCardsInMainDeck = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(0).getMainDeck();
+            allCardsInMainDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck();
         }
         if (player1Or2 == 2) {
             allCardsInDeck = opponentCardsInDeck;
-            allCardsInMainDeck = GameManager.getDuelControllerByIndex(0).getDecksOfPlayers().get(1).getMainDeck();
+            allCardsInMainDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getMainDeck();
         }
 
         allCardsInDeck.clear();

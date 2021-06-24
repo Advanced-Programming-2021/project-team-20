@@ -17,6 +17,7 @@ import java.util.Map;
 public class StartDuel {
 
     private boolean isDuelStarted = false;
+    private GameManager gameManager = new GameManager();
 
     public String findCommand(String command) {
 
@@ -69,9 +70,8 @@ public class StartDuel {
         ArrayList<Card> secondUserMainDeck = getMainOrSideDeckCards(secondUserActiveDeck, true);
         ArrayList<Card> secondUserSideDeck = getMainOrSideDeckCards(secondUserActiveDeck, false);
 
-        GameManager gameManager = new GameManager();
-        gameManager.addANewGame(firstUserActiveDeck,firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,secondUserMainDeck, secondUserSideDeck,
-                firstUser.getName(), secondUser.getName(), roundsNumber);
+        gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
+                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
         GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
         GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
     }

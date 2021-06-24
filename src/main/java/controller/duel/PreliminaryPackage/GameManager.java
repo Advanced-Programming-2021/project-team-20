@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import controller.duel.GamePackage.ai.AI;
 import controller.duel.GamePackage.Action;
+import controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import controller.duel.GamePackage.ActionConductors.ContinuousMonsterEffectController;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.GamePackage.DuelController;
+import controller.duel.GamePackage.SetTurnForGame;
 import controller.duel.GamePhaseControllers.*;
 import model.Deck;
 import model.cardData.General.Card;
@@ -24,7 +26,8 @@ public class GameManager {
     public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
     public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
     public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
-    //public static ArrayList<MainPhaseController> mainPhaseControllers = new ArrayList<>();
+    // public static ArrayList<MainPhaseController> mainPhaseControllers = new
+    // ArrayList<>();
     public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
     public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
     public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
@@ -34,15 +37,16 @@ public class GameManager {
     public static ArrayList<SetCardController> setCardControllers = new ArrayList<>();
     public static ArrayList<SummonSetCommonClass> summonSetCommonClasses = new ArrayList<>();
     public static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
+    private static ArrayList<SetTurnForGame> setTurnForGames = new ArrayList<>();
+    private static ArrayList<ChangeCardsBetweenTwoRounds> changeCardsBetweenTwoRounds = new ArrayList<>();
     public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
     public static ArrayList<AI> ais = new ArrayList<>();
 
     public void addANewGame(Deck firstPlayerActiveDeck, ArrayList<Card> firstPlayerMainDeck,
-    ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
-    ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
-    int numberOfRounds) {
-duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername,firstPlayerActiveDeck, firstPlayerSideDeck,
-      secondPlayerActiveDeck , secondPlayerSideDeck, numberOfRounds));
+            ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
+            ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
+            int numberOfRounds) {
+        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));
         duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
         activateMonsterControllers.add(new ActivateMonsterController());
@@ -53,7 +57,7 @@ duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsern
         changeCardPositionControllers.add(new ChangeCardPositionController());
         directAttackControllers.add(new DirectAttackController());
         continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
-        //mainPhaseControllers.add(new MainPhaseController());
+        // mainPhaseControllers.add(new MainPhaseController());
         normalSummonControllers.add(new NormalSummonController());
         flipSummonControllers.add(new FlipSummonController());
         specialSummonControllers.add(new SpecialSummonController());
@@ -64,6 +68,8 @@ duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsern
         phaseControllers.add(new PhaseController());
         actions.add(new ArrayList<>());
         uninterruptedActions.add(new ArrayList<>());
+        changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
+        setTurnForGames.add(new SetTurnForGame());
         ais.add(new AI());
     }
 
@@ -78,7 +84,7 @@ duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsern
         changeCardPositionControllers.remove(index);
         directAttackControllers.remove(index);
         continuousMonsterEffectControllers.remove(index);
-        //mainPhaseControllers.remove(index);
+        // mainPhaseControllers.remove(index);
         normalSummonControllers.remove(index);
         flipSummonControllers.remove(index);
         specialSummonControllers.remove(index);
@@ -167,7 +173,7 @@ duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsern
         return uninterruptedActions.get(index);
     }
 
-    public static AI getAIByIndex(int index){
+    public static AI getAIByIndex(int index) {
         return ais.get(index);
     }
 
@@ -177,6 +183,14 @@ duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsern
 
     public static PhaseController getPhaseControllerByIndex(int index) {
         return phaseControllers.get(index);
+    }
+
+    public static SetTurnForGame getSetTurnForGamesByIndex(int index) {
+        return setTurnForGames.get(index);
+    }
+
+    public static ChangeCardsBetweenTwoRounds getChangeCardsBetweenTwoRoundsByIndex(int index) {
+        return changeCardsBetweenTwoRounds.get(index);
     }
 
 }

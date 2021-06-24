@@ -31,9 +31,6 @@ public class DuelController {
     private boolean isGameOver;
     private boolean isAIPlaying;
     private int aiTurn;
-    private ArrayList<Deck> decksOfPlayers = new ArrayList<>();
-    private ArrayList<Card> allySideDeckCards = new ArrayList<>();
-    private ArrayList<Card> opponentSideDeckCards = new ArrayList<>();
     private ArrayList<String> playingUsers = new ArrayList<>();
     private ArrayList<Integer> lifePoints = new ArrayList<>();
     private ArrayList<Integer> maxLifePointOfPlayers = new ArrayList<>();
@@ -41,20 +38,13 @@ public class DuelController {
     private ArrayList<Integer> playersScores = new ArrayList<>();
     private ArrayList<Boolean> canUserSummonOrSetMonsters = new ArrayList<>();
     private ArrayList<String> allInputs = new ArrayList<>();
-    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = new ChangeCardsBetweenTwoRounds();
-    private SetTurnForGame setTurnForGame = new SetTurnForGame();
 
-    public DuelController(String firstUser, String secondUser, Deck allyActiveDeck, ArrayList<Card> allySideDeckCards,
-            Deck opponentActiveDeck, ArrayList<Card> opponentSideDeckCards, int numberOfRounds) {
+    public DuelController(String firstUser, String secondUser, int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
-        this.allySideDeckCards = allySideDeckCards;
-        this.opponentSideDeckCards = opponentSideDeckCards;
         playingUsers.add(firstUser);
         playingUsers.add(secondUser);
         lifePoints.add(8000);
         lifePoints.add(8000);
-        decksOfPlayers.add(allyActiveDeck);
-        decksOfPlayers.add(opponentActiveDeck);
         maxLifePointOfPlayers.add(0);
         maxLifePointOfPlayers.add(0);
         numberOfRoundsPlayersWon.add(0);
@@ -99,6 +89,8 @@ public class DuelController {
         DirectAttackController directAttackController = GameManager.getDirectAttackControllerByIndex(0);
         ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+        ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
+        SetTurnForGame setTurnForGame = GameManager.getSetTurnForGamesByIndex(0);
 
         if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
@@ -474,8 +466,7 @@ public class DuelController {
     }
 
     public void startDuel(int index) {
-        turn = 1;
-        fakeTurn = 1;
+        fakeTurn = turn;
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
         if (turn == 1) {
             phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -666,14 +657,6 @@ public class DuelController {
         return currentRound;
     }
 
-    public ArrayList<Card> getAllySideDeckCards() {
-        return allySideDeckCards;
-    }
-
-    public ArrayList<Card> getOpponentSideDeckCards() {
-        return opponentSideDeckCards;
-    }
-
     public int getTotalTurnsUntilNow() {
         return totalTurnsUntilNow;
     }
@@ -750,14 +733,6 @@ public class DuelController {
         this.numberOfRounds = numberOfRounds;
     }
 
-    public void setAllySideDeckCards(ArrayList<Card> allySideDeckCards) {
-        this.allySideDeckCards = allySideDeckCards;
-    }
-
-    public void setOpponentSideDeckCards(ArrayList<Card> opponentSideDeckCards) {
-        this.opponentSideDeckCards = opponentSideDeckCards;
-    }
-
     public void setGameOver(boolean isGameOver) {
         this.isGameOver = isGameOver;
     }
@@ -773,8 +748,4 @@ public class DuelController {
     public void setMaxLifePointOfPlayers(ArrayList<Integer> maxLifePointOfPlayers) {
         this.maxLifePointOfPlayers = maxLifePointOfPlayers;
     }
-
-   public ArrayList<Deck> getDecksOfPlayers() {
-       return decksOfPlayers;
-   }
 }
