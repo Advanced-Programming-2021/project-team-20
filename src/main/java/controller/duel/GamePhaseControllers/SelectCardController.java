@@ -24,7 +24,7 @@ public class SelectCardController {
     }
 
     public String selectCardInputAnalysis(String string) {
-        String inputRegex = "(?<=\\n|^)(select[\\s]+--([\\S]+)(|[\\s]+--([\\S]+))(|[\\s]+([\\d]+))(?=\\n|$))";
+        String inputRegex = "(?<=\\n|^)(select[\\s]+(--|-)([\\S]+)(|[\\s]+(--|-)([\\S]+))(|[\\s]+([\\d]+))(?=\\n|$))";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         RowOfCardLocation rowOfCardLocation;
         DuelController duelController = GameManager.getDuelControllerByIndex(indexOfWholeGame);
@@ -49,7 +49,7 @@ public class SelectCardController {
                         //System.out.println(card.getCardName()+" is what is chosen");
                         selectedCardLocations.add(cardLocation);
                         for (int i = 0; i < selectedCardLocations.size(); i++) {
-                        //    System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString() + selectedCardLocations.get(i).getIndex());
+                            //    System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString() + selectedCardLocations.get(i).getIndex());
                         }
                         //System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName() + "is selected");
                         return "card selected";
@@ -99,41 +99,41 @@ public class SelectCardController {
         if (secondString == null) {
             secondString = "";
         }
-        if (firstString.equals("opponent") && secondString.equals("monster")) {
+        if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("monster") || secondString.equals("m"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, turn);
-        } else if (firstString.equals("monster") && secondString.equals("opponent")) {
+        } else if ((firstString.equals("monster") || firstString.equals("m")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, turn);
-        } else if (firstString.equals("spell") && secondString.equals("opponent")) {
+        } else if ((firstString.equals("spell") || firstString.equals("s")) && (secondString.equals("opponent") || secondString.equals("0"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, turn);
-        } else if (firstString.equals("opponent") && secondString.equals("spell")) {
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("spell") || secondString.equals("s"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, turn);
-        } else if (firstString.equals("field") && secondString.equals("opponent")) {
+        } else if ((firstString.equals("field") || firstString.equals("f")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, turn);
-        } else if (firstString.equals("opponent") && secondString.equals("field")) {
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("field") || secondString.equals("f"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, turn);
-        } else if (firstString.equals("hand") && secondString.equals("opponent")) {
+        } else if ((firstString.equals("hand") || firstString.equals("h")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, turn);
-        } else if (firstString.equals("opponent") && secondString.equals("hand")) {
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("hand") || secondString.equals("h"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, turn);
-        } else if (firstString.equals("deck") && secondString.equals("opponent")) {
+        } else if ((firstString.equals("deck") || firstString.equals("d")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, turn);
-        } else if (firstString.equals("opponent") && secondString.equals("deck")) {
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("deck") || secondString.equals("d"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, turn);
-        } else if (firstString.equals("graveyard") && secondString.equals("opponent")) {
+        } else if ((firstString.equals("graveyard") || firstString.equals("g")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, turn);
-        } else if (firstString.equals("opponent") && secondString.equals("graveyard")) {
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("graveyard") || secondString.equals("g"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, turn);
-        } else if (firstString.equals("monster") && secondString.equals("")) {
+        } else if ((firstString.equals("monster") || firstString.equals("m")) && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, turn);
-        } else if (firstString.equals("spell") && secondString.equals("")) {
+        } else if ((firstString.equals("spell") || firstString.equals("s")) && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, turn);
-        } else if (firstString.equals("field") && secondString.equals("")) {
+        } else if ((firstString.equals("field") || firstString.equals("f")) && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, turn);
-        } else if (firstString.equals("hand") && secondString.equals("")) {
+        } else if ((firstString.equals("hand") || firstString.equals("h")) && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_HAND_ZONE, turn);
-        } else if (firstString.equals("deck") && secondString.equals("")) {
+        } else if ((firstString.equals("deck") || firstString.equals("d")) && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_DECK_ZONE, turn);
-        } else if (firstString.equals("graveyard") && secondString.equals("")) {
+        } else if ((firstString.equals("graveyard") || firstString.equals("g")) && secondString.equals("")) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_GRAVEYARD_ZONE, turn);
         }
         return null;
@@ -182,7 +182,7 @@ public class SelectCardController {
         return selectedCardLocations.size() != 0;
     }
 
-    public void clearAllVariablesOfThisClass(){
+    public void clearAllVariablesOfThisClass() {
         selectedCardLocations.clear();
         indexOfWholeGame = 0;
     }

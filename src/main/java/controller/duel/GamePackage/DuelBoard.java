@@ -557,9 +557,8 @@ public class DuelBoard {
         freshSecondCards.addAll(secondPlayerDeck);
         allyCardsInDeck.clear();
         opponentCardsInDeck.clear();
-        System.out.println(freshFirstCards.size()==0);
         for (int i = 0; i < freshFirstCards.size() - 5; i++) {
-            allyCardsInDeck.add(freshSecondCards.get(i + 5));
+            allyCardsInDeck.add(freshFirstCards.get(i + 5));
         }
         for (int i = 0; i < freshSecondCards.size() - 5; i++) {
             opponentCardsInDeck.add(freshSecondCards.get(i + 5));

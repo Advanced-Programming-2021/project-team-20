@@ -17,8 +17,10 @@ public class ChangeCardPositionController extends SummonSetCommonClass {
 
     public String changeCardPositionInputAnalysis(String string) {
         String inputRegex = "(?<=\\n|^)set[\\s]+--position[\\s]+(attack|defense)(?=\\n|$)";
+        String secondInputRegex = "(?<=\\n|^)set[\\s]+-p[\\s]+(attack|defense)(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
-        if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
+        Matcher secondMatcher = Utility.getCommandMatcher(string, secondInputRegex);
+        if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher) || Utility.isMatcherCorrectWithoutErrorPrinting(secondMatcher)) {
             return startChecking(0, string);
         }
         return "invalid command";
