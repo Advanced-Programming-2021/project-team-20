@@ -131,5 +131,8 @@ public class ChainController {
 
         }
     }
-
+    public void clearAllVariablesOfThisClass(){
+        isClassWaitingForChainCardToBeSelected = false;
+        isGoingToChangeTurnsForChaining = false;
+    }
 }

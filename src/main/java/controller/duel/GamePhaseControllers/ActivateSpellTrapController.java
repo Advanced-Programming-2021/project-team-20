@@ -381,11 +381,11 @@ public class ActivateSpellTrapController extends ChainController {
                 if (isMoreInputNeeded) {
                     return messagesSentToUser.get(messagesSentToUser.size() - 1);
                 } else {
-                    System.out.println("creatign action for magic jammer");
+                    //System.out.println("creatign action for magic jammer");
                     output = Action.conductUninterruptedAction(0);
-                    System.out.println("conducted uninterrupted");
+                    //System.out.println("conducted uninterrupted");
                     canChainingOccur = canChainingOccur(index);
-                    System.out.println("this is can chaining: " + canChainingOccur);
+                    //System.out.println("this is can chaining: " + canChainingOccur);
                 }
                 //used to give fakeTurn as input
             }
@@ -489,7 +489,7 @@ public class ActivateSpellTrapController extends ChainController {
             } else {
                 cardsToBeTargeted.add(cardLocation);
                 boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
-                System.out.println("THIS IS IS MOREINPUTNEEDED " + isMoreInputNeeded);
+               // System.out.println("THIS IS IS MOREINPUTNEEDED " + isMoreInputNeeded);
                 if (isMoreInputNeeded) {
                     return messagesSentToUser.get(messagesSentToUser.size() - 1);
                 } else {
@@ -531,7 +531,7 @@ public class ActivateSpellTrapController extends ChainController {
             output += canChainingOccur;
             return output;
         }
-        System.out.println("happy me!");
+        //System.out.println("happy me!");
         return output + Action.conductAllActions(0);
     }
 
@@ -636,5 +636,24 @@ public class ActivateSpellTrapController extends ChainController {
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, index);
     }
 
-
+    public void clearAllVariablesOfThisClass(){
+        areWeLookingForFurtherInputToActivateSpellTrap = false;
+        areWeLookingForACardNameToBeInserted = false;
+        messageSentToUser = "";
+        messagesSentToUser.clear();
+        mainCardLocation = null;
+        mainCardPosition = null;
+        cardsToBeTargeted.clear();
+        cardsToBeDiscarded.clear();
+        cardsToBeChosenToApplyEquipSpellTo.clear();
+        cardsToBeSpecialSummoned.clear();
+        cardsToBeRitualSummoned.clear();
+        cardsToBeChosenFromDeckAndAddedToHand.clear();
+        cardsToBeDestroyed.clear();
+        cardsToTakeControlOf.clear();
+        cardsToBeChosenFromDeckAndSentToGraveyard.clear();
+        cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition.clear();
+        sumOfLevelsOfChosenMonsters.clear();
+        optionalCardNameInput="";
+    }
 }

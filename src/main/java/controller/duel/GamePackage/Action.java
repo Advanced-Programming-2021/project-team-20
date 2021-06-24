@@ -212,9 +212,9 @@ public class Action {
         //if (actions.get(0).getActionType().equals())
         StringBuilder output = new StringBuilder();
         int startIndex = currentActionConducting;
-        System.out.println("actions.size() " + actions.size() + " currently activating");
+     //   System.out.println("actions.size() " + actions.size() + " currently activating");
         for (int j = 0; j < actions.size(); j++) {
-            System.out.println("action " + j + " " + actions.get(j).getActionType().toString());
+     //       System.out.println("action " + j + " " + actions.get(j).getActionType().toString());
         }
         //int maximumSize = actions.size();
         //int mirageSize = maximumSize;
@@ -261,10 +261,10 @@ public class Action {
                     return isGameOver;
                 }
                 if (actions.size() > 1) {
-                    System.out.println("NOW AN ACTION IS BEING PROCESSES WITH ACTION TURN " + action.getActionTurn());
-                    System.out.println("THE ACTION TO BE PROCESSED HAS ACTION TURN " + actions.get(actions.size() - 2).getActionTurn());
+              //      System.out.println("NOW AN ACTION IS BEING PROCESSES WITH ACTION TURN " + action.getActionTurn());
+              //      System.out.println("THE ACTION TO BE PROCESSED HAS ACTION TURN " + actions.get(actions.size() - 2).getActionTurn());
                 } else {
-                    System.out.println("ACTION SIZE WAS 1");
+             //       System.out.println("ACTION SIZE WAS 1");
                 }
 
                 if (actions.size() > 1 && action.getActionTurn() != actions.get(actions.size() - 2).getActionTurn()) {
@@ -320,9 +320,9 @@ public class Action {
         //if (actions.get(0).getActionType().equals())
         String output = "";
         // there shouldn't be a for
-        System.out.println("uninterruptedActions.size() " + uninterruptedActions.size() + " currently activating");
+      //  System.out.println("uninterruptedActions.size() " + uninterruptedActions.size() + " currently activating");
         for (int j = 0; j < uninterruptedActions.size(); j++) {
-            System.out.println("uninterruptedAction" + j + uninterruptedActions.get(j).getActionType().toString());
+      //      System.out.println("uninterruptedAction" + j + uninterruptedActions.get(j).getActionType().toString());
         }
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) {

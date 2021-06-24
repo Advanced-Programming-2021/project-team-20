@@ -421,4 +421,15 @@ public class PhaseController {
         monsterCard.setCardType(CardType.MONSTER);
         monsterCard.setCardDescription("");
     }
+
+    public void clearAllVariablesOfThisClass(){
+        phaseInGame = null;
+        playersProhibitedToDrawCardNextTurn.clear();
+        playersProhibitedToDrawCardNextTurn.add(false);
+        playersProhibitedToDrawCardNextTurn.add(false);
+        numberOfSpellCardsPayedFor = 0;
+        numberOfSpellCardsToPayFor = 0;
+        isClassWaitingForPayingLifePointsOrDestroyingCard = false;
+        gameIsOver = false;
+    }
 }

@@ -49,7 +49,7 @@ public class SelectCardController {
                         //System.out.println(card.getCardName()+" is what is chosen");
                         selectedCardLocations.add(cardLocation);
                         for (int i = 0; i < selectedCardLocations.size(); i++) {
-                            System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString() + selectedCardLocations.get(i).getIndex());
+                        //    System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString() + selectedCardLocations.get(i).getIndex());
                         }
                         //System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName() + "is selected");
                         return "card selected";
@@ -180,5 +180,10 @@ public class SelectCardController {
 
     public boolean doesSelectedCardLocationsHaveCard() {
         return selectedCardLocations.size() != 0;
+    }
+
+    public void clearAllVariablesOfThisClass(){
+        selectedCardLocations.clear();
+        indexOfWholeGame = 0;
     }
 }

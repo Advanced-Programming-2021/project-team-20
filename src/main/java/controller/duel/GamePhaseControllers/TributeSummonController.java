@@ -113,10 +113,17 @@ public class TributeSummonController extends ChainController {
             actions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
             //add action that conducts effects of the card
         } else if (turn == 2) {
-            uninterruptedActions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed,  null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
+            uninterruptedActions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
             actions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
             //add action that conducts effects of the card
         }
         cardsToBeTributed.clear();
+    }
+
+    public void clearAllVariablesOfThisClass() {
+        areWeLookingForMonstersToBeTributed = false;
+        mainCard = null;
+        cardsToBeTributed.clear();
+        numberOfCardsToBeTributed = 0;
     }
 }

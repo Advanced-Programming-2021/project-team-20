@@ -193,4 +193,30 @@ public class GameManager {
         return changeCardsBetweenTwoRounds.get(index);
     }
 
+
+    public static void clearAllVariablesOfThisIndex(int index){
+        duelControllerList.get(index).clearAllVariablesOfThisClass();
+        duelBoardList.get(index).clearAllVariablesOfThisClass();
+        activateSpellTrapControllers.get(index).clearAllVariablesOfThisClass();
+        activateMonsterControllers.get(index).clearAllVariablesOfThisClass();
+        attackMonsterToMonsterControllers.get(index).clearAllVariablesOfThisClass();
+        attackMonsterToMonsterConductors.get(index).clearAllVariablesOfThisClass();
+        battlePhaseControllers.get(index).clearAllVariablesOfThisClass();
+        chainControllers.get(index).clearAllVariablesOfThisClass();
+        changeCardPositionControllers.get(index).clearAllVariablesOfThisClass();
+        directAttackControllers.get(index).clearAllVariablesOfThisClass();
+        // mainPhaseControllers.add(new MainPhaseController());
+        normalSummonControllers.get(index).clearAllVariablesOfThisClass();
+        flipSummonControllers.get(index).clearAllVariablesOfThisClass();
+        specialSummonControllers.get(index).clearAllVariablesOfThisClass();
+        tributeSummonControllers.get(index).clearAllVariablesOfThisClass();
+        selectCardControllers.get(index).clearAllVariablesOfThisClass();
+        setCardControllers.get(index).clearAllVariablesOfThisClass();
+        summonSetCommonClasses.get(index).clearAllVariablesOfThisClass();
+        phaseControllers.get(index).clearAllVariablesOfThisClass();
+        actions.get(index).clear();
+        uninterruptedActions.get(index).clear();
+        //changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
+        //setTurnForGames.add(new SetTurnForGame());
+    }
 }

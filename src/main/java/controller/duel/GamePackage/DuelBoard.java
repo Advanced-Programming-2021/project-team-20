@@ -413,7 +413,7 @@ public class DuelBoard {
     }
 
     public void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardLocations) {
-        System.out.println("LLL " + cardLocations);
+       // System.out.println("LLL " + cardLocations);
         ArrayList<Card> cards = new ArrayList<>();
         for (int i = 0; i < cardLocations.size(); i++) {
             cards.add(getCardByCardLocation(cardLocations.get(i)));
@@ -465,7 +465,7 @@ public class DuelBoard {
     public void addCardToMonsterZone(Card card, int turn) {
         ArrayList<Card> arrayList;
         CardLocation cardLocation;
-        System.out.println(card.getCardName());
+       // System.out.println(card.getCardName());
         if (turn == 1) {
             arrayList = giveArrayListByRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE);
             cardLocation = giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true);
@@ -550,11 +550,19 @@ public class DuelBoard {
         }
         allySpellFieldCard.add(null);
         opponentSpellFieldCard.add(null);
-        for (int i = 0; i < firstPlayerDeck.size() - 5; i++) {
-            allyCardsInDeck.add(firstPlayerDeck.get(i + 5));
+        ArrayList<Card> freshFirstCards = new ArrayList<>();
+        freshFirstCards.addAll(firstPlayerDeck);
+
+        ArrayList<Card> freshSecondCards = new ArrayList<>();
+        freshSecondCards.addAll(secondPlayerDeck);
+        allyCardsInDeck.clear();
+        opponentCardsInDeck.clear();
+        System.out.println(freshFirstCards.size()==0);
+        for (int i = 0; i < freshFirstCards.size() - 5; i++) {
+            allyCardsInDeck.add(freshSecondCards.get(i + 5));
         }
-        for (int i = 0; i < secondPlayerDeck.size() - 5; i++) {
-            opponentCardsInDeck.add(secondPlayerDeck.get(i + 5));
+        for (int i = 0; i < freshSecondCards.size() - 5; i++) {
+            opponentCardsInDeck.add(freshSecondCards.get(i + 5));
         }
     }
 
@@ -901,6 +909,23 @@ public class DuelBoard {
             }
         }
         return graveyard.toString();
+    }
+
+
+    public void clearAllVariablesOfThisClass(){
+        allyCardsInHand.clear();
+        allySpellCards.clear();
+        allySpellFieldCard.clear();
+        allyMonsterCards.clear();
+        allyCardsInDeck.clear();
+        allyCardsInGraveyard.clear();
+        opponentCardsInHand.clear();
+        opponentSpellCards.clear();
+        opponentSpellFieldCard.clear();
+        opponentMonsterCards.clear();
+        opponentCardsInDeck.clear();
+        opponentCardsInGraveyard.clear();
+        cardLocationsToBeTakenBackInEndPhase.clear();
     }
 
 }

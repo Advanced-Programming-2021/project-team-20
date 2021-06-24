@@ -44,7 +44,7 @@ public class SendCardToGraveyardConductor {
                 duelBoard.removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(targetingCardLocation);
             }
             Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, index);
-            System.out.println("CARD WITH NAME" + removedCard.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
+            //System.out.println("CARD WITH NAME" + removedCard.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
             duelBoard.addCardToGraveyard(removedCard, graveyardToSendCardTo);
             duelBoard.refreshCharacteristicsOfACardSentToGraveyard(removedCard);
         }

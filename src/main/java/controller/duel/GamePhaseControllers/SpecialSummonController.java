@@ -208,4 +208,14 @@ public class SpecialSummonController extends SummonSetCommonClass {
         }
         return "invalid input\nplease enter attacking or defensive";
     }
+    public void clearAllVariablesOfThisClass(){
+        areWeLookingForMonstersToBeTributed = false;
+        mainCard = null;
+        cardsToBeTributed.clear();
+        cardsToBeDiscarded.clear();
+        numberOfCardsToBeTributed = 0;
+        isClassWaitingForCardToBeDiscarded = false;
+        isClassWaitingForUserToChooseAttackPositionOrDefensePosition = false;
+        cardPositionOfMainCard = null;
+    }
 }

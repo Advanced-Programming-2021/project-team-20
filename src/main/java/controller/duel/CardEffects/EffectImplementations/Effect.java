@@ -278,9 +278,9 @@ public class Effect {
             }
             Card card = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocation);
             if (card == null) {
-                System.out.println("THIS CARD IS NULLL");
+             //   System.out.println("THIS CARD IS NULLL");
             } else {
-                System.out.println("THIS CARD NAME IS " + card.getCardName());
+             //   System.out.println("THIS CARD NAME IS " + card.getCardName());
             }
             if (card != null) {
                 if (isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(cardLocation, actionType, 0)) {
@@ -439,9 +439,9 @@ public class Effect {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(cardLocation);
         if (card == null) {
-            System.out.println("the card we are checking its preparations is null");
+      //      System.out.println("the card we are checking its preparations is null");
         } else {
-            System.out.println("the card we are checking its preparations has name " + card.getCardName());
+      //      System.out.println("the card we are checking its preparations has name " + card.getCardName());
         }
         int turn = duelController.getTurn();
         int fakeTurn;
@@ -452,7 +452,7 @@ public class Effect {
             fakeTurn = 2;
         }
         //int fakeTurn = duelController.getFakeTurn();
-        System.out.println("FAKETURN IS " + fakeTurn);
+       // System.out.println("FAKETURN IS " + fakeTurn);
         boolean preparationsAreComplete = true;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
@@ -509,7 +509,7 @@ public class Effect {
                 }
             }
             if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND)) {
-                System.out.println("CHECKING EXISTENCE OF RITUAL IN USE HAND FAKE TURN IS" + fakeTurn);
+               // System.out.println("CHECKING EXISTENCE OF RITUAL IN USE HAND FAKE TURN IS" + fakeTurn);
                 if (!logicalActivationRequirementSpellOwnerMustHaveAtLeast1RitualMonsterInHand(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
                 }
@@ -537,9 +537,9 @@ public class Effect {
                 }
             }
             if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY)) {
-                System.out.println("I AM CHECKING THE IF I AM SUPPOSED TO");
+                //System.out.println("I AM CHECKING THE IF I AM SUPPOSED TO");
                 if (!logicalActivationRequirementTrapOwnerMustHaveAtLeast1MonsterInTheirGraveyard(duelBoard, fakeTurn)) {
-                    System.out.println("DANGER");
+                 //   System.out.println("DANGER");
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
@@ -560,7 +560,7 @@ public class Effect {
             }
             return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE;
         }
-        System.out.println("this card is not a spell or trap and i am returning null");
+        //System.out.println("this card is not a spell or trap and i am returning null");
         return null;
     }
 
@@ -694,9 +694,9 @@ public class Effect {
             Card card = cardsInOwnerHand.get(i);
             if (Card.isCardAMonster(card)) {
                 MonsterCard monsterCard = (MonsterCard) card;
-                System.out.println("monster card in hand has name " + monsterCard.getCardName());
+             //   System.out.println("monster card in hand has name " + monsterCard.getCardName());
                 if (monsterCard.getMonsterCardValue().equals(MonsterCardValue.RITUAL)) {
-                    System.out.println("i a, returning true");
+              //      System.out.println("i a, returning true");
                     return true;
                 }
             }
@@ -710,9 +710,9 @@ public class Effect {
         ArrayList<Card> cardsInHand = null;
         if (fakeTurn == 1) {
             cardsInDeck = duelBoard.getAllyCardsInDeck();
-            System.out.println("ally cards in deck is " + cardsInDeck);
+           // System.out.println("ally cards in deck is " + cardsInDeck);
             cardsInHand = duelBoard.getAllyCardsInHand();
-            System.out.println("ally cards in hand is " + cardsInHand);
+          //  System.out.println("ally cards in hand is " + cardsInHand);
         } else if (fakeTurn == 2) {
             cardsInDeck = duelBoard.getOpponentCardsInDeck();
             cardsInHand = duelBoard.getOpponentCardsInHand();
@@ -724,7 +724,7 @@ public class Effect {
                 normalMonsterCardLevels.add(((MonsterCard) card).getLevel());
             }
         }
-        System.out.println("levels of normal monsters in deck is" + normalMonsterCardLevels);
+        //System.out.println("levels of normal monsters in deck is" + normalMonsterCardLevels);
         ArrayList<Integer> levelsOfRitualCardsInHand = new ArrayList<>();
         for (int i = 0; i < cardsInHand.size(); i++) {
             Card card = cardsInHand.get(i);
@@ -732,7 +732,7 @@ public class Effect {
                 levelsOfRitualCardsInHand.add(((MonsterCard) card).getLevel());
             }
         }
-        System.out.println("levels of ritual monsters in hand is " + levelsOfRitualCardsInHand);
+       // System.out.println("levels of ritual monsters in hand is " + levelsOfRitualCardsInHand);
         // Algorithmic Reasoning !!!
         boolean isRitualSummoningPossible;
         for (int i = 0; i < levelsOfRitualCardsInHand.size(); i++) {
@@ -784,9 +784,9 @@ public class Effect {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
-        System.out.println("this mainCardLocation we are analyzing has location " + finalMainCardLocation.getRowOfCardLocation() + " " + finalMainCardLocation.getIndex());
+       // System.out.println("this mainCardLocation we are analyzing has location " + finalMainCardLocation.getRowOfCardLocation() + " " + finalMainCardLocation.getIndex());
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(finalMainCardLocation);
-        System.out.println("monster card name is " + monsterCard.getCardName());
+       // System.out.println("monster card name is " + monsterCard.getCardName());
         return monsterCard.getAttackPower() >= 1000;
     }
 
@@ -817,13 +817,13 @@ public class Effect {
                 }
             } else if (uninterruptedActionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
                 CardLocation defendingMonsterCardLocation = uninterruptedAction.getTargetingCards().get(uninterruptedAction.getTargetingCards().size() - 1);
-                System.out.println("texchanger should logically be at location:");
-                System.out.println(defendingMonsterCardLocation.getRowOfCardLocation().toString());
-                System.out.println(defendingMonsterCardLocation.getIndex());
+              //  System.out.println("texchanger should logically be at location:");
+              //  System.out.println(defendingMonsterCardLocation.getRowOfCardLocation().toString());
+              //  System.out.println(defendingMonsterCardLocation.getIndex());
                 Card card = GameManager.getDuelBoardByIndex(index).getCardByCardLocation(defendingMonsterCardLocation);
                 ArrayList<BeingAttackedEffect> beingAttackedEffects = ((MonsterCard) card).getBeingAttackedEffects();
                 if (beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN)) {
-                    System.out.println("yeeeeehaaah!!");
+              //      System.out.println("yeeeeehaaah!!");
                     return true;
                 }
             }

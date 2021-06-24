@@ -138,5 +138,9 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         targetingCards.clear();
     }
 
-
+    public void clearAllVariablesOfThisClass(){
+        mainCard = null;
+        indexOfAttackedMonster = 0;
+        targetingCards.clear();
+    }
 }

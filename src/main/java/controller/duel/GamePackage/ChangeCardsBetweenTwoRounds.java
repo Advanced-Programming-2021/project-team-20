@@ -13,14 +13,19 @@ public class ChangeCardsBetweenTwoRounds {
     private Deck opponentPlayerDeck;
     private List<String> mainDeckCards;
     private List<String> sideDeckCards;
+    private int turn;
 
     public ChangeCardsBetweenTwoRounds(Deck allyPlayerDeck, Deck opponentPlayerDeck) {
         this.allyPlayerDeck = allyPlayerDeck;
         this.opponentPlayerDeck = opponentPlayerDeck;
+        this.turn = 0;
     }
 
-    public String changeCardsBetweenTwoRounds(int turn, String input, int index) {
-
+    public String changeCardsBetweenTwoRounds(String input, int index) {
+        turn++;
+        if (turn == 3) {
+            turn = 1;
+        }
         String allyPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
         String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
@@ -40,7 +45,6 @@ public class ChangeCardsBetweenTwoRounds {
                     resetCardsAfterChangingDeck();
                     return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
                 }
-                GameManager.getDuelControllerByIndex(index).setTurn(2);
                 return "now " + opponentPlayerName + " can change his deck";
             }
             if (turn == 2) {
@@ -53,7 +57,7 @@ public class ChangeCardsBetweenTwoRounds {
 
         Matcher matcher;
         matcher = Utility.getCommandMatcher(input,
-                "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
+            "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
         if (matcher.find()) {
             String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
             String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");

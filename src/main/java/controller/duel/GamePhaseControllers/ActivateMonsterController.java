@@ -329,8 +329,15 @@ public class ActivateMonsterController extends ChainController {
                 graveyardToSendCardTo = 2;
             }
             Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-            System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
+           // System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
             duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
         }
+    }
+    public void clearAllVariablesOfThisClass(){
+        isClassWaitingForUserToDiscardOneCard  = false;
+        isClassWaitingForUserToChooseMonsterFromGraveyard = false;
+        isClassWaitingForUserToChooseMonsterFromOpponentGraveyard = false;
+        activateMonsterTurn = 0;
+        mainMonsterCardLocation = null;
     }
 }

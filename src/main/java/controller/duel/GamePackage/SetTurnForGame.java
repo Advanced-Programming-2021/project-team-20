@@ -48,22 +48,30 @@ public class SetTurnForGame {
             canFirstPlayerSelect = true;
             canSecondPlayerSelect = false;
             return "both player select similar choice\ndo this action again\n" + allyPlayerName
-                    + " must choose\n1.stone\n2.hand\n3.snips";
+                + " must choose\n1.stone\n2.hand\n3.snips";
         }
 
         if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
-                || (player1Selection == 3 && player2Selection == 2)) {
+            || (player1Selection == 3 && player2Selection == 2)) {
             GameManager.getDuelControllerByIndex(index).setTurn(1);
-            GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            setFieldsOfClassLikeForNextRound();
             GameManager.getDuelControllerByIndex(index).startDuel(index);
+            GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            if (GameManager.getDuelControllerByIndex(0).getCurrentRound() >= 2) {
+                DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+                duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(), duelBoard.getOpponentCardsInDeck());
+            }
+            setFieldsOfClassLikeForNextRound();
             return allyPlayerName + " must start game";
         }
 
         GameManager.getDuelControllerByIndex(index).setTurn(2);
-        GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-        setFieldsOfClassLikeForNextRound();
         GameManager.getDuelControllerByIndex(index).startDuel(index);
+        GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+        if (GameManager.getDuelControllerByIndex(0).getCurrentRound() >= 2) {
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+            duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(), duelBoard.getOpponentCardsInDeck());
+        }
+        setFieldsOfClassLikeForNextRound();
         return opponentPlayerName + " must start game";
     }
 
@@ -72,5 +80,6 @@ public class SetTurnForGame {
         canSecondPlayerSelect = false;
         player1Selection = 0;
         player2Selection = 0;
+
     }
 }

@@ -193,4 +193,10 @@ public class SetCardController extends SummonSetCommonClass {
         }
         return null;
     }
+    public void clearAllVariablesOfThisClass(){
+        areWeLookingForMonstersToBeTributed = false;
+        mainCard = null;
+        cardsToBeTributed.clear();
+        numberOfCardsToBeTributed = 0;
+    }
 }
