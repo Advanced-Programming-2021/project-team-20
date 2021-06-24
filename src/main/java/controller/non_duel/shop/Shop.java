@@ -62,7 +62,6 @@ public class Shop {
     }
 
     private boolean isItInvalidCardName(String cardName) {
-     //   System.out.println(cardName);
        return(Storage.doesCardExist(cardName));
     }
 }

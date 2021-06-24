@@ -49,7 +49,6 @@ public class ImportAndExport {
     private String exportCard(String cardname) {
 
         File file = new File("Resourses\\ImportedCards\\" + cardname + ".json");
-        //System.out.println(file.exists() + " " + cardname);
         if (file.exists()) {
             try {
                 FileReader fileReader = new FileReader("Resourses\\ImportedCards\\" + cardname + ".json");

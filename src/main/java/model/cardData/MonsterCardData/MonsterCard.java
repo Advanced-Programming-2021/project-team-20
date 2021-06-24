@@ -63,7 +63,6 @@ public class MonsterCard extends Card {
         this.monsterCardAttribute = attribute;
         this.monsterCardFamily = monsterCardFamily;
         this.monsterCardValue = monsterCardValue;
-        // System.out.println(123);
         summoningRequirements = new ArrayList<>();
         uponSummoningEffects = new ArrayList<>();
         attackerEffects = new ArrayList<>();
