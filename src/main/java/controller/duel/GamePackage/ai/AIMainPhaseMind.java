@@ -251,7 +251,7 @@ public class AIMainPhaseMind {
 
     protected String getCommandWhenAIIsInMainPhaseWithNoNecessaryQuery(AI ai) {
         //for (int i = 0;i<500; i++){
-        System.out.println("ai is free to think in main phase");
+        //System.out.println("ai is free to think in main phase");
         //}
 
         //ai.getAiInformationUpdater().updateVariablesForBoard();
@@ -267,10 +267,10 @@ public class AIMainPhaseMind {
         boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
         //boolean doAIMonstersDominateOpponentAlone = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
         //set mystical space typhoon or twin twisters
-        System.out.println("IMPORTANT MESSAGE ");
-        System.out.println("doOpponentMonstersDominateAIWithBuffEffects " + doOpponentMonstersDominateAIWithBuffEffects);
-        System.out.println("doOpponentMonstersDominateAIAlone " + doOpponentMonstersDominateAIAlone);
-        System.out.println("doAIMonstersDominateOpponentWithBuffEffects " + doAIMonstersDominateOpponentWithBuffEffects);
+        //System.out.println("IMPORTANT MESSAGE ");
+        //System.out.println("doOpponentMonstersDominateAIWithBuffEffects " + doOpponentMonstersDominateAIWithBuffEffects);
+        //System.out.println("doOpponentMonstersDominateAIAlone " + doOpponentMonstersDominateAIAlone);
+        //System.out.println("doAIMonstersDominateOpponentWithBuffEffects " + doAIMonstersDominateOpponentWithBuffEffects);
         if (aiKeyVariablesUpdater.isDoesAIHaveCardDrawingSpellCardsInHand()) {
             return aiCardFinder.findCardDrawingSpellCardInHandToActivate(ai);
         }
@@ -371,9 +371,9 @@ public class AIMainPhaseMind {
                 return aiCardFinder.findMonsterNeedingTributeInHandToSpecialSummon(ai);
             }
         }
-        System.out.println("THIS MESSAGE IS BECAUSE I WANT  TO SET A TRAP CARD");
-        System.out.println(GameManager.getPhaseControllerByIndex(0).getPhaseInGame());
-        System.out.println(GameManager.getDuelControllerByIndex(0).getAiTurn());
+        //System.out.println("THIS MESSAGE IS BECAUSE I WANT  TO SET A TRAP CARD");
+        //System.out.println(GameManager.getPhaseControllerByIndex(0).getPhaseInGame());
+        //System.out.println(GameManager.getDuelControllerByIndex(0).getAiTurn());
         if (GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.OPPONENT_MAIN_PHASE_2) &&
             GameManager.getDuelControllerByIndex(0).getAiTurn() == 2 ||
             GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_2) &&

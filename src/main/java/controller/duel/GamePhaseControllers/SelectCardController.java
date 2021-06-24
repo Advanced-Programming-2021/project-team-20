@@ -30,12 +30,12 @@ public class SelectCardController {
         DuelController duelController = GameManager.getDuelControllerByIndex(indexOfWholeGame);
         int fakeTurn = duelController.getFakeTurn();
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
-            rowOfCardLocation = switchCaseInputToGetRowOfCardLocation(matcher.group(2), matcher.group(4), fakeTurn);
+            rowOfCardLocation = switchCaseInputToGetRowOfCardLocation(matcher.group(3), matcher.group(6), fakeTurn);
             if (rowOfCardLocation == null) {
                 return "invalid selection";
             }
-            if (matcher.group(6) != null) {
-                int cardIndex = Integer.parseInt(matcher.group(6));
+            if (matcher.group(8) != null) {
+                int cardIndex = Integer.parseInt(matcher.group(8));
                 //System.out.println("card Index is "+cardIndex);
                 if (isSelectedCardIndexValid(cardIndex, rowOfCardLocation, indexOfWholeGame)) {
                     cardIndex = Utility.changeYuGiOhIndexToArrayIndex(cardIndex, rowOfCardLocation);
@@ -57,7 +57,7 @@ public class SelectCardController {
                 } else {
                     return "invalid selection";
                 }
-            } else if (matcher.group(4) != null || matcher.group(4) == null && rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
+            } else if (matcher.group(6) != null || matcher.group(6) == null && rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
                 CardLocation cardLocation = new CardLocation(rowOfCardLocation, 1);
                 DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
                 Card card = duelBoard.getCardByCardLocation(cardLocation);
@@ -103,7 +103,7 @@ public class SelectCardController {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, turn);
         } else if ((firstString.equals("monster") || firstString.equals("m")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, turn);
-        } else if ((firstString.equals("spell") || firstString.equals("s")) && (secondString.equals("opponent") || secondString.equals("0"))) {
+        } else if ((firstString.equals("spell") || firstString.equals("s")) && (secondString.equals("opponent") || secondString.equals("o"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, turn);
         } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("spell") || secondString.equals("s"))) {
             return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, turn);

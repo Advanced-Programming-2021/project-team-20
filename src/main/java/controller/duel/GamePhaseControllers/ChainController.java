@@ -55,9 +55,9 @@ public class ChainController {
     public String canChainingOccur(int index, int turn, ActionType allyActionType, ActionType opponentActionType) {
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         if (turn == 1) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(allyActionType, 1);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(allyActionType, 1, 0);
         } else if (turn == 2) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(opponentActionType, 2);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(opponentActionType, 2, 0);
         }
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, index);
     }

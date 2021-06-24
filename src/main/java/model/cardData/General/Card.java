@@ -1,8 +1,12 @@
 package model.cardData.General;
 
+import controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
 import model.cardData.MonsterCardData.MonsterCard;
 import model.cardData.SpellCardData.SpellCard;
 import model.cardData.TrapCardData.TrapCard;
+import model.cardData.TrapCardData.TrapCardValue;
+
+import java.util.ArrayList;
 
 public class Card {
 
@@ -94,5 +98,25 @@ public class Card {
 
     public static boolean isCardATrap(Card card) {
         return card instanceof TrapCard;
+    }
+
+    public int getSpeedOfCard(){
+        if (Card.isCardAMonster(this)){
+            return 0;
+        } else if (Card.isCardASpell(this)){
+            SpellCard spellCard = (SpellCard) this;
+            ArrayList<QuickSpellEffect> quickSpellEffects = spellCard.getQuickSpellEffects();
+            if (quickSpellEffects.size()>=1){
+                return 2;
+            }
+            return 1;
+        } else if (Card.isCardATrap(this)){
+            TrapCard trapCard = (TrapCard) this;
+            if (trapCard.getTrapCardValue().equals(TrapCardValue.COUNTER)){
+                return 3;
+            }
+            return 2;
+        }
+        return 0;
     }
 }
