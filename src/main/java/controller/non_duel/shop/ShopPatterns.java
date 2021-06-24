@@ -17,7 +17,7 @@ public class ShopPatterns {
         return matcher.find();
     }
 
-    public static String getCardName(String command) {
+    public static String getBoughtCardName(String command) {
         Pattern pattern = Pattern.compile("shop buy (.+)");
         Matcher matcher = pattern.matcher(command);
         if (matcher.find()) {
@@ -25,4 +25,14 @@ public class ShopPatterns {
         }
         return "invalid command!";
     }
+
+    public static String getShownCardName(String command) {
+        Pattern pattern = Pattern.compile("card show (.+)");
+        Matcher matcher = pattern.matcher(command);
+        if(matcher.find()){
+             return matcher.group(1);
+        }
+        return "";
+    }
+
 }

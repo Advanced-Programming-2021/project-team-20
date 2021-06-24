@@ -11,6 +11,10 @@ import controller.non_duel.profile.Profile;
 import controller.non_duel.storage.Storage;
 import model.Deck;
 import model.cardData.General.Card;
+import model.cardData.General.CardType;
+import model.cardData.MonsterCardData.MonsterCard;
+import model.cardData.SpellCardData.SpellCard;
+import model.cardData.TrapCardData.TrapCard;
 
 public class DeckCommands {
 
@@ -54,8 +58,10 @@ public class DeckCommands {
             return showOneDeck(foundCommadns);
         }
 
+        if (foundCommadns.containsKey("showCard")) {
+            return showCard(foundCommadns.get("showCard"));
+        }
         return showAllCards();
-
     }
 
     private String showAllCards() {
@@ -105,7 +111,7 @@ public class DeckCommands {
             showDeck.append(showCardsInMainOrSideDeck(
                     allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
         }
-       
+
         return showDeck.toString();
     }
 
@@ -160,6 +166,40 @@ public class DeckCommands {
         showAllDecks.append("Other Decks:" + showOtherDecks.toString());
 
         return showAllDecks.toString();
+    }
+
+    private String showCard(String cardName) {
+        if (!Storage.doesCardExist(cardName)) {
+            return "card with name " + cardName + " does not exist";
+        }
+
+        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
+        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+
+        StringBuilder shownCardStringBuilder = new StringBuilder();
+        shownCardStringBuilder.append("Name: " + cardName + "\n");
+        if (allMonsterCards.containsKey(cardName)) {
+            MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
+            shownCardStringBuilder.append("Level: " + monsterCard.getLevel() + "\n");
+            shownCardStringBuilder.append("Type: " + monsterCard.getMonsterCardFamily() + "\n");
+            shownCardStringBuilder.append("ATK: " + monsterCard.getAttackPower() + "\n");
+            shownCardStringBuilder.append("DEF: " + monsterCard.getDefensePower() + "\n");
+            shownCardStringBuilder.append("Description: " + monsterCard.getCardDescription());
+        } else {
+            if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
+                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
+                shownCardStringBuilder.append("Spell\n");
+                shownCardStringBuilder.append("Type: " + spellCard.getSpellCardValue() + "\n");
+                shownCardStringBuilder.append("Description: " + spellCard.getCardDescription());
+            } else {
+                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
+                shownCardStringBuilder.append("Trap\n");
+                shownCardStringBuilder.append("Type: " + trapCard.getTrapCardValue() + "\n");
+                shownCardStringBuilder.append("Description: " + trapCard.getCardDescription());
+            }
+        }
+
+        return shownCardStringBuilder.toString();
     }
 
     private String deleteCardFromDeck(HashMap<String, String> foundCommands) {
