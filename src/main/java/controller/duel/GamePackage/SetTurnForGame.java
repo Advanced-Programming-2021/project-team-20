@@ -55,19 +55,19 @@ public class SetTurnForGame {
                 || (player1Selection == 3 && player2Selection == 2)) {
             GameManager.getDuelControllerByIndex(index).setTurn(1);
             GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            setFieldsOfClassLikeForNextRound();
+            setFieldsOfClassLikeFirstForNextRound();
             GameManager.getDuelControllerByIndex(index).startDuel(index);
             return allyPlayerName + " must start game";
         }
 
         GameManager.getDuelControllerByIndex(index).setTurn(2);
         GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-        setFieldsOfClassLikeForNextRound();
+        setFieldsOfClassLikeFirstForNextRound();
         GameManager.getDuelControllerByIndex(index).startDuel(index);
         return opponentPlayerName + " must start game";
     }
 
-    private void setFieldsOfClassLikeForNextRound() {
+    private void setFieldsOfClassLikeFirstForNextRound() {
         canFirstPlayerSelect = true;
         canSecondPlayerSelect = false;
         player1Selection = 0;
