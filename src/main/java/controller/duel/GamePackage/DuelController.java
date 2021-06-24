@@ -66,10 +66,10 @@ public class DuelController {
 //        currentRound = 1;
 //        isAIPlaying = false;
 //        aiTurn = 0;
-        if (firstUser.equals("ai")) {
+        if (firstUser.equals("AI")) {
             aiTurn = 1;
             isAIPlaying = true;
-        } else if (secondUser.equals("ai")) {
+        } else if (secondUser.equals("AI")) {
             aiTurn = 2;
             isAIPlaying = true;
         }
