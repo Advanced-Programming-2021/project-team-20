@@ -18,14 +18,11 @@ public class ChangeCardsBetweenTwoRounds {
     public ChangeCardsBetweenTwoRounds(Deck allyPlayerDeck, Deck opponentPlayerDeck) {
         this.allyPlayerDeck = allyPlayerDeck;
         this.opponentPlayerDeck = opponentPlayerDeck;
-        this.turn = 0;
+        this.turn = 1;
     }
 
     public String changeCardsBetweenTwoRounds(String input, int index) {
-        turn++;
-        if (turn == 3) {
-            turn = 1;
-        }
+
         String allyPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
         String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
@@ -45,12 +42,14 @@ public class ChangeCardsBetweenTwoRounds {
                     resetCardsAfterChangingDeck();
                     return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
                 }
+                turn = 2;
                 return "now " + opponentPlayerName + " can change his deck";
             }
             if (turn == 2) {
                 GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
                 GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
                 resetCardsAfterChangingDeck();
+                turn = 1;
                 return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
             }
         }
