@@ -37,6 +37,7 @@ public class ChangeCardsBetweenTwoRounds {
                 if (opponentPlayerName.equals("AI")) {
                     GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
                     GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
+                    resetCardsAfterChangingDeck();
                     return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
                 }
                 GameManager.getDuelControllerByIndex(index).setTurn(2);
@@ -45,6 +46,7 @@ public class ChangeCardsBetweenTwoRounds {
             if (turn == 2) {
                 GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
                 GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+                resetCardsAfterChangingDeck();
                 return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
             }
         }
@@ -55,14 +57,18 @@ public class ChangeCardsBetweenTwoRounds {
         if (matcher.find()) {
             String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
             String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");
-            return moveCards(cardToBeMovedToMainDeckStringFormat, cardToBeMovedToSideDeckStringFormat, index);
+            return moveCards(cardToBeMovedToMainDeckStringFormat, cardToBeMovedToSideDeckStringFormat);
         }
 
         return "invalid command!";
     }
 
-    private String moveCards(String cardToBeMovedToMainDeckStringFormat, String cardToBeMovedToSideDeckStringFormat,
-            int index) {
+    private void resetCardsAfterChangingDeck() {
+        GameManager.getDuelBoardByIndex(0).resetCards(1);
+        GameManager.getDuelBoardByIndex(0).resetCards(2);
+    }
+
+    private String moveCards(String cardToBeMovedToMainDeckStringFormat, String cardToBeMovedToSideDeckStringFormat) {
 
         if (!sideDeckCards.contains(cardToBeMovedToMainDeckStringFormat))
             return cardToBeMovedToMainDeckStringFormat + " does not exist in side deck";

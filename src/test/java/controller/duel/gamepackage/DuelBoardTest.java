@@ -73,9 +73,6 @@ class DuelBoardTest {
         duelBoard.addCardToSpellZone(cards.get(5), 2);
         duelBoard.addCardToMonsterZone(cards.get(1), 2);
         duelBoard.addCardToMonsterZone(cards.get(1), 1);
-        // String x = "\tE\tE\tfgk\tfgk\tE\t";
-        // System.out.println(x);
-        // System.out.println(duelBoard.reverseWordsWhenTurnIs2(x));
         System.out.println(duelBoard.showMainDuelBoard(0));
         // turn == 2
         GameManager.getDuelControllerByIndex(0).setTurn(2);

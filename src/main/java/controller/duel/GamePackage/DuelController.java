@@ -499,8 +499,6 @@ public class DuelController {
 
     public String endOneRoundOfDuel(int turn) {
         User winnerUser = Storage.getUserByName(playingUsers.get(turn - 1));
-        GameManager.getDuelBoardByIndex(0).resetCards(1);
-        GameManager.getDuelBoardByIndex(0).resetCards(2);
         playersScores.set(turn - 1, playersScores.get(turn - 1) + 1000);
         isPlayersChangedDecks = false;
         turn = 1;
