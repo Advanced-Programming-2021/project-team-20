@@ -56,7 +56,7 @@ public class ChangeCardsBetweenTwoRounds {
 
         Matcher matcher;
         matcher = Utility.getCommandMatcher(input,
-            "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
+                "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
         if (matcher.find()) {
             String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
             String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");

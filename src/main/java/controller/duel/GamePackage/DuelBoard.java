@@ -782,8 +782,40 @@ public class DuelBoard {
                 return "card is not visible";
             }
         }
-        return selectedCard.getCardName() + " : " + selectedCard.getCardDescription();
+        return showCard(selectedCard.getCardName());
     }
+
+    private String showCard(String cardName) {
+
+        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
+        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+
+        StringBuilder shownCardStringBuilder = new StringBuilder();
+        shownCardStringBuilder.append("Name: " + cardName + "\n");
+        if (allMonsterCards.containsKey(cardName)) {
+            MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
+            shownCardStringBuilder.append("Level: " + monsterCard.getLevel() + "\n");
+            shownCardStringBuilder.append("Type: " + monsterCard.getMonsterCardFamily() + "\n");
+            shownCardStringBuilder.append("ATK: " + monsterCard.getAttackPower() + "\n");
+            shownCardStringBuilder.append("DEF: " + monsterCard.getDefensePower() + "\n");
+            shownCardStringBuilder.append("Description: " + monsterCard.getCardDescription());
+        } else {
+            if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
+                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
+                shownCardStringBuilder.append("Spell\n");
+                shownCardStringBuilder.append("Type: " + spellCard.getSpellCardValue() + "\n");
+                shownCardStringBuilder.append("Description: " + spellCard.getCardDescription());
+            } else {
+                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
+                shownCardStringBuilder.append("Trap\n");
+                shownCardStringBuilder.append("Type: " + trapCard.getTrapCardValue() + "\n");
+                shownCardStringBuilder.append("Description: " + trapCard.getCardDescription());
+            }
+        }
+
+        return shownCardStringBuilder.toString();
+    }
+
 
     private boolean isCardHidden(Card card) {
         String cardPositionToString = card.getCardPosition().toString();
