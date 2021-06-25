@@ -284,7 +284,8 @@ public class Storage {
                         details.get("password").getAsString(), details.get("imagePath").getAsString());
                 user.setScore(details.get("score").getAsInt());
                 user.setMoney(details.get("money").getAsInt());
-                user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
+                //it was commented because it made problem on my device (Javad)
+                //user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
             }
         }
