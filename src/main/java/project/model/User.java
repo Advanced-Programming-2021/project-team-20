@@ -3,6 +3,8 @@ package project.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javafx.scene.image.Image;
+
 public class User {
 
     private String name;
@@ -13,6 +15,7 @@ public class User {
     private int money;
     private HashMap<String, Deck> decks = new HashMap<>();
     private ArrayList<String> allUselessCards = new ArrayList<>();
+    private Image image;
 
     public User(String username, String nickname, String password, String imagePath) {
         this.name = username;
@@ -73,6 +76,10 @@ public class User {
         this.score = score;
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public void addDeckToAllDecks(String deckname, Deck deck) {
         decks.put(deckname, deck);
     }
@@ -85,6 +92,7 @@ public class User {
         Deck deck = decks.get(deckname);
         allUselessCards.addAll(deck.getMainDeck());
         allUselessCards.addAll(deck.getSideDeck());
+    //    System.out.println("in delete deck method");
         decks.remove(deckname);
     }
 
@@ -98,6 +106,10 @@ public class User {
 
     public void addCardToAllUselessCards(String cardname) {
         allUselessCards.add(cardname);
+    }
+
+    public Image getImage() {
+        return image;
     }
 
 }

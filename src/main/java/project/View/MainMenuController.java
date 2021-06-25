@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 
 public class MainMenuController implements Initializable {
 
@@ -34,8 +35,20 @@ public class MainMenuController implements Initializable {
     }
 
     public void duelMenu() {
-        System.out.println("duel");
-        // TODO
+        DuelStarter duelStarter = new DuelStarter();
+        duelStarter.createGame("JustMonster", "AI", 3);
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("/project/fxml/changeCardsBetweenTwoRoundsPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new ChangeCardsBetweenTwoRoundsController().showPage(pane, "JustMonster", "JustMonster");
+        // try {
+        //     new MainView().changeView("/project/fxml/startDuelPage.fxml");
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     public void goToDeckMenu() {

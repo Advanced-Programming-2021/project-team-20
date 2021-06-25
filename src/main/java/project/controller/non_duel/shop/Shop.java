@@ -2,7 +2,7 @@ package project.controller.non_duel.shop;
 
 import java.util.*;
 
-import project.controller.non_duel.profile.Profile;
+import project.View.LoginController;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 
@@ -12,7 +12,7 @@ public class Shop {
 
         if (ShopPatterns.isItBuyPattern(command)) {
             String cardName = ShopPatterns.getCardName(command);
-            int userAmount = Profile.getOnlineUser().getMoney();
+            int userAmount = LoginController.getOnlineUser().getMoney();
             if (!isItInvalidCardName(cardName)) {
                 return "there is no card with this name";
             }
@@ -21,8 +21,8 @@ public class Shop {
             if (cardAmount > userAmount) {
                 return "not enough money";
             }
-            Profile.getOnlineUser().setMoney(userAmount - cardAmount);
-            Profile.getOnlineUser().addCardToAllUselessCards(cardName);
+            LoginController.getOnlineUser().setMoney(userAmount - cardAmount);
+            LoginController.getOnlineUser().addCardToAllUselessCards(cardName);
             return "successful buy";
         }
 
@@ -62,7 +62,6 @@ public class Shop {
     }
 
     private boolean isItInvalidCardName(String cardName) {
-     //   System.out.println(cardName);
        return(Storage.doesCardExist(cardName));
     }
 }

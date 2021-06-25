@@ -13,7 +13,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.ProfileController">
    <children>
-      <Button fx:id="backbtn" layoutX="468.0" layoutY="645.0" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
+      <Button fx:id="backbtn" layoutX="459.0" layoutY="661.0" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
       <Button fx:id="changeImagebtn" layoutX="437.0" layoutY="520.0" mnemonicParsing="false" onAction="#changeImage" text="change image" />
       <Button fx:id="changePasswordbtn" layoutX="68.0" layoutY="520.0" mnemonicParsing="false" onAction="#changePassword" text="change password" />
       <Button fx:id="changeNicknamebtn" layoutX="796.0" layoutY="520.0" mnemonicParsing="false" onAction="#changeNickname" text="change nickname" />
@@ -65,32 +65,32 @@
             <Image url="@../images/Capture.PNG" />
          </image>
       </ImageView>
-      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="819.0" layoutY="585.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="819.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ghab2.PNG" />
          </image>
       </ImageView>
-      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="633.0" layoutY="585.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="633.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ghab2.PNG" />
          </image>
       </ImageView>
-      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="435.0" layoutY="585.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="435.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ghab2.PNG" />
          </image>
       </ImageView>
-      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="235.0" layoutY="585.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="235.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ghab2.PNG" />
          </image>
       </ImageView>
-      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="41.0" layoutY="585.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="41.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ghab2.PNG" />
          </image>
       </ImageView>
-      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="-39.0" layoutY="585.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="200.0" layoutX="-39.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ghab2.PNG" />
          </image>
@@ -150,7 +150,7 @@
             <Font name="Old English Text MT" size="22.0" />
          </font>
       </PasswordField>
-      <Rectangle fx:id="rectangleImage" arcHeight="5.0" arcWidth="5.0" height="385.0" layoutX="362.0" layoutY="113.0" opacity="0.07" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="287.0" />
+      <Rectangle fx:id="rectangleImage" arcHeight="25.0" arcWidth="25.0" fill="#3300ff" height="385.0" layoutX="362.0" layoutY="113.0" stroke="#0300ff" strokeType="INSIDE" strokeWidth="20.0" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="287.0" />
    </children>
    <styleClass>
       <String fx:value="context-menu" />

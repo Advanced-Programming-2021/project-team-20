@@ -1,11 +1,13 @@
 package project.View;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.util.Duration;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 
 public class Transition {
     public void applyTransitionForDrawingACard(boolean isForAlly) {
-        //this function is called after we receive successful card drawing from server
+        // this function is called after we receive successful card drawing from server
         ArrayList<CardView> cardViews;
         ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -42,10 +44,13 @@ public class Transition {
             }
             cardViews.get(0).setLabel(RowOfCardLocation.ALLY_HAND_ZONE);
             cardViews = DuelView.getControllerForView().giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
-            TranslateTransition translate = new TranslateTransition(Duration.millis(500), cardViews.get(cardViews.size() - 1));
-            translate.setToX(
-                    (DuelView.getBattleFieldView().getUpperLeftX() + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size())) / 2
-                            + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1) - cardViews.get(cardViews.size() - 1).getUpperLeftX()));
+            TranslateTransition translate = new TranslateTransition(Duration.millis(500),
+                    cardViews.get(cardViews.size() - 1));
+            translate.setToX((DuelView.getBattleFieldView().getUpperLeftX()
+                    + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size()))
+                            / 2
+                    + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1)
+                    - cardViews.get(cardViews.size() - 1).getUpperLeftX()));
             translate.setToY(CardView.getCardHeight() - 19);
             translate.setCycleCount(1);
             translate.setAutoReverse(true);
@@ -53,15 +58,19 @@ public class Transition {
         } else {
             cardViews = DuelView.getControllerForView().giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE);
             for (int i = 0; i < cardViews.size(); i++) {
-                System.out.println("these are cards in opponent deck in order " + cardViews.get(i).getCard().getCardName());
+                System.out.println(
+                        "these are cards in opponent deck in order " + cardViews.get(i).getCard().getCardName());
             }
             cardViews.get(0).setLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
             cardViews = DuelView.getControllerForView().giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
-            TranslateTransition translate = new TranslateTransition(Duration.millis(500), cardViews.get(cardViews.size() - 1));
-            translate.setToX(
-                    (DuelView.getBattleFieldView().getUpperLeftX() + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size())) / 2
-                            + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1) - cardViews.get(cardViews.size() - 1).getUpperLeftX()
-                            - CardView.getCardWidth() * (cardViews.size() - 1)));
+            TranslateTransition translate = new TranslateTransition(Duration.millis(500),
+                    cardViews.get(cardViews.size() - 1));
+            translate.setToX((DuelView.getBattleFieldView().getUpperLeftX()
+                    + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size()))
+                            / 2
+                    + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1)
+                    - cardViews.get(cardViews.size() - 1).getUpperLeftX()
+                    - CardView.getCardWidth() * (cardViews.size() - 1)));
             translate.setToY(19 - CardView.getCardHeight());
             translate.setCycleCount(1);
             translate.setAutoReverse(true);
@@ -75,10 +84,13 @@ public class Transition {
     }
 
     public void applyTransitionForActivatingSpellTrap(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
-            if (initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) ||
-                    initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE) || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
+            if (initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)
+                    || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)
+                    || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)
+                    || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
                 applyTransitionForActivatingSpellTrapInSpellZone(cardView);
             } else {
                 applyTransitionForActivatingSpellTrapFromHand(cardView);
@@ -86,22 +98,24 @@ public class Transition {
         }
     }
 
-
     public void applyTransitionForActivatingSpellTrapInSpellZone(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             flipCardBackAndForthConsideringCardImage(cardView, false);
         }
     }
 
     public void applyTransitionForActivatingSpellTrapFromHand(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             ParallelTransition parallelTransition = new ParallelTransition();
             TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToSpellZone(cardView);
             parallelTransition.getChildren().add(translateTransition);
             DuelView.getControllerForView().changeLabelOfCardForSendingSpellToSpellZone(cardView);
-            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(GameManager.getDuelControllerByIndex(0).getTurn() == 1);
+            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(
+                    GameManager.getDuelControllerByIndex(0).getTurn() == 1);
             for (int i = 0; i < translateTransitions.size(); i++) {
                 parallelTransition.getChildren().add(translateTransitions.get(i));
             }
@@ -111,17 +125,18 @@ public class Transition {
     }
 
     public void applyTransitionForSettingCard(CardView cardView) {
-        if (cardView.getCard().getCardType().equals(CardType.SPELL) || cardView.getCard().getCardType().equals(CardType.TRAP)) {
+        if (cardView.getCard().getCardType().equals(CardType.SPELL)
+                || cardView.getCard().getCardType().equals(CardType.TRAP)) {
             applyTransitionForSettingSpellTrapCard(cardView);
         } else if (cardView.getCard().getCardType().equals(CardType.MONSTER)) {
             applyTransitionForSettingMonsterCard(cardView);
         }
     }
 
-
     public void applyTransitionForSettingSpellTrapCard(CardView cardView) {
-        //incorrect
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        // incorrect
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             flipCardBackAndForthConsideringCardImage(cardView, false);
             ParallelTransition parallelTransition = new ParallelTransition();
@@ -129,7 +144,8 @@ public class Transition {
             TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToSpellZone(cardView);
             parallelTransition.getChildren().add(translateTransition);
             DuelView.getControllerForView().changeLabelOfCardForSendingSpellToSpellZone(cardView);
-            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(GameManager.getDuelControllerByIndex(0).getTurn() == 1);
+            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(
+                    GameManager.getDuelControllerByIndex(0).getTurn() == 1);
             for (int i = 0; i < translateTransitions.size(); i++) {
                 parallelTransition.getChildren().add(translateTransitions.get(i));
             }
@@ -137,16 +153,17 @@ public class Transition {
         }
     }
 
-
     public void applyTransitionForSummoningMonsterCard(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
-            //System.out.println("1");
+            // System.out.println("1");
             ParallelTransition parallelTransition = new ParallelTransition();
             TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView);
             parallelTransition.getChildren().add(translateTransition);
             DuelView.getControllerForView().changeLabelOfCardForSendingMonsterToMonsterZone(cardView);
-            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(GameManager.getDuelControllerByIndex(0).getTurn() == 1);
+            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(
+                    GameManager.getDuelControllerByIndex(0).getTurn() == 1);
             for (int i = 0; i < translateTransitions.size(); i++) {
                 parallelTransition.getChildren().add(translateTransitions.get(i));
             }
@@ -155,7 +172,8 @@ public class Transition {
     }
 
     public void applyTransitionForSettingMonsterCard(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             flipCardBackAndForthConsideringCardImage(cardView, false);
             RotateTransition rotateTransition = rotateCardNintyDegrees(cardView);
@@ -164,7 +182,8 @@ public class Transition {
             TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView);
             parallelTransition.getChildren().add(translateTransition);
             DuelView.getControllerForView().changeLabelOfCardForSendingMonsterToMonsterZone(cardView);
-            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(GameManager.getDuelControllerByIndex(0).getTurn() == 1);
+            ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(
+                    GameManager.getDuelControllerByIndex(0).getTurn() == 1);
             for (int i = 0; i < translateTransitions.size(); i++) {
                 parallelTransition.getChildren().add(translateTransitions.get(i));
             }
@@ -174,7 +193,8 @@ public class Transition {
     }
 
     public void applyTransitionForChangingMonsterPositionToFaceUpAttackPosition(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             RotateTransition rotateTransition = rotateCardMinusNintyDegrees(cardView);
             rotateTransition.play();
@@ -182,7 +202,8 @@ public class Transition {
     }
 
     public void applyTransitionForChangingMonsterPositionToFaceUpDefensePosition(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             RotateTransition rotateTransition = rotateCardNintyDegrees(cardView);
             rotateTransition.play();
@@ -190,7 +211,8 @@ public class Transition {
     }
 
     public void applyTransitionForFlipSummoning(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             flipCardBackAndForthConsideringCardImage(cardView, true);
             RotateTransition rotateTransition = rotateCardNintyDegrees(cardView);
@@ -199,14 +221,15 @@ public class Transition {
     }
 
     public void applyTransitionForShowingFrontOfACard(CardView cardView) {
-        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null,
+                cardView);
         if (initialCardLocation != null) {
             flipCardBackAndForthConsideringCardImage(cardView, true);
         }
     }
 
     private ArrayList<TranslateTransition> giveTranslateTransitionForCardDecreasingInHand(boolean isForAlly) {
-        //before calling this method you must delete your card from hand
+        // before calling this method you must delete your card from hand
         ArrayList<TranslateTransition> translateTransitions = new ArrayList<>();
         ArrayList<CardView> cardViews;
         if (isForAlly) {
@@ -218,13 +241,15 @@ public class Transition {
             CardView cardView = cardViews.get(i);
             TranslateTransition translate = new TranslateTransition(Duration.millis(500), cardView);
             if (isForAlly) {
-                translate.setToX(
-                        (DuelView.getBattleFieldView().getUpperLeftX() + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size())) / 2
-                                + 33.6 + CardView.getCardWidth() * (i) - cardView.getUpperLeftX()));
+                translate.setToX((DuelView.getBattleFieldView().getUpperLeftX()
+                        + (DuelView.getBattleFieldView().getWidth() - 33.6
+                                - CardView.getCardWidth() * (cardViews.size())) / 2
+                        + 33.6 + CardView.getCardWidth() * (i) - cardView.getUpperLeftX()));
             } else {
-                translate.setToX(
-                        (DuelView.getBattleFieldView().getUpperLeftX() + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size())) / 2
-                                + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1 - i) - cardView.getUpperLeftX()));
+                translate.setToX((DuelView.getBattleFieldView().getUpperLeftX()
+                        + (DuelView.getBattleFieldView().getWidth() - 33.6
+                                - CardView.getCardWidth() * (cardViews.size())) / 2
+                        + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1 - i) - cardView.getUpperLeftX()));
             }
             translate.setCycleCount(1);
             translate.setAutoReverse(true);
@@ -233,10 +258,9 @@ public class Transition {
         return translateTransitions;
     }
 
-
     private ArrayList<TranslateTransition> giveTranslateTransitionForCardIncreasingInHand(boolean isForAlly) {
-        //before calling this method you must add your card to hand
-        //therefore this function gives translations for already existing cards in hand
+        // before calling this method you must add your card to hand
+        // therefore this function gives translations for already existing cards in hand
         ArrayList<TranslateTransition> translateTransitions = new ArrayList<>();
         ArrayList<CardView> cardViews;
         if (isForAlly) {
@@ -249,11 +273,15 @@ public class Transition {
             System.out.println("just to make sure " + cardView.getCard().getCardName());
             TranslateTransition translate = new TranslateTransition(Duration.millis(500), cardView);
             if (isForAlly) {
-                double xTranslation = (DuelView.getBattleFieldView().getUpperLeftX() + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size())) / 2
+                double xTranslation = (DuelView.getBattleFieldView().getUpperLeftX()
+                        + (DuelView.getBattleFieldView().getWidth() - 33.6
+                                - CardView.getCardWidth() * (cardViews.size())) / 2
                         + 33.6 + CardView.getCardWidth() * (i) - cardView.getUpperLeftX());
                 translate.setToX(xTranslation);
             } else {
-                double xTranslation = (DuelView.getBattleFieldView().getUpperLeftX() + (DuelView.getBattleFieldView().getWidth() - 33.6 - CardView.getCardWidth() * (cardViews.size())) / 2
+                double xTranslation = (DuelView.getBattleFieldView().getUpperLeftX()
+                        + (DuelView.getBattleFieldView().getWidth() - 33.6
+                                - CardView.getCardWidth() * (cardViews.size())) / 2
                         + 33.6 + CardView.getCardWidth() * (cardViews.size() - 1 - i) - cardView.getUpperLeftX());
                 translate.setToX(xTranslation);
             }
@@ -298,10 +326,18 @@ public class Transition {
                 } else {
                     cardView.setCanBeSeen(false);
                 }
-                //parallelTransition.getChildren().add(stShowBack);
+                // parallelTransition.getChildren().add(stShowBack);
                 stShowBack.play();
             }
         });
         stHideFront.play();
+    }
+
+    public void fadeTranstionFromValue1To0(Parent root) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
+        fadeTransition.setNode(root);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
     }
 }

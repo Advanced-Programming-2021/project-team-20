@@ -1,30 +1,22 @@
 package project.View;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.regex.Matcher;
 
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import project.controller.duel.Utility.Utility;
+
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 import javafx.geometry.Pos;
-
 
 public class UIUtility {
 
@@ -33,14 +25,16 @@ public class UIUtility {
     private static List<Rectangle> allScrollBarRectangle;
     private static List<Rectangle> allScrollBarBackGroundRectangles;
     private static List<Rectangle> fourRectangleToShowDecks;
-    private static Image validDeckImage;
-    private static Image invalidDeckImage;
+    private static List<Rectangle> rectanglesToShowCardsInImportAndExportClass;
+    private static HashMap<String, Image> decksImage;
     private static List<Label> allScrollBarLabels = new ArrayList<>();
     private static List<Label> numberOfCardslabels = new ArrayList<>();
     private static HashMap<String, List<Card>> allTypeOfCards;
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
+    private static HashMap<String,Image> imagesForRockPaperScissorController;
 
-    private static List<Label> allCardDiscriptionLabels;
+    private static List<Label> allCardDiscriptionLabels1;
+    private static List<Label> allCardDiscriptionLabels2;
 
     public static void createPreliminaryToStartProgram() {
         createAllCardDiscriptionLabels();
@@ -50,8 +44,37 @@ public class UIUtility {
         createOneRectangleForEachCard();
         createAllTypeOfCards();
         initializeLabelsToShowInfornationOfDeck();
-        validDeckImage = createValidAndInvalidDeckImage("validDeck");
-        invalidDeckImage = createValidAndInvalidDeckImage("invalidDeck");
+        createRectanglesToShowCardsInImportAndExportClass();
+        createDeckImages();
+        createImagesForRockPaperScissorController();
+    }
+
+    private static void createDeckImages() {
+        decksImage = new HashMap<>();
+        decksImage.put("validDeck", createImages("deckpage\\", "validDeck"));
+        decksImage.put("invalidDeck", createImages("deckpage\\","invalidDeck"));
+    }
+
+    private static void createImagesForRockPaperScissorController() {
+        imagesForRockPaperScissorController = new HashMap<>();
+        imagesForRockPaperScissorController.put("mouseEnterdScissorBaz", createImages("stonePaperscissor\\", "mouseEnterdScissorBaz"));
+        imagesForRockPaperScissorController.put("stone", createImages("stonePaperscissor\\", "stone"));
+        imagesForRockPaperScissorController.put("mouseEnterdStone", createImages("stonePaperscissor\\", "mouseEnterdStone"));
+        imagesForRockPaperScissorController.put("scissor", createImages("stonePaperscissor\\", "scissor"));
+        imagesForRockPaperScissorController.put("mouseEnterePaper", createImages("stonePaperscissor\\", "mouseEnterePaper"));
+        imagesForRockPaperScissorController.put("paper", createImages("stonePaperscissor\\", "paper"));
+    }
+
+    private static void createRectanglesToShowCardsInImportAndExportClass() {
+        rectanglesToShowCardsInImportAndExportClass = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 6; j++) {
+                Rectangle rectangle = new Rectangle(45, 65);
+                rectangle.setX(4 + 52.5 * j);
+                rectangle.setY(4 + 71 * i);
+                rectanglesToShowCardsInImportAndExportClass.add(rectangle);
+            }
+        }
     }
 
     private static void createAllTypeOfCards() {
@@ -83,10 +106,10 @@ public class UIUtility {
         allTypeOfCards.put("allTrapCardsInList", allTrapCradsInList);
     }
 
-    private static Image createValidAndInvalidDeckImage(String imagename) {
+    private static Image createImages(String path, String imagename) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("src\\main\\resources\\project\\images\\deckpage\\" + imagename + ".PNG");
+            stream = new FileInputStream("src\\main\\resources\\project\\images\\" + path + imagename + ".PNG");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,16 +124,20 @@ public class UIUtility {
         allScrollBarBackGroundRectangles = new ArrayList<>();
 
         for (int i = 0; i < 60; i++) {
-            Rectangle rectangle = new Rectangle(60, 85);
+            Rectangle rectangle = new Rectangle(45, 65);
             // rectangle.setArcHeight(10);
             // rectangle.setArcWidth(10);
+            rectangle.setX(4 + 52.5 * (i % 10));
+            rectangle.setY(4 + 71 * (i / 10));
             allMainDeckRectangle.add(rectangle);
             // rectangle.setStroke(Color.WHITE);
             // rectangle.setStrokeWidth(3);
         }
 
         for (int i = 0; i < 15; i++) {
-            Rectangle rectangle = new Rectangle(60, 85);
+            Rectangle rectangle = new Rectangle(45, 65);
+            rectangle.setX(4 + 52.5 * (i % 10));
+            rectangle.setY(4 + 71 * (i / 10));
             // rectangle.setArcHeight(10);
             // rectangle.setArcWidth(10);
             allSideDeckRectangle.add(rectangle);
@@ -202,18 +229,16 @@ public class UIUtility {
         label.setLayoutX(10 + 310 * column);
         label.setLayoutY(210 * row);
         label.setAlignment(Pos.CENTER);
-        label.setText("arg0 my best deck");
     }
 
-    private static void createLabelForSizeOfOtherParts(Label label, int row, int column, int translateX, int translateY) {
+    private static void createLabelForSizeOfOtherParts(Label label, int row, int column, int translateX,
+            int translateY) {
         label.setPrefSize(100, 50);
         label.setFont(new Font(20));
         label.setLayoutY(51 + 210 * row + translateY);
         label.setLayoutX(52 + 310 * column + translateX);
         label.setAlignment(Pos.CENTER);
-        label.setText("49");
     }
-
 
     public static void createLabelToShowSizeOfCardsInDeck() {
         Label allDecksSizeLabel = new Label();
@@ -245,10 +270,16 @@ public class UIUtility {
     }
 
     public static void createAllCardDiscriptionLabels() {
-        allCardDiscriptionLabels = new ArrayList<>();
+        allCardDiscriptionLabels1 = new ArrayList<>();
+        allCardDiscriptionLabels2 = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            allCardDiscriptionLabels.add(new Label());
+            allCardDiscriptionLabels1.add(new Label());
+            allCardDiscriptionLabels2.add(new Label());
         }
+    }
+
+    public static HashMap<String, Image> getImagesForRockPaperScissorController() {
+        return imagesForRockPaperScissorController;
     }
 
     public static List<Rectangle> getAllMainDeckRectangle() {
@@ -263,8 +294,12 @@ public class UIUtility {
         return allSideDeckRectangle;
     }
 
-    public static List<Label> getAllCardDiscriptionLabels() {
-        return allCardDiscriptionLabels;
+    public static List<Label> getAllCardDiscriptionLabels1() {
+        return allCardDiscriptionLabels1;
+    }
+
+    public static List<Label> getAllCardDiscriptionLabels2() {
+        return allCardDiscriptionLabels2;
     }
 
     public static List<Label> getAllScrollBarLabels() {
@@ -279,12 +314,8 @@ public class UIUtility {
         return allScrollBarBackGroundRectangles;
     }
 
-    public static Image getValidDeckImage() {
-        return validDeckImage;
-    }
-
-    public static Image getInvalidDeckImage() {
-        return invalidDeckImage;
+    public static HashMap<String, Image> getDecksImage() {
+        return decksImage;
     }
 
     public static List<Rectangle> getFourRectangleToShowDecks() {
@@ -297,5 +328,9 @@ public class UIUtility {
 
     public static HashMap<String, Label> getLabelsToShowInformationOfDeck() {
         return labelsToShowInformationOfDeck;
+    }
+
+    public static List<Rectangle> getRectanglesToShowCardsInImportAndExportClass() {
+        return rectanglesToShowCardsInImportAndExportClass;
     }
 }
