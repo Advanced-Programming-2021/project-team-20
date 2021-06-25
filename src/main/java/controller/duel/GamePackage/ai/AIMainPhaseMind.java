@@ -347,9 +347,9 @@ public class AIMainPhaseMind {
             if (!aiKeyVariablesUpdater.isCanOpponentInterruptAISpellWithQuickSpells() && aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInHand()) {
                 return aiCardFinder.findQuickSpellCardsToDestroyOpponentSpellTrapCards(ai);
             }
-            if (aiKeyVariablesUpdater.isDoesAIHaveMonstersWithHighAttackInHand()) {
-                return aiCardFinder.findMonsterInBoardWithDecentAttackToChangeCardPositionToFaceUpAttackPosition(ai);
-            }
+           //if (aiKeyVariablesUpdater.isDoesAIHaveMonstersWithGoodAttackInHand()) {
+           //     return aiCardFinder.findMonsterInBoardWithDecentAttackToChangeCardPositionToFaceUpAttackPosition(ai);
+            //}
         } else {
             //System.out.println("nobody's monsters dominated another and i am here thinking");
             //System.out.println(duelController.getHaveUsersAlreadySummonedOrSetOnce(duelController.getAiTurn()));

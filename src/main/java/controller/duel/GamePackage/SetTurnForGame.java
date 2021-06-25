@@ -54,6 +54,9 @@ public class SetTurnForGame {
         if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
             || (player1Selection == 3 && player2Selection == 2)) {
             GameManager.getDuelControllerByIndex(index).setTurn(1);
+            if (opponentPlayerName.equals("AI")){
+                GameManager.getDuelControllerByIndex(0).setAiTurn(2);
+            }
             GameManager.getDuelControllerByIndex(index).startDuel(index);
             GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             if (GameManager.getDuelControllerByIndex(0).getCurrentRound() >= 2) {
@@ -65,6 +68,9 @@ public class SetTurnForGame {
         }
 
         GameManager.getDuelControllerByIndex(index).setTurn(2);
+        if (opponentPlayerName.equals("AI")){
+            GameManager.getDuelControllerByIndex(0).setAiTurn(1);
+        }
         GameManager.getDuelControllerByIndex(index).startDuel(index);
         GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
         if (GameManager.getDuelControllerByIndex(0).getCurrentRound() >= 2) {
