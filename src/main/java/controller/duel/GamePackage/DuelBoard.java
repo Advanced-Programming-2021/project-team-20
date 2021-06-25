@@ -944,7 +944,7 @@ public class DuelBoard {
             graveyard.append("graveyard empty\n");
         } else {
             for (int i = 0; i < cards.size(); i++) {
-                graveyard.append(i).append(". ").append(cards.get(i).getCardName()).append(": ");
+                graveyard.append(i + 1).append(". ").append(cards.get(i).getCardName()).append(": ");
                 graveyard.append(cards.get(i).getCardDescription()).append("\n");
             }
         }
