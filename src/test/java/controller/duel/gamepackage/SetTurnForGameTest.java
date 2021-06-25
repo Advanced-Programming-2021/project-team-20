@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import controller.duel.GamePackage.SetTurnForGame;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.non_duel.storage.Storage;
+import model.Deck;
 import model.cardData.General.Card;
 
 class SetTurnForGameTest {
@@ -37,11 +38,13 @@ class SetTurnForGameTest {
 
         ArrayList<Card> cards = new ArrayList<>();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        Deck deck = new Deck("ssss");
         for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
             cards.add(entry.getValue());
+            deck.addCardToMainDeck(entry.getKey());
         }
         gameManager = new GameManager();
-        gameManager.addANewGame(null,cards, cards,null, cards, cards, "firstPlayer", "AI", 1);
+        gameManager.addANewGame(deck,cards, cards,deck, cards, cards, "firstPlayer", "AI", 1);
         setTurnForGame = new SetTurnForGame();
         String output = setTurnForGame.setTurnBetweenTwoPlayer("1", 0);
         assertNotNull(output);
@@ -51,11 +54,14 @@ class SetTurnForGameTest {
     void normalTest1() {
         ArrayList<Card> cards = new ArrayList<>();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        Deck deck = new Deck("ssss");
         for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
             cards.add(entry.getValue());
+            deck.addCardToMainDeck(entry.getKey());
+
         }
         gameManager = new GameManager();
-        gameManager.addANewGame(null,cards, cards,null, cards, cards, "firstPlayer", "secondPlayer", 1);
+        gameManager.addANewGame(deck,cards, cards,deck, cards, cards, "firstPlayer", "secondPlayer", 1);
         setTurnForGame = new SetTurnForGame();
 
         String output = setTurnForGame.setTurnBetweenTwoPlayer("dsada", 0);
@@ -80,11 +86,13 @@ class SetTurnForGameTest {
     void normalTest2() {
         ArrayList<Card> cards = new ArrayList<>();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        Deck deck = new Deck("ssss");
         for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
             cards.add(entry.getValue());
+            deck.addCardToMainDeck(entry.getKey());
         }
         gameManager = new GameManager();
-        gameManager.addANewGame(null,cards, cards,null, cards, cards, "firstPlayer", "secondPlayer", 1);
+        gameManager.addANewGame(deck,cards, cards,deck, cards, cards, "firstPlayer", "secondPlayer", 1);
         setTurnForGame = new SetTurnForGame();
 
         String output = setTurnForGame.setTurnBetweenTwoPlayer("1", 0);

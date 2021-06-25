@@ -735,7 +735,7 @@ public class DuelBoard {
             return "DH";
         }
         // NOT_APPLICABLE
-        return "kgf";
+        return "E";
 
     }
 

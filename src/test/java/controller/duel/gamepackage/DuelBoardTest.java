@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import controller.duel.GamePackage.DuelBoard;
 import controller.duel.PreliminaryPackage.GameManager;
 import controller.non_duel.storage.Storage;
+import model.Deck;
 import model.User;
 import model.cardData.General.Card;
 import model.cardData.General.CardLocation;
@@ -38,11 +39,13 @@ class DuelBoardTest {
 
         ArrayList<Card> cards = new ArrayList<>();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        Deck deck = new Deck("dsa"); 
         for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
             cards.add(entry.getValue());
+            deck.addCardToMainDeck(entry.getKey());
         }
         gameManager = new GameManager();
-        gameManager.addANewGame(null,cards, cards,null, cards, cards, "1", "2", 1);
+        gameManager.addANewGame(deck,cards, cards,deck, cards, cards, "1", "2", 1);
     }
 
     @Test
