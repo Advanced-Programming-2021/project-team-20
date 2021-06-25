@@ -165,6 +165,7 @@ public class SpellCard extends Card {
         this.ritualSpellEffects = spellCard.getRitualSpellEffects();
         this.sentToGraveyardEffects = spellCard.getSentToGraveyardEffects();
         this.userReplyForActivations = spellCard.getUserReplyForActivations();
+        this.cardLocationsToWhichEquipSpellIsApplied = spellCard.getCardLocationsToWhichEquipSpellIsApplied();
     }
 
     public int getHighestNumberOfTurnsOfActivation() {

@@ -297,7 +297,7 @@ public class Action {
         if (duelController.getLifePoints().get(2 - action.getActionTurn()) <= 0) {
             if (duelController.getNumberOfRounds() == 1 && duelController.getCurrentRound() == 1) {
                 return output.toString() + duelController.endGame(action.getActionTurn(), index);
-            } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 2) {
+            } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 3) {
                 return output.toString() + duelController.endGame(action.getActionTurn(), index);
             } else {
                 return output.toString() + duelController.endOneRoundOfDuel(action.getActionTurn());
@@ -305,7 +305,7 @@ public class Action {
         } else if (duelController.getLifePoints().get(action.getActionTurn() - 1) <= 0) {
             if (duelController.getNumberOfRounds() == 1 && duelController.getCurrentRound() == 1) {
                 return output.toString() + duelController.endGame(3 - action.getActionTurn(), index);
-            } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 2) {
+            } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 3) {
                 return output.toString() + duelController.endGame(3 - action.getActionTurn(), index);
             } else {
                 return output.toString() + duelController.endOneRoundOfDuel(3 - action.getActionTurn());
