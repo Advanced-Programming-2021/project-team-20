@@ -79,6 +79,7 @@ public class GameManager {
         activateSpellTrapControllers.remove(index);
         activateMonsterControllers.remove(index);
         attackMonsterToMonsterControllers.remove(index);
+        attackMonsterToMonsterConductors.remove(index);
         battlePhaseControllers.remove(index);
         chainControllers.remove(index);
         changeCardPositionControllers.remove(index);
@@ -95,6 +96,9 @@ public class GameManager {
         phaseControllers.remove(index);
         actions.remove(index);
         uninterruptedActions.remove(index);
+        changeCardsBetweenTwoRounds.remove(index);
+        setTurnForGames.remove(index);
+        ais.remove(index);
     }
 
     public static DuelController getDuelControllerByIndex(int index) {

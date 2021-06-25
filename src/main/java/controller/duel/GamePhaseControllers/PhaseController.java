@@ -29,7 +29,6 @@ public class PhaseController {
     private boolean gameIsOver;
 
     public PhaseController() {
-        //phaseInGame = null;
         playersProhibitedToDrawCardNextTurn = new ArrayList<>();
         playersProhibitedToDrawCardNextTurn.add(false);
         playersProhibitedToDrawCardNextTurn.add(false);
@@ -239,7 +238,6 @@ public class PhaseController {
         if (turn == 1) {
             cardLocation = new CardLocation(RowOfCardLocation.ALLY_DECK_ZONE, 1);
         } else {
-            //changed index here from 2 to 1
             cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, 1);
         }
         Card card = duelBoard.getCardByCardLocation(cardLocation);
@@ -377,7 +375,7 @@ public class PhaseController {
     private void resetCharacteristicsOfOneCardWhenTurnChanges(Card card) {
         if (Card.isCardAMonster(card)) {
             MonsterCard monsterCard = (MonsterCard) card;
-            if (monsterCard.getRealName().equals("scanner")) {
+            if (monsterCard.getRealName().equals("Scanner")) {
                 resetScannerCard(monsterCard);
             }
             monsterCard.setOncePerTurnCardEffectUsed(false);
@@ -417,7 +415,7 @@ public class PhaseController {
         monsterCard.setSentToGraveyardEffects(sentToGraveyardEffects);
         ArrayList<AttackerEffect> attackerEffects = new ArrayList<>();
         monsterCard.setAttackerEffects(attackerEffects);
-        monsterCard.setCardName("scanner");
+        monsterCard.setCardName("Scanner");
         monsterCard.setCardType(CardType.MONSTER);
         monsterCard.setCardDescription("");
     }

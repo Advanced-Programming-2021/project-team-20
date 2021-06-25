@@ -39,8 +39,9 @@ public class AIBattlePhaseMind {
         //boolean doAIMonstersDominateOpponentWithBuffEffects = doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
         if ((!aiKeyVariablesUpdater.isDoesOpponentHaveMonsterDestroyingTrapCardsInAttacking() ||
             aiKeyVariablesUpdater.isDoesOpponentHaveDefensiveTrapCardsInBoard() &&
-                aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInBoard()) &&
-        !aiKeyVariablesUpdater.isDoesOpponentHaveStoppingMonstersOfAttackingSpellCardsCurrentlyActiveInBoard()) {
+                aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInBoard() ||
+            aiKeyVariablesUpdater.isDoesAIHaveMonstersWithStoppingTrapCardActivationEffectInBoard()) &&
+            !aiKeyVariablesUpdater.isDoesOpponentHaveStoppingMonstersOfAttackingSpellCardsCurrentlyActiveInBoard()) {
             String output = aiCardFinder.findBestMonsterInBoardThatDominatesOpponentMonsterToAttack(ai);
             if (output.equals("nothing found")) {
                 return "next phase";
@@ -57,7 +58,7 @@ public class AIBattlePhaseMind {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
         Action attackAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation attackingMonsterLocation = attackAction.getFinalMainCardLocation();
-        if (attackAction.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER)||attackAction.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)){
+        if (attackAction.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || attackAction.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
             CardLocation beingAttackedLocation = attackAction.getTargetingCards().get(attackAction.getTargetingCards().size() - 1);
             if (doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(beingAttackedLocation, attackingMonsterLocation, 0)) {
                 return "no";
@@ -66,13 +67,13 @@ public class AIBattlePhaseMind {
         int aiTurn = GameManager.getDuelControllerByIndex(0).getAiTurn();
         int enemyLifePoints = GameManager.getDuelControllerByIndex(0).getLifePoints().get(2 - aiTurn);
         if ((enemyLifePoints < MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, 0)
-            || 2200 <= MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, 0)) &&
+            || 1600 <= MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, 0)) &&
             aiKeyVariablesUpdater.isDoesAIHaveDamageInflictingTrapCardsInBattlePhaseInBoard()) {
             ai.setAiSpellTrapSelections(AISpellTrapSelections.SELECT_A_DAMAGE_INFLICTING_TRAP_CARD_IN_BOARD);
             return "yes";
         }
         if (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersWorthyOfKillingAndFaceUpAttackPosition().size() +
-            ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersGoodToBeKilledAndFaceUpAttackPosition().size() >= 2 &&
+            ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersGoodToBeKilledAndFaceUpAttackPosition().size() >= 1 &&
             aiKeyVariablesUpdater.isDoesAIHaveMonsterDestroyingTrapCardsInBattlePhaseInBoard()) {
             ai.setAiSpellTrapSelections(AISpellTrapSelections.SELECT_A_MONSTER_DESTROYING_TRAP_CARD_IN_BOARD);
             return "yes";
@@ -126,7 +127,7 @@ public class AIBattlePhaseMind {
         } else if (ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.SELECT_A_MONSTER_WITH_HIGH_ATTACK_FROM_OWN_GRAVEYARD)) {
             ai.setAiFurtherActivationInput(AIFurtherActivationInput.NOTHING);
             return aiCardFinder.findMonsterWithHighestAttackInOwnGraveyardToSpecialSummon(ai);
-        } else if (ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.NOTHING)){
+        } else if (ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.NOTHING)) {
             return ai.getAiMainPhaseMind().getCommandForGivingFurtherInputForActivatingSpellOrTrap(ai);
         }
         return "next phase";

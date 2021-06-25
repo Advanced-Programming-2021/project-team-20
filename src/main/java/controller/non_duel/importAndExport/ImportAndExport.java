@@ -81,7 +81,7 @@ public class ImportAndExport {
             else if(Storage.getAllSpellAndTrapCards().containsKey(cardName)){
                 addSpellAndTrapCardToAllCards(detailsOfCards, cardName, cardType, cardDesciption, price);
             }
-            
+
             try {
                 FileWriter fileWriter = new FileWriter("Resourses\\ExportedCards\\" + cardName + ".json");
                 fileWriter.write(cardDesciption);
@@ -120,12 +120,16 @@ public class ImportAndExport {
             String cardDescription, int cardPrice) {
         String cardProperty = detailsOfCards.get("Card Property").getAsString();
         String status = detailsOfCards.get("Status").getAsString();
+        int numberOfTurnsOfActivation = 100;
         if (cardType.equals("Trap")) {
             new TrapCard(cardName, cardDescription, TrapCardValue.valueOf(cardProperty.toUpperCase()), null,
-                    status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
+                    status.equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation, cardPrice, null);
         } else {
+            if (cardName.startsWith("Swords Of R")){
+                numberOfTurnsOfActivation = 6;
+            }
             new SpellCard(cardName, cardDescription, SpellCardValue.valueOf(cardProperty), null,
-                    status.equals("Unlimited") ? 3 : 1, 0, cardPrice, null);
+                    status.equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation, cardPrice, null);
         }
     }
 

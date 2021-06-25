@@ -12,11 +12,6 @@ import controller.duel.GamePhaseControllers.SummonSetCommonClass;
 import controller.duel.PreliminaryPackage.GameManager;
 import model.cardData.General.Card;
 import model.cardData.General.RowOfCardLocation;
-import model.cardData.SpellCardData.SpellCard;
-import model.cardData.TrapCardData.TrapCard;
-import model.cardData.TrapCardData.TrapCardValue;
-
-import javax.swing.table.TableRowSorter;
 
 public class Utility {
     public static Matcher getCommandMatcher(String input, String regex) {

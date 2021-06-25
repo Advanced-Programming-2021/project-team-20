@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class SpecialSummonConductor {
     public static String conductSpecialSummoningActionUninterruptedAction(int index, int numberInListOfActions) {
-        //if (!isActionCanceled){
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
@@ -54,7 +53,6 @@ public class SpecialSummonConductor {
         mainCard.setCardPosition(uninterruptedAction.getCardPositionOfMainCard());
         MonsterCard monsterCard = (MonsterCard) mainCard;
         monsterCard.setCardPositionChanged(true);
-        //duelBoard.removeNullCardsFromHands();
         return "special summoned successfully";
     }
 
@@ -64,14 +62,9 @@ public class SpecialSummonConductor {
 
     private static void tendToFirstAndSecondCardsInHandWithBadIndex(int index, int numberInListOfActions, CardLocation mainMonsterCardLocation) {
         Action uninterruptedAction = GameManager.getUninterruptedActionsByIndex(index).get(numberInListOfActions);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(mainMonsterCardLocation);
         if (uninterruptedAction.getCardsToBeDiscarded().size() > 0) {
             ArrayList<CardLocation> cardsToBeDiscarded = uninterruptedAction.getCardsToBeDiscarded();
             int indexOfCardToBeDiscarded = cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1).getIndex();
-            //System.out.println(indexOfCardToBeDiscarded);
-            //System.out.println(mainMonsterCardLocation.getIndex());
-            //System.out.println("kkk");
             uninterruptedAction.setSecondCardInHandAfterFirstCardInHand(indexOfCardToBeDiscarded < mainMonsterCardLocation.getIndex());
         }
     }

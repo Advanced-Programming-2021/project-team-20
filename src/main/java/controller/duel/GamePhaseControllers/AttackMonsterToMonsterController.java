@@ -29,14 +29,6 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
     }
 
 
-    public void setGoingToChangeTurnsForChaining(boolean goingToChangeTurnsForChaining) {
-        isGoingToChangeTurnsForChaining = goingToChangeTurnsForChaining;
-    }
-
-    public void setClassWaitingForFurtherChainInput(boolean classWaitingForFurtherChainInput) {
-        isClassWaitingForChainCardToBeSelected = classWaitingForFurtherChainInput;
-    }
-
     public String attackInputAnalysis(String string) {
         String inputRegex = "(?<=\\n|^)attack[\\s]+([\\d])(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
@@ -51,20 +43,11 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
             } else {
                 Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
                 resultOfChecking = checkAttackWithCard(card, 0);
-                //System.out.println("result of checking was " + resultOfChecking);
                 if (!resultOfChecking.equals("")) {
                     return resultOfChecking;
                 } else {
                     resultOfChecking = checkIndexOfAttackedMonster(card, 0);
                     return resultOfChecking;
-                    /*
-                    if (resultOfChecking.equals("")) {
-                        Action.conductAllActions(0);
-                    } else {
-                        return resultOfChecking;
-                    }
-
-                     */
                 }
             }
         }
@@ -77,9 +60,6 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
         int turn = duelController.getTurn();
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectCardLocations = selectCardController.getSelectedCardLocations();
-        //System.out.println("turn is "+turn);
-        //System.out.println("card name is "+card.getCardName());
-        //System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
         if (indexOfAttackedMonster < 1 || indexOfAttackedMonster > 5) {
             return "there is no card to attack here";
         } else {
@@ -90,14 +70,11 @@ public class AttackMonsterToMonsterController extends BattlePhaseController {
                 rowOfCardLocation = RowOfCardLocation.ALLY_MONSTER_ZONE;
             }
             indexOfAttackedMonster = Utility.changeYuGiOhIndexToArrayIndex(indexOfAttackedMonster, rowOfCardLocation);
-            //System.out.println("rowOfCardLocation is " + rowOfCardLocation);
-            //System.out.println("indexOfAttackedMonster is " + indexOfAttackedMonster);
             CardLocation opponentCardLocation = new CardLocation(rowOfCardLocation, indexOfAttackedMonster);
             Card attackedMonster = duelBoard.getCardByCardLocation(opponentCardLocation);
             if (!(Card.isCardAMonster(attackedMonster))) {
                 return "there is no card to attack here";
             } else {
-                //System.out.println("attackedMonster name is " + attackedMonster.getCardName());
                 String output = "";
                 mainCard = selectCardLocations.get(selectCardLocations.size() - 1);
                 if (((MonsterCard)duelBoard.getCardByCardLocation(mainCard)).isHasCardAlreadyAttacked()){

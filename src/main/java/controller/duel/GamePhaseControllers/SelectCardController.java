@@ -36,22 +36,15 @@ public class SelectCardController {
             }
             if (matcher.group(8) != null) {
                 int cardIndex = Integer.parseInt(matcher.group(8));
-                //System.out.println("card Index is "+cardIndex);
                 if (isSelectedCardIndexValid(cardIndex, rowOfCardLocation, indexOfWholeGame)) {
                     cardIndex = Utility.changeYuGiOhIndexToArrayIndex(cardIndex, rowOfCardLocation);
-                    //System.out.println("cardIndex is " + cardIndex);
                     CardLocation cardLocation = new CardLocation(rowOfCardLocation, cardIndex);
                     DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
                     Card card = duelBoard.getCardByCardLocation(cardLocation);
                     if (card == null) {
                         return "no card found in the given position";
                     } else {
-                        //System.out.println(card.getCardName()+" is what is chosen");
                         selectedCardLocations.add(cardLocation);
-                        for (int i = 0; i < selectedCardLocations.size(); i++) {
-                            //    System.out.println(selectedCardLocations.get(i).getRowOfCardLocation().toString() + selectedCardLocations.get(i).getIndex());
-                        }
-                        //System.out.println(duelBoard.getCardByCardLocation(cardLocation).getCardName() + "is selected");
                         return "card selected";
                     }
                 } else {

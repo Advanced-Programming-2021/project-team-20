@@ -176,41 +176,5 @@ public class AIQueryUnderstander{
 
     private String understandQueryInMainPhase2OpponentTurn(AI ai) {
         return understandQueryInMainPhase1OpponentTurn(ai);
-        /*
-        AIMainPhaseMind aiMainPhaseMind = ai.getAiMainPhaseMind();
-        NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(0);
-        if (normalSummonController.isGoingToChangeTurnsForChaining()) {
-            return aiMainPhaseMind.getCommandForChoosingToActivateTrapInChainOrNotInMainPhase2(ai);
-        }
-        if (normalSummonController.isClassWaitingForChainCardToBeSelected()) {
-            return aiMainPhaseMind.getCommandForChoosingSpellTrapToActivateInChainInMainPhase2(ai);
-        }
-        SpecialSummonController specialSummonController = GameManager.getSpecialSummonControllerByIndex(0);
-        if (specialSummonController.isGoingToChangeTurnsForChaining()) {
-            return aiMainPhaseMind.getCommandForChoosingToActivateTrapInChainOrNotInMainPhase2(ai);
-        }
-        if (specialSummonController.isClassWaitingForChainCardToBeSelected()) {
-            return aiMainPhaseMind.getCommandForChoosingSpellTrapToActivateInChainInMainPhase2(ai);
-        }
-        TributeSummonController tributeSummonController = GameManager.getTributeSummonControllerByIndex(0);
-        if (tributeSummonController.isGoingToChangeTurnsForChaining()) {
-            return aiMainPhaseMind.getCommandForChoosingToActivateTrapInChainOrNotInMainPhase2(ai);
-        }
-        if (tributeSummonController.isClassWaitingForChainCardToBeSelected()) {
-            return aiMainPhaseMind.getCommandForChoosingSpellTrapToActivateInChainInMainPhase2(ai);
-        }
-        ActivateSpellTrapController activateSpellTrapController = GameManager.getActivateSpellTrapControllerByIndex(0);
-        if (activateSpellTrapController.isGoingToChangeTurnsForChaining()) {
-            return aiMainPhaseMind.getCommandForChoosingToActivateTrapInChainOrNotInMainPhase2(ai);
-        }
-        if (activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
-            return aiMainPhaseMind.getCommandForChoosingSpellTrapToActivateInChainInMainPhase2(ai);
-        }
-        if (activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
-            return aiMainPhaseMind.getCommandForGivingFurtherInputToActivateSpellTrapInChainInMainPhase2(ai);
-        }
-        return "no";
-
-         */
     }
 }

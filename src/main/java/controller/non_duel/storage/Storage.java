@@ -136,14 +136,17 @@ public class Storage {
             FileReader filereader = new FileReader(addressOfStorage + "CSV\\Spell.csv");
             CSVReader csvReader = new CSVReader(filereader);
             String[] nextRecord;
-
+            int numberOfTurnsOfActivation = 100;
             while ((nextRecord = csvReader.readNext()) != null) {
 
                 if (nextRecord[1].equals("Spell")) {
+                    if (nextRecord[0].startsWith("Swords of R")){
+                        numberOfTurnsOfActivation = 6;
+                    }
                     allSpellAndTrapCards.put(nextRecord[0],
                             new SpellCard(nextRecord[0], nextRecord[3],
                                     SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
-                                    nextRecord[4].equals("Unlimited") ? 3 : 1, 0, Integer.parseInt(nextRecord[5]),
+                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation, Integer.parseInt(nextRecord[5]),
                                     addEffectsSpellCards(nextRecord)));
                 }
             }

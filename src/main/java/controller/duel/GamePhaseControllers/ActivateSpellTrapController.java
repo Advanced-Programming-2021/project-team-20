@@ -114,7 +114,6 @@ public class ActivateSpellTrapController extends ChainController {
         ActivateMonsterController activateMonsterController = GameManager.getActivateMonsterControllerByIndex(index);
         if (Card.isCardAMonster(card)) {
             return activateMonsterController.activateMonsterEffectInputAnalysis("activate effect");
-            //"activate effect is only for spell and trap cards.";
         } else {
             return checkCorrectPhase(index);
         }
@@ -178,11 +177,6 @@ public class ActivateSpellTrapController extends ChainController {
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
         Card card = duelBoard.getCardByCardLocation(cardLocation);
-        if (card == null) {
-            //System.out.println("WHOOPS!");
-        } else {
-            //System.out.println("CARD NAME IS " + card.getCardName());
-        }
         //probably should be turn
         int fakeTurn = duelController.getFakeTurn();
         RowOfCardLocation rowOfCardLocation = RowOfCardLocation.OPPONENT_SPELL_ZONE;
@@ -204,7 +198,6 @@ public class ActivateSpellTrapController extends ChainController {
             return "spell zone is full";
         } else {
             String output = arePreparationsCompleteForSpellTrapActivation(index);
-            //System.out.println("SUCH A THING THAT IS SUPPOSED TO GIVE THINGS NEEDED OR SAY PREPARATIONS ARE NOT OK IS SAYING\n" + output);
             if (output.startsWith("pre")) {
                 return output;
             } else if (output.equals("nothing needed")) {
@@ -212,12 +205,9 @@ public class ActivateSpellTrapController extends ChainController {
                 selectCardController.resetSelectedCardLocationList();
                 String finalOutput = Action.conductUninterruptedAction(index);
                 String canChainingOccur = canChainingOccur(index);
-                //duelController.changeFakeTurn();
-                //used to give fakeTurn as input
                 if (canChainingOccur.equals("")) {
                     return finalOutput + "\n" + Action.conductAllActions(index);
                 }
-                //activateSpellTrapController.setGoingToChangeTurnsForChaining(true);
                 return finalOutput + "\n" + canChainingOccur;
             } else {
                 if (card.getCardName().equals("mind crush")) {
@@ -257,7 +247,6 @@ public class ActivateSpellTrapController extends ChainController {
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         CardLocation spellTrapCardActivating = selectedCardLocations.get(selectedCardLocations.size() - 1);
         ArrayList<String> resultOfChecking = Effect.inputsNeededForActivatingSpellTrapCard(spellTrapCardActivating, index);
-        //System.out.println("WHY IS RESULTOFCHECKING NULL" + resultOfChecking);
         messagesSentToUser = resultOfChecking;
         mainCardLocation = spellTrapCardActivating;
         return resultOfChecking.get(resultOfChecking.size() - 1);
@@ -369,7 +358,7 @@ public class ActivateSpellTrapController extends ChainController {
                 }
                 //used to give fakeTurn as input
             }
-        }//discard card from hand and choose up to two spell cards not written
+        }
         else if (message.startsWith("please choose one card from your hand to discard")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
                 return "invalid selection\nplease try again";
@@ -381,11 +370,8 @@ public class ActivateSpellTrapController extends ChainController {
                 if (isMoreInputNeeded) {
                     return messagesSentToUser.get(messagesSentToUser.size() - 1);
                 } else {
-                    //System.out.println("creatign action for magic jammer");
                     output = Action.conductUninterruptedAction(0);
-                    //System.out.println("conducted uninterrupted");
                     canChainingOccur = canChainingOccur(index);
-                    //System.out.println("this is can chaining: " + canChainingOccur);
                 }
                 //used to give fakeTurn as input
             }
@@ -489,14 +475,12 @@ public class ActivateSpellTrapController extends ChainController {
             } else {
                 cardsToBeTargeted.add(cardLocation);
                 boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(index);
-               // System.out.println("THIS IS IS MOREINPUTNEEDED " + isMoreInputNeeded);
                 if (isMoreInputNeeded) {
                     return messagesSentToUser.get(messagesSentToUser.size() - 1);
                 } else {
                     output = Action.conductUninterruptedAction(0);
                     canChainingOccur = canChainingOccur(index);
                 }
-                //used to give fakeTurn as input
             }
         } else if (message.startsWith("please choose up to two spell")) {
             String currentInput = duelController.getLatestInput();
@@ -523,7 +507,6 @@ public class ActivateSpellTrapController extends ChainController {
                         output = Action.conductUninterruptedAction(0);
                         canChainingOccur = canChainingOccur(index);
                     }
-                    //used to give fakeTurn as input
                 }
             }
         }
@@ -531,7 +514,6 @@ public class ActivateSpellTrapController extends ChainController {
             output += canChainingOccur;
             return output;
         }
-        //System.out.println("happy me!");
         return output + Action.conductAllActions(0);
     }
 
@@ -571,7 +553,6 @@ public class ActivateSpellTrapController extends ChainController {
         } else {
             areWeLookingForFurtherInputToActivateSpellTrap = false;
             selectCardController.resetSelectedCardLocationList();
-            //System.out.println("I AM CRATING AN ACTION "+mainCardLocation.getRowOfCardLocation()+" "+mainCardLocation.getIndex());
             createActionForActivatingSpellTrap(index);
             return false;
         }
@@ -583,7 +564,6 @@ public class ActivateSpellTrapController extends ChainController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         int fakeTurn = duelController.getFakeTurn();
         Card card = duelBoard.getCardByCardLocation(mainCardLocation);
-        //System.out.println("mainCard\n" + mainCard.getRowOfCardLocation().toString() + mainCard.getIndex());
         selectCardController.resetSelectedCardLocationList();
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
@@ -596,7 +576,6 @@ public class ActivateSpellTrapController extends ChainController {
                 uninterruptedActions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput, cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition));
                 actions.add(new Action(ActionType.ALLY_ACTIVATING_TRAP, 1, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput, cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition));
             }
-            //add action that conducts effects of the card
         } else if (fakeTurn == 2) {
             if (Card.isCardASpell(card)) {
                 uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_SPELL, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput, cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition));
@@ -604,7 +583,7 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (Card.isCardATrap(card)) {
                 uninterruptedActions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput, cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition));
                 actions.add(new Action(ActionType.OPPONENT_ACTIVATING_TRAP, 2, mainCardLocation, cardsToBeTargeted, null, cardsToBeDiscarded, cardsToBeChosenToApplyEquipSpellTo, cardsToBeSpecialSummoned, cardsToBeChosenFromDeckAndAddedToHand, cardsToBeDestroyed, cardsToTakeControlOf, cardsToBeChosenFromDeckAndSentToGraveyard, cardsToBeRitualSummoned, CardPosition.FACE_UP_ACTIVATED_POSITION, optionalCardNameInput, cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition));
-            }//add action that conducts effects of the card
+            }
         }
         optionalCardNameInput = "";
         cardsToBeTargeted.clear();
@@ -622,7 +601,7 @@ public class ActivateSpellTrapController extends ChainController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
-        Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
+        Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getFinalMainCardLocation());
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         int actionTurn = uninterruptedAction.getActionTurn();
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL)) {

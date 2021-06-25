@@ -416,7 +416,6 @@ public class DuelBoard {
     }
 
     public void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardLocations) {
-        // System.out.println("LLL " + cardLocations);
         ArrayList<Card> cards = new ArrayList<>();
         for (int i = 0; i < cardLocations.size(); i++) {
             cards.add(getCardByCardLocation(cardLocations.get(i)));
@@ -429,9 +428,7 @@ public class DuelBoard {
         for (int i = 0; i < cards.size(); i++) {
             if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE)
                 || rowOfCardLocation.equals(RowOfCardLocation.ALLY_DECK_ZONE)) {
-                // System.out.println("BEFORE "+allyCardsInGraveyard);
                 allyCardsInGraveyard.add(cards.get(i));
-                // System.out.println("AFTER "+allyCardsInGraveyard);
             } else {
                 opponentCardsInGraveyard.add(cards.get(i));
             }
@@ -468,7 +465,6 @@ public class DuelBoard {
     public void addCardToMonsterZone(Card card, int turn) {
         ArrayList<Card> arrayList;
         CardLocation cardLocation;
-        // System.out.println(card.getCardName());
         if (turn == 1) {
             arrayList = giveArrayListByRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE);
             cardLocation = giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true);
@@ -638,7 +634,6 @@ public class DuelBoard {
     }
 
     private String reverseWords(String input) {
-        // System.out.println(input + " input");
         String[] temp = input.split(" ");
         String result = "";
 
@@ -648,12 +643,10 @@ public class DuelBoard {
             else
                 result = " " + temp[i] + result;
         }
-        // System.out.println(result + " result");
         return result;
     }
 
     public String reverseWordsWhenTurnIs2(String input) {
-        // System.out.println(input + " input");
         String words[] = input.split("\\s");
         String reverseWord = "";
         for (String w : words) {
@@ -767,6 +760,9 @@ public class DuelBoard {
 
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
+        if (selectedCardLocations.size() == 0) {
+            return "no card is selected yet";
+        }
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
 
         if (cardLocation == null) {
@@ -785,11 +781,11 @@ public class DuelBoard {
                 return "card is not visible";
             }
         }
-        return showCard(selectedCard.getCardName());
+        return showCard(cardLocation);
     }
 
-    private String showCard(String cardName) {
-
+    private String showCard(CardLocation selectedCard) {
+        String cardName = getCardByCardLocation(selectedCard).getCardName();
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
 
@@ -799,8 +795,8 @@ public class DuelBoard {
             MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
             shownCardStringBuilder.append("Level: " + monsterCard.getLevel() + "\n");
             shownCardStringBuilder.append("Type: " + monsterCard.getMonsterCardFamily() + "\n");
-            shownCardStringBuilder.append("ATK: " + monsterCard.getAttackPower() + "\n");
-            shownCardStringBuilder.append("DEF: " + monsterCard.getDefensePower() + "\n");
+            shownCardStringBuilder.append("ATK: " + MonsterCard.giveATKDEFConsideringEffects("attack", selectedCard, 0) + "\n");
+            shownCardStringBuilder.append("DEF: " + MonsterCard.giveATKDEFConsideringEffects("defense", selectedCard, 0) + "\n");
             shownCardStringBuilder.append("Description: " + monsterCard.getCardDescription());
         } else {
             if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
@@ -890,7 +886,6 @@ public class DuelBoard {
             if (monsterCards.get(i) == null) {
                 output += "unoccupied ";
             } else {
-                // MonsterCard monsterCard = (MonsterCard) monsterCards.get(i);
                 output += (monsterCards.get(i).getCardName() + " ");
             }
         }
@@ -899,7 +894,6 @@ public class DuelBoard {
             if (monsterCards.get(i) == null) {
                 output += "unoccupied ";
             } else {
-                // MonsterCard monsterCard = (MonsterCard) monsterCards.get(i);
                 output += (monsterCards.get(i).getCardPosition().toString() + " ");
             }
         }
@@ -912,10 +906,8 @@ public class DuelBoard {
                 output += "unoccupied ";
             } else {
                 if (Card.isCardASpell(spellCards.get(i))) {
-                    // SpellCard spellCard = (SpellCard) spellCards.get(i);
                     output += (spellCards.get(i).getCardName() + " ");
                 } else if (Card.isCardATrap(spellCards.get(i))) {
-                    // TrapCard trapCard = (TrapCard) spellCards.get(i);
                     output += (spellCards.get(i).getCardName() + " ");
                 }
             }
@@ -929,6 +921,20 @@ public class DuelBoard {
         output.append(showGraveyardInList(allyCardsInGraveyard));
         output.append("second player graveyard:\n");
         output.append(showGraveyardInList(opponentCardsInGraveyard));
+        return output.toString();
+    }
+
+    public String showDeck(int turn) {
+        StringBuilder output = new StringBuilder();
+        ArrayList<Card> deckCards = new ArrayList<>();
+        if (turn == 1) {
+            deckCards = allyCardsInDeck;
+        } else {
+            deckCards = opponentCardsInDeck;
+        }
+        for (int i = 0; i < deckCards.size(); i++) {
+            output.append(i + 1 + ": " + deckCards.get(i).getCardName() + "\n");
+        }
         return output.toString();
     }
 

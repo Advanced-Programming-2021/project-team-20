@@ -108,7 +108,6 @@ public class Effect {
                 }
             }
         }
-        //return null;
     }
 
     public static MessagesFromEffectToControllers checkNumberOfMonstersToTribute(ArrayList<SummoningRequirement> summoningRequirements, int monstersForTribute, String string) {
@@ -140,125 +139,10 @@ public class Effect {
     public static MessagesFromEffectToControllers canSpellTrapCardBeActivatedInChain(ActionType actionType, int actionTurn, int previousActionCardSpeed) {
         // This function also checks if preparations are complete and says yes if everything was ok
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
-        //new line
         return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(actionTurn, actionType, previousActionCardSpeed);
-        /*
-        if (actionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) && actionTurn == 1) {
-            System.out.println("C1");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterAttackingInChain(opponentSpellTrapCards);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "opponent");
-        } else if (actionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER) && actionTurn == 2) {
-            System.out.println("C2");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterAttackingInChain(allySpellTrapCards);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        } else if (actionType.equals(ActionType.ALLY_DIRECT_ATTACKING) && actionTurn == 1) {
-            System.out.println("C3");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterAttackingInChain(opponentSpellTrapCards);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "opponent");
-        } else if (actionType.equals(ActionType.OPPONENT_DIRECT_ATTACKING) && actionTurn == 2) {
-            System.out.println("C4");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterAttackingInChain(allySpellTrapCards);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        } else if ((actionType.equals(ActionType.ALLY_ACTIVATING_SPELL) || actionType.equals(ActionType.ALLY_ACTIVATING_TRAP)) && actionTurn == 1) {
-            System.out.println("C5");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInSpellTrapActivatingInChain(opponentSpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "ally");
-        } else if ((actionType.equals(ActionType.OPPONENT_ACTIVATING_SPELL) || actionType.equals(ActionType.OPPONENT_ACTIVATING_TRAP)) && actionTurn == 2) {
-            System.out.println("C6");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInSpellTrapActivatingInChain(allySpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        } else if (actionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) && actionTurn == 1) {
-            System.out.println("C7");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterNormalSummoningInChain(opponentSpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "opponent");
-        } else if (actionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) && actionTurn == 1) {
-            System.out.println("C8");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterFlipSummoningInChain(opponentSpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "opponent");
-        } else if (actionType.equals(ActionType.ALLY_SPECIAL_SUMMONING_MONSTER) && actionTurn == 1) {
-            System.out.println("C9");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterSpecialSummoningInChain(opponentSpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "opponent");
-        } else if (actionType.equals(ActionType.ALLY_RITUAL_SUMMONING_MONSTER) && actionTurn == 1) {
-            System.out.println("C10");
-            ArrayList<Card> opponentSpellTrapCards = duelBoard.getOpponentSpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterRitualSummoningInChain(opponentSpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, opponentSpellTrapCards, "opponent");
-        } else if (actionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER) && actionTurn == 2) {
-            System.out.println("C11");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterNormalSummoningInChain(allySpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        } else if (actionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER) && actionTurn == 2) {
-            System.out.println("C12");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterFlipSummoningInChain(allySpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        } else if (actionType.equals(ActionType.OPPONENT_SPECIAL_SUMMONING_MONSTER) && actionTurn == 2) {
-            System.out.println("C13");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterSpecialSummoningInChain(allySpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        } else if (actionType.equals(ActionType.OPPONENT_RITUAL_SUMMONING_MONSTER) && actionTurn == 2) {
-            System.out.println("C14");
-            ArrayList<Card> allySpellTrapCards = duelBoard.getAllySpellCards();
-            messagesFromEffectToControllers = isSelectedSpellTrapCardCorrectForActivatingInMonsterRitualSummoningInChain(allySpellTrapCards, actionType);
-            return iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(messagesFromEffectToControllers, allySpellTrapCards, "ally");
-        }
-        System.out.println("C15");
-
-
-
-         */
-
-        //return messagesFromEffectToControllers = iterateThroughAllyOrOpponentSpellTrapCardsToSeeIfACardBeActivatedInChain(actionTurn, actionType);
-
-        //this line used to be
-        //return MessagesFromEffectToControllers.SPELL_TRAP_CARD_CANT_BE_ACTIVATED_IN_CHAIN;
     }
 
-    /*
-    private static MessagesFromEffectToControllers iterateThroughAllyOrOpponentSpellTrapCardsToSeeIfACardBeActivatedInChain(int actionTurn, ActionType actionType) {
-        //This function also calls are preparations complete if the card was available and returns the final answer
-        ArrayList<Card> allyOrOpponentSpellTrapCards;
-        MessagesFromEffectToControllers messagesFromEffectToControllers;
-        if (actionTurn == 2){
-            allyOrOpponentSpellTrapCards = GameManager.getDuelBoardByIndex(0).getAllySpellCards();
-        } else {
-            allyOrOpponentSpellTrapCards = GameManager.getDuelBoardByIndex(0).getOpponentSpellCards();
-        }
-        messagesFromEffectToControllers = areCardsAvailableForActivatingSpellTrapCardInMonsterFlipSummoningInChain(allyOrOpponentSpellTrapCards, actionType);
-        if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.SPELL_TRAP_CARD_CANT_BE_ACTIVATED_IN_CHAIN)) {
-            return messagesFromEffectToControllers;
-        } else {
-            for (int i = 0; i < allyOrOpponentSpellTrapCards.size(); i++) {
-                CardLocation cardLocation;
-                if (actionTurn == 2) {
-                    cardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1);
-                } else {
-                    cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
-                }
-                messagesFromEffectToControllers = arePreparationsCompleteForActivatingSpellTrapCard(cardLocation, actionType, 0);
-                if (messagesFromEffectToControllers != null){
-                    if (messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE) || messagesFromEffectToControllers.equals(MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE)) {
-                        return MessagesFromEffectToControllers.SPELL_TRAP_CARD_CAN_BE_ACTIVATED_IN_CHAIN;
-                    }
-                }
-            }
-            return MessagesFromEffectToControllers.SPELL_TRAP_CARD_CANT_BE_ACTIVATED_IN_CHAIN;
-        }
-    }
 
-     */
     private static MessagesFromEffectToControllers iterateThroughAllyOrOpponentSpellTrapCardsForCanSpellTrapCardBeActivatedInChain(int actionTurn, ActionType actionType, int previousActionCardSpeed) {
         //This function also calls are preparations complete if the card was available and returns the final answer
         //Here, actionTurn is the turn we want to make a move and we are going to check if our opponent can stop us
@@ -277,11 +161,6 @@ public class Effect {
                 cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
             }
             Card card = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocation);
-            if (card == null) {
-                //   System.out.println("THIS CARD IS NULLL");
-            } else {
-                //   System.out.println("THIS CARD NAME IS " + card.getCardName());
-            }
             if (card != null) {
                 if (isSelectedSpellTrapCorrectAccordingToPreviousActionAndArePreparationsComplete(cardLocation, actionType, 0)) {
                     if (card.getSpeedOfCard() >= previousActionCardSpeed) {
@@ -331,7 +210,7 @@ public class Effect {
     }
 
     private static boolean isSelectedSpellTrapCardCorrectForActivatingInSpellTrapActivatingInChain(Card spellTrapCard, ActionType actionType) {
-        //This function has a bit of errors because i haven't considered speed of cards correctly
+        //This function does not consider speed of cards
         if (Card.isCardASpell(spellTrapCard)) {
             ArrayList<QuickSpellEffect> quickSpellEffects = ((SpellCard) spellTrapCard).getQuickSpellEffects();
             if (quickSpellEffects.contains(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY)) {
@@ -440,11 +319,6 @@ public class Effect {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         Card card = duelBoard.getCardByCardLocation(cardLocation);
-        if (card == null) {
-            //      System.out.println("the card we are checking its preparations is null");
-        } else {
-            //      System.out.println("the card we are checking its preparations has name " + card.getCardName());
-        }
         int turn = duelController.getTurn();
         int fakeTurn;
         if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) || cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)
@@ -453,8 +327,6 @@ public class Effect {
         } else {
             fakeTurn = 2;
         }
-        //int fakeTurn = duelController.getFakeTurn();
-        // System.out.println("FAKETURN IS " + fakeTurn);
         boolean preparationsAreComplete = true;
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
@@ -511,7 +383,6 @@ public class Effect {
                 }
             }
             if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND)) {
-                // System.out.println("CHECKING EXISTENCE OF RITUAL IN USE HAND FAKE TURN IS" + fakeTurn);
                 if (!logicalActivationRequirementSpellOwnerMustHaveAtLeast1RitualMonsterInHand(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
                 }
@@ -539,9 +410,7 @@ public class Effect {
                 }
             }
             if (logicalActivationRequirements.contains(controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY)) {
-                //System.out.println("I AM CHECKING THE IF I AM SUPPOSED TO");
                 if (!logicalActivationRequirementTrapOwnerMustHaveAtLeast1MonsterInTheirGraveyard(duelBoard, fakeTurn)) {
-                    //   System.out.println("DANGER");
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
@@ -562,11 +431,9 @@ public class Effect {
             }
             return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE;
         }
-        //System.out.println("this card is not a spell or trap and i am returning null");
         return null;
     }
 
-    //public static MessagesFromEffectToControllers arePreparationsCompleteForActivatingMonsterCardEffect()
 
     public static boolean logicalActivationRequirementSpellMustExistAtLeastOneSpellInField(DuelBoard duelBoard, int fakeTurn) {
         ArrayList<Card> allySpellCards = duelBoard.getAllySpellCards();
@@ -712,9 +579,7 @@ public class Effect {
         ArrayList<Card> cardsInHand = null;
         if (fakeTurn == 1) {
             cardsInDeck = duelBoard.getAllyCardsInDeck();
-            // System.out.println("ally cards in deck is " + cardsInDeck);
             cardsInHand = duelBoard.getAllyCardsInHand();
-            //  System.out.println("ally cards in hand is " + cardsInHand);
         } else if (fakeTurn == 2) {
             cardsInDeck = duelBoard.getOpponentCardsInDeck();
             cardsInHand = duelBoard.getOpponentCardsInHand();
@@ -726,7 +591,6 @@ public class Effect {
                 normalMonsterCardLevels.add(((MonsterCard) card).getLevel());
             }
         }
-        //System.out.println("levels of normal monsters in deck is" + normalMonsterCardLevels);
         ArrayList<Integer> levelsOfRitualCardsInHand = new ArrayList<>();
         for (int i = 0; i < cardsInHand.size(); i++) {
             Card card = cardsInHand.get(i);
@@ -734,7 +598,6 @@ public class Effect {
                 levelsOfRitualCardsInHand.add(((MonsterCard) card).getLevel());
             }
         }
-        // System.out.println("levels of ritual monsters in hand is " + levelsOfRitualCardsInHand);
         // Algorithmic Reasoning !!!
         boolean isRitualSummoningPossible;
         for (int i = 0; i < levelsOfRitualCardsInHand.size(); i++) {
@@ -786,9 +649,7 @@ public class Effect {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
-        // System.out.println("this mainCardLocation we are analyzing has location " + finalMainCardLocation.getRowOfCardLocation() + " " + finalMainCardLocation.getIndex());
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(finalMainCardLocation);
-        // System.out.println("monster card name is " + monsterCard.getCardName());
         return monsterCard.getAttackPower() >= 1000;
     }
 
@@ -819,19 +680,14 @@ public class Effect {
                 }
             } else if (uninterruptedActionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || uninterruptedActionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
                 CardLocation defendingMonsterCardLocation = uninterruptedAction.getTargetingCards().get(uninterruptedAction.getTargetingCards().size() - 1);
-                //  System.out.println("texchanger should logically be at location:");
-                //  System.out.println(defendingMonsterCardLocation.getRowOfCardLocation().toString());
-                //  System.out.println(defendingMonsterCardLocation.getIndex());
                 Card card = GameManager.getDuelBoardByIndex(index).getCardByCardLocation(defendingMonsterCardLocation);
                 ArrayList<BeingAttackedEffect> beingAttackedEffects = ((MonsterCard) card).getBeingAttackedEffects();
                 if (beingAttackedEffects.contains(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN)) {
-                    //      System.out.println("yeeeeehaaah!!");
                     return true;
                 }
             }
 
         }
-        // have to check more ifs
         return false;
     }
 

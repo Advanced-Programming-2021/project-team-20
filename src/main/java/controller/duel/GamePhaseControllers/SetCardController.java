@@ -109,7 +109,6 @@ public class SetCardController extends SummonSetCommonClass {
         } else {
             return cardAnalysis;
         }
-        //return "";
     }
 
     public void createActionForSettingSpellOrTrap(int index) {
@@ -123,11 +122,9 @@ public class SetCardController extends SummonSetCommonClass {
         if (turn == 1) {
             actions.add(new Action(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD, 1, cardLocation, null, null, null, null, null, null, null, null, null, null, null, "", null));
             uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD, 1, cardLocation, null, null, null, null, null, null, null, null, null, null, null, "", null));
-            //Action.conductUninterruptedAction(index);
         } else if (turn == 2) {
             actions.add(new Action(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD, 2, cardLocation, null, null, null, null, null, null, null, null, null, null, null, "", null));
             uninterruptedActions.add(new Action(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD, 2, cardLocation, null, null, null, null, null, null, null, null, null, null, null, "", null));
-            //Action.conductUninterruptedAction(index);
         }
     }
 
@@ -137,7 +134,6 @@ public class SetCardController extends SummonSetCommonClass {
         int turn = duelController.getTurn();
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         mainCard = selectedCardLocations.get(selectedCardLocations.size() - 1);
-        System.out.println("mainCard\n" + mainCard.getRowOfCardLocation().toString() + mainCard.getIndex());
         selectCardController.resetSelectedCardLocationList();
         ArrayList<Action> actions = GameManager.getActionsByIndex(0);
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
@@ -145,13 +141,10 @@ public class SetCardController extends SummonSetCommonClass {
         if (turn == 1) {
             actions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, null, null, null, null, null, null,null,null, null, null, "", null));
             uninterruptedActions.add(new Action(ActionType.ALLY_SETTING_MONSTER, 1, mainCard, null, null, null, null, null,null,null, null, null, null, null, "", null));
-            //Action.conductUninterruptedAction(0);
         } else if (turn == 2) {
             actions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null, null,null,null, "", null));
             uninterruptedActions.add(new Action(ActionType.OPPONENT_SETTING_MONSTER, 2, mainCard, null, null, null, null, null, null, null, null,null,null, null, "", null));
-            //Action.conductUninterruptedAction(0);
         }
-        //Action.conductAllActions(index);
     }
 
     public String redirectInput() {

@@ -90,7 +90,6 @@ public class ActivateTrapConductor {
         int actionTurn = uninterruptedAction.getActionTurn();
         Action action = actions.get(numberInListOfActions - 1);
         Action thisUninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        //ArrayList<NormalTrapCardEffect> normalTrapCardEffects = trapCard.getNormalTrapCardEffects();
         //note that normalTrapCardEffects don't need to counter previous action so 5 lines above gives null pointer exception
         ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects = trapCard.getNormalSummonTrapCardEffects();
         ArrayList<TributeSummonTrapCardEffect> tributeSummonTrapCardEffects = trapCard.getTributeSummonTrapCardEffects();
@@ -101,7 +100,6 @@ public class ActivateTrapConductor {
         ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects = trapCard.getMonsterAttackingTrapCardEffects();
         ArrayList<SpellCardActivationTrapCardEffect> spellCardActivationTrapCardEffects = trapCard.getSpellCardActivationTrapCardEffects();
         ArrayList<TrapCardActivationTrapCardEffect> trapCardActivationTrapCardEffects = trapCard.getTrapCardActivationTrapCardEffects();
-        //ArrayList<MonsterEffectActivationTrapCardEffect> monsterEffectActivationTrapCardEffects = trapCard.getMonsterEffectActivationTrapCardEffect();
         boolean isPreviousUninterruptedActionNormalSummoning = ((actionType.equals(ActionType.ALLY_NORMAL_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_NORMAL_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionTributeSummoning = ((actionType.equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionFlipSummoning = ((actionType.equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) && actionTurn == 2);
@@ -110,7 +108,6 @@ public class ActivateTrapConductor {
         boolean isPreviousUninterruptedActionMonsterAttacking = ((actionType.equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) && actionTurn == 2) || (actionType.equals(ActionType.ALLY_DIRECT_ATTACKING) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_DIRECT_ATTACKING) && actionTurn == 2);
         boolean isPreviousUninterruptedActionSpellActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_SPELL) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_SPELL)) && actionTurn == 2);
         boolean isPreviousUninterruptedActionTrapActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_TRAP) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_TRAP)) && actionTurn == 2);
-        //boolean isPreviousUninterruptedActionMonsterEffectActivating = ((actionType.equals(ActionType.ALLY_ACTIVATING_MONSTER_EFFECT) && actionTurn == 1) || (actionType.equals(ActionType.OPPONENT_ACTIVATING_MONSTER_EFFECT)) && actionTurn == 2);
         if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.IF_ATK_IS_AT_LEAST_1000_ATK_DESTROY_IT) && isPreviousUninterruptedActionNormalSummoning) {
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
@@ -194,7 +191,6 @@ public class ActivateTrapConductor {
             endBattlePhase(index);
         }
         if (spellCardActivationTrapCardEffects.contains(SpellCardActivationTrapCardEffect.DISCARD_1_CARD_NEGATE_DESTROY_CARD) && isPreviousUninterruptedActionSpellActivating) {
-            //System.out.println("extraordinary!");
             discardCard(index, numberInListOfActions);
             destroyMainMonsterCardInPreviousAction(uninterruptedAction, index);
             cancelPreviousAction(action);
@@ -224,13 +220,11 @@ public class ActivateTrapConductor {
             specialSummonMonsterFromGraveyard(actions.get(numberInListOfActions), index, CardPosition.FACE_UP_ATTACK_POSITION);
             cancelPreviousAction(action);
         }
-        //System.out.println("main trap card continuous is " + continuousTrapCardEffects);
         if (continuousTrapCardEffects.size() == 0) {
             Action thisAction = actions.get(numberInListOfActions);
             CardLocation mainCardLocationInThisAction = thisAction.getMainCardLocation();
             int thisActionTurn = thisAction.getActionTurn();
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index);
-            //sendCardToGraveyardAfterRemoving(mainCardLocationInThisAction, index, thisActionTurn);
         }
         return "trap activated";
     }
@@ -278,9 +272,7 @@ public class ActivateTrapConductor {
     }
 
     public static boolean doesExistACardWithGivenNameInGivenArrayList(ArrayList<Card> arrayList, String cardName) {
-        //System.out.println("POOR CARD NAME IS " + cardName);
         for (int i = 0; i < arrayList.size(); i++) {
-            //System.out.println("CANDIDATES " + arrayList.get(i).getCardName());
             if (arrayList.get(i).getCardName().equals(cardName)) {
                 return true;
             }
@@ -346,20 +338,16 @@ public class ActivateTrapConductor {
     public static void destroyMainMonsterCardInPreviousAction(Action uninterruptedAction, int index) {
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
-        //sendCardToGraveyardAfterRemoving(finalMainCardLocation, index, uninterruptedAction.getActionTurn());
     }
 
     public static void destroyDefendingMonsterCardInPreviousAction(Action uninterruptedAction, int index) {
         CardLocation defendingCardLocation = uninterruptedAction.getTargetingCards().get(uninterruptedAction.getTargetingCards().size() - 1);
         SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(defendingCardLocation, index);
-        //sendCardToGraveyardAfterRemoving(finalMainCardLocation, index, uninterruptedAction.getActionTurn());
     }
 
     public static void sendAllCardsInThisArrayListToGraveyard(ArrayList<CardLocation> targetingCards, int index, int graveyardToSendCardsTo) {
-        //System.out.println("sendAllCardsInThisArrayListToGraveyard index is " + index);
         for (int i = 0; i < targetingCards.size(); i++) {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
-            //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
         }
     }
 
@@ -387,13 +375,6 @@ public class ActivateTrapConductor {
         return cardLocations;
     }
 
-    /*
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index, int graveyardToSendCardTo) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-        duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
-    }
-     */
 
     public static void destroyAllMonsterCardsInTheField(int index) {
         ArrayList<CardLocation> targetingCards;
@@ -407,21 +388,16 @@ public class ActivateTrapConductor {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<CardLocation> targetingCards;
         int actionTurn = uninterruptedAction.getActionTurn();
-        int graveyardToSendCardsTo;
         if (actionTurn == 1) {
             targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE);
-            graveyardToSendCardsTo = 1;
         } else {
             targetingCards = giveCardLocationArrayListByRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE);
-            //sendAllCardsInThisArrayListToGraveyard(targetingCards, index, 2);
-            graveyardToSendCardsTo = 2;
         }
         for (int i = 0; i < targetingCards.size(); i++) {
             MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(targetingCards.get(i));
             if (monsterCard != null) {
                 if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
                     SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
-                    //sendCardToGraveyardAfterRemoving(targetingCards.get(i), index, graveyardToSendCardsTo);
                 }
             }
         }
@@ -441,7 +417,6 @@ public class ActivateTrapConductor {
         Action currentAction = GameManager.getActionsByIndex(index).get(numberInListOfActions);
         ArrayList<CardLocation> cardsToBeDiscarded = currentAction.getCardsToBeDiscarded();
         SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index);
-        //sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index, currentAction.getActionTurn());
     }
 
     public static void pay2000HP(Action action, int index) {
