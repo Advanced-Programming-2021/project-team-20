@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 public class AICardFinder {
     protected String findAllMonsterDestroyingSpellCardFromHandOrBoard(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 1");
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < 5; i++) {
@@ -75,7 +74,6 @@ public class AICardFinder {
     }
 
     protected String findUndieableMonsterCardInHandToSet(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 2");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardAMonster(aiCardsInHand.get(i))) {
@@ -92,7 +90,6 @@ public class AICardFinder {
     }
 
     protected String findDefensiveMonsterCardsInHandToSet(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 3");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardAMonster(aiCardsInHand.get(i))) {
@@ -127,17 +124,10 @@ public class AICardFinder {
                 }
             }
         }
-//        ArrayList<Integer> indexesOfMonstersWithHighDefense = ai.getAiBoardUnderstander().getAiHandBoardAnalysis().getIndexesOfMonstersWithHighDefense();
-//        if (indexesOfMonstersWithHighDefense.size() > 0) {
-//            ai.setShouldRedirectAIMind(true);
-//            ai.setAiActionType(AIActionType.SET);
-//            return "select --hand " + (indexesOfMonstersWithHighDefense.get(0) + 1);
-//        }
         return "next phase";
     }
 
     protected String findSpellCardToDestroyAllOfOpponentsSpellCard(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 4");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         for (int i = 0; i < 5; i++) {
@@ -166,7 +156,6 @@ public class AICardFinder {
     }
 
     protected String findQuickSpellCardsToDestroyOpponentSpellTrapCards(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 5");
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < 5; i++) {
@@ -178,7 +167,6 @@ public class AICardFinder {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
                     ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_A_CARD_FROM_YOUR_HAND_TO_DISCARD);
-                    //have to destroy opponent spell traps worthy of killing
                     return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
                 }
             }
@@ -205,7 +193,6 @@ public class AICardFinder {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
                     ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING);
-                    //have to destroy opponent spell traps worthy of killing
                     return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
                 }
             }
@@ -243,7 +230,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterWithGoodAttackFromHandToNormalSummon(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 6");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardAMonster(aiCardsInHand.get(i))) {
@@ -259,7 +245,6 @@ public class AICardFinder {
     }
 
     protected String findQuickSpellCardOnAISideWithSpellTrapDestroyingEffectInChain(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 7");
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         for (int i = 0; i < 5; i++) {
             if (Card.isCardASpell(aiSpellTrapCards.get(i))) {
@@ -285,7 +270,6 @@ public class AICardFinder {
     }
 
     protected String findDefensiveTrapCardsInHandForBattlePhaseToSet(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 8");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardATrap(aiCardsInHand.get(i))) {
@@ -304,7 +288,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterInBoardWithDecentAttackToChangeCardPositionToFaceUpAttackPosition(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 9");
         ArrayList<Card> aiMonsterCardsInBoard = ai.getAiBoardUnderstander().getAiMonsterCards();
         for (int i = 0; i < aiMonsterCardsInBoard.size(); i++) {
             if (Card.isCardAMonster(aiMonsterCardsInBoard.get(i)) && ((MonsterCard) aiMonsterCardsInBoard.get(i)).getAttackPower() >= 1800 &&
@@ -318,12 +301,8 @@ public class AICardFinder {
     }
 
     protected String findBestMonsterInBoardThatDominatesOpponentMonsterToAttack(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 10");
         ArrayList<Card> aiMonsterCardsInBoard = ai.getAiBoardUnderstander().getAiMonsterCards();
         ArrayList<Card> opponentMonsterCardsInBoard = ai.getAiBoardUnderstander().getOpponentMonsterCards();
-        //ArrayList<CardLocation> allyMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(false, true);
-        //ArrayList<CardLocation> opponentSpellCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, false);
-        //ArrayList<CardLocation> opponentMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, true);
         boolean doesOpponentHaveAMonster = false;
         for (int j = 0; j < opponentMonsterCardsInBoard.size(); j++) {
             if (Card.isCardAMonster(opponentMonsterCardsInBoard.get(j))) {
@@ -417,7 +396,6 @@ public class AICardFinder {
     }
 
     protected String findActiveMainCardInPreviousUninterruptedAction(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 12");
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation mainCardLocation = uninterruptedAction.getFinalMainCardLocation();
@@ -434,7 +412,6 @@ public class AICardFinder {
     }
 
     protected String findQuickSpellCardInHandToSet(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 13");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardASpell(aiCardsInHand.get(i))) {
@@ -452,7 +429,6 @@ public class AICardFinder {
     }
 
     protected String findCardDrawingSpellCardInHandToActivate(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 14");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardASpell(aiCardsInHand.get(i))) {
@@ -469,7 +445,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterSwappingSpellCardsInHandOrBoardToActivate(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 15");
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiSpellTrapCards.size(); i++) {
@@ -498,7 +473,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterWithStoppingTrapCardActivationFromHandToNormalSummon(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 16");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardAMonster(aiCardsInHand.get(i))) {
@@ -515,7 +489,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterWithFlipEffectToFlipSummon(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 17");
         ArrayList<Card> aiMonsterCards = ai.getAiBoardUnderstander().getAiMonsterCards();
         for (int i = 0; i < aiMonsterCards.size(); i++) {
             if (Card.isCardAMonster(aiMonsterCards.get(i))) {
@@ -532,7 +505,6 @@ public class AICardFinder {
     }
 
     protected String findCardDiscardingTrapCardInBoardToActivate(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 18");
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         for (int i = 0; i < aiSpellTrapCards.size(); i++) {
             if (Card.isCardATrap(aiSpellTrapCards.get(i))) {
@@ -549,7 +521,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterNeedingTributeInHandToNormalSummon(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 19");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardAMonster(aiCardsInHand.get(i))) {
@@ -566,7 +537,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterNeedingTributeInHandToSpecialSummon(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 20");
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardAMonster(aiCardsInHand.get(i))) {
@@ -583,7 +553,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterInOwnGraveyardToSpecialSummonWithThisBeingAttackedEffect(AI ai, BeingAttackedEffect beingAttackedEffect) {
-        System.out.println("AI ATTENTION PLEASE 21");
         ArrayList<Card> aiCardsInGraveyard = ai.getAiBoardUnderstander().getAiCardsInGraveyard();
         for (int i = 0; i < aiCardsInGraveyard.size(); i++) {
             if (Card.isCardAMonster(aiCardsInGraveyard.get(i))) {
@@ -600,7 +569,6 @@ public class AICardFinder {
     }
 
     protected String findMonsterWithHighestAttackInOwnGraveyardToSpecialSummon(AI ai) {
-        System.out.println("AI ATTENTION PLEASE 22");
         ArrayList<Card> aiCardsInGraveyard = ai.getAiBoardUnderstander().getAiCardsInGraveyard();
         int highestAttack = 0;
         int index = 0;
@@ -619,7 +587,6 @@ public class AICardFinder {
     }
 
     protected String findTrapCardInBoardToActivateWithThisMonsterAttackingTrapCardEffect(AI ai, MonsterAttackingTrapCardEffect monsterAttackingTrapCardEffect) {
-        System.out.println("AI ATTENTION PLEASE 23");
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         for (int i = 0; i < aiSpellTrapCards.size(); i++) {
             if (Card.isCardATrap(aiSpellTrapCards.get(i))) {
@@ -636,7 +603,6 @@ public class AICardFinder {
     }
 
     protected String findNormalMonsterCyberseCardInDeckGraveyardOrHandTo(AI ai, boolean isAttackingOrDefensive) {
-        System.out.println("AI ATTENTION PLEASE 24");
         ArrayList<Card> aiCardsInDeck = ai.getAiBoardUnderstander().getAiCardsInDeck();
         for (int i = 0; i < aiCardsInDeck.size(); i++) {
             if (Card.isCardAMonster(aiCardsInDeck.get(i))) {

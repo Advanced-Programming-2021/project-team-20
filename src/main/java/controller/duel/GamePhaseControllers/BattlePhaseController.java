@@ -50,7 +50,6 @@ public class BattlePhaseController extends ChainController {
             return "this card already attacked";
         } else {
             return "";
-            // return checkIndexOfAttackedMonster(card, index);
         }
     }
 
@@ -89,7 +88,6 @@ public class BattlePhaseController extends ChainController {
     }
 
     private String areMonsterWithATK1500OrMoreEligibleToAttack(ArrayList<Card> spellCards, CardLocation allyCardLocation) {
-        //System.out.println("GIVE ME INFO " + allyCardLocation.getRowOfCardLocation() + " II " + allyCardLocation.getIndex());
         if (MonsterCard.giveATKDEFConsideringEffects("attack", allyCardLocation, 0) >= 1500) {
             for (int i = 0; i < spellCards.size(); i++) {
                 if (spellCards.get(i) != null && Card.isCardASpell(spellCards.get(i))) {

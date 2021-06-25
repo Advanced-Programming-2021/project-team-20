@@ -111,18 +111,15 @@ public class ChainController {
                     selectCardController.resetSelectedCardLocationList();
                     String output = Action.conductUninterruptedAction(index);
                     String canChainingOccur = activateSpellTrapController.canChainingOccur(index);
-                    //duelController.changeFakeTurn();
                     //used to give fakeTurn as input
                     if (canChainingOccur.equals("")) {
                         return output + "\n" + Action.conductAllActions(index);
                     }
-                    //activateSpellTrapController.setGoingToChangeTurnsForChaining(true);
                     return output + "\n" + canChainingOccur;
                 } else {
                     activateSpellTrapController.setAreWeLookingForFurtherInputToActivateSpellTrap(true);
                     activateSpellTrapController.setMainCardLocation(cardLocation);
                     activateSpellTrapController.setMessagesSentToUser(inputsNeeded);
-                    //activateSpellTrapController.setRedirectInputBeingProcessesInChain(true);
                     selectCardController.resetSelectedCardLocationList();
                     isClassWaitingForChainCardToBeSelected = false;
                     return inputsNeeded.get(inputsNeeded.size() - 1);

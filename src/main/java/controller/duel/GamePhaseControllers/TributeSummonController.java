@@ -75,8 +75,6 @@ public class TributeSummonController extends ChainController {
             selectCardController.resetSelectedCardLocationList();
             numberOfCardsToBeTributed -= 1;
             if (numberOfCardsToBeTributed == 0) {
-                ArrayList<Action> actions = GameManager.getActionsByIndex(0);
-                ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
                 areWeLookingForMonstersToBeTributed = false;
                 if (turn == 1 && cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                     createActionForTributeSummoningMonster(0);
@@ -87,7 +85,6 @@ public class TributeSummonController extends ChainController {
                     output = Action.conductUninterruptedAction(0);
                     canChainingOccur = canChainingOccur(0, 2, ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER);
                 }
-                //apply gate guardian effect
                 if (!canChainingOccur.equals("")) {
                     output += canChainingOccur;
                     return output;
@@ -104,18 +101,15 @@ public class TributeSummonController extends ChainController {
         SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         int turn = duelController.getTurn();
-        //System.out.println("mainCard\n" + mainCard.getRowOfCardLocation().toString() + mainCard.getIndex());
         selectCardController.resetSelectedCardLocationList();
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         if (turn == 1) {
             uninterruptedActions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
             actions.add(new Action(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER, 1, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
-            //add action that conducts effects of the card
         } else if (turn == 2) {
             uninterruptedActions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
             actions.add(new Action(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER, 2, mainCard, null, cardsToBeTributed, null, null, null, null, null, null, null, null, CardPosition.FACE_UP_ATTACK_POSITION, "", null));
-            //add action that conducts effects of the card
         }
         cardsToBeTributed.clear();
     }

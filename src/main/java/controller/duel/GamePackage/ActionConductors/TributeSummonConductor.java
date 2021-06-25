@@ -26,24 +26,16 @@ public class TributeSummonConductor{
         int turn = 0;
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_TRIBUTE_SUMMONING_MONSTER)) {
             turn = 1;
-            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getRowOfCardLocation() + " !!!");
-            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getIndex() + " !!!");
             uninterruptedAction.setFinalMainCardLocation(
                 new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getRowOfCardLocation(),
                     duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true).getIndex() + 1)
             );
-            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
-            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
         } else if (uninterruptedAction.getActionType().equals(ActionType.OPPONENT_TRIBUTE_SUMMONING_MONSTER)) {
             turn = 2;
-            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getRowOfCardLocation() + " !!!");
-            //System.out.println(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getIndex() + " !!!");
             uninterruptedAction.setFinalMainCardLocation(
                 new CardLocation(duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getRowOfCardLocation(),
                     duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getIndex() + 1)
             );
-            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation() + " ***");
-            //System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex() + " ***");
         }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());
@@ -53,8 +45,6 @@ public class TributeSummonConductor{
         monsterCard.setCardPositionChanged(true);
         GameManager.getDuelControllerByIndex(index).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
         return "tribute summoned successfully";
-        //}
-        //return "normal summoning action was interrupted and therefore, canceled.";
     }
 
     public static String conductTributeSummoningAction(int index, int numberInListOfActions) {
@@ -75,39 +65,7 @@ public class TributeSummonConductor{
         }
         return "";
     }
-/*
-    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);
-        duelBoard.removeCardByCardLocation(cardToBeRemoved);
-        return card;
-    }
 
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
-        //System.out.println("sendCardToGraveyardAfterRemoving rowOfCardLocation" + targetingCardLocation.getRowOfCardLocation());
-        //System.out.println("sendCardToGraveyardAfterRemoving card index" + targetingCardLocation.getIndex());
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
-        if (cardGoingToBeSentToGraveyard != null) {
-            int graveyardToSendCardTo;
-            RowOfCardLocation rowOfCardLocationOfThrownCard = targetingCardLocation.getRowOfCardLocation();
-            if (rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
-                || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || rowOfCardLocationOfThrownCard.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
-                graveyardToSendCardTo = 1;
-            } else {
-                graveyardToSendCardTo = 2;
-            }
-            Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-            if (card == null) {
-
-            }
-            System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
-            duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
-        }
-    }
-
-
- */
     public static void destroyAllOfOpponentsCards(int actionTurn, int index) {
         if (actionTurn == 1) {
             for (int i = 0; i < 5; i++) {

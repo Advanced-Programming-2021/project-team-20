@@ -30,10 +30,6 @@ public class AI {
         aiTurn = GameManager.getDuelControllerByIndex(0).getAiTurn();
     }
 
-    public int getAiTurn() {
-        return aiTurn;
-    }
-
     public AIBoardUnderstander getAiBoardUnderstander() {
         return aiBoardUnderstander;
     }
@@ -83,19 +79,15 @@ public class AI {
     }
 
     public String getCommand() {
-        //AIBattlePhaseMind.numberOfActions = 0;
         updateAIInformationAccordingToBoard();
         if (shouldRedirectAIMind) {
             return redirectInput() + "\n";
         }
         return aiQueryUnderstander.understandQuery(this);
-        //return "next phase\n";
     }
 
 
-    //private String understandQueryIn
     protected void updateAIInformationAccordingToBoard() {
-        //ArrayList<Card> opponentMonsterCards = new ArrayList<>();
         aiMainPhaseMind.getAiKeyVariablesUpdater().clearVariables();
         aiBattlePhaseMind.getAiKeyVariablesUpdater().clearVariables();
         aiBoardUnderstander.updateVariablesForBoard();

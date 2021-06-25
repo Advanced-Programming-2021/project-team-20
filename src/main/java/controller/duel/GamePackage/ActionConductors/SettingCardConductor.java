@@ -28,7 +28,6 @@ public class SettingCardConductor {
     }
 
     public static String conductNormalSettingActionUninterruptedAction(int index, int numberInListOfActions) {
-        // if (!isActionCanceled){
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
@@ -81,9 +80,6 @@ public class SettingCardConductor {
             duelBoard.addCardToGraveyard(cardsToBeTributed.get(i), turn);
         }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
-        //System.out
-        //        .println("main Care Location is row" + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-        //                + " index " + uninterruptedAction.getMainCardLocation().getIndex());
         if (Card.isCardATrap(mainCard)){
             ((TrapCard)mainCard).setTurnCardWasSet(GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow());
         }
@@ -93,16 +89,12 @@ public class SettingCardConductor {
             duelBoard.addCardToMonsterZone(mainCard, turn);
             mainCard.setCardPosition(CardPosition.FACE_DOWN_MONSTER_SET_POSITION);
             GameManager.getDuelControllerByIndex(index).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
-            // actions.remove(numberInListOfActions);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD)
             || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
             duelBoard.addCardToSpellZone(mainCard, turn);
             mainCard.setCardPosition(CardPosition.FACE_DOWN_SPELL_SET_POSITION);
-            // actions.remove(numberInListOfActions);
         }
         return "set successfully";
-        // }
-        // return "normal setting action was interrupted and therefore, canceled.";
     }
 
     private static void sendUseLessSpellFieldCardToGraveyard(int index, int turn) {

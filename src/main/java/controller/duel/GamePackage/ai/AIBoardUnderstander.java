@@ -260,10 +260,10 @@ public class AIBoardUnderstander {
             } else if (summoningRequirements.contains(SummoningRequirement.TRIBUTE_3_MONSTERS)) {
                 indexesOfMonstersNeeding3Tributes.add(i);
             }
-            if (monsterCard.getAttackPower() >= 2200) {
+            if (monsterCard.getAttackPower() >= 2000) {
                 ArrayList<Integer> indexesOfMonstersWithHighAttackPower = aiBoardAnalysis.getIndexesOfMonstersWithHighAttack();
                 indexesOfMonstersWithHighAttackPower.add(i);
-            } else if (monsterCard.getAttackPower() >= 1800) {
+            } else if (monsterCard.getAttackPower() >= 1600) {
                 ArrayList<Integer> indexesOfMonstersWithGoodAttackPower = aiBoardAnalysis.getIndexesOfMonstersWithGoodAttack();
                 indexesOfMonstersWithGoodAttackPower.add(i);
             }
@@ -276,7 +276,7 @@ public class AIBoardUnderstander {
             if (flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD) && monsterCard.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) {
                 indexesOfMonstersWithFlipEffectsIncludingDestroyingMonsters.add(i);
             }
-            if (monsterCard.getAttackPower() >= 1800 && monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
+            if (monsterCard.getAttackPower() >= 1600 && monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                 ArrayList<Integer> indexesOfMonstersWithDecentAttackButDefensePosition = aiBoardAnalysis.getIndexesOfMonstersWithDecentAttackButDefensePosition();
                 indexesOfMonstersWithDecentAttackButDefensePosition.add(i);
             }
@@ -284,7 +284,7 @@ public class AIBoardUnderstander {
             ArrayList<Integer> indexesOfMonstersWorthyOfKillingAndFaceUpAttackPosition = aiBoardAnalysis.getIndexesOfMonstersWorthyOfKillingAndFaceUpAttackPosition();
             ArrayList<Integer> indexesOfMonstersGoodToBeKilledAndFaceUpAttackPosition = aiBoardAnalysis.getIndexesOfMonstersGoodToBeKilledAndFaceUpAttackPosition();
             ArrayList<Integer> indexesOfMonstersWorthyOfBeingTributes = aiBoardAnalysis.getIndexesOfMonstersWorthyOfBeingTributes();
-            if (monsterCard.getAttackPower() >= 2200 || beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)
+            if (monsterCard.getAttackPower() >= 2000 || beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)
                 || beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)
                 || beingAttackedEffects.contains(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN)
                 || beingAttackedEffects.contains(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN)

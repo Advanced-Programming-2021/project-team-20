@@ -45,6 +45,7 @@ public class AIKeyVariablesUpdater {
     private boolean doesAIHaveDefensiveTrapCardsInBoard;
     private boolean doesAIHaveMonsterDestroyingTrapCardsInBattlePhaseInBoard;
     private boolean doesAIHaveMonsterAttackNegatingTrapCardsInBattlePhaseInBoard;
+    private boolean doesAIHaveMonstersWithStoppingTrapCardActivationEffectInBoard;
     private boolean doesAIHaveDamageInflictingTrapCardsInBattlePhaseInBoard;
     private boolean doesAIHaveCardDrawingSpellCardsInHand;
     private boolean doesAIHaveMonsterSwappingSpellCardsInHand;
@@ -165,6 +166,9 @@ public class AIKeyVariablesUpdater {
         }
         if (aiHandBoardAnalysis.getIndexesOfMonstersWithStoppingTrapCardActivationEffect().size() > 0) {
             doesAIHaveMonstersWithStoppingTrapCardActivationEffectInHand = true;
+        }
+        if (aiMonsterSpellBoardAnalysis.getIndexesOfMonstersWithStoppingTrapCardActivationEffect().size() > 0) {
+            doesAIHaveMonstersWithStoppingTrapCardActivationEffectInBoard = true;
         }
         if (aiMonsterSpellBoardAnalysis.getIndexesOfMonstersWithFlipEffectsIncludingDestroyingMonsters().size() > 0) {
             doesAIHaveMonstersWithFlipEffectsIncludingDestroyingMonsters = true;
@@ -331,6 +335,10 @@ public class AIKeyVariablesUpdater {
 
     public boolean isDoesAIHaveMonstersWithStoppingTrapCardActivationEffectInHand() {
         return doesAIHaveMonstersWithStoppingTrapCardActivationEffectInHand;
+    }
+
+    public boolean isDoesAIHaveMonstersWithStoppingTrapCardActivationEffectInBoard() {
+        return doesAIHaveMonstersWithStoppingTrapCardActivationEffectInBoard;
     }
 
     public boolean isDoesAIHaveMonstersWithFlipEffectsIncludingDestroyingMonsters() {

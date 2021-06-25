@@ -29,13 +29,6 @@ public class FlipSummoningOrChangingCardPositionConductor {
         return promptingUserToActivateMonsterEffect;
     }
 
-    public static boolean isIsActionCanceled() {
-        return isActionCanceled;
-    }
-
-    public static void setIsActionCanceled(boolean isActionCanceled) {
-        FlipSummoningOrChangingCardPositionConductor.isActionCanceled = isActionCanceled;
-    }
 
     public static boolean isClassWaitingForPlayerToPickMonsterToDestroy() {
         return isClassWaitingForPlayerToPickMonsterToDestroy;
@@ -51,7 +44,6 @@ public class FlipSummoningOrChangingCardPositionConductor {
             monsterCard.setCardPositionChanged(true);
             if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) {
                 monsterCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
-                //uninterruptedActions.remove(numberInListOfActions);
                 return "flip summoned successfully";
             } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
                 if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
@@ -59,10 +51,8 @@ public class FlipSummoningOrChangingCardPositionConductor {
                 } else if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                     monsterCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
                 }
-                //actions.remove(numberInListOfActions);
                 return "monster card position changed successfully";
             }
-            // check effectts
             return "nothing is conducted";
         }
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) {
@@ -109,7 +99,6 @@ public class FlipSummoningOrChangingCardPositionConductor {
                 MonsterCard defendingMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardToBeFlippedOrPositionChanged);
                 defendingMonsterCard.setOncePerTurnCardEffectUsed(true);
                 promptingUserToActivateMonsterEffect = false;
-                //isClassWaitingForFurtherChainInput = true;
                 ArrayList<FlipEffect> flipEffects = defendingMonsterCard.getFlipEffects();
                 if (flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD)) {
                     isClassWaitingForPlayerToPickMonsterToDestroy = true;

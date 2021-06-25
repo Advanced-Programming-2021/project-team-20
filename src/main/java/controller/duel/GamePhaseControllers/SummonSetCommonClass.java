@@ -27,7 +27,6 @@ public class SummonSetCommonClass extends ChainController {
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
         int turn = duelController.getTurn();
-        //System.out.println("IMPORTANT"+duelBoard.isCardInHand(card, turn)+"\n\n");
         if (!duelBoard.isCardInHand(card, turn)) {
             return "you can't " + stringUsedInOutput + " this card";
         }
@@ -80,15 +79,6 @@ public class SummonSetCommonClass extends ChainController {
             SpellCardValue spellCardValue = spellCard.getSpellCardValue();
             if (spellCardValue.equals(SpellCardValue.FIELD)) {
                 return "";
-                /*
-                if (turn == 1 && duelBoard.isZoneFull(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
-                    return "spell card zone is full";
-                } else if (turn == 2 && duelBoard.isZoneFull(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
-                    return "spell card zone is full";
-                }
-                return "";
-
-                 */
             }
         }
         if (turn == 1 && duelBoard.isZoneFull(RowOfCardLocation.ALLY_SPELL_ZONE) || turn == 2 && duelBoard.isZoneFull(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {

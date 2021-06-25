@@ -387,6 +387,8 @@ public class DuelController {
             return duelBoard.showDuelBoard(0);
         } else if (string.equals("show graveyard")) {
             return duelBoard.showGraveyard();
+        } else if (string.equals("show deck")) {
+            return duelBoard.showDeck(fakeTurn);
         } else if (string.equals("no") && attackMonsterToMonsterController.isGoingToChangeTurnsForChaining()) {
             return mediateOutputBeforeSendingToGameManager(
                 attackMonsterToMonsterController.userReplyYesNoForChain(string), needToMediate);
@@ -465,7 +467,8 @@ public class DuelController {
             return mediateOutputBeforeSendingToGameManager(
                 phaseController.redirectInputForStandByPhaseSpellCheck(string), needToMediate);
         } else if (Utility.isMatcherCorrectWithoutErrorPrinting(
-            Utility.getCommandMatcher(string, "(?<=\\n|^)card[\\s]+show[\\s]+--selected(?=\\n|$)"))) {
+            Utility.getCommandMatcher(string, "(?<=\\n|^)card[\\s]+show[\\s]+--selected(?=\\n|$)")) || Utility.isMatcherCorrectWithoutErrorPrinting(
+            Utility.getCommandMatcher(string, "(?<=\\n|^)card[\\s]+show[\\s]+-s(?=\\n|$)"))) {
             return duelBoard.showSelectedCard(0, fakeTurn);
         } else if (Utility.isMatcherCorrectWithoutErrorPrinting(
             Utility.getCommandMatcher(string, "(?<=\\n|^)show[\\s]+board(?=\\n|$)"))) {
@@ -583,9 +586,6 @@ public class DuelController {
             return "it's not your turn to play this kind of moves";
         } else if (!string.startsWith("select") && normalSummonController.isClassWaitingForChainCardToBeSelected()) {
             return "it's not your turn to play this kind of moves";
-        } else if (!string.startsWith("select")
-            && activateSpellTrapController.isAreWeLookingForFurtherInputToActivateSpellTrap()) {
-            return "you should give input for activating your trap or spell right now";
         } else if (!string.startsWith("select")
             && activateSpellTrapController.isClassWaitingForChainCardToBeSelected()) {
             return "it's not your turn to play this kind of moves";

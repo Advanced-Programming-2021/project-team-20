@@ -11,7 +11,6 @@ import model.cardData.General.CardLocation;
 import model.cardData.MonsterCardData.MonsterCard;
 
 public class DirectAttackConductor {
-    //private static boolean isDirectAttackCanceled;
     private static int actionTurn;
     private static ArrayList<Integer> playersLifePointsChange = new ArrayList<>();
     private static CardLocation attackingMonsterCardLocation;

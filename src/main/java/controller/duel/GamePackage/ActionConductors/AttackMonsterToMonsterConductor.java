@@ -85,36 +85,30 @@ public class AttackMonsterToMonsterConductor extends ChainController {
     }
 
     public String AttackConductor(int index, int numberInListOfActions) {
-        printEverything();
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         indexOfClass = index;
         numberInListOfActionsOfClass = numberInListOfActions;
         ArrayList<Action> actions = GameManager.getActionsByIndex(index);
         Action action = actions.get(numberInListOfActions);
         if (shouldRedirectAttackConductorFunctionToAvoidRepetition) {
-            //System.out.println("QQQQQQQQQQ");
             shouldRedirectAttackConductorFunctionToAvoidRepetition = false;
             if (action.isActionCanceled()) {
                 attackingMonsterCard.setHasCardAlreadyAttacked(true);
-                //System.out.println("WWWWWWWWW");
                 return "action was canceled";
             }
             if (playerIsSupposedToPickMonsterToSpecialSummon) {
-                //System.out.println("LLLLLLLLLLl");
                 playerIsSupposedToPickMonsterToSpecialSummon = false;
                 isClassWaitingForPlayerToPickMonsterToSpecialSummon = true;
                 return "show hand, graveyard, deck.\nselect one cyberse normal monster to special summon";
             }
             if (isConductBattleNegatedBecauseOfMonsterEffect) {
                 attackingMonsterCard.setHasCardAlreadyAttacked(true);
-                //System.out.println("KKKKKKKKKKKK");
                 isConductBattleNegatedBecauseOfMonsterEffect = false;
                 return "action was canceled because of monster card's effect";
             }
             return conductBattle();
         }
         if (!action.isActionCanceled()) {
-            //System.out.println("DDDDDDD");
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
             actionTurn = action.getActionTurn();
             playersLifePointsChange.clear();
@@ -126,9 +120,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             defendingMonsterCardLocation = action.getTargetingCards().get(action.getTargetingCards().size() - 1);
             Card defendingCard = duelBoard.getCardByCardLocation(defendingMonsterCardLocation);
             defendingMonsterCard = (MonsterCard) defendingCard;
-            //System.out.println("attacking Monster Card name " + attackingMonsterCard.getCardName());
-            //System.out.println("defending Monster Crd name " + defendingMonsterCard.getCardName());
-            //System.out.println("EEEEEEEE");
             if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) {
                 //System.out.println("FFFFFFF");
                 defendingMonsterCard.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);
@@ -142,14 +133,8 @@ public class AttackMonsterToMonsterConductor extends ChainController {
                     String usernameInChain = duelController.getPlayingUsernameByTurn(fakeTurn);
                     return "now it will be " + usernameInChain + "'s turn\n" + duelBoard.showDuelBoard(index) + "\ndo you want to activate your monster card's effect?";
                 }
-                //must change turns and prompt user to select for flip effect
             }
-            //also put if flip effect
-            //System.out.println("GGGGGGG");
-            //System.out.println(doesDefendingMonsterHaveEffect(defendingMonsterCard));
-            //System.out.println(defendingMonsterCard.isOncePerTurnCardEffectUsed());
             if (doesDefendingMonsterHaveEffect(defendingMonsterCard) && !defendingMonsterCard.isOncePerTurnCardEffectUsed()) {
-                //System.out.println("HHHHHHH");
                 promptingUserToActivateMonsterEffect = true;
                 shouldRedirectAttackConductorFunctionToAvoidRepetition = true;
                 duelController.changeFakeTurn();
@@ -164,41 +149,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             }
         }
         return "action was canceled.";
-    }
-
-    public void printEverything() {
-        /*
-        System.out.println("indexOfClass " + indexOfClass);
-        System.out.println("numberInListOfActions " + numberInListOfActionsOfClass);
-        System.out.println("attackingMonsterATK " + attackingMonsterATK);
-        //private boolean isAttackCanceled;
-        System.out.println("attackingMonsterDEF " + attackingMonsterDEF);
-        System.out.println("defendingMonsterATK " + defendingMonsterATK);
-        System.out.println("defendingMonsterDEF " + defendingMonsterDEF);
-        System.out.println("promptingUserToActivateMonsterEffect" + promptingUserToActivateMonsterEffect);
-        System.out.println("isBeingAttackedMonsterFlipped" + isBeingAttackedMonsterFlipped);
-        System.out.println("isClassWaitingForPlayerToPickMonsterToSpecialSummon" + isClassWaitingForPlayerToPickMonsterToSpecialSummon);
-        System.out.println("isClassWaitingForPlayerToPickMonsterToDestroy" + isClassWaitingForPlayerToPickMonsterToDestroy);
-        System.out.println("doesDefendingMonsterEffectActivate" + doesDefendingMonsterEffectActivate);
-        System.out.println("playerIsSupposedToPickMonsterToSpecialSummon" + playerIsSupposedToPickMonsterToSpecialSummon);
-        System.out.println("doesAttackingMonsterGoToGraveyard" + doesAttackingMonsterGoToGraveyard);
-        System.out.println("doesDefendingMonsterGoToGraveyard" + doesDefendingMonsterGoToGraveyard);
-        System.out.println("doesDefendingMonsterEventuallyGoToGraveyard" + doesDefendingMonsterEventuallyGoToGraveyard);
-        System.out.println("doesAttackingMonsterEventuallyGoToGraveyard" + doesAttackingMonsterEventuallyGoToGraveyard);
-        System.out.println("didAttackingUserReceiveDamage" + didAttackingUserReceiveDamage);
-        System.out.println("isConductBattleNegatedBecauseOfMonsterEffect" + isConductBattleNegatedBecauseOfMonsterEffect);
-        System.out.println("shouldRedirectAttackConductorFunctionToAvoidRepetition" + shouldRedirectAttackConductorFunctionToAvoidRepetition);
-        System.out.println("cardPositionToBeSpecialSummoned");
-        if (cardToBeSpecialSummoned != null) {
-            System.out.println(cardToBeSpecialSummoned.getIndex());
-            System.out.println(cardToBeSpecialSummoned.getRowOfCardLocation());
-        } else {
-            System.out.println();
-            System.out.println();
-        }
-        System.out.println("cardPositionToBeSpecialSummoned" + cardPositionToBeSpecialSummoned);
-
-         */
     }
 
 
@@ -346,7 +296,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         ArrayList<Action> actions = GameManager.getActionsByIndex(0);
         if (string.equals("attacking")) {
             isClassWaitingForUserToChooseAttackPositionOrDefensePosition = false;
-            //cardPositionOfMainCard = CardPosition.FACE_UP_ATTACK_POSITION;
             cardPositionToBeSpecialSummoned = CardPosition.FACE_UP_ATTACK_POSITION;
             createActionForSpecialSummoningMonster(0);
             output = Action.conductUninterruptedAction(0);
@@ -356,7 +305,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         } else if (string.equals("defensive")) {
             isClassWaitingForUserToChooseAttackPositionOrDefensePosition = false;
             cardPositionToBeSpecialSummoned = CardPosition.FACE_UP_DEFENSE_POSITION;
-            //cardPositionOfMainCard = CardPosition.FACE_UP_DEFENSE_POSITION;
             createActionForSpecialSummoningMonster(0);
             output = Action.conductUninterruptedAction(0);
             Action action = actions.get(actions.size() - 1);
@@ -437,15 +385,11 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         shouldRedirectAttackConductorFunctionToAvoidRepetition = false;
         isConductBattleNegatedBecauseOfMonsterEffect = false;
         playersLifePointsChange.clear();
-        //beingAttackedEffectsForAttackingMonster.clear();
-        //beingAttackedEffectsForDefendingMonster.clear();
     }
 
     public String faceUpAttackPositionMonsterToFaceUpAttackPositionMonster() {
         attackingMonsterATK = MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterCardLocation, 0);
         defendingMonsterATK = MonsterCard.giveATKDEFConsideringEffects("attack", defendingMonsterCardLocation, 0);
-        //System.out.println("attackingMonsterATK is " + attackingMonsterATK);
-        //System.out.println("defendingMonsterATK is " + defendingMonsterATK);
         ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
         if (beingAttackedEffects.contains(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN) && doesDefendingMonsterEffectActivate) {
             doesDefendingMonsterEffectActivate = false;
@@ -464,19 +408,13 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterATK);
             didAttackingUserReceiveDamage = true;
         }
-        //reconsiderEffectsOfMonsterInBattle();
         return finishAttackConduction();
     }
 
     public String faceUpAttackPositionMonsterToFaceUpDefensePositionMonster() {
-        //System.out.println("defending monster card name os " + defendingMonsterCard.getCardName() + "\niiiiiiiiiiiiiiiiiiiiiii\n");
-        //System.out.println("attacking monster card name os " + attackingMonsterCard.getCardName() + "\niiiiiiiiiiiiiiiiiiiiiii\n");
         attackingMonsterATK = MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterCardLocation, 0);
         defendingMonsterDEF = MonsterCard.giveATKDEFConsideringEffects("defense", defendingMonsterCardLocation, 0);
         ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
-        for (int i = 0; i < beingAttackedEffects.size(); i++) {
-            //System.out.println("being attacked effect are " + beingAttackedEffects.get(i));
-        }
         if (beingAttackedEffects.contains(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN) && doesDefendingMonsterEffectActivate) {
             doesDefendingMonsterEffectActivate = false;
             attackingMonsterATK = 0;
@@ -493,34 +431,9 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterDEF);
             didAttackingUserReceiveDamage = true;
         }
-        //reconsiderEffectsOfMonsterInBattle();
         return finishAttackConduction();
     }
 
-    /*
-        public static void reconsiderEffectsOfMonsterInBattle() {
-            ArrayList<BeingAttackedEffect> beingAttackedEffects = defendingMonsterCard.getBeingAttackedEffects();
-            if (beingAttackedEffects.contains(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES) && doesDefendingMonsterGoToGraveyard) {
-                playersLifePointsChange.set(0, 0);
-                playersLifePointsChange.set(1, 0);
-            }
-            if (beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)) {
-                if (doesDefendingMonsterGoToGraveyard) {
-                    doesAttackingMonsterGoToGraveyard = true;
-                }
-            }
-            if (beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
-                if (doesDefendingMonsterGoToGraveyard) {
-                    doesDefendingMonsterGoToGraveyard = false;
-                }
-            }
-            if (beingAttackedEffects.contains(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE) && isBeingAttackedMonsterFlipped) {
-                playersLifePointsChange.set(2 - actionTurn, -1000);
-            }
-        }
-
-
-     */
     public void tendToNeitherPlayerReceivesBattleDamageIfMonsterDies(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {
         if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES) && doesDefendingMonsterGoToGraveyard) {
             playersLifePointsChange.set(0, 0);
@@ -531,22 +444,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(1, 0);
         }
     }
-/*
-    public void tendToMonsterSendingOtherMonsterToGraveyardIfItselfIsDestroyed() {
-        if (!beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) &&
-            beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD) && doesDefendingMonsterGoToGraveyard) {
-            doesAttackingMonsterEventuallyGoToGraveyard = true;
-            //output += "\nbecause of your opponent's monster's effect, your monster is destroyed too.";
-        }
-        if (!beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) &&
-            beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD) && doesAttackingMonsterGoToGraveyard) {
-            doesDefendingMonsterEventuallyGoToGraveyard = true;
-            //output += "\nbecause of your opponent's monster's effect, your monster is destroyed too.";
-        }
-    }
 
-
- */
     public String finishAttackConduction() {
         doesDefendingMonsterEventuallyGoToGraveyard = doesDefendingMonsterGoToGraveyard;
         doesAttackingMonsterEventuallyGoToGraveyard = doesAttackingMonsterGoToGraveyard;
@@ -567,23 +465,17 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         output += tendToFaceUpDefensePositionMonsterLogicallyEqual();
         output += tendToFaceUpDefensePositionMonsterLogicallyLost();
 
-        //tendToMonsterSendingOtherMonsterToGraveyardIfItselfIsDestroyed();
         if (doesAttackingMonsterEventuallyGoToGraveyard) {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0);
-            //sendCardToGraveyardAfterRemoving(attackingMonsterCardLocation, 0, actionTurn);
         }
         if (doesDefendingMonsterEventuallyGoToGraveyard) {
-            //if (!beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0);
-            //}
-            //sendCardToGraveyardAfterRemoving(defendingMonsterCardLocation, 0, actionTurn);
         }
         attackingMonsterCard.setHasCardAlreadyAttacked(true);
         return output;
     }
 
     public String tendToFaceUpDefensePositionMonsterLogicallyWinning(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {
-        //System.out.println("tendToFaceUpDefensePositionMonsterLogicallyWinning");
         String output = "";
         if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
             if (isBeingAttackedMonsterFlipped) {
@@ -608,7 +500,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
     }
 
     public String tendToFaceUpDefensePositionMonsterLogicallyEqual() {
-        //System.out.println("tendToFaceUpDefensePositionMonsterLogicallyEqual");
         String output = "";
         if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard && !didAttackingUserReceiveDamage) {
             if (isBeingAttackedMonsterFlipped) {
@@ -622,7 +513,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
     }
 
     public String tendToFaceUpDefensePositionMonsterLogicallyLost() {
-        //System.out.println("tendToFaceUpDefensePositionMonsterLogicallyLost");
         String output = "";
         if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) && !doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard && didAttackingUserReceiveDamage) {
             if (isBeingAttackedMonsterFlipped) {
@@ -636,7 +526,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
     }
 
     public String tendToFaceUpAttackPositionMonsterLogicallyWinning(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {
-        //System.out.println("tendToFaceUpAttackPositionMonsterLogicallyWinning");
         String output = "";
         if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && !doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
             if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
@@ -659,7 +548,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
     }
 
     public String tendToFaceUpAttackPositionMonsterLogicallyEqual(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {
-        //System.out.println("tendToFaceUpAttackPositionMonsterLogicallyEqual");
         String output = "";
         if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && doesAttackingMonsterGoToGraveyard && doesDefendingMonsterGoToGraveyard) {
             if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE) && beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
@@ -684,7 +572,6 @@ public class AttackMonsterToMonsterConductor extends ChainController {
     }
 
     public String tendToFaceUpAttackPositionMonsterLogicallyLost(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {
-        //System.out.println("tendToFaceUpAttackPositionMonsterLogicallyLost");
         String output = "";
         if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) && doesAttackingMonsterGoToGraveyard && !doesDefendingMonsterGoToGraveyard) {
             if (beingAttackedEffectsForAttackingMonster.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {

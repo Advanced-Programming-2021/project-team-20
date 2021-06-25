@@ -65,7 +65,6 @@ public class ActivateMonsterController extends ChainController {
         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
         if (!Card.isCardAMonster(card)) {
             return "activate effect is not possible for this card";
-            //"activate effect is only for spell and trap cards.";
         } else {
             return checkCorrectPhase(index);
         }
@@ -329,7 +328,6 @@ public class ActivateMonsterController extends ChainController {
                 graveyardToSendCardTo = 2;
             }
             Card card = removeCardAndGetRemovedCard(targetingCardLocation, index);
-           // System.out.println("CARD WITH NAME" + card.getCardName() + "IS BEING SENT TO GRAVEYARD " + graveyardToSendCardTo);
             duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
         }
     }

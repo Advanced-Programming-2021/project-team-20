@@ -19,39 +19,12 @@ import model.cardData.TrapCardData.TrapCard;
 import java.util.ArrayList;
 
 public class AIMainPhaseMind {
-    //private static int maximumNumberOfNormalSummonOrSet = 0;
     private AICardFinder aiCardFinder;
     private AIKeyVariablesUpdater aiKeyVariablesUpdater;
     private int numberOfTributesNeeded;
     private int numberOfTributesDone;
     private int indexOfPreviouslyChosenSpellTrapForKilling;
 
-    /*
-    protected AIBoardAnalysis opponentMonsterSpellBoardAnalysis;
-    protected AIBoardAnalysis opponentHandBoardAnalysis;
-    protected AIBoardAnalysis aiMonsterSpellBoardAnalysis;
-    protected AIBoardAnalysis aiHandBoardAnalysis;
-    protected ArrayList<Card> opponentMonsterCards;
-    protected ArrayList<Card> opponentCardsInHand;
-    protected ArrayList<Card> opponentSpellTrapCards;
-    protected ArrayList<Card> opponentSpellFieldCard;
-    RowOfCardLocation opponentMonsterCardsRowOfCardLocation = null;
-    RowOfCardLocation opponentSpellCardsRowOfCardLocation = null;
-    RowOfCardLocation opponentSpellFieldCardRowOfCardLocation = null;
-    RowOfCardLocation opponentGraveyardCardsRowOfCardLocation = null;
-    RowOfCardLocation opponentHandCardsRowOfCardLocation = null;
-    protected ArrayList<Card> aiMonsterCards;
-    protected ArrayList<Card> aiCardsInHand;
-    protected ArrayList<Card> aiSpellTrapCards;
-    protected ArrayList<Card> aiSpellFieldCard;
-    RowOfCardLocation aiMonsterCardsRowOfCardLocation = null;
-    RowOfCardLocation aiSpellCardsRowOfCardLocation = null;
-    RowOfCardLocation aiSpellFieldCardRowOfCardLocation = null;
-    RowOfCardLocation aiGraveyardCardsRowOfCardLocation = null;
-    RowOfCardLocation aiHandCardsRowOfCardLocation = null;
-
-
-     */
     public AIMainPhaseMind() {
         aiCardFinder = new AICardFinder();
         aiKeyVariablesUpdater = new AIKeyVariablesUpdater();
@@ -83,16 +56,6 @@ public class AIMainPhaseMind {
             ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.SELECT_A_CARD_FROM_YOUR_HAND_TO_DISCARD_IN_CHAIN)) {
             ArrayList<Card> cardsInAIHand = ai.getAiBoardUnderstander().getAiCardsInHand();
             String output = "select --hand 1";
-            /*
-            for (int i = 0; i < cardsInAIHand.size(); i++) {
-                if (Card.isCardAMonster(cardsInAIHand.get(i))) {
-                    if (((MonsterCard) cardsInAIHand.get(i)).getAttackPower() <= 2000) {
-                        output = "select --hand " + (i + 1);
-                    }
-                }
-            }
-
-             */
             if (ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.SELECT_A_CARD_FROM_YOUR_HAND_TO_DISCARD)) {
                 ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_2_OF_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING);
             } else {
@@ -122,7 +85,6 @@ public class AIMainPhaseMind {
                     }
                 }
             } else {
-                //index = indexesOfSpellTrapsGoodToBeKilled.get(indexesOfSpellTrapsGoodToBeKilled.size() - 1);
                 for (Integer integer : indexesOfSpellTrapsGoodToBeKilled) {
                     index = integer;
                     if (index != indexOfPreviouslyChosenSpellTrapForKilling) {
@@ -250,42 +212,27 @@ public class AIMainPhaseMind {
     }
 
     protected String getCommandWhenAIIsInMainPhaseWithNoNecessaryQuery(AI ai) {
-        //for (int i = 0;i<500; i++){
-        //System.out.println("ai is free to think in main phase");
-        //}
-
-        //ai.getAiInformationUpdater().updateVariablesForBoard();
         ai.updateAIInformationAccordingToBoard();
         aiKeyVariablesUpdater.updateVariablesOfThisClassAccordingToSituation(ai);
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
-        //ArrayList<CardLocation> allySpellCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(false, false);
         ArrayList<CardLocation> allyMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(false, true);
-        //ArrayList<CardLocation> opponentSpellCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, false);
         ArrayList<CardLocation> opponentMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, true);
         boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, 0, true);
         boolean doOpponentMonstersDominateAIAlone = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, 0, false);
         boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
-        //boolean doAIMonstersDominateOpponentAlone = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
-        //set mystical space typhoon or twin twisters
-        //System.out.println("IMPORTANT MESSAGE ");
-        //System.out.println("doOpponentMonstersDominateAIWithBuffEffects " + doOpponentMonstersDominateAIWithBuffEffects);
-        //System.out.println("doOpponentMonstersDominateAIAlone " + doOpponentMonstersDominateAIAlone);
-        //System.out.println("doAIMonstersDominateOpponentWithBuffEffects " + doAIMonstersDominateOpponentWithBuffEffects);
         if (aiKeyVariablesUpdater.isDoesAIHaveCardDrawingSpellCardsInHand()) {
             return aiCardFinder.findCardDrawingSpellCardInHandToActivate(ai);
         }
         if (!aiKeyVariablesUpdater.isCanOpponentInterruptAISpellWithQuickSpells() &&
             aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingAllSpellCardsInHand() &&
-            (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() >= 2 &&
-                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsGoodToBeKilled().size() >= 1 ||
-                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() >= 3)) {
+            (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() +
+                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsGoodToBeKilled().size() >= 2)) {
             return aiCardFinder.findSpellCardToDestroyAllOfOpponentsSpellCard(ai);
         }
         if (!aiKeyVariablesUpdater.isCanOpponentInterruptAISpellWithQuickSpells() &&
             (aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInHand() || aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInBoard()) &&
-            (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() >= 2 ||
-                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsGoodToBeKilled().size() >= 1 &&
-                    ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() == 1)) {
+            (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() +
+                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsGoodToBeKilled().size() >= 2)) {
             return aiCardFinder.findQuickSpellCardsToDestroyOpponentSpellTrapCards(ai);
         }
         if (aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInHand() &&
@@ -304,6 +251,9 @@ public class AIMainPhaseMind {
             ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersWorthyOfKilling().size() >= 1) {
             return aiCardFinder.findMonsterWithFlipEffectToFlipSummon(ai);
         }
+        if (aiKeyVariablesUpdater.isDoesAIHaveDefensiveTrapCardsInHand() && !aiKeyVariablesUpdater.isDoesAIHaveDefensiveTrapCardsInBoard()) {
+            return aiCardFinder.findDefensiveTrapCardsInHandForBattlePhaseToSet(ai);
+        }
         if (doOpponentMonstersDominateAIAlone || doOpponentMonstersDominateAIWithBuffEffects) {
             if (aiKeyVariablesUpdater.isDoesAIHaveStoppingMonstersOfAttackingSpellCardsInHand() &&
                 !aiKeyVariablesUpdater.isDoesAIHaveStoppingMonstersOfAttackingSpellCardsInBoard() &&
@@ -312,7 +262,8 @@ public class AIMainPhaseMind {
             }
             if (!aiKeyVariablesUpdater.isCanOpponentInterruptAISpellWithQuickSpells() &&
                 aiKeyVariablesUpdater.isDoesAIHaveMonsterDestroyingSpellCardsEitherInBoardOrInHand() &&
-                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersWorthyOfKilling().size() >= 2) {
+                (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersWorthyOfKilling().size() +
+                    ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfMonstersWithGoodAttack().size() >= 1)) {
                 return aiCardFinder.findAllMonsterDestroyingSpellCardFromHandOrBoard(ai);
             }
             if (aiKeyVariablesUpdater.isDoesOpponentHaveMonsterWithSelfDestructionEffectAndNoDamageCalculation() &&
@@ -328,6 +279,10 @@ public class AIMainPhaseMind {
                 duelController.canUserSummonOrSetMonsters(duelController.getAiTurn())) {
                 return aiCardFinder.findDefensiveMonsterCardsInHandToSet(ai);
             }
+            if (aiKeyVariablesUpdater.isDoesAIHaveMonstersWithGoodAttackInHand() &&
+                duelController.canUserSummonOrSetMonsters(duelController.getAiTurn())) {
+                return aiCardFinder.findMonsterWithGoodAttackFromHandToNormalSummon(ai);
+            }
         } else if (doAIMonstersDominateOpponentWithBuffEffects) {
             if (aiKeyVariablesUpdater.isDoesOpponentHaveDefensiveTrapCardsInBoard() &&
                 aiKeyVariablesUpdater.isDoesAIHaveMonstersWithStoppingTrapCardActivationEffectInHand() &&
@@ -341,18 +296,14 @@ public class AIMainPhaseMind {
             }
             if (!aiKeyVariablesUpdater.isCanOpponentInterruptAISpellWithQuickSpells() && aiKeyVariablesUpdater.isDoesOpponentHaveMonsterDestroyingTrapCardsInAttacking()
                 && aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInHand() &&
-                ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() >= 2) {
+                (ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling().size() +
+                    ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsGoodToBeKilled().size() >= 2)) {
                 return aiCardFinder.findSpellCardToDestroyAllOfOpponentsSpellCard(ai);
             }
             if (!aiKeyVariablesUpdater.isCanOpponentInterruptAISpellWithQuickSpells() && aiKeyVariablesUpdater.isDoesAIHaveSpellDestroyingQuickSpellCardsInHand()) {
                 return aiCardFinder.findQuickSpellCardsToDestroyOpponentSpellTrapCards(ai);
             }
-           //if (aiKeyVariablesUpdater.isDoesAIHaveMonstersWithGoodAttackInHand()) {
-           //     return aiCardFinder.findMonsterInBoardWithDecentAttackToChangeCardPositionToFaceUpAttackPosition(ai);
-            //}
         } else {
-            //System.out.println("nobody's monsters dominated another and i am here thinking");
-            //System.out.println(duelController.getHaveUsersAlreadySummonedOrSetOnce(duelController.getAiTurn()));
             if (aiKeyVariablesUpdater.isDoesAIHaveMonstersWithGoodAttackInHand() && duelController.canUserSummonOrSetMonsters(duelController.getAiTurn())) {
                 return aiCardFinder.findMonsterWithGoodAttackFromHandToNormalSummon(ai);
             }
@@ -371,16 +322,11 @@ public class AIMainPhaseMind {
                 return aiCardFinder.findMonsterNeedingTributeInHandToSpecialSummon(ai);
             }
         }
-        //System.out.println("THIS MESSAGE IS BECAUSE I WANT  TO SET A TRAP CARD");
-        //System.out.println(GameManager.getPhaseControllerByIndex(0).getPhaseInGame());
-        //System.out.println(GameManager.getDuelControllerByIndex(0).getAiTurn());
         if (GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.OPPONENT_MAIN_PHASE_2) &&
             GameManager.getDuelControllerByIndex(0).getAiTurn() == 2 ||
             GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_2) &&
                 GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
-            if (aiKeyVariablesUpdater.isDoesAIHaveDefensiveTrapCardsInHand() && !aiKeyVariablesUpdater.isDoesAIHaveDefensiveTrapCardsInBoard()) {
-                return aiCardFinder.findDefensiveTrapCardsInHandForBattlePhaseToSet(ai);
-            }
+
         }
         return "next phase\n";
     }
@@ -457,7 +403,6 @@ public class AIMainPhaseMind {
     }
 
     protected String getCommandForChoosingSpellTrapToActivateInChainInMainPhase1(AI ai) {
-        //ai.getAiInformationUpdater().updateVariablesForBoard();
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)
@@ -468,7 +413,6 @@ public class AIMainPhaseMind {
     }
 
     protected String getCommandForGivingFurtherInputToActivateSpellTrapInChainInMainPhase1(AI ai) {
-        //ai.getAiInformationUpdater().updateVariablesForBoard();
         return getCommandForGivingFurtherInputForActivatingSpellOrTrap(ai);
     }
 
