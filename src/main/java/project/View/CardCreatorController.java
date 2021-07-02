@@ -1,19 +1,13 @@
 package project.View;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import project.model.cardData.MonsterCardData.MonsterCard;
-import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
 
@@ -263,32 +257,14 @@ public class CardCreatorController implements Initializable {
             for (int i = 0; i < buttonsForMonsterCardAttribute.size(); i++) {
                 int finalI = i;
                 buttonsForMonsterCardAttribute.get(i).setOnAction(ActionEvent -> monsterCardFamilyAction(finalI));
-//                buttonsForMonsterCardAttribute.get(i).setMaxWidth(200);
-//                buttonsForMonsterCardAttribute.get(i).setMaxHeight(220);
-//                buttonsForMonsterCardAttribute.get(i).setMaxSize(200, 220);
             }
-//            buttonsForMonsterCardAttribute = new Button[7];
-//            buttonsForMonsterCardAttribute[0].setText("DARK");
-//            buttonsForMonsterCardAttribute[1].setText("DIVINE");
-//            buttonsForMonsterCardAttribute[2].setText("LIGHT");
-//            buttonsForMonsterCardAttribute[3].setText("EARTH");
-//            buttonsForMonsterCardAttribute[4].setText("FIRE");
-//            buttonsForMonsterCardAttribute[5].setText("WATER");
-//            buttonsForMonsterCardAttribute[6].setText("WIND");
 
             vboxForMonsterCardAttribute = new VBox();
             vboxForMonsterCardAttribute.setLayoutY(100);
             vboxForMonsterCardAttribute.setLayoutX(480);
-            for (int i = 0; i < buttonsForMonsterCardAttribute.size(); i++) {
-                vboxForMonsterCardAttribute.getChildren().add(buttonsForMonsterCardAttribute.get(i));
+            for (Button button : buttonsForMonsterCardAttribute) {
+                vboxForMonsterCardAttribute.getChildren().add(button);
             }
-
-//            vBox.getChildren().add(buttonsForMonsterCardAttribute.get(1));
-//            vBox.getChildren().add(buttonsForMonsterCardAttribute.get(2));
-//            vBox.getChildren().add(buttonsForMonsterCardAttribute.get(3));
-//            vBox.getChildren().add(buttonsForMonsterCardAttribute.get(4));
-//            vBox.getChildren().add(buttonsForMonsterCardAttribute.get(5));
-//            vBox.getChildren().add(buttonsForMonsterCardAttribute.get(6));
 
             anchorPane.getChildren().add(vboxForMonsterCardAttribute);
         }
@@ -315,8 +291,8 @@ public class CardCreatorController implements Initializable {
         vboxForMonsterCardFamily.setLayoutY(100);
         vboxForMonsterCardFamily.setLayoutX(400);
 
-        for (int i = 0; i < buttonsForMonsterCardFamily.size(); i++) {
-            vboxForMonsterCardFamily.getChildren().add(buttonsForMonsterCardFamily.get(i));
+        for (Button button : buttonsForMonsterCardFamily) {
+            vboxForMonsterCardFamily.getChildren().add(button);
         }
         anchorPane.getChildren().add(vboxForMonsterCardFamily);
 
@@ -324,7 +300,6 @@ public class CardCreatorController implements Initializable {
 
 
         buttonsForMonsterCardFamily2 = new ArrayList<>();
-        int counter = 0;
         for (int i = values.length/2; i < values.length; i++) {
             String name = values[i].toString();
             buttonsForMonsterCardFamily2.add(new Button(name));
@@ -339,8 +314,8 @@ public class CardCreatorController implements Initializable {
         vboxForMonsterCardFamily2.setLayoutY(100);
         vboxForMonsterCardFamily2.setLayoutX(600);
 
-        for (int i = 0; i < buttonsForMonsterCardFamily2.size(); i++) {
-            vboxForMonsterCardFamily2.getChildren().add(buttonsForMonsterCardFamily2.get(i));
+        for (Button button : buttonsForMonsterCardFamily2) {
+            vboxForMonsterCardFamily2.getChildren().add(button);
         }
 
         anchorPane.getChildren().add(vboxForMonsterCardFamily2);
@@ -361,8 +336,8 @@ public class CardCreatorController implements Initializable {
         buttonsForMonsterCardValues = new ArrayList<>();
         MonsterCardValue[] values = MonsterCardValue.values();
 
-        for (int i = 0; i < values.length; i++) {
-            String name = values[i].toString();
+        for (MonsterCardValue value : values) {
+            String name = value.toString();
             buttonsForMonsterCardValues.add(new Button(name));
         }
 
@@ -375,8 +350,8 @@ public class CardCreatorController implements Initializable {
         vboxForMonsterCardValues.setLayoutY(100);
         vboxForMonsterCardValues.setLayoutX(400);
 
-        for (int i = 0; i < buttonsForMonsterCardValues.size(); i++) {
-            vboxForMonsterCardValues.getChildren().add(buttonsForMonsterCardValues.get(i));
+        for (Button buttonsForMonsterCardValue : buttonsForMonsterCardValues) {
+            vboxForMonsterCardValues.getChildren().add(buttonsForMonsterCardValue);
         }
         anchorPane.getChildren().add(vboxForMonsterCardValues);
     }
