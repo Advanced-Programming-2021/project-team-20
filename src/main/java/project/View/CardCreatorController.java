@@ -1,6 +1,8 @@
 package project.View;
 
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -8,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import project.controller.duel.CardEffects.MonsterEffectEnums.*;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
 
@@ -61,6 +64,28 @@ public class CardCreatorController implements Initializable {
     ArrayList<Button> buttonsForMonsterCardValues;
     VBox vboxForMonsterCardValues;
 
+    ArrayList<Button> buttonsForGettingSummoningRequirement;
+    ArrayList<Integer> selectedSummoningRequirements;
+    VBox vBoxForSummoningRequirement;
+    Button finishButtonForSummoningRequirement;
+
+    ArrayList<Button> buttonsForUponSummoningEffect;
+    ArrayList<Integer> selectedUponSummoningEffect;
+    VBox vBoxForUponSummoningEffect;
+    Button buttonForFinishUponSummoningEffect;
+
+    ArrayList<Button> buttonsForBeingAttackedEffect;
+    ArrayList<Integer> selectedBeingAttackedEffect;
+    VBox vBoxForBeingAttackedEffect;
+    Button buttonForFinishBeingAttackedEffect;
+
+
+
+
+
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -89,6 +114,8 @@ public class CardCreatorController implements Initializable {
         monsterButton.setOnAction(actionEvent -> monsterCard());
     }
 
+
+
     private void monsterCard() {
         cardType = "monster";
         removeThreeButtons();
@@ -96,11 +123,15 @@ public class CardCreatorController implements Initializable {
 
     }
 
+
+
     private void trapCard() {
         cardType = "trap";
         removeThreeButtons();
         getCardNameFromUser();
     }
+
+
 
     private void spellCard() {
         cardType = "spell";
@@ -108,11 +139,25 @@ public class CardCreatorController implements Initializable {
         getCardNameFromUser();
     }
 
+
+
+
+
+
+
+
+
     private void removeThreeButtons(){
         anchorPane.getChildren().remove(spellButton);
         anchorPane.getChildren().remove(trapButton);
         anchorPane.getChildren().remove(monsterButton);
     }
+
+
+
+
+
+
 
     private void getCardNameFromUser() {
         labelForGettingCardNameFromUser = new Label("Please enter card name");
@@ -132,6 +177,13 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForGettingCardNameFromUser);
     }
 
+
+
+
+
+
+
+
     private void setCardName() {
         if (!textFieldForGettingCardNameFromUser.getText().isEmpty()) {
             cardName = textFieldForGettingCardNameFromUser.getText();
@@ -140,11 +192,25 @@ public class CardCreatorController implements Initializable {
         }
     }
 
+
+
+
+
+
+
+
+
     private void removeThingsInTheGetCardNameScene() {
         anchorPane.getChildren().remove(labelForGettingCardNameFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardNameFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardNameFromUser);
     }
+
+
+
+
+
+
 
     private void getNumberOfAllowedUsages() {
         labelForGettingNumberOfAllowedUsagesFromUser = new Label("Choose one of them for number of allowed usages");
@@ -165,6 +231,11 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonThreeForNumberOfAllowedUsages);
     }
 
+
+
+
+
+
     private void getCardInformationBasedOnTheCardType(int numberOfAllowedUsages) {
         this.numberOfAllowedUsages = numberOfAllowedUsages;
         removeThingsInTheGetNumberOfAllowedUsages();
@@ -172,6 +243,10 @@ public class CardCreatorController implements Initializable {
         else if (cardType.equals("spell")) continueGettingSpellInformation();
         else continueGettingTrapInformation();
     }
+
+
+
+
 
     private void continueGettingMonsterInformation() {
         labelForGettingAttackPowerMonsterCard = new Label("Please enter the card's attack power");
@@ -190,6 +265,11 @@ public class CardCreatorController implements Initializable {
         buttonForGettingAttackPowerMonsterCard.setOnAction(actionEvent -> getDefencePowerMonsterCard());
         anchorPane.getChildren().add(buttonForGettingAttackPowerMonsterCard);
     }
+
+
+
+
+
 
     private void getDefencePowerMonsterCard() {
         String attackPower = textFieldForGettingAttackPowerMonsterCard.getText();
@@ -215,6 +295,11 @@ public class CardCreatorController implements Initializable {
         }
     }
 
+
+
+
+
+
     private void getLevelMonsterCard() {
         String defencePower = textFieldForGettingDefencePowerMonsterCard.getText();
         Pattern pattern = Pattern.compile("^\\d+$");
@@ -239,6 +324,13 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().add(buttonForGettingLevelMonsterCard);
         }
     }
+
+
+
+
+
+
+
 
     private void monsterCardAttributeFunction() {
         String level = textFieldForGettingLevelMonsterCard.getText();
@@ -270,6 +362,14 @@ public class CardCreatorController implements Initializable {
         }
     }
 
+
+
+
+
+
+
+
+
     private void monsterCardFamilyAction(int finalI) {
 
         monsterAttributeNumber = finalI;
@@ -295,8 +395,6 @@ public class CardCreatorController implements Initializable {
             vboxForMonsterCardFamily.getChildren().add(button);
         }
         anchorPane.getChildren().add(vboxForMonsterCardFamily);
-
-
 
 
         buttonsForMonsterCardFamily2 = new ArrayList<>();
@@ -327,6 +425,8 @@ public class CardCreatorController implements Initializable {
 
 
 
+
+
     private void monsterCardValuesFunction(int finalI1) {
         monsterFamilyNumber = finalI1;
 
@@ -343,7 +443,7 @@ public class CardCreatorController implements Initializable {
 
         for (int i = 0; i < values.length; i++) {
             int finalI2 = i;
-            buttonsForMonsterCardValues.get(i).setOnAction(ActionEvent -> endOfCreatingMonsterCard(finalI2));
+            buttonsForMonsterCardValues.get(i).setOnAction(ActionEvent -> endOfCreatingMonsterCardWithoutEffects(finalI2));
         }
 
         vboxForMonsterCardValues = new VBox();
@@ -356,18 +456,215 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(vboxForMonsterCardValues);
     }
 
-    private void endOfCreatingMonsterCard(int finalI2) {
+
+
+
+
+
+
+
+
+
+
+
+
+    private void endOfCreatingMonsterCardWithoutEffects(int finalI2) {
         monsterValuesNumber = finalI2;
         anchorPane.getChildren().remove(vboxForMonsterCardValues);
-        System.out.println("Type : " + cardType);
-        System.out.println("Card name : " + cardName);
-        System.out.println("numberOfAllowedUsages : " + numberOfAllowedUsages);
-        System.out.println("attackPowerMonsterCard : " + attackPowerMonsterCard);
-        System.out.println("defencePowerMonsterCard : " + defencePowerMonsterCard);
-        System.out.println("monsterAttributeNumber : " + monsterAttributeNumber);
-        System.out.println("monsterFamilyNumber : " + monsterFamilyNumber);
-        System.out.println("monsterValuesNumber : " + monsterValuesNumber);
+//        System.out.println("Type : " + cardType);
+//        System.out.println("Card name : " + cardName);
+//        System.out.println("numberOfAllowedUsages : " + numberOfAllowedUsages);
+//        System.out.println("attackPowerMonsterCard : " + attackPowerMonsterCard);
+//        System.out.println("defencePowerMonsterCard : " + defencePowerMonsterCard);
+//        System.out.println("monsterAttributeNumber : " + monsterAttributeNumber);
+//        System.out.println("monsterFamilyNumber : " + monsterFamilyNumber);
+//        System.out.println("monsterValuesNumber : " + monsterValuesNumber);
 
+
+         /* from here we should get effects from user
+         ArrayList<SummoningRequirement>
+         ArrayList<UponSummoningEffect>
+         ArrayList<AttackerEffect> --> there is no need to get this one because it has no usages
+         ArrayList<BeingAttackedEffect>
+         ArrayList<ContinuousMonsterEffect>
+         ArrayList<FlipEffect>
+         ArrayList<OptionalMonsterEffect>
+         ArrayList<SentToGraveyardEffect> */
+        getSummoningRequirementFromUser();
+//        getUponSummoningEffectFromUser();
+//        getBeingAttackedEffectFromUser();
+//        getContinuousMonsterEffectFromUser();
+//        getFlipEffectFromUser();
+//        getOptionalMonsterEffectFromUser();
+//        getSentToGraveyardEffectFromUser();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    private void getSummoningRequirementFromUser() {
+
+        buttonsForGettingSummoningRequirement = new ArrayList<>();
+        finishButtonForSummoningRequirement = new Button("OK");
+        SummoningRequirement[] summoningRequirements = SummoningRequirement.values();
+
+        for (SummoningRequirement summoningRequirement : summoningRequirements) {
+            String summoningRequirementName = summoningRequirement.toString();
+            buttonsForGettingSummoningRequirement.add(new Button(summoningRequirementName));
+        }
+
+        selectedSummoningRequirements = new ArrayList<>();
+        for (int i = 0; i < summoningRequirements.length; i++) {
+            int finalI = i;
+            buttonsForGettingSummoningRequirement.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedSummoningRequirements, buttonsForGettingSummoningRequirement);
+                }
+            });
+        }
+
+        vBoxForSummoningRequirement = new VBox();
+        vBoxForSummoningRequirement.setLayoutX(400);
+        vBoxForSummoningRequirement.setLayoutY(100);
+        finishButtonForSummoningRequirement.setLayoutX(400);
+        finishButtonForSummoningRequirement.setLayoutY(500);
+        finishButtonForSummoningRequirement.setOnAction(ActionEvent -> getUponSummoningEffectFromUser());
+
+        for (int i = 0; i < buttonsForGettingSummoningRequirement.size(); i++) {
+            if (i == 4 || i == 7 || i == 8) {
+                vBoxForSummoningRequirement.getChildren().add(buttonsForGettingSummoningRequirement.get(i));
+            }
+        }
+
+        anchorPane.getChildren().add(vBoxForSummoningRequirement);
+        anchorPane.getChildren().add(finishButtonForSummoningRequirement);
+
+    }
+
+
+
+
+
+
+
+
+
+    private void getUponSummoningEffectFromUser() {
+        //should be commented
+        System.out.println(selectedSummoningRequirements);
+        anchorPane.getChildren().remove(vBoxForSummoningRequirement);
+        anchorPane.getChildren().remove(finishButtonForSummoningRequirement);
+
+
+        buttonsForUponSummoningEffect = new ArrayList<>();
+        buttonForFinishUponSummoningEffect = new Button("OK");
+        UponSummoningEffect[] uponSummoningEffects = UponSummoningEffect.values();
+        for (UponSummoningEffect uponSummoningEffect : uponSummoningEffects) {
+            String buttonName = uponSummoningEffect.toString();
+            buttonsForUponSummoningEffect.add(new Button(buttonName));
+        }
+
+        selectedUponSummoningEffect = new ArrayList<>();
+
+
+        for (int i = 0; i < buttonsForUponSummoningEffect.size(); i++) {
+            int finalI = i;
+            buttonsForUponSummoningEffect.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedUponSummoningEffect, buttonsForUponSummoningEffect);
+                }
+            });
+        }
+
+        vBoxForUponSummoningEffect = new VBox();
+        vBoxForUponSummoningEffect.setLayoutX(400);
+        vBoxForUponSummoningEffect.setLayoutY(100);
+        buttonForFinishUponSummoningEffect.setLayoutX(400);
+        buttonForFinishUponSummoningEffect.setLayoutY(500);
+        buttonForFinishUponSummoningEffect.setOnAction(ActionEvent -> getBeingAttackedEffectFromUser());
+
+
+        for (Button button : buttonsForUponSummoningEffect) {
+            vBoxForUponSummoningEffect.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBoxForUponSummoningEffect);
+        anchorPane.getChildren().add(buttonForFinishUponSummoningEffect);
+
+    }
+
+    private void getBeingAttackedEffectFromUser() {
+        //should be commented
+        System.out.println(selectedUponSummoningEffect);
+        anchorPane.getChildren().remove(vBoxForUponSummoningEffect);
+        anchorPane.getChildren().remove(buttonForFinishUponSummoningEffect);
+
+
+        buttonsForBeingAttackedEffect = new ArrayList<>();
+        buttonForFinishBeingAttackedEffect = new Button("OK");
+        BeingAttackedEffect[] beingAttackedEffects = BeingAttackedEffect.values();
+
+        for (BeingAttackedEffect beingAttackedEffect : beingAttackedEffects) {
+            String buttonName = beingAttackedEffect.toString();
+            buttonsForBeingAttackedEffect.add(new Button(buttonName));
+        }
+
+        selectedBeingAttackedEffect = new ArrayList<>();
+
+        for (int i = 0; i < buttonsForBeingAttackedEffect.size(); i++) {
+            int finalI = i;
+            buttonsForBeingAttackedEffect.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedBeingAttackedEffect, buttonsForBeingAttackedEffect);
+                }
+            });
+        }
+
+        vBoxForBeingAttackedEffect = new VBox();
+        vBoxForBeingAttackedEffect.setLayoutY(100);
+        vBoxForBeingAttackedEffect.setLayoutX(400);
+        buttonForFinishBeingAttackedEffect.setLayoutY(500);
+        buttonForFinishBeingAttackedEffect.setLayoutX(500);
+
+        buttonForFinishBeingAttackedEffect.setOnAction(ActionEvent -> getContinuousMonsterEffectFromUser());
+
+
+        for (Button button : buttonsForBeingAttackedEffect) {
+            vBoxForBeingAttackedEffect.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBoxForBeingAttackedEffect);
+        anchorPane.getChildren().add(buttonForFinishBeingAttackedEffect);
+
+    }
+
+    private void getContinuousMonsterEffectFromUser() {
+        System.out.println(selectedBeingAttackedEffect);
+        anchorPane.getChildren().remove(vBoxForBeingAttackedEffect);
+        anchorPane.getChildren().remove(buttonForFinishBeingAttackedEffect);
+
+    }
+
+    private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
+        if (integersValues.contains(finalI)) {
+            integersValues.remove(Integer.valueOf(finalI));
+            buttons.get(finalI).setStyle("-fx-background-color: #e6e9ec");
+        }
+        else {
+            integersValues.add(finalI);
+            buttons.get(finalI).setStyle("-fx-background-color: #0c7bea;");
+        }
     }
 
 
