@@ -55,6 +55,7 @@ public class CardCreatorController implements Initializable {
     TextField textFieldForGettingLevelMonsterCard;
     Button buttonForGettingLevelMonsterCard;
 
+
     ArrayList<Button> buttonsForMonsterCardAttribute;
     VBox vboxForMonsterCardAttribute;
     ArrayList<Button> buttonsForMonsterCardFamily;
@@ -64,15 +65,18 @@ public class CardCreatorController implements Initializable {
     ArrayList<Button> buttonsForMonsterCardValues;
     VBox vboxForMonsterCardValues;
 
+
     ArrayList<Button> buttonsForGettingSummoningRequirement;
     ArrayList<Integer> selectedSummoningRequirements;
     VBox vBoxForSummoningRequirement;
     Button finishButtonForSummoningRequirement;
 
+
     ArrayList<Button> buttonsForUponSummoningEffect;
     ArrayList<Integer> selectedUponSummoningEffect;
     VBox vBoxForUponSummoningEffect;
     Button buttonForFinishUponSummoningEffect;
+
 
     ArrayList<Button> buttonsForBeingAttackedEffect;
     ArrayList<Integer> selectedBeingAttackedEffect;
@@ -80,8 +84,16 @@ public class CardCreatorController implements Initializable {
     Button buttonForFinishBeingAttackedEffect;
 
 
+    ArrayList<Button> buttonsForContinuousMonsterEffect;
+    ArrayList<Integer> selectedContinuousMonsterEffect;
+    VBox vBoxForContinuousMonsterEffect;
+    Button buttonForFinishContinuousMonsterEffect;
 
 
+    ArrayList<Button> buttonsForFlipEffect;
+    ArrayList<Integer> selectedFlipEffect;
+    VBox vBoxForFlipEffect;
+    Button buttonForFinishFlipEffect;
 
 
 
@@ -603,6 +615,11 @@ public class CardCreatorController implements Initializable {
 
     }
 
+
+
+
+
+
     private void getBeingAttackedEffectFromUser() {
         //should be commented
         System.out.println(selectedUponSummoningEffect);
@@ -649,12 +666,114 @@ public class CardCreatorController implements Initializable {
 
     }
 
+
+
+
+
+
+
     private void getContinuousMonsterEffectFromUser() {
         System.out.println(selectedBeingAttackedEffect);
         anchorPane.getChildren().remove(vBoxForBeingAttackedEffect);
         anchorPane.getChildren().remove(buttonForFinishBeingAttackedEffect);
 
+
+
+        buttonsForContinuousMonsterEffect = new ArrayList<>();
+        buttonForFinishContinuousMonsterEffect = new Button("OK");
+        ContinuousMonsterEffect[] continuousMonsterEffects = ContinuousMonsterEffect.values();
+
+        for (ContinuousMonsterEffect continuousMonsterEffect : continuousMonsterEffects) {
+            String buttonName = continuousMonsterEffect.toString();
+            buttonsForContinuousMonsterEffect.add(new Button(buttonName));
+        }
+
+        selectedContinuousMonsterEffect = new ArrayList<>();
+
+        for (int i = 0; i < buttonsForContinuousMonsterEffect.size(); i++) {
+            int finalI = i;
+            buttonsForContinuousMonsterEffect.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedContinuousMonsterEffect, buttonsForContinuousMonsterEffect);
+                }
+            });
+        }
+
+        vBoxForContinuousMonsterEffect = new VBox();
+        vBoxForContinuousMonsterEffect.setLayoutX(400);
+        vBoxForContinuousMonsterEffect.setLayoutY(100);
+        buttonForFinishContinuousMonsterEffect.setLayoutX(400);
+        buttonForFinishContinuousMonsterEffect.setLayoutY(400);
+        buttonForFinishContinuousMonsterEffect.setOnAction(ActionEvent -> getFlipEffectFromUser());
+
+        for (Button button : buttonsForContinuousMonsterEffect) {
+            vBoxForContinuousMonsterEffect.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBoxForContinuousMonsterEffect);
+        anchorPane.getChildren().add(buttonForFinishContinuousMonsterEffect);
+
+
     }
+
+
+
+
+
+
+
+    private void getFlipEffectFromUser() {
+        System.out.println(selectedContinuousMonsterEffect);
+        anchorPane.getChildren().remove(vBoxForContinuousMonsterEffect);
+        anchorPane.getChildren().remove(buttonForFinishContinuousMonsterEffect);
+
+
+
+        buttonsForFlipEffect = new ArrayList<>();
+        buttonForFinishFlipEffect = new Button("OK");
+
+        FlipEffect[] flipEffects = FlipEffect.values();
+
+        for (FlipEffect flipEffect : flipEffects) {
+            String buttonName = flipEffect.toString();
+            buttonsForFlipEffect.add(new Button(buttonName));
+        }
+
+
+        selectedFlipEffect = new ArrayList<>();
+
+        for (int i = 0; i < buttonsForFlipEffect.size(); i++) {
+            int finalI = i;
+            buttonsForFlipEffect.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedFlipEffect, buttonsForFlipEffect);
+                }
+            });
+        }
+
+
+        vBoxForFlipEffect = new VBox();
+        vBoxForFlipEffect.setLayoutY(100);
+        vBoxForFlipEffect.setLayoutX(400);
+        buttonForFinishFlipEffect.setLayoutY(400);
+        buttonForFinishFlipEffect.setLayoutX(400);
+        buttonForFinishFlipEffect.setOnAction(ActionEvent -> System.out.println(selectedFlipEffect));
+
+        for (Button button : buttonsForFlipEffect) {
+            vBoxForFlipEffect.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBoxForFlipEffect);
+        anchorPane.getChildren().add(buttonForFinishFlipEffect);
+    }
+
+
+
+
+
+
 
     private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
         if (integersValues.contains(finalI)) {
@@ -668,11 +787,18 @@ public class CardCreatorController implements Initializable {
     }
 
 
+
+
+
+
     private void removeThingsInGetLevelMonsterCard() {
         anchorPane.getChildren().remove(labelForGettingLevelMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingLevelMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingLevelMonsterCard);
     }
+
+
+
 
     private void removeThingsInGetDefencePowerMonsterCard() {
         anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
@@ -680,23 +806,40 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().remove(buttonForGettingDefencePowerMonsterCard);
     }
 
+
+
+
+
     private void removeThingsInContinueGettingMonsterInformation() {
         anchorPane.getChildren().remove(labelForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingAttackPowerMonsterCard);
     }
 
+
+
+
+
     private void continueGettingTrapInformation() {
     }
+
+
+
 
     private void continueGettingSpellInformation() {
 
     }
+
+
+
 
     private void removeThingsInTheGetNumberOfAllowedUsages() {
         anchorPane.getChildren().remove(labelForGettingNumberOfAllowedUsagesFromUser);
         anchorPane.getChildren().remove(buttonOneForNumberOfAllowedUsages);
         anchorPane.getChildren().remove(buttonThreeForNumberOfAllowedUsages);
     }
+
+
+
 
 }
