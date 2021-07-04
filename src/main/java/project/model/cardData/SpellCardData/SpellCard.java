@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.scene.image.Image;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.*;
+import project.controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.LogicalActivationRequirement;
+import project.controller.duel.CardEffects.SpellEffectEnums.NormalSpellCardEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.RitualSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.General.CardType;
-
 
 public class SpellCard extends Card {
     private int highestNumberOfTurnsOfActivation;
@@ -30,8 +37,8 @@ public class SpellCard extends Card {
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
-            HashMap<String, List<String>> enumValues) {
-        super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice);
+            HashMap<String, List<String>> enumValues, Image image) {
+        super(cardName, CardType.SPELL, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, image);
         this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
         this.numberOfTurnsForActivation = numberOfTurnsForActivation;
         this.oncePerTurnCardEffectUsed = false;
@@ -46,98 +53,105 @@ public class SpellCard extends Card {
         this.sentToGraveyardEffects = new ArrayList<>();
         this.userReplyForActivations = new ArrayList<>();
         this.cardLocationsToWhichEquipSpellIsApplied = new ArrayList<>();
-        if (cardName.equals("DarkHole")) {
+        if (cardName.equals("dark hole")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD);
-        } else if (cardName.equals("HarpiesFeatherDuster")) {
+        } else if (cardName.equals("harpie's feather duster")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS);
-        } else if (cardName.equals("Raigeki")) {
+        } else if (cardName.equals("raigeki")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS);
-        } else if (cardName.equals("SwordOfDarkDestruction")) {
+        } else if (cardName.equals("sword of dark destruction")) {
             equipSpellEffects.add(EquipSpellEffect.FIEND_OR_SPELLCASTER_EQUIPPED_MONSTER_GAINS_400_ATK_LOSE_200_DEF);
             logicalActivationRequirements
-                .add(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER);
+                    .add(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_FIEND_OR_SPELLCASTER_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("BlackPendant")) {
+        } else if (cardName.equals("black pendant")) {
             equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_500_ATK);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("UnitedWeStand")) {
+        } else if (cardName.equals("united we stand")) {
             equipSpellEffects
-                .add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_800_ATK_DEF_FOR_EACH_FACE_UP_MONSTER_OWNER_CONTROLS);
+                    .add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_800_ATK_DEF_FOR_EACH_FACE_UP_MONSTER_OWNER_CONTROLS);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("MagnumShield")) {
+        } else if (cardName.equals("magnum shield")) {
             equipSpellEffects.add(EquipSpellEffect.WARRIOR_EQUIPPED_MONSTER_IF_DEFENSE_POSITION_GAIN_DEF_EQUAL_TO_ATK);
             equipSpellEffects.add(EquipSpellEffect.WARRIOR_EQUIPPED_MONSTER_IF_ATTACK_POSITION_GAIN_ATK_EQUAL_TO_DEF);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_WARRIOR_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_WARRIOR_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("Umiiruka")) {
+        } else if (cardName.equals("umiruka")) {
             fieldSpellEffects.add(FieldSpellEffect.AQUA_GAINS_500_ATK);
             fieldSpellEffects.add(FieldSpellEffect.AQUA_LOSES_400_DEF);
-        } else if (cardName.equals("ClosedForest")) {
+        } else if (cardName.equals("closed forest")) {
             fieldSpellEffects.add(FieldSpellEffect.BEAST_MONSTERS_OWNER_CONTROLS_GAIN_100_ATK_FOR_EACH_MONSTER_IN_GY);
-        } else if (cardName.equals("Forest")) {
+        } else if (cardName.equals("forest")) {
             fieldSpellEffects.add(FieldSpellEffect.INSECT_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.BEAST_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.BEASTWARRIOR_GAIN_200_ATK_DEF);
-        } else if (cardName.equals("Yami")) {
+        } else if (cardName.equals("yami")) {
             fieldSpellEffects.add(FieldSpellEffect.FIEND_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.SPELLCASTER_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.FAIRY_LOSE_200_ATK_DEF);
         } else if (cardName.equals("ring of defense")) {
-            quickSpellEffects.add(QuickSpellEffect.TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0);
-            logicalActivationRequirements.add(LogicalActivationRequirement.TRAP_CARD_INFLICTING_DAMAGE_MUST_BE_ACTIVATED);
-        } else if (cardName.equals("MysticalSpaceTyphoon")) {
+            quickSpellEffects
+                    .add(QuickSpellEffect.TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.TRAP_CARD_INFLICTING_DAMAGE_MUST_BE_ACTIVATED);
+        } else if (cardName.equals("mystical space typhoon")) {
             quickSpellEffects.add(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_TRAP_CARD_IN_FIELD);
-        } else if (cardName.equals("TwinTwisters")) {
+        } else if (cardName.equals("twin twisters")) {
             quickSpellEffects.add(QuickSpellEffect.DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
             userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_UP_TO_TWO_SPELL_TRAP_CARDS_IN_FIELD);
-        } else if (cardName.equals("MessengerOfPeace")) {
+        } else if (cardName.equals("messenger of peace")) {
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK);
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD);
-        } else if (cardName.equals("SpellAbsorption")) {
+        } else if (cardName.equals("spell absorption")) {
             continuousSpellCardEffects
-                .add(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS);
-        } else if (cardName.equals("SupplySquad")) {
+                    .add(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS);
+        } else if (cardName.equals("supply squad")) {
             continuousSpellCardEffects
-                .add(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD);
-        } else if (cardName.equals("PotOfGreed")) {
+                    .add(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD);
+        } else if (cardName.equals("pot of greed")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DRAW_2_CARDS);
-        } else if (cardName.equals("ChangeOfHeart")) {
+        } else if (cardName.equals("change of heart")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.CONTROL_ONE_OF_OPPONENTS_MONSTERS_UNTIL_END_PHASE);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_ZONE_SLOT_EMPTY);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_ZONE_SLOT_EMPTY);
             logicalActivationRequirements.add(LogicalActivationRequirement.OPPONENT_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_OF_OPPONENTS_MONSTERS);
-        } else if (cardName.equals("SwordsOfRevealingLight")) {
+        } else if (cardName.equals("swords of revealing light")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.FLIP_OPPONENT_MONSTER_CARDS);
-            continuousSpellCardEffects.add(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK);
-            continuousSpellCardEffects.add(ContinuousSpellCardEffect.NUMBER_OF_TURNS_OF_ACTIVATION_REDUCES_BY_1_IN_EACH_TURN);
-        } else if (cardName.equals("Terraforming")) {
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK);
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.NUMBER_OF_TURNS_OF_ACTIVATION_REDUCES_BY_1_IN_EACH_TURN);
+        } else if (cardName.equals("terraforming")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.ADD_SPELL_FIELD_CARD_FROM_DECK_TO_HAND);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_FIELD_CARD_FROM_OWNER_DECK);
-        } else if (cardName.equals("MonsterReborn")) {
+        } else if (cardName.equals("monster reborn")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_1_MONSTER_IN_EITHER_GY);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_EITHER_GY);
-            userReplyForActivations.add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
-        } else if (cardName.equals("AdvancedRitualArt")) {
+            userReplyForActivations
+                    .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
+        } else if (cardName.equals("advanced ritual art")) {
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND);
             logicalActivationRequirements.add(
-                LogicalActivationRequirement.OWNER_MUST_HAVE_CARDS_WITH_SUM_OF_LEVELS_AT_LEAST_RITUAL_MONSTERS_LEVEL_IN_DECK);
+                    LogicalActivationRequirement.OWNER_MUST_HAVE_CARDS_WITH_SUM_OF_LEVELS_AT_LEAST_RITUAL_MONSTERS_LEVEL_IN_DECK);
             ritualSpellEffects.add(
-                RitualSpellEffect.SEND_NORMAL_MONSTERS_WITH_SUM_OF_LEVELS_EQUAL_TO_MONSTERS_LEVEL_FROM_DECK_TO_GRAVEYARD);
+                    RitualSpellEffect.SEND_NORMAL_MONSTERS_WITH_SUM_OF_LEVELS_EQUAL_TO_MONSTERS_LEVEL_FROM_DECK_TO_GRAVEYARD);
             ritualSpellEffects.add(RitualSpellEffect.RITUAL_SUMMON_CHOSEN_MONSTER_FROM_HAND);
             userReplyForActivations.add(
-                UserReplyForActivation.CHOOSE_NORMAL_MONSTERS_FROM_YOUR_DECK_WITH_SUM_OF_LEVELS_EQUAL_TO_A_RITUAL_MONSTER_LEVEL);
+                    UserReplyForActivation.CHOOSE_NORMAL_MONSTERS_FROM_YOUR_DECK_WITH_SUM_OF_LEVELS_EQUAL_TO_A_RITUAL_MONSTER_LEVEL);
             userReplyForActivations.add(
-                UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE);
+                    UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE);
             userReplyForActivations
-                .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
+                    .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
         }
         if (enumValues != null) {
             setEnumValues(enumValues);
@@ -146,10 +160,9 @@ public class SpellCard extends Card {
 
     public SpellCard(SpellCard spellCard) {
         super(spellCard.getCardName(), CardType.SPELL, spellCard.getCardDescription(), spellCard.getCardPosition(),
-                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice());
+                spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice(), spellCard.getImage());
         this.highestNumberOfTurnsOfActivation = spellCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
-        this.oncePerTurnCardEffectUsed = spellCard.isOncePerTurnCardEffectUsed();
         this.spellCardValue = spellCard.getSpellCardValue();
         this.continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
         this.equipSpellEffects = spellCard.getEquipSpellEffects();
@@ -160,7 +173,6 @@ public class SpellCard extends Card {
         this.ritualSpellEffects = spellCard.getRitualSpellEffects();
         this.sentToGraveyardEffects = spellCard.getSentToGraveyardEffects();
         this.userReplyForActivations = spellCard.getUserReplyForActivations();
-        this.cardLocationsToWhichEquipSpellIsApplied = spellCard.getCardLocationsToWhichEquipSpellIsApplied();
     }
 
     public int getHighestNumberOfTurnsOfActivation() {
@@ -284,5 +296,39 @@ public class SpellCard extends Card {
     @Override
     public Object clone() {
         return new SpellCard(this);
+    }
+
+    public String[] toCSVFormatString() {
+        List<String> csvArray = new ArrayList<>();
+        csvArray.add(  cardName );
+        csvArray.add("Spell");
+        csvArray.add(spellCardValue +"");
+        csvArray.add(cardDescription + "");
+        csvArray.add(numberOfAllowedUsages == 3 ? "Unlimited" : "Limited" );
+        csvArray.add(cardPrice + "");
+        csvArray.add(toCSVformatEffectsOfCards(continuousSpellCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(equipSpellEffects) );
+        csvArray.add( toCSVformatEffectsOfCards(fieldSpellEffects));
+        csvArray.add( toCSVformatEffectsOfCards(logicalActivationRequirements));
+        csvArray.add( toCSVformatEffectsOfCards(normalSpellCardEffects) );
+        csvArray.add(toCSVformatEffectsOfCards(sentToGraveyardEffects));
+        csvArray.add( toCSVformatEffectsOfCards(quickSpellEffects));
+        csvArray.add(toCSVformatEffectsOfCards(ritualSpellEffects) );
+        csvArray.add( toCSVformatEffectsOfCards(userReplyForActivations) );
+        String[] res = new String[csvArray.size()];
+        res = csvArray.toArray(res);
+        return res;
+    }
+
+    private String toCSVformatEffectsOfCards(ArrayList effects) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("#");
+        for (int i = 0; i < effects.size(); i++) {
+            stringBuilder.append(effects.get(i));
+            if (i + 1 < effects.size()) {
+                stringBuilder.append("#" );
+            }
+        }
+        return stringBuilder.toString();
     }
 }

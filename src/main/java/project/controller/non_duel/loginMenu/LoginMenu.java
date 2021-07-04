@@ -44,7 +44,7 @@ public class LoginMenu {
         String username = LoginMenuPatterns.findUsernameCreateUser(command);
         String password = LoginMenuPatterns.findPasswordCreateUser(command);
         String nickname = LoginMenuPatterns.findNicknameCreateUser(command);
-        Storage.addUserToAllUsers(new User(username, nickname, password));
+      //  Storage.addUserToAllUsers(new User(username, nickname, password));
         return "user created successfully!";
     }
 
@@ -67,7 +67,7 @@ public class LoginMenu {
 
     private String loginUser(String command) {
         String username = LoginMenuPatterns.findUsernameLoginUser(command);
-        Profile.setOnlineUser(Storage.getUserByName(username));
+     //   Profile.setOnlineUser(Storage.getUserByName(username));
         return "user logged in successfully!";
     }
 

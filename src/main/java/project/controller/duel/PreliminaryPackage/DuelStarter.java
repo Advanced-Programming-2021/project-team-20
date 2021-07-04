@@ -1,5 +1,13 @@
 package project.controller.duel.PreliminaryPackage;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import project.view.LoginController;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
@@ -9,16 +17,9 @@ import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class StartDuel {
+public class DuelStarter {
 
     private boolean isDuelStarted = false;
-    private GameManager gameManager = new GameManager();
 
     public String findCommand(String command) {
 
@@ -36,18 +37,14 @@ public class StartDuel {
             return "there is no player with this username";
         }
         User secondUser = Storage.getUserByName(foundCommands.get("secondPlayer"));
-        User firstUser = Profile.getOnlineUser();
+        User firstUser = LoginController.getOnlineUser();
         int numberOfRounds = Integer.parseInt(foundCommands.get("rounds"));
-        Deck firstUserActiveDeck = getActiveDeck(firstUser);
-        if (firstUserActiveDeck == null) {
+        if (getActiveDeck(firstUser) == null) {
             return firstUser.getName() + " has no active deck";
         }
-
-        Deck secondUserActiveDeck = getActiveDeck(secondUser);
-        if (secondUserActiveDeck == null) {
+        if (getActiveDeck(secondUser) == null) {
             return secondUser.getName() + " has no active deck";
         }
-
         if (!isThisDeckValid(firstUser)) {
             return firstUser.getName() + "’s deck is invalid";
         }
@@ -58,9 +55,40 @@ public class StartDuel {
             return "number of rounds is not supported";
         }
 
-        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
+        // startNewGame(firstUser, secondUser, numberOfRounds);
         isDuelStarted = true;
         return "duel successfully started!\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
+    }
+
+    public String createGame(String firstUserName, String secondUserName, int numberOfRounds) {
+        if (!doesThisUserNameExist(firstUserName)) {
+            return "user " + firstUserName + " not found";
+        }
+        if (!doesThisUserNameExist(secondUserName)) {
+            return "user " + secondUserName + " not found";
+        }
+
+        User firstUser = Storage.getUserByName(firstUserName);
+        User secondUser = Storage.getUserByName(secondUserName);
+        Deck firstUserActiveDeck = getActiveDeck(firstUser);
+        if (firstUserActiveDeck == null) {
+            return firstUserName + " has no active deck";
+        }
+
+        Deck secondUserActiveDeck = getActiveDeck(secondUser);
+        if (secondUserActiveDeck == null) {
+            return secondUserName + " has no active deck";
+        }
+
+        if (!isThisDeckValid(firstUser)) {
+            return firstUserName + " has not valid deck";
+        }
+
+        if (!isThisDeckValid(secondUser)) {
+            return secondUserName + " has not valid deck";
+        }
+        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
+        return "game started";
     }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber, Deck firstUserActiveDeck,
@@ -72,10 +100,12 @@ public class StartDuel {
         ArrayList<Card> secondUserSideDeck = getMainOrSideDeckCards(secondUserActiveDeck, false);
         Collections.shuffle(firstUserMainDeck);
         Collections.shuffle(secondUserMainDeck);
+        GameManager gameManager = new GameManager();
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
                 secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
         GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
         GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+
     }
 
     private ArrayList<Card> getMainOrSideDeckCards(Deck activeDeck, boolean isCardsInMainDeck) {
@@ -120,7 +150,7 @@ public class StartDuel {
         return false;
     }
 
-    private Deck getActiveDeck(User user) {
+    public Deck getActiveDeck(User user) {
         HashMap<String, Deck> allDecks = user.getDecks();
         for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
             if (allDecks.get(entry.getKey()).getIsDeckActive())

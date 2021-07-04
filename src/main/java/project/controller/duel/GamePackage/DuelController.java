@@ -9,7 +9,7 @@ import project.controller.duel.GamePackage.ActionConductors.NormalSummonConducto
 import project.controller.duel.GamePackage.ai.AI;
 import project.controller.duel.GamePhaseControllers.*;
 import project.controller.duel.PreliminaryPackage.GameManager;
-import project.controller.duel.PreliminaryPackage.StartDuel;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.Utility.Utility;
 import project.controller.duel.cheat.Cheat;
 import project.controller.non_duel.mainController.MainController;
@@ -142,7 +142,7 @@ public class DuelController {
         }
 
         if (!isPlayersChangedDecks) {
-            return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(string, 0);
+        //    return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(string, 0);
         } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
@@ -534,7 +534,7 @@ public class DuelController {
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         MainController mainController = MainController.getInstance();
-        mainController.setDuel(new StartDuel());
+      //  mainController.setDuel(new StartDuel());
         mainController.exitMenu();
         isGameOver = true;
         return winnerUser.getName() + " won the whole match with score: "
