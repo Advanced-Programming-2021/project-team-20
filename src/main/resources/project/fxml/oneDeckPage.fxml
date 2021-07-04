@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background3" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.DeckMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background3" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.DeckMenuController">
    <children>
       <Rectangle fx:id="shownCardRectangle" arcHeight="20.0" arcWidth="20.0" height="385.0" layoutX="15.0" layoutY="68.0" stroke="BLACK" strokeType="INSIDE" width="213.0" />
       <Button fx:id="backbtn" layoutX="64.0" layoutY="645.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="31.0" prefWidth="116.0" text="back" />

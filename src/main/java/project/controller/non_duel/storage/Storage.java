@@ -309,7 +309,7 @@ public class Storage {
             fileReader.close();
 
             if (rootNode.isJsonObject()) {
-
+                  
                 JsonObject details = rootNode.getAsJsonObject();
                 User user = new User(details.get("name").getAsString(), details.get("nickname").getAsString(),
                         details.get("password").getAsString(), details.get("imagePath").getAsString());
@@ -318,6 +318,10 @@ public class Storage {
                 user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
             }
+        }
+
+        for( int i = 0; i < allUsers.size(); i ++){
+            System.out.println(allUsers.get(i).getName() + allUsers.get(i).getPassword());
         }
     }
 

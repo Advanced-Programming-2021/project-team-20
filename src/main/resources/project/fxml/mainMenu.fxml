@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.MainMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.MainMenuController">
    <children>
       <Button fx:id="duelbtn" layoutX="402.0" layoutY="212.0" mnemonicParsing="false" onAction="#duelMenu" prefHeight="25.0" prefWidth="195.0" text="duel" />
       <Button fx:id="deckbtn" layoutX="402.0" layoutY="300.0" mnemonicParsing="false" onAction="#goToDeckMenu" prefHeight="25.0" prefWidth="195.0" text="deck" />

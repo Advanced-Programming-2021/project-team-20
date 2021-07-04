@@ -47,15 +47,14 @@ public class LoginController implements Initializable {
             passwordField.setText("");
             usernameField.setText("");
         } else if (Storage.getUserByName(usernameField.getText()) == null) {
-            showAlert("THIS USER DOES NOT EXIST");
+            showAlert("USERNAME AND PASSWORD DID NOT MATCH");
             passwordField.setText("");
             usernameField.setText("");
-        } else if (Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
-            showAlert("INCORRECT PASSWORD");
+        } else if (!Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
+            showAlert("USERNAME AND PASSWORD DID NOT MATCH");
             passwordField.setText("");
             usernameField.setText("");
         } else {
-            
             setOnlineUser(Storage.getUserByName(usernameField.getText()));
             try {
                 new MainView().changeView("/project/fxml/mainMenu.fxml");

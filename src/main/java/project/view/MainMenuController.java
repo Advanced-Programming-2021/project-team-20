@@ -51,20 +51,11 @@ public class MainMenuController implements Initializable {
     }
 
     public void duelMenu() {
-        DuelStarter duelStarter = new DuelStarter();
-        duelStarter.createGame("JustMonster", "reza", 3);
-        AnchorPane pane = null;
         try {
-            pane = FXMLLoader.load(getClass().getResource("/project/fxml/changeCardsBetweenTwoRoundsPage.fxml"));
+        new MainView().changeView("/project/fxml/startDuelPage.fxml");
         } catch (IOException e) {
-            e.printStackTrace();
+        e.printStackTrace();
         }
-        new ChangeCardsBetweenTwoRoundsController().showPage(pane, "JustMonster", "JustMonster");
-        // try {
-        // new MainView().changeView("/project/fxml/startDuelPage.fxml");
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
     }
 
     public void goToDeckMenu() {

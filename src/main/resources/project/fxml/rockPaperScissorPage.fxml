@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background8" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.RockPaperScissorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background8" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.RockPaperScissorController">
    <children>
       <Rectangle fx:id="stone1Rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="649.0" y="453.0" />
       <Rectangle fx:id="paper1Rectangle" arcHeight="5.0" arcWidth="5.0" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="451.0" y="453.0" />
