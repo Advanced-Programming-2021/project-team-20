@@ -584,14 +584,14 @@ public class DuelBoard {
         for (int i = 0; i < allCardsInMainDeck.size(); i++) {
             if (allMonsterCards.containsKey(allCardsInMainDeck.get(i))) {
                 MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(allCardsInMainDeck.get(i));
-                allCardsInDeck.set(i, (MonsterCard) monsterCard.clone());
+                allCardsInDeck.add( (MonsterCard) monsterCard.clone());
             } else if (allSpellAndTrapCards.containsKey(allCardsInMainDeck.get(i))) {
                 if (Card.isCardASpell(allSpellAndTrapCards.get(allCardsInMainDeck.get(i)))) {
                     SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(allCardsInMainDeck.get(i));
-                    allCardsInDeck.set(i, (SpellCard) spellCard.clone());
+                    allCardsInDeck.add((SpellCard) spellCard.clone());
                 } else {
                     TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(allCardsInMainDeck.get(i));
-                    allCardsInDeck.set(i, (TrapCard) trapCard.clone());
+                    allCardsInDeck.add((TrapCard) trapCard.clone());
                 }
             }
         }

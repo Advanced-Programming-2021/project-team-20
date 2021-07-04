@@ -50,9 +50,9 @@ public class ControllerForView {
             }
             RowOfCardLocation rowOfCardLocation = viewLittleInformation.getRowOfCardLocation();
             boolean isFirstPlayerChoosing = viewLittleInformation.isFirstPlayerChoosing();
-            System.out.println("this is the input im receiving " + rowOfCardLocation + " pp " + isFirstPlayerChoosing);
+         //   System.out.println("this is the input im receiving " + rowOfCardLocation + " pp " + isFirstPlayerChoosing);
             DuelView.setCardLocationToSendCardTo(GameManager.getDuelBoardByIndex(0).giveAvailableCardLocationForUse(rowOfCardLocation, isFirstPlayerChoosing));
-            System.out.println("final card location given is " + DuelView.getCardLocationToSendCardTo().getRowOfCardLocation() + " and has index " + DuelView.getCardLocationToSendCardTo().getIndex());
+        //    System.out.println("final card location given is " + DuelView.getCardLocationToSendCardTo().getRowOfCardLocation() + " and has index " + DuelView.getCardLocationToSendCardTo().getIndex());
         }
     }
 
@@ -66,11 +66,11 @@ public class ControllerForView {
             y = ((TwoDimensionalPoint) mouseOrDragEvent).getY();
         } else if (cardView == null || cardView.getUpperLeftX() < 0 || cardView.getUpperLeftY() < 0) {
             if (mouseOrDragEvent instanceof MouseEvent) {
-                System.out.println("this is a mouse event babe");
+           //     System.out.println("this is a mouse event babe");
                 x = ((MouseEvent) mouseOrDragEvent).getSceneX();
                 y = ((MouseEvent) mouseOrDragEvent).getSceneY();
             } else if (mouseOrDragEvent instanceof DragEvent) {
-                System.out.println("this is a drag event babe");
+           //     System.out.println("this is a drag event babe");
                 x = ((DragEvent) mouseOrDragEvent).getSceneX();
                 y = ((DragEvent) mouseOrDragEvent).getSceneY();
             }
@@ -80,8 +80,8 @@ public class ControllerForView {
             x = bounds.getMinX();
             y = bounds.getMinY();
         }
-        System.out.println("x is " + x);
-        System.out.println("y is " + y);
+        // System.out.println("x is " + x);
+        // System.out.println("y is " + y);
         //if (x )
         CardView cardViewAnalyzing = null;
         if (cardView == null || cardView.getUpperLeftX() < 0 || cardView.getUpperLeftY() < 0) {
@@ -93,10 +93,10 @@ public class ControllerForView {
         } else {
             cardViewAnalyzing = cardView;
         }
-        System.out.println("cardViewAnalyzing is " + cardViewAnalyzing);
+     //   System.out.println("cardViewAnalyzing is " + cardViewAnalyzing);
         ArrayList<CardView> cardsInMyHand = giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
         for (int i = 0; i < cardsInMyHand.size(); i++) {
-            System.out.println(cardsInMyHand.get(i).getCard().getCardName() + " da I'm here");
+     //       System.out.println(cardsInMyHand.get(i).getCard().getCardName() + " da I'm here");
         }
         if (giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).contains(cardViewAnalyzing)) {
             //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
@@ -140,16 +140,16 @@ public class ControllerForView {
             //    return new CardLocation(RowOfCardLocation.ALLY_DECK_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.ALLY_DECK_ZONE) + 1);
             //}
         }
-        System.out.println("I am so sorry, this is not good");
+     //   System.out.println("I am so sorry, this is not good");
         double upperLeftXOfBattleField = DuelView.getBattleFieldView().getUpperLeftX();
         double upperLeftYOfBattleField = DuelView.getBattleFieldView().getUpperLeftY();
         double upperRightXOfBattleField = upperLeftXOfBattleField + DuelView.getBattleFieldView().getWidth();
         double lowerLeftYOfBattleField = upperLeftYOfBattleField + DuelView.getBattleFieldView().getHeight();
-        System.out.println("upperLeftXOfBattleField is " + upperLeftXOfBattleField);
-        System.out.println("upperRightXOfBattleField is " + upperRightXOfBattleField);
-        System.out.println("upperLeftYOfBattleField" + upperLeftYOfBattleField);
+        // System.out.println("upperLeftXOfBattleField is " + upperLeftXOfBattleField);
+        // System.out.println("upperRightXOfBattleField is " + upperRightXOfBattleField);
+        // System.out.println("upperLeftYOfBattleField" + upperLeftYOfBattleField);
         if (x - upperLeftXOfBattleField >= 146.4 && x - upperRightXOfBattleField <= -116.4) {
-            System.out.println("going inside");
+     //       System.out.println("going inside");
             if (y - upperLeftYOfBattleField >= 131 && y - upperLeftYOfBattleField <= 227) {
 
                 // return RowOfCardLocation.OPPONENT_SPELL_ZONE;
@@ -204,7 +204,7 @@ public class ControllerForView {
                 //return RowOfCardLocation.ALLY_SPELL_ZONE;
             }
         }
-        System.out.println("returning null");
+    //    System.out.println("returning null");
         return null;
     }
 
@@ -233,7 +233,7 @@ public class ControllerForView {
         DuelView.printChildrenInGroups();
         ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(0).getAllyCardsInHand();
         for (int i = 0; i < allyCardsInHand.size(); i++) {
-            System.out.println(allyCardsInHand.get(i).getCardName() + " sfdsfd");
+  //          System.out.println(allyCardsInHand.get(i).getCardName() + " sfdsfd");
         }
         ParallelTransition allyParallelTransition = new ParallelTransition();
         for (int i = 0; i < allyCardsInHand.size(); i++) {

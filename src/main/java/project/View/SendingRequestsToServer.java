@@ -13,7 +13,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Alert;
 import project.controller.duel.PreliminaryPackage.GameManager;
-import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.modelsforview.CardView;
@@ -21,17 +20,17 @@ import project.model.modelsforview.CardView;
 public class SendingRequestsToServer {
 
     public void sendNormalSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
-        System.out.println();
-        System.out.println();
-        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
+        // System.out.println();
+        // System.out.println();
+        // System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-        System.out.println("&" + output);
+        // System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("normal summon", true);
-        System.out.println("*" + output);
+        // System.out.println("*" + output);
         if (output.contains("successfully")) {
-            System.out.println("Am i really summoning");
+            // System.out.println("Am i really summoning");
             DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
         } else {
             DuelView.setCardLocationToSendCardTo(null);
@@ -47,7 +46,7 @@ public class SendingRequestsToServer {
     public void sendTributeSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-        System.out.println("&" + output);
+        // System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("tribute summon", true);
         if (output.contains("successfully")) {
@@ -65,10 +64,10 @@ public class SendingRequestsToServer {
     public void sendSpecialSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-        System.out.println("&" + output);
+        // System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("special summon", true);
-        System.out.println("*" + output);
+        // System.out.println("*" + output);
         if (output.contains("successfully")) {
             DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
         } else {
@@ -84,10 +83,10 @@ public class SendingRequestsToServer {
     public void sendRitualSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-        System.out.println("&" + output);
+        // System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("ritual summon", true);
-        System.out.println("*" + output);
+        // System.out.println("*" + output);
         if (output.contains("successfully")) {
             DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
         } else {
@@ -103,10 +102,10 @@ public class SendingRequestsToServer {
     public void sendSettingRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-        System.out.println("&&&&" + output);
+        // System.out.println("&&&&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("set", true);
-        System.out.println("*" + output);
+        // System.out.println("*" + output);
         if (output.contains("successfully")) {
             DuelView.getTransition().applyTransitionForSettingCard(cardView);
         } else {
@@ -122,10 +121,10 @@ public class SendingRequestsToServer {
     public void sendActivateEffectRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-        System.out.println("&" + output);
+        // System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("activate effect", true);
-        System.out.println("*" + output);
+        // System.out.println("*" + output);
         if (output.contains("activated")) {
             DuelView.getTransition().applyTransitionForActivatingSpellTrap(cardView);
         } else {

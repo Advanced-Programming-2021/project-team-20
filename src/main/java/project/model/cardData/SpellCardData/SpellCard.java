@@ -92,8 +92,10 @@ public class SpellCard extends Card {
             fieldSpellEffects.add(FieldSpellEffect.SPELLCASTER_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.FAIRY_LOSE_200_ATK_DEF);
         } else if (cardName.equals("ring of defense")) {
-            quickSpellEffects.add(QuickSpellEffect.TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0);
-            logicalActivationRequirements.add(LogicalActivationRequirement.TRAP_CARD_INFLICTING_DAMAGE_MUST_BE_ACTIVATED);
+            quickSpellEffects
+                    .add(QuickSpellEffect.TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.TRAP_CARD_INFLICTING_DAMAGE_MUST_BE_ACTIVATED);
         } else if (cardName.equals("mystical space typhoon")) {
             quickSpellEffects.add(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
@@ -116,22 +118,27 @@ public class SpellCard extends Card {
             normalSpellCardEffects.add(NormalSpellCardEffect.DRAW_2_CARDS);
         } else if (cardName.equals("change of heart")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.CONTROL_ONE_OF_OPPONENTS_MONSTERS_UNTIL_END_PHASE);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_ZONE_SLOT_EMPTY);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_ZONE_SLOT_EMPTY);
             logicalActivationRequirements.add(LogicalActivationRequirement.OPPONENT_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_OF_OPPONENTS_MONSTERS);
         } else if (cardName.equals("swords of revealing light")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.FLIP_OPPONENT_MONSTER_CARDS);
-            continuousSpellCardEffects.add(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK);
-            continuousSpellCardEffects.add(ContinuousSpellCardEffect.NUMBER_OF_TURNS_OF_ACTIVATION_REDUCES_BY_1_IN_EACH_TURN);
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK);
+            continuousSpellCardEffects
+                    .add(ContinuousSpellCardEffect.NUMBER_OF_TURNS_OF_ACTIVATION_REDUCES_BY_1_IN_EACH_TURN);
         } else if (cardName.equals("terraforming")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.ADD_SPELL_FIELD_CARD_FROM_DECK_TO_HAND);
-            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
+            logicalActivationRequirements
+                    .add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_FIELD_CARD_FROM_OWNER_DECK);
         } else if (cardName.equals("monster reborn")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_1_MONSTER_IN_EITHER_GY);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_EITHER_GY);
-            userReplyForActivations.add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
+            userReplyForActivations
+                    .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
         } else if (cardName.equals("advanced ritual art")) {
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND);
             logicalActivationRequirements.add(
@@ -289,5 +296,39 @@ public class SpellCard extends Card {
     @Override
     public Object clone() {
         return new SpellCard(this);
+    }
+
+    public String[] toCSVFormatString() {
+        List<String> csvArray = new ArrayList<>();
+        csvArray.add(  cardName );
+        csvArray.add("Spell");
+        csvArray.add(spellCardValue +"");
+        csvArray.add(cardDescription + "");
+        csvArray.add(numberOfAllowedUsages == 3 ? "Unlimited" : "Limited" );
+        csvArray.add(cardPrice + "");
+        csvArray.add(toCSVformatEffectsOfCards(continuousSpellCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(equipSpellEffects) );
+        csvArray.add( toCSVformatEffectsOfCards(fieldSpellEffects));
+        csvArray.add( toCSVformatEffectsOfCards(logicalActivationRequirements));
+        csvArray.add( toCSVformatEffectsOfCards(normalSpellCardEffects) );
+        csvArray.add(toCSVformatEffectsOfCards(sentToGraveyardEffects));
+        csvArray.add( toCSVformatEffectsOfCards(quickSpellEffects));
+        csvArray.add(toCSVformatEffectsOfCards(ritualSpellEffects) );
+        csvArray.add( toCSVformatEffectsOfCards(userReplyForActivations) );
+        String[] res = new String[csvArray.size()];
+        res = csvArray.toArray(res);
+        return res;
+    }
+
+    private String toCSVformatEffectsOfCards(ArrayList effects) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("#");
+        for (int i = 0; i < effects.size(); i++) {
+            stringBuilder.append(effects.get(i));
+            if (i + 1 < effects.size()) {
+                stringBuilder.append("#" );
+            }
+        }
+        return stringBuilder.toString();
     }
 }

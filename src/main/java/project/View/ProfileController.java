@@ -1,35 +1,32 @@
 package project.View;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import project.controller.non_duel.profile.Profile;
-import project.controller.non_duel.storage.Storage;
-import project.model.User;
 
 public class ProfileController implements Initializable {
+    private static final AlertType CONFIRMATION = null;
     @FXML
     private Rectangle rectangleImage;
     @FXML
@@ -80,49 +77,45 @@ public class ProfileController implements Initializable {
     public void changePassword(ActionEvent actionEvent) {
 
         if (currentPasswordField.getText().equals("") || newPasswordField.getText().equals("")) {
-            // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            // label.setText("FILL FIELDS");
+            showAlert("FILL FIELDS");
             currentPasswordField.setText("");
             newPasswordField.setText("");
             return;
         }
         String result = profile.changePassword(currentPasswordField.getText(), newPasswordField.getText());
         if (result.equals("current password is invalid")) {
-            // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            // label.setText("CURRENT PASSWORD IS WRONG");
-
+            showAlert("CURRENT PASSWORD IS WRONG");
         } else if (result.equals("please enter a new password")) {
-            // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            // label.setText("ENTER NEW PASSWORD");
-
+            showAlert("ENTER NEW PASSWORD");
+        } else {
+            showAlert("PASSWORD CHANGED SUCCESSFULLY!");
         }
-
         currentPasswordField.setText("");
         newPasswordField.setText("");
-        // else {} show successful change password message
+    }
 
+    private void showAlert(String message) {
+        Alert alert = new Alert(CONFIRMATION, message, ButtonType.OK);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
     }
 
     public void changeNickname(ActionEvent actionEvent) {
 
         if (newNicknameField.getText().equals("")) {
-            // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            // label.setText("FILL FIELDS");
+            showAlert("FILL FIELDS");
             return;
         }
 
         String result = profile.changeNickname(newNicknameField.getText());
         if (result.equals("user with nickname already exists")) {
-            // label.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            // label.setText("NEW NICKNAME IS REPEATED");
+            showAlert("NEW NICKNAME IS REPEATED");
             newNicknameField.setText("");
             return;
         }
 
         nicknameLabel.setText(newNicknameField.getText());
         newNicknameField.setText("");
-
-        // show successful message
+        showAlert("NICKNAME CHANGED SUCCESSFULLY!");
     }
 
     public void backToMainMenu() {

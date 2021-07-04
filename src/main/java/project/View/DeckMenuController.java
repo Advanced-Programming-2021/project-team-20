@@ -29,6 +29,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import project.controller.non_duel.deckCommands.DeckCommands;
@@ -43,12 +45,14 @@ public class DeckMenuController implements Initializable {
     private Button activateDeckbtn;
     @FXML
     private Label activatedStatusLabel;
+    @FXML
+    private Label deckNameLabel;
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
     private static List<Rectangle> allScrollBarRectangle;
     private static List<Rectangle> allScrollBarBackGroundRectangles;
     private static AnchorPane anchorPane;
-    private static String deckname = new String();
+    private static String deckname ;
     private Rectangle shownCardRectangle;
     private static List<Label> allCardDiscriptionLabels;
     private DeckCommands deckCommands = new DeckCommands();
@@ -60,11 +64,13 @@ public class DeckMenuController implements Initializable {
     private static boolean isAddedNecessaryThingsForTheFirstTime = false;
     private static Label equalActivatedStatusLabel;
     private static Button equalActivateDeckbtn;
+    private static Label equalDeckNameLabel;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         equalActivatedStatusLabel = activatedStatusLabel;
         equalActivateDeckbtn = activateDeckbtn;
+        equalDeckNameLabel = deckNameLabel;
     }
 
     public void showPage(AnchorPane pane, String chosenDeck) {
@@ -93,6 +99,7 @@ public class DeckMenuController implements Initializable {
         }
         shownCardRectangle = (Rectangle) pane.getChildren().get(0);
         shownCardRectangle.setFill(new ImagePattern(Storage.getUnknownCard().getImage()));
+        equalDeckNameLabel.setText(chosenDeck);
         MainView.changeScene(pane);
     }
 
@@ -109,7 +116,8 @@ public class DeckMenuController implements Initializable {
 
     private void showNmberOfCardsInLabels() {
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
-        sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(deckname, LoginController.getOnlineUser().getName());
+        sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(deckname,
+                LoginController.getOnlineUser().getName());
         if (sizeOfEachPart.get("mainDeckSize") < 40) {
             sizeOfMainDeckLabel.setTextFill(Color.RED);
         } else {
@@ -161,7 +169,6 @@ public class DeckMenuController implements Initializable {
     }
 
     private void transferCardToScrollBar(DragEvent e) {
-
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         Pane pane = (Pane) scrollPane.getContent();
@@ -181,29 +188,31 @@ public class DeckMenuController implements Initializable {
                 label.setText((Integer.parseInt(label.getText()) + 1) + "");
             }
         }
+
         deleteDraggedCard(transfferdRectangle);
         deckCommands.addCardToAllUselessCards(transfferdRectangle.getId(), LoginController.getOnlineUser().getName());
     }
 
     private void transferCardToMainOrSideDeck(DragEvent e, Pane pane, boolean isTransferToMainDeck) {
-        int numberOdCardsInMainoRSideDeck = pane.getChildren().size();
+        int numberOfCardsInMainoRSideDeck = pane.getChildren().size();
         Rectangle addedRectangle = null;
         if (isTransferToMainDeck) {
-            addedRectangle = allMainDeckRectangle.get(numberOdCardsInMainoRSideDeck);
+            addedRectangle = allMainDeckRectangle.get(numberOfCardsInMainoRSideDeck);
         } else {
-            addedRectangle = allSideDeckRectangle.get(numberOdCardsInMainoRSideDeck);
+            addedRectangle = allSideDeckRectangle.get(numberOfCardsInMainoRSideDeck);
         }
 
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
-        copyPropertyToTransferredCard(transfferdRectangle, addedRectangle);
-        pane.getChildren().add(addedRectangle);
         deleteDraggedCard(transfferdRectangle);
 
-        String nameOfAddedCard = addedRectangle.getId();
+        String nameOfAddedCard = transfferdRectangle.getId();
         if (nameOfAddedCard.contains("scrollBar")) {
             nameOfAddedCard = nameOfAddedCard.replace("scrollBar", "");
         }
-        deckCommands.addCardToMainOrSideDeck(deckname, nameOfAddedCard, isTransferToMainDeck, LoginController.getOnlineUser().getName());
+        copyPropertyToTransferredCard(transfferdRectangle, addedRectangle, nameOfAddedCard);
+        pane.getChildren().add(addedRectangle);
+        deckCommands.addCardToMainOrSideDeck(deckname, nameOfAddedCard, isTransferToMainDeck,
+                LoginController.getOnlineUser().getName());
     }
 
     private void deleteDraggedCard(Rectangle transfferdRectangle) {
@@ -222,9 +231,10 @@ public class DeckMenuController implements Initializable {
         deleteCardFromScrollBar(transfferdRectangle);
     }
 
-    private void copyPropertyToTransferredCard(Rectangle teransfferdRectangle, Rectangle addedRectangle) {
+    private void copyPropertyToTransferredCard(Rectangle teransfferdRectangle, Rectangle addedRectangle,
+            String cardName) {
         addedRectangle.setFill(teransfferdRectangle.getFill());
-        addedRectangle.setId(teransfferdRectangle.getId());
+        addedRectangle.setId(cardName);
         addOnDragDetectedEffectForCard(addedRectangle);
         addOnMouseEnteredEffectForCard(addedRectangle);
     }
@@ -321,23 +331,23 @@ public class DeckMenuController implements Initializable {
             rectangle.setId(scrollCards.get(i).getCardName() + "scrollBar");
             addOnDragDetectedEffectForCard(rectangle);
             addOnMouseEnteredEffectForCard(rectangle);
-            rectangle.setX(10);
-            backGrouRectangle.setX(10);
+            rectangle.setX(5);
+            backGrouRectangle.setX(5);
             Label label = allScrollBarLabels.get(i);
-            label.setLayoutX(35);
+            label.setLayoutX(30);
             label.setId(scrollCards.get(i).getCardName() + "label");
             if (i % 2 == 0) {
-                backGrouRectangle.setY(50 + 30 * i);
-                rectangle.setY(50 + 30 * i);
-                label.setLayoutY(87 + 30 * i);
+                backGrouRectangle.setY(5 + 30 * i);
+                rectangle.setY(5+30 * i);
+                label.setLayoutY(42 + 30 * i);
             }
             if (i % 2 == 1) {
-                rectangle.setY(50 + 30 * (i - 1));
+                rectangle.setY(5+ 30 * (i - 1));
                 rectangle.setX(rectangle.getX() + 50);
-                backGrouRectangle.setY(50 + 30 * (i - 1));
-                backGrouRectangle.setX(60);
+                backGrouRectangle.setY(5 + 30 * (i - 1));
+                backGrouRectangle.setX(55);
                 label.setLayoutX(label.getLayoutX() + 50);
-                label.setLayoutY(87 + 30 * (i - 1));
+                label.setLayoutY(42 + 30 * (i - 1));
             }
             if (!doesCardExistInUseLessCards(scrollCards.get(i).getCardName())) {
                 rectangle.setOpacity(0.5);
@@ -371,7 +381,8 @@ public class DeckMenuController implements Initializable {
                 }
             }
         }
-        deckCommands.deleteCardFromAllUselessCards(transfferdRectangle.getId().replace("scrollBar", ""), LoginController.getOnlineUser().getName());
+        deckCommands.deleteCardFromAllUselessCards(transfferdRectangle.getId().replace("scrollBar", ""),
+                LoginController.getOnlineUser().getName());
     }
 
     private int countNumberOfCardsInUselessCards(String cardname) {
@@ -421,7 +432,8 @@ public class DeckMenuController implements Initializable {
     }
 
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
-        deckCommands.deleteCardFromMainOrSideDeck(deckname, transfferdRectangle.getId(), isDeleteFromMainDeck, LoginController.getOnlineUser().getName());
+        deckCommands.deleteCardFromMainOrSideDeck(deckname, transfferdRectangle.getId(), isDeleteFromMainDeck,
+                LoginController.getOnlineUser().getName());
         int indexOfRemovedRectanlge = pane.getChildren().indexOf(transfferdRectangle);
         for (int i = indexOfRemovedRectanlge; i < pane.getChildren().size() - 1; i++) {
             Rectangle rectangle = (Rectangle) pane.getChildren().get(i);
@@ -437,9 +449,8 @@ public class DeckMenuController implements Initializable {
         String cardDiscription = card.getCardDescription();
         Pane pane = new Pane();
         Label label = allCardDiscriptionLabels.get(0);
-        label.setText(" " + cardName);
+        label.setText("  " + cardName);
         label.setTextFill(Color.YELLOW);
-        label.setFont(new Font(13));
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
@@ -447,7 +458,7 @@ public class DeckMenuController implements Initializable {
         int numberOfLabelUsed = 0;
         for (int i = 0; i < shortCardDescription.size(); i++) {
             label = allCardDiscriptionLabels.get(i + 1);
-            if (sentencesForEachLabel.length() >= 20) {
+            if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
                 label.setLayoutY(20 * (numberOfLabelUsed + 1));
@@ -459,7 +470,6 @@ public class DeckMenuController implements Initializable {
                 label.setLayoutY(20 * (numberOfLabelUsed + 1));
                 pane.getChildren().add(label);
             }
-
             sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
         }
 
@@ -574,6 +584,6 @@ public class DeckMenuController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new wholeDeckPageMenuController().showPage(pane);
+        new WholeDeckPageMenuController().showPage(pane);
     }
 }

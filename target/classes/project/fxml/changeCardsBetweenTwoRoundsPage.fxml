@@ -20,7 +20,7 @@
       <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#3ca1ff" height="651.0" layoutX="255.0" layoutY="39.0" stroke="#ffffffcd" strokeType="INSIDE" strokeWidth="4.0" width="75.0" />
       <Rectangle fx:id="shownCardRectangle" arcHeight="20.0" arcWidth="20.0" height="385.0" layoutX="25.0" layoutY="78.0" stroke="BLACK" strokeType="INSIDE" width="213.0" />
       <ScrollPane layoutX="25.0" layoutY="469.0" prefHeight="162.0" prefWidth="213.0" styleClass="chart-plot-background4" stylesheets="@../css/abc.css" />
-      <Label fx:id="decknameLabel" layoutX="192.0" layoutY="529.0" prefHeight="71.0" prefWidth="202.0" rotate="270.0" text="Label" textFill="WHITE">
+      <Label fx:id="deckNameLabel" layoutX="178.0" layoutY="531.0" prefHeight="71.0" prefWidth="230.0" rotate="270.0" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -133,5 +133,10 @@
             <Image url="@../images/cardSwapHeader.PNG" />
          </image>
       </ImageView>
+      <Label fx:id="showPlayerNameLabel" alignment="CENTER" layoutX="753.0" layoutY="172.0" prefHeight="95.0" prefWidth="351.0" rotate="90.0" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

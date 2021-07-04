@@ -1,8 +1,14 @@
 package project.View;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javazoom.jl.player.*;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,12 +37,23 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        // TODO
+        playMusic();
+    }
+
+    private void playMusic() {
+    //     String path = "src\\main\\resources\\project\\musics\\MAINMENU.mp3";
+    //     try{
+    //         FileInputStream fis = new FileInputStream(path);
+    //        Player playMP3 = new Player(fis);
+    //        playMP3.play();
+    //    }  catch(Exception e){
+    //         System.out.println(e);
+    //       }
     }
 
     public void duelMenu() {
         DuelStarter duelStarter = new DuelStarter();
-        duelStarter.createGame("JustMonster", "AI", 3);
+        duelStarter.createGame("JustMonster", "reza", 3);
         AnchorPane pane = null;
         try {
             pane = FXMLLoader.load(getClass().getResource("/project/fxml/changeCardsBetweenTwoRoundsPage.fxml"));
@@ -45,9 +62,9 @@ public class MainMenuController implements Initializable {
         }
         new ChangeCardsBetweenTwoRoundsController().showPage(pane, "JustMonster", "JustMonster");
         // try {
-        //     new MainView().changeView("/project/fxml/startDuelPage.fxml");
+        // new MainView().changeView("/project/fxml/startDuelPage.fxml");
         // } catch (IOException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
     }
 
@@ -58,7 +75,7 @@ public class MainMenuController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new wholeDeckPageMenuController().showPage(pane);
+        new WholeDeckPageMenuController().showPage(pane);
     }
 
     public void shopMenu() {

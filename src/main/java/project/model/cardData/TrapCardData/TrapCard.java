@@ -290,4 +290,41 @@ public class TrapCard extends Card {
     public Object clone() {
         return new TrapCard(this);
     }
+
+    public String[] toCSVFormatString() {
+        List<String> csvArray = new ArrayList<>();
+        csvArray.add(cardName);
+        csvArray.add("Spell");
+        csvArray.add(trapCardValue + "");
+        csvArray.add(cardDescription);
+        csvArray.add(numberOfAllowedUsages == 3 ? "Unlimited" : "Limited");
+        csvArray.add(cardPrice + "");
+        csvArray.add(toCSVformatEffectsOfCards(continuousTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(flipSummonTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(logicalActivationRequirements));
+        csvArray.add(toCSVformatEffectsOfCards(monsterAttackingTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(monsterEffectActivationTrapCardEffect));
+        csvArray.add(toCSVformatEffectsOfCards(normalSummonTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(normalTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(ritualSummonTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(specialSummonTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(spellCardActivationTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(trapCardActivationTrapCardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(userReplyForActivations));
+        String[] res = new String[csvArray.size()];
+        res = csvArray.toArray(res);
+        return res;
+    }
+
+    private String toCSVformatEffectsOfCards(ArrayList effects) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("#");
+        for (int i = 0; i < effects.size(); i++) {
+            stringBuilder.append(effects.get(i));
+            if (i + 1 < effects.size()) {
+                stringBuilder.append("#");
+            }
+        }
+        return stringBuilder.toString();
+    }
 }

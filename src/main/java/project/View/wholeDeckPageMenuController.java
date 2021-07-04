@@ -12,9 +12,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
@@ -22,7 +25,7 @@ import javafx.scene.shape.Rectangle;
 import project.controller.non_duel.deckCommands.DeckCommands;
 import project.model.Deck;
 
-public class wholeDeckPageMenuController implements Initializable {
+public class WholeDeckPageMenuController implements Initializable {
 
     @FXML
     private Button backbtn;
@@ -31,11 +34,15 @@ public class wholeDeckPageMenuController implements Initializable {
     @FXML
     private Button deleteDeckbtn;
     @FXML
+    private Button editDeckbtn;
+    @FXML
     private Button nextPagebtn;
     @FXML
     private Button previousPagebtn;
     @FXML
     private TextField createdDeckNameField;
+    @FXML
+    private Label deckNameLabel;
     private static List<Rectangle> fourRectangleToShowDecks;
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
     private static List<List<Deck>> decksInDifferentPages;
@@ -45,11 +52,19 @@ public class wholeDeckPageMenuController implements Initializable {
     private int currentPageToShowDecks = 0;
     private static Button equalToNextPagebtn;
     private static Button equalToPreviousPagebtn;
+    private static Button equalToDeleteDeckbtn;
+    private static Button equalToEditDeckbtn;
+    private static Label equalDeckNameLabel;
+    private boolean isEnteredMouse = false;
+    private Long firstTimeMouseEnteredRectangle = 0l;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         equalToNextPagebtn = nextPagebtn;
         equalToPreviousPagebtn = previousPagebtn;
+        equalToDeleteDeckbtn = deleteDeckbtn;
+        equalToEditDeckbtn = editDeckbtn;
+        equalDeckNameLabel = deckNameLabel;
     }
 
     public void showPage(AnchorPane pane) {
@@ -60,6 +75,7 @@ public class wholeDeckPageMenuController implements Initializable {
         addRectangleOfDecksToPage();
         addInformationLabelOfDeckToPane();
         createNewPage();
+        setEffectsOfEditAndDeleteButtons();
         setEffectOfpreviousAndnextCardsbtn();
         MainView.changeScene(pane);
     }
@@ -75,24 +91,34 @@ public class wholeDeckPageMenuController implements Initializable {
 
     private void addEffectsToFourRectangleToShowDeck() {
         fourRectangleToShowDecks = UIUtility.getFourRectangleToShowDecks();
+        showCardsInDeck();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
-            fourRectangleToShowDecks.get(i).setOnMouseEntered(MouseEvent -> {
-                // System.out.println("setOnMouseEntered");
+            fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent arg0) {
+                    firstTimeMouseEnteredRectangle = System.currentTimeMillis();
+                //  /   thread.start();
+                }
             });
-
+            
             fourRectangleToShowDecks.get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent t) {
                     chosenDeck = fourRectangleToShowDecks.get(index).getId();
-                    System.out.println(chosenDeck);
+                    setEffectsOfEditAndDeleteButtons();
+                    equalDeckNameLabel.setText(chosenDeck);
                 }
             });
 
             fourRectangleToShowDecks.get(i).setOnMouseExited(MouseEvent -> {
-                // System.out.println("setOnMouseExited");
+            
             });
         }
+    }
+
+    private void showCardsInDeck() {
+        System.out.println("x");
     }
 
     private void addRectangleOfDecksToPage() {
@@ -120,10 +146,6 @@ public class wholeDeckPageMenuController implements Initializable {
     }
 
     public void deleteDeck() {
-        if (chosenDeck.equals("")) {
-            //
-            return;
-        }
         deckCommands.deleteDeck(chosenDeck, LoginController.getOnlineUser().getName());
         if (decksInDifferentPages.get(currentPageToShowDecks).size() == 1) {
             if (currentPageToShowDecks != 0) {
@@ -144,6 +166,7 @@ public class wholeDeckPageMenuController implements Initializable {
         chosenDeck = "";
         createNewPage();
         setEffectOfpreviousAndnextCardsbtn();
+        setEffectsOfEditAndDeleteButtons();
     }
 
     private void editDecksInDifferentPageWhenCardDeleted() {
@@ -159,10 +182,6 @@ public class wholeDeckPageMenuController implements Initializable {
     }
 
     public void editDeck() {
-        if (chosenDeck.equals("")) {
-            //
-            return;
-        }
         AnchorPane pane = null;
         try {
             pane = FXMLLoader.load(getClass().getResource("/project/fxml/oneDeckPage.fxml"));
@@ -176,11 +195,16 @@ public class wholeDeckPageMenuController implements Initializable {
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
         String result = deckCommands.createDeck(createdDeckName, LoginController.getOnlineUser().getName());
+        if (createdDeckName.equals("")) {
+            showAlert("ENTER DECK NAME");
+            return;
+        }
         if (result.equals("deck already exists")) {
-            //
+            showAlert("DECK ALREADY EXISTS");
             createdDeckNameField.setText("");
             return;
         }
+        showAlert("DECK CREATED SUCCESSFULLY!");
         createdDeckNameField.setText("");
         Deck deck = LoginController.getOnlineUser().getDecks().get(createdDeckName);
         if (decksInDifferentPages.get(decksInDifferentPages.size() - 1).size() == 4) {
@@ -194,7 +218,11 @@ public class wholeDeckPageMenuController implements Initializable {
             }
         }
         setEffectOfpreviousAndnextCardsbtn();
+    }
 
+    private void showAlert(String message) {
+        Alert alert = new Alert(null, message, ButtonType.OK);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
     }
 
     private void setEffectOfpreviousAndnextCardsbtn() {
@@ -209,6 +237,16 @@ public class wholeDeckPageMenuController implements Initializable {
             equalToPreviousPagebtn.setDisable(true);
         } else {
             equalToPreviousPagebtn.setDisable(false);
+        }
+    }
+
+    private void setEffectsOfEditAndDeleteButtons() {
+        if (chosenDeck.equals("")) {
+            equalToEditDeckbtn.setDisable(true);
+            equalToDeleteDeckbtn.setDisable(true);
+        } else {
+            equalToDeleteDeckbtn.setDisable(false);
+            equalToEditDeckbtn.setDisable(false);
         }
     }
 
@@ -239,7 +277,8 @@ public class wholeDeckPageMenuController implements Initializable {
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
                     HashMap<String, Integer> sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(
-                            decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(), LoginController.getOnlineUser().getName());
+                            decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(),
+                            LoginController.getOnlineUser().getName());
 
                     labelsToShowInformationOfDeck.get("deckname" + i + "" + j)
                             .setText(sizeOfEachPart.get("mainDeckSize") + "");
@@ -281,6 +320,6 @@ public class wholeDeckPageMenuController implements Initializable {
     }
 
     public static void setAnchorPane(AnchorPane anchorPane) {
-        wholeDeckPageMenuController.anchorPane = anchorPane;
+        WholeDeckPageMenuController.anchorPane = anchorPane;
     }
 }

@@ -28,12 +28,12 @@ public class DestroyCardTransition extends Transition {
 
     public DestroyCardTransition(CardView cardView) {
         Bounds bounds = cardView.localToScene(cardView.getBoundsInLocal());
-        System.out.println("being destroyed is x = " + bounds);
-        System.out.println("upperleft was " + cardView.getUpperLeftX() + " " + cardView.getUpperLeftY());
-        System.out.println("being destroyed is x = " + cardView.getX() + " and y = " + cardView.getY());
-        System.out.println("being destroyed is x = " + cardView.getLayoutX() + " and y = " + cardView.getLayoutY());
-        System.out.println("being destroyed is x = " + cardView.getScaleX() + " and y = " + cardView.getScaleY());
-        System.out.println("being destroyed is x = " + cardView.getScene().getX() + " and y = " + cardView.getScene().getY());
+        // System.out.println("being destroyed is x = " + bounds);
+        // System.out.println("upperleft was " + cardView.getUpperLeftX() + " " + cardView.getUpperLeftY());
+        // System.out.println("being destroyed is x = " + cardView.getX() + " and y = " + cardView.getY());
+        // System.out.println("being destroyed is x = " + cardView.getLayoutX() + " and y = " + cardView.getLayoutY());
+        // System.out.println("being destroyed is x = " + cardView.getScaleX() + " and y = " + cardView.getScaleY());
+        // System.out.println("being destroyed is x = " + cardView.getScene().getX() + " and y = " + cardView.getScene().getY());
         this.transitionRectangle = new Rectangle(bounds.getMinX(), bounds.getMinY(), CardView.getCardWidth(), CardView.getCardHeight());
         this.upperLeftX = cardView.getUpperLeftX();
         this.upperLeftY = cardView.getUpperLeftY();
@@ -49,7 +49,7 @@ public class DestroyCardTransition extends Transition {
         if (frame == 27) {
             cardView.setShouldBeInvisible(true);
         }
-        System.out.println("/project/ingameicons/breaking/" + frame + ".png");
+     //   System.out.println("/project/ingameicons/breaking/" + frame + ".png");
         transitionRectangle.setFill(new ImagePattern(new Image(DestroyCardTransition.class.getResource("/project/ingameicons/breaking/" + frame + ".png").toExternalForm())));
     }
 

@@ -1,8 +1,6 @@
 package project.View;
 
-import com.google.gson.JsonObject;
-import com.opencsv.CSVReader;
-import javafx.collections.ObservableList;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,23 +11,11 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.stage.FileChooser;
-import project.View.Components.CardForShow;
-import project.View.Components.CardView;
-import project.controller.non_duel.importAndExport.ImportAndExport;
 import project.controller.non_duel.shop.Shop;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
-import project.model.cardData.General.CardType;
-import project.model.cardData.MonsterCardData.MonsterCard;
-import project.model.cardData.SpellCardData.SpellCard;
-import project.model.cardData.TrapCardData.TrapCard;
 
 import java.io.*;
 import java.net.URL;
@@ -178,7 +164,7 @@ public class ShopController implements Initializable {
                         chosenRectangleForExport = rectangle;
                         System.out.println(rectangle.getId());
                         chosenCardName = rectangle.getId();
-                        System.out.println("Chosen is : " + chosenCardName);
+              //          System.out.println("Chosen is : " + chosenCardName);
 //                        System.out.println(rectangle.toString());
 //                        System.out.println("qqq");
                     }

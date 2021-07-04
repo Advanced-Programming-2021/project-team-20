@@ -12,7 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
@@ -31,7 +32,7 @@ public class UIUtility {
     private static List<Label> numberOfCardslabels = new ArrayList<>();
     private static HashMap<String, List<Card>> allTypeOfCards;
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
-    private static HashMap<String,Image> imagesForRockPaperScissorController;
+    private static HashMap<String, Image> imagesForRockPaperScissorController;
 
     private static List<Label> allCardDiscriptionLabels1;
     private static List<Label> allCardDiscriptionLabels2;
@@ -52,16 +53,19 @@ public class UIUtility {
     private static void createDeckImages() {
         decksImage = new HashMap<>();
         decksImage.put("validDeck", createImages("deckpage\\", "validDeck"));
-        decksImage.put("invalidDeck", createImages("deckpage\\","invalidDeck"));
+        decksImage.put("invalidDeck", createImages("deckpage\\", "invalidDeck"));
     }
 
     private static void createImagesForRockPaperScissorController() {
         imagesForRockPaperScissorController = new HashMap<>();
-        imagesForRockPaperScissorController.put("mouseEnterdScissorBaz", createImages("stonePaperscissor\\", "mouseEnterdScissorBaz"));
+        imagesForRockPaperScissorController.put("mouseEnterdScissorBaz",
+                createImages("stonePaperscissor\\", "mouseEnterdScissorBaz"));
         imagesForRockPaperScissorController.put("stone", createImages("stonePaperscissor\\", "stone"));
-        imagesForRockPaperScissorController.put("mouseEnterdStone", createImages("stonePaperscissor\\", "mouseEnterdStone"));
+        imagesForRockPaperScissorController.put("mouseEnterdStone",
+                createImages("stonePaperscissor\\", "mouseEnterdStone"));
         imagesForRockPaperScissorController.put("scissor", createImages("stonePaperscissor\\", "scissor"));
-        imagesForRockPaperScissorController.put("mouseEnterePaper", createImages("stonePaperscissor\\", "mouseEnterePaper"));
+        imagesForRockPaperScissorController.put("mouseEnterePaper",
+                createImages("stonePaperscissor\\", "mouseEnterePaper"));
         imagesForRockPaperScissorController.put("paper", createImages("stonePaperscissor\\", "paper"));
     }
 
@@ -125,21 +129,15 @@ public class UIUtility {
 
         for (int i = 0; i < 60; i++) {
             Rectangle rectangle = new Rectangle(45, 65);
-            // rectangle.setArcHeight(10);
-            // rectangle.setArcWidth(10);
             rectangle.setX(4 + 52.5 * (i % 10));
             rectangle.setY(4 + 71 * (i / 10));
             allMainDeckRectangle.add(rectangle);
-            // rectangle.setStroke(Color.WHITE);
-            // rectangle.setStrokeWidth(3);
         }
 
         for (int i = 0; i < 15; i++) {
             Rectangle rectangle = new Rectangle(45, 65);
             rectangle.setX(4 + 52.5 * (i % 10));
             rectangle.setY(4 + 71 * (i / 10));
-            // rectangle.setArcHeight(10);
-            // rectangle.setArcWidth(10);
             allSideDeckRectangle.add(rectangle);
         }
 
@@ -147,8 +145,6 @@ public class UIUtility {
 
         for (int i = 0; i < sizeOfWholeCards; i++) {
             Rectangle rectangle = new Rectangle(45, 55);
-            // rectangle.setArcHeight(10);
-            // rectangle.setArcWidth(10);
             allScrollBarRectangle.add(rectangle);
         }
 
@@ -165,8 +161,8 @@ public class UIUtility {
         fourRectangleToShowDecks = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             Rectangle rectangle = new Rectangle(290, 190);
-            rectangle.setX(7 + 310 * (i % 2));
-            rectangle.setY(5 + 210 * (i / 2));
+            rectangle.setX(7 + 306 * (i % 2));
+            rectangle.setY(7 + 204 * (i / 2));
             fourRectangleToShowDecks.add(rectangle);
         }
     }
@@ -272,8 +268,13 @@ public class UIUtility {
     public static void createAllCardDiscriptionLabels() {
         allCardDiscriptionLabels1 = new ArrayList<>();
         allCardDiscriptionLabels2 = new ArrayList<>();
+        Label label;
         for (int i = 0; i < 100; i++) {
-            allCardDiscriptionLabels1.add(new Label());
+            label = new Label();
+            label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14));
+            allCardDiscriptionLabels1.add(label);
+            label = new Label();
+            label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14));
             allCardDiscriptionLabels2.add(new Label());
         }
     }
