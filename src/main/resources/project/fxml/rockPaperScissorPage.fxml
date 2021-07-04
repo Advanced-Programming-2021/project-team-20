@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background8" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.View.RockPaperScissorController">
+   <children>
+      <Rectangle fx:id="stone1Rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="649.0" y="453.0" />
+      <Rectangle fx:id="paper1Rectangle" arcHeight="5.0" arcWidth="5.0" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="451.0" y="453.0" />
+      <Rectangle fx:id="scissor1Rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="256.0" y="453.0" />
+      <Rectangle fx:id="stone2Rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="256.0" y="124.0" />
+      <Rectangle fx:id="paper2Rectangle" arcHeight="5.0" arcWidth="5.0" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="451.0" y="124.0" />
+      <Rectangle fx:id="scissor2Rectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" onMouseClicked="#clickedRectangles" onMouseEntered="#enterdToRectangles" onMouseExited="#exitFromRectangles" stroke="BLACK" strokeType="INSIDE" width="146.0" x="649.0" y="124.0" />
+      <Rectangle fx:id="player1SelectionRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" layoutX="37.0" layoutY="291.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="146.0" />
+      <Rectangle fx:id="player2SelectionRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" layoutX="825.0" layoutY="291.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="146.0" />
+      <ImageView fitHeight="118.0" fitWidth="304.0" layoutX="398.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/stonePaperscissor/text.PNG" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
