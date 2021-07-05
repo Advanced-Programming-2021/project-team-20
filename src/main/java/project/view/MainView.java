@@ -9,7 +9,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import project.controller.non_duel.storage.Storage;
 
@@ -25,7 +27,6 @@ public class MainView extends Application {
         stage.setResizable(false);
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
-        // stage.addEventHandler(arg0, arg1);
         stage.show();
     }
 
