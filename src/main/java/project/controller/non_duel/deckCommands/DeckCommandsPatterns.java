@@ -40,7 +40,6 @@ public class DeckCommandsPatterns {
     private Pattern deckShowOneDeck2 = Pattern
             .compile("deck show(?<side> -s| --side|) (-d-n|--deck-name) (?<deckName>\\S+)");
     private Pattern deckShowCards = Pattern.compile("deck show (-c|--cards)");
-    private Pattern showCardPattern = Pattern.compile("show card (?<cardName>.+)");
 
     private Matcher matcher;
 
@@ -82,12 +81,6 @@ public class DeckCommandsPatterns {
         matcher = deckShowCards.matcher(command);
         if (matcher.find()) {
             output.put("show all cards", " ");
-            return output;
-        }
-
-        matcher = showCardPattern.matcher(command);
-        if (matcher.find()) {
-            output.put("showCard", matcher.group("cardName"));
             return output;
         }
 

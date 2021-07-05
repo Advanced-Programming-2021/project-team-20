@@ -4,8 +4,11 @@ module PhaseOneProject {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
+    requires java.sql;
 
 
+    opens project.view to javafx.fxml;
+    exports project.view;
     opens project.view.pooyaviewpackage to javafx.fxml;
     exports project.view.pooyaviewpackage;
     opens project.view.internet to javafx.fxml;

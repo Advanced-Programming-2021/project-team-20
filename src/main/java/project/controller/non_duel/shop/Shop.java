@@ -16,18 +16,18 @@ public class Shop {
 
         if (ShopPatterns.isItBuyPattern(command)) {
             String cardName = ShopPatterns.getBoughtCardName(command);
-            int userAmount = Profile.getOnlineUser().getMoney();
+         //   int userAmount = Profile.getOnlineUser().getMoney();
             if (!isItInvalidCardName(cardName)) {
                 return "there is no card with this name";
             }
             Card card = getCardWithName(cardName);
             int cardAmount = card.getCardPrice();
-            if (cardAmount > userAmount) {
-                return "not enough money";
-            }
-            Profile.getOnlineUser().setMoney(userAmount - cardAmount);
-            Profile.getOnlineUser().addCardToAllUselessCards(cardName);
-            return "successful buy";
+            // if (cardAmount > userAmount) {
+            //     return "not enough money";
+            // }
+            // Profile.getOnlineUser().setMoney(userAmount - cardAmount);
+            // Profile.getOnlineUser().addCardToAllUselessCards(cardName);
+            // return "successful buy";
         }
 
         else if (ShopPatterns.isItShowAllPattern(command)) {

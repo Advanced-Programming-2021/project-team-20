@@ -23,69 +23,76 @@ public class ChangeCardsBetweenTwoRounds {
 
     public String changeCardsBetweenTwoRounds(String input, int index) {
 
-        String allyPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
-        String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
+        return null;
+        // String allyPlayerName =
+        // GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
+        // String opponentPlayerName =
+        // GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
 
-        if (turn == 1) {
-            mainDeckCards = allyPlayerDeck.getMainDeck();
-            sideDeckCards = allyPlayerDeck.getSideDeck();
-        } else if (turn == 2) {
-            mainDeckCards = opponentPlayerDeck.getMainDeck();
-            sideDeckCards = opponentPlayerDeck.getSideDeck();
-        }
+        // if (turn == 1) {
+        // mainDeckCards = allyPlayerDeck.getMainDeck();
+        // sideDeckCards = allyPlayerDeck.getSideDeck();
+        // } else if (turn == 2) {
+        // mainDeckCards = opponentPlayerDeck.getMainDeck();
+        // sideDeckCards = opponentPlayerDeck.getSideDeck();
+        // }
 
-        if (input.equals("end")) {
-            if (turn == 1) {
-                if (opponentPlayerName.equals("AI")) {
-                    GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
-                    GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
-                    resetCardsAfterChangingDeck();
-                    return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
-                }
-                turn = 2;
-                return "now " + opponentPlayerName + " can change his deck";
-            }
-            if (turn == 2) {
-                GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
-                GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
-                resetCardsAfterChangingDeck();
-                turn = 1;
-                return "next round of duel started\n" + allyPlayerName + " must choose\n1.stone\n2.hand\n3.snips";
-            }
-        }
-
-        Matcher matcher;
-        matcher = Utility.getCommandMatcher(input,
-                "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
-        if (matcher.find()) {
-            String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
-            String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");
-            return moveCards(cardToBeMovedToMainDeckStringFormat, cardToBeMovedToSideDeckStringFormat);
-        }
-
-        return "invalid command!";
+        // if (input.equals("end")) {
+        // if (turn == 1) {
+        // if (opponentPlayerName.equals("AI")) {
+        // GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+        // GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
+        // resetCardsAfterChangingDeck();
+        // return "next round of duel started\n" + allyPlayerName + " must
+        // choose\n1.stone\n2.hand\n3.snips";
+        // }
+        // turn = 2;
+        // return "now " + opponentPlayerName + " can change his deck";
+        // }
+        // if (turn == 2) {
+        // GameManager.getDuelControllerByIndex(index).setPlayersChangedDecks(true);
+        // GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+        // resetCardsAfterChangingDeck();
+        // turn = 1;
+        // return "next round of duel started\n" + allyPlayerName + " must
+        // choose\n1.stone\n2.hand\n3.snips";
+        // }
     }
 
-    private void resetCardsAfterChangingDeck() {
-        GameManager.getDuelBoardByIndex(0).resetCards(1);
-        GameManager.getDuelBoardByIndex(0).resetCards(2);
-    }
+    // Matcher matcher;
+    // matcher = Utility.getCommandMatcher(input,
+    // "move from side deck (?<sideDeckCard>.+) to main deck (?<mainDeckCard>.+)");
+    // if (matcher.find()) {
+    // String cardToBeMovedToMainDeckStringFormat = matcher.group("sideDeckCard");
+    // String cardToBeMovedToSideDeckStringFormat = matcher.group("mainDeckCard");
+    // return moveCards(cardToBeMovedToMainDeckStringFormat,
+    // cardToBeMovedToSideDeckStringFormat);
+    // }
 
-    private String moveCards(String cardToBeMovedToMainDeckStringFormat, String cardToBeMovedToSideDeckStringFormat) {
+    // return "invalid command!";
+    // }
 
-        if (!sideDeckCards.contains(cardToBeMovedToMainDeckStringFormat))
-            return cardToBeMovedToMainDeckStringFormat + " does not exist in side deck";
+    // private void resetCardsAfterChangingDeck() {
+    // GameManager.getDuelBoardByIndex(0).resetCards(1);
+    // GameManager.getDuelBoardByIndex(0).resetCards(2);
+    // }
 
-        if (!mainDeckCards.contains(cardToBeMovedToSideDeckStringFormat))
-            return cardToBeMovedToSideDeckStringFormat + " does not exist in main deck";
+    // private String moveCards(String cardToBeMovedToMainDeckStringFormat, String
+    // cardToBeMovedToSideDeckStringFormat) {
 
-        sideDeckCards.remove(cardToBeMovedToMainDeckStringFormat);
-        mainDeckCards.add((cardToBeMovedToMainDeckStringFormat));
+    // if (!sideDeckCards.contains(cardToBeMovedToMainDeckStringFormat))
+    // return cardToBeMovedToMainDeckStringFormat + " does not exist in side deck";
 
-        mainDeckCards.remove(cardToBeMovedToSideDeckStringFormat);
-        sideDeckCards.add(cardToBeMovedToSideDeckStringFormat);
-        return "cards moved successfully!";
-    }
+    // if (!mainDeckCards.contains(cardToBeMovedToSideDeckStringFormat))
+    // return cardToBeMovedToSideDeckStringFormat + " does not exist in main deck";
+
+    // sideDeckCards.remove(cardToBeMovedToMainDeckStringFormat);
+    // mainDeckCards.add((cardToBeMovedToMainDeckStringFormat));
+
+    // mainDeckCards.remove(cardToBeMovedToSideDeckStringFormat);
+    // sideDeckCards.add(cardToBeMovedToSideDeckStringFormat);
+    // return "cards moved successfully!";
+    // }
 
     public Deck getAllyPlayerDeck() {
         return allyPlayerDeck;
@@ -94,4 +101,46 @@ public class ChangeCardsBetweenTwoRounds {
     public Deck getOpponentPlayerDeck() {
         return opponentPlayerDeck;
     }
+
+    public void addCardToMianOrSideDeck(String cardName, boolean isMainDeck, String playerName) {
+        String allyPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
+        String opponentPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
+        if (playerName.equals(allyPlayerName)) {
+            mainDeckCards = allyPlayerDeck.getMainDeck();
+            sideDeckCards = allyPlayerDeck.getSideDeck();
+        } else if (playerName.equals(opponentPlayerName)) {
+            mainDeckCards = opponentPlayerDeck.getMainDeck();
+            sideDeckCards = opponentPlayerDeck.getSideDeck();
+        }
+
+        if (isMainDeck) {
+            removeCardFromSideDeck(cardName);
+            mainDeckCards.add((cardName));
+        } else {
+            removeCardFromMainDeck(cardName);
+            sideDeckCards.add((cardName));
+        }
+        // transferCardsBetweenSideAndMainDeck(0);
+        // ChangeCardsBetweenTwoRoundsController.setMainDeckCards(mainDeckCards);
+        // ChangeCardsBetweenTwoRoundsController.setSideDeckCards(sideDeckCards);
+    }
+
+    private void removeCardFromSideDeck(String cardName) {
+        for (int i = 0; i < sideDeckCards.size(); i++) {
+            if (sideDeckCards.get(i).equals(cardName)) {
+                sideDeckCards.remove(i);
+                break;
+            }
+        }
+    }
+
+    private void removeCardFromMainDeck(String cardName) {
+        for (int i = 0; i < mainDeckCards.size(); i++) {
+            if (mainDeckCards.get(i).equals(cardName)) {
+                mainDeckCards.remove(i);
+                break;
+            }
+        }
+    }
+
 }

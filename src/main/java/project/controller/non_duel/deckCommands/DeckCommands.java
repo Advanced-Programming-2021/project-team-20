@@ -7,71 +7,69 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import project.view.LoginController;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
+import project.model.User;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
-import project.model.cardData.MonsterCardData.MonsterCard;
-import project.model.cardData.SpellCardData.SpellCard;
-import project.model.cardData.TrapCardData.TrapCard;
 
 public class DeckCommands {
 
     private HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
     private HashMap<String, Card> allSpellAndTrapCard = Storage.getAllSpellAndTrapCards();
 
-    public String findCommands(String command) {
-        DeckCommandsPatterns deckCommandsPatterns = new DeckCommandsPatterns();
+    // public String findCommands(String command) {
+    // DeckCommandsPatterns deckCommandsPatterns = new DeckCommandsPatterns();
 
-        HashMap<String, String> foundCommadns = deckCommandsPatterns.findCommands(command);
-        if (foundCommadns == null) {
-            return "invalid command!";
+    // HashMap<String, String> foundCommadns =
+    // deckCommandsPatterns.findCommands(command);
+    // if (foundCommadns == null) {
+    // return "invalid command!";
 
-        }
+    // }
 
-        if (foundCommadns.containsKey("create deck")) {
-            return createDeck(foundCommadns.get("create deck"));
-        }
+    // if (foundCommadns.containsKey("create deck")) {
+    // return createDeck(foundCommadns.get("create deck"));
+    // }
 
-        if (foundCommadns.containsKey("delete deck")) {
-            return deleteDeck(foundCommadns.get("delete deck"));
-        }
+    // if (foundCommadns.containsKey("delete deck")) {
+    // return deleteDeck(foundCommadns.get("delete deck"));
+    // }
 
-        if (foundCommadns.containsKey("activate deck")) {
-            return activateDeck(foundCommadns.get("activate deck"));
-        }
+    // if (foundCommadns.containsKey("activate deck")) {
+    // return activateDeck(foundCommadns.get("activate deck"));
+    // }
 
-        if (foundCommadns.containsKey("add card to")) {
-            return addCardToDeck(foundCommadns);
-        }
+    // if (foundCommadns.containsKey("add card to")) {
+    // return addCardToDeck(foundCommadns);
+    // }
 
-        if (foundCommadns.containsKey("delete card from")) {
-            return deleteCardFromDeck(foundCommadns);
-        }
+    // if (foundCommadns.containsKey("delete card from")) {
+    // return deleteCardFromDeck(foundCommadns);
+    // }
 
-        if (foundCommadns.containsKey("show all deck")) {
-            return showAllDecks();
-        }
+    // if (foundCommadns.containsKey("show all deck")) {
+    // return showAllDecks();
+    // }
 
-        if (foundCommadns.containsKey("show deck with name")) {
-            return showOneDeck(foundCommadns);
-        }
+    // if (foundCommadns.containsKey("show deck with name")) {
+    // return showOneDeck(foundCommadns);
+    // }
 
-        if (foundCommadns.containsKey("showCard")) {
-            return showCard(foundCommadns.get("showCard"));
-        }
-        return showAllCards();
-    }
+    // return showAllCards();
+
+    // }
 
     private String showAllCards() {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         List<String> allCards = new ArrayList<>();
         for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
             allCards.addAll(entry.getValue().getMainDeck());
             allCards.addAll(entry.getValue().getSideDeck());
         }
-        allCards.addAll(Profile.getOnlineUser().getAllUselessCards());
+        allCards.addAll(LoginController.getOnlineUser().getAllUselessCards());
 
         allCards = allCards.stream().distinct().collect(Collectors.toList());
         Collections.sort(allCards);
@@ -94,7 +92,7 @@ public class DeckCommands {
 
     private String showOneDeck(HashMap<String, String> foundCommands) {
 
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         if (allDecksOfUser == null || !allDecksOfUser.containsKey(foundCommands.get("show deck with name"))) {
             return "deck with name " + foundCommands.get("show deck with name") + " does not exist";
         }
@@ -111,7 +109,6 @@ public class DeckCommands {
             showDeck.append(showCardsInMainOrSideDeck(
                     allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
         }
-
         return showDeck.toString();
     }
 
@@ -131,13 +128,11 @@ public class DeckCommands {
                         + allSpellAndTrapCard.get(cardsInDeck.get(i)).getCardDescription());
             }
         }
-
         return monsterCardsBuilder.toString() + "\nSpell and Traps:" + spellAndTrapCardsBuilder.toString();
     }
 
     private String showAllDecks() {
-
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+        HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
         StringBuilder showAllDecks = new StringBuilder();
         showAllDecks.append("Decks:\nActive deck:\n");
         if (allDecksOfUser == null) {
@@ -162,141 +157,106 @@ public class DeckCommands {
                         .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ? "valid" : "invalid");
             }
         }
-
         showAllDecks.append("Other Decks:" + showOtherDecks.toString());
-
         return showAllDecks.toString();
     }
 
-    private String showCard(String cardName) {
-        if (!Storage.doesCardExist(cardName)) {
-            return "card with name " + cardName + " does not exist";
-        }
-
-        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-
-        StringBuilder shownCardStringBuilder = new StringBuilder();
-        shownCardStringBuilder.append("Name: " + cardName + "\n");
-        if (allMonsterCards.containsKey(cardName)) {
-            MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
-            shownCardStringBuilder.append("Level: " + monsterCard.getLevel() + "\n");
-            shownCardStringBuilder.append("Type: " + monsterCard.getMonsterCardFamily() + "\n");
-            shownCardStringBuilder.append("ATK: " + monsterCard.getAttackPower() + "\n");
-            shownCardStringBuilder.append("DEF: " + monsterCard.getDefensePower() + "\n");
-            shownCardStringBuilder.append("Description: " + monsterCard.getCardDescription());
+    public void deleteCardFromMainOrSideDeck(String deckname, String cardname, boolean isDeleteFromMainDeck,
+            String playerName) {
+        User user = Storage.getUserByName(playerName);
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        if (isDeleteFromMainDeck) {
+            allDecksOfUser.get(deckname).deleteCardFromMainDeck(cardname);
         } else {
-            if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
-                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
-                shownCardStringBuilder.append("Spell\n");
-                shownCardStringBuilder.append("Type: " + spellCard.getSpellCardValue() + "\n");
-                shownCardStringBuilder.append("Description: " + spellCard.getCardDescription());
-            } else {
-                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
-                shownCardStringBuilder.append("Trap\n");
-                shownCardStringBuilder.append("Type: " + trapCard.getTrapCardValue() + "\n");
-                shownCardStringBuilder.append("Description: " + trapCard.getCardDescription());
-            }
+            allDecksOfUser.get(deckname).deleteCardFromSideDeck(cardname);
         }
-
-        return shownCardStringBuilder.toString();
     }
 
-    private String deleteCardFromDeck(HashMap<String, String> foundCommands) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
-        if (allDecksOfUser == null || !allDecksOfUser.containsKey(foundCommands.get("deck"))) {
-            return "deck with name " + foundCommands.get("deck") + " does not exist";
-        }
-
-        if (foundCommands.get("delete card from").contains("-s")) {
-            if (!allDecksOfUser.get(foundCommands.get("deck")).getSideDeck().contains(foundCommands.get("card"))) {
-                return "card with name " + foundCommands.get("card") + " does not exist in side deck";
-            }
-            allDecksOfUser.get(foundCommands.get("deck")).deleteCardFromSideDeck(foundCommands.get("card"));
+    public void addCardToMainOrSideDeck(String deckname, String cardname, boolean isCardAddedToMainDeck,
+            String playerName) {
+        User user = Storage.getUserByName(playerName);
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        if (isCardAddedToMainDeck) {
+            allDecksOfUser.get(deckname).addCardToMainDeck(cardname);
         } else {
-            if (!allDecksOfUser.get(foundCommands.get("deck")).getMainDeck().contains(foundCommands.get("card"))) {
-                return "card with name " + foundCommands.get("card") + " does not exist in main deck";
-            }
-            allDecksOfUser.get(foundCommands.get("deck")).deleteCardFromMainDeck(foundCommands.get("card"));
+            allDecksOfUser.get(deckname).addCardToSideDeck(cardname);
         }
-        return "card removed from deck successfully";
     }
 
-    private String addCardToDeck(HashMap<String, String> foundCommands) {
+    public void deleteCardFromAllUselessCards(String cardname, String playerName) {
+        User user = Storage.getUserByName(playerName);
+        user.deleteCardFromAllUselessCards(cardname);
+    }
 
-        if (!Profile.getOnlineUser().doesCardExistsInUselessCards(foundCommands.get("card"))) {
-            return "card with name " + foundCommands.get("card") + " does not exist";
-        }
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
-        if (allDecksOfUser == null || !allDecksOfUser.containsKey(foundCommands.get("deck"))) {
-            return "deck with name " + foundCommands.get("deck") + " does not exist";
-        }
+    public void addCardToAllUselessCards(String cardname, String playerName) {
+        User user = Storage.getUserByName(playerName);
+        user.addCardToAllUselessCards(cardname);
+    }
 
-        if (foundCommands.get("add card to").contains("-s")) {
-            if (allDecksOfUser.get(foundCommands.get("deck")).getSizeOfSideDeck() == 15) {
-                return "side deck is full";
-            }
-        } else {
-            if (allDecksOfUser.get(foundCommands.get("deck")).getSizeOfMainDeck() == 60) {
-                return "main deck is full";
-            }
-        }
+    public boolean canAddCardToDeck(String deckname, String cardname, String playerName) {
 
-        int numberOfCardsInDeck = allDecksOfUser.get(foundCommands.get("deck"))
-                .numberOfCardsInDeck(foundCommands.get("card"));
+        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
+
+        int numberOfCardsInDeck = allDecksOfUser.get(deckname).numberOfCardsInDeck(cardname);
         int numberOfAllowedUsages = 0;
-        if (allSpellAndTrapCard.containsKey(foundCommands.get("card"))) {
-            numberOfAllowedUsages = allSpellAndTrapCard.get(foundCommands.get("card")).getNumberOfAllowedUsages();
-        } else if (allMonsterCards.containsKey(foundCommands.get("card"))) {
+        if (allSpellAndTrapCard.containsKey(cardname)) {
+            numberOfAllowedUsages = allSpellAndTrapCard.get(cardname).getNumberOfAllowedUsages();
+        } else if (allMonsterCards.containsKey(cardname)) {
             numberOfAllowedUsages = 3;
         }
-
         if (numberOfCardsInDeck == numberOfAllowedUsages) {
-            return "there are already " + numberOfAllowedUsages + " cards with name " + foundCommands.get("card")
-                    + " in deck " + foundCommands.get("deck");
+            return false;
         }
-
-        Profile.getOnlineUser().deleteCardFromAllUselessCards(foundCommands.get("card"));
-
-        if (foundCommands.get("add card to").contains("-s")) {
-            allDecksOfUser.get(foundCommands.get("deck")).addCardToSideDeck(foundCommands.get("card"));
-        } else {
-            allDecksOfUser.get(foundCommands.get("deck")).addCardToMainDeck(foundCommands.get("card"));
-        }
-        return "card added to deck successfully";
-
+        return true;
     }
 
-    private String activateDeck(String deckname) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
-        if (allDecksOfUser == null || !allDecksOfUser.containsKey(deckname)) {
-            return "deck with name " + deckname + " does not exist";
-        }
+    public String activateDeck(String deckname, String playerName) {
+        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
         for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
-            allDecksOfUser.get(entry.getKey()).setDeckActive(false);
+            entry.getValue().setDeckActive(false);
         }
         allDecksOfUser.get(deckname).setDeckActive(true);
         return "deck activated successfully!";
     }
 
-    private String deleteDeck(String deckname) {
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
-        if (allDecksOfUser == null || !allDecksOfUser.containsKey(deckname)) {
-            return "deck with name " + deckname + " does not exist";
-        }
-        Profile.getOnlineUser().deleteDeck(deckname);
-        return "deck deleted successfully!";
+    public String deleteDeck(String deckname, String playerName) {
 
+        Storage.getUserByName(playerName).deleteDeck(deckname);
+        return "deck deleted successfully!";
     }
 
-    private String createDeck(String deckname) {
-
-        HashMap<String, Deck> allDecksOfUser = Profile.getOnlineUser().getDecks();
+    public String createDeck(String deckname, String playerName) {
+        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
         if (allDecksOfUser != null && allDecksOfUser.containsKey(deckname)) {
-            return "deck with name " + deckname + " already exists";
+            return "deck already exists";
         }
-        Profile.getOnlineUser().addDeckToAllDecks(deckname, new Deck(deckname));
+        Storage.getUserByName(playerName).addDeckToAllDecks(deckname, new Deck(deckname));
         return "deck created successfully!";
     }
 
+    public HashMap<String, Integer> getNumberOfEachTypeOfCardsInDeck(String deckname, String playerName) {
+        int numberOfMonsterCards = 0;
+        int numberOfSpellCards = 0;
+        int numberOfTrapCards = 0;
+        List<String> mainDeckCards = Storage.getUserByName(playerName).getDecks().get(deckname).getMainDeck();
+        HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
+        sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
+        sizeOfEachPart.put("sideDeckSize",
+                LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfSideDeck());
+        for (int i = 0; i < mainDeckCards.size(); i++) {
+            if (allMonsterCards.containsKey(mainDeckCards.get(i))) {
+                numberOfMonsterCards++;
+            } else {
+                if (allSpellAndTrapCard.get(mainDeckCards.get(i)).getCardType().equals(CardType.SPELL)) {
+                    numberOfSpellCards++;
+                } else {
+                    numberOfTrapCards++;
+                }
+            }
+        }
+        sizeOfEachPart.put("monstersSize", numberOfMonsterCards);
+        sizeOfEachPart.put("spellsSize", numberOfSpellCards);
+        sizeOfEachPart.put("trapsSize", numberOfTrapCards);
+        return sizeOfEachPart;
+    }
 }

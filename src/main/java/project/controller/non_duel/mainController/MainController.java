@@ -1,6 +1,5 @@
 package project.controller.non_duel.mainController;
 
-import project.controller.duel.PreliminaryPackage.StartDuel;
 import project.controller.non_duel.deckCommands.DeckCommands;
 import project.controller.non_duel.importAndExport.ImportAndExport;
 import project.controller.non_duel.loginMenu.LoginMenu;
@@ -28,7 +27,7 @@ public class MainController {
     private Scoreboard scoreboard = new Scoreboard();
     private Shop shop = new Shop();
     private ImportAndExport importAndExport = new ImportAndExport();
-    private StartDuel duel = new StartDuel();
+  //  private StartDuel duel = new StartDuel();
 
     public static MainController getInstance() {
         if (mainController == null) {
@@ -49,17 +48,17 @@ public class MainController {
             return resultOfLoginUser;
         }
         if (isInDeckCommands) {
-            return deckCommands.findCommands(command);
+       //     return deckCommands.findCommands(command);
         } else if (isInProfile) {
-            return profile.findCommands(command);
+        //    return profile.findCommands(command);
         } else if (isInScoreBoard) {
             return scoreboard.findCommands(command);
         } else if (isInShop) {
             return shop.findCommand(command);
         } else if (isInImportAndExport) {
-            return importAndExport.findCommand(command);
+      //      return importAndExport.findCommand(command);
         } else if (isInDuelMenu) {
-            return duel.findCommand(command);
+        //.    return duel.findCommand(command);
         }
 
         return "invalid command!";
@@ -127,7 +126,5 @@ public class MainController {
         return false;
     }
 
-    public void setDuel(StartDuel duel) {
-        this.duel = duel;
-    }
+  
 }

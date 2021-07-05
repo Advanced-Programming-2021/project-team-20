@@ -63,5 +63,5 @@ public class Deck {
     public void deleteCardFromSideDeck(String cardname) {
         sideDeck.remove(cardname);
     }
-
+    
 }
