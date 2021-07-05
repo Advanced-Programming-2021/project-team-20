@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javafx.scene.image.Image;
 import project.view.LoginController;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 import javax.imageio.*;
-import java.awt.*;
+import java.awt.image.*;
 
 public class Profile {
 
@@ -76,7 +75,7 @@ public class Profile {
         try {
             File initialImage = new File(imagePath);
             bImage = ImageIO.read(initialImage);
-            ImageIO.write(bImage, "jpg", new File("C://Users/Rou/Desktop/image.png"));
+            ImageIO.write(bImage, "jpg", new File("/image.png"));
         } catch (IOException e) {
               System.out.println("Exception occured :" + e.getMessage());
         }
