@@ -28,7 +28,7 @@
             <Font name="Old English Text MT" size="22.0" />
          </font>
       </PasswordField>
-      <PasswordField fx:id="currentPasswordField1" layoutX="193.0" layoutY="272.0" prefHeight="41.0" prefWidth="287.0" promptText="second player ">
+      <PasswordField fx:id="secondPlayerSingleDuelField" layoutX="193.0" layoutY="272.0" prefHeight="41.0" prefWidth="287.0" promptText="second player ">
          <font>
             <Font name="Old English Text MT" size="22.0" />
          </font>

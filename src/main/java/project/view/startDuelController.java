@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import project.controller.duel.PreliminaryPackage.DuelStarter;
 
@@ -44,7 +45,7 @@ public class startDuelController implements Initializable {
         isMatchGame = false;
         if (checkConditionsOfPlayers("AI")) {
             startGame();
-        } 
+        }
     }
 
     public void matchDuleWithComputer() {
@@ -52,7 +53,7 @@ public class startDuelController implements Initializable {
         isMatchGame = false;
         if (checkConditionsOfPlayers("AI")) {
             startGame();
-        } 
+        }
         System.out.println("dadasdasdas");
     }
 
@@ -80,7 +81,7 @@ public class startDuelController implements Initializable {
         int numberOfRounds = isMatchGame ? 3 : 1;
         String result = duelStarter.createGame(LoginController.getOnlineUser().getName(), secondPlayer, numberOfRounds);
         if (!result.equals("game started")) {
-            showAlert("WARNING", result);
+            showAlert(result.toUpperCase());
             return false;
         }
         return true;
@@ -94,10 +95,9 @@ public class startDuelController implements Initializable {
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.NONE, message);
-        alert.setTitle(title);
-        alert.showAndWait();
+    private void showAlert(String message) {
+        Alert alert = new Alert(null, message, ButtonType.OK);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
     }
 
     public void backToMainMenu() {
