@@ -16,7 +16,8 @@ import java.util.Scanner;
 
 import com.google.gson.*;
 import com.opencsv.*;
-
+import javax.imageio.*;
+import java.awt.image.*;
 import javafx.scene.image.Image;
 import project.model.Deck;
 import project.model.User;
@@ -39,6 +40,7 @@ public class Storage {
     private static Card unknownCard;
     private String addressOfStorage = "Resourses\\";
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
+    private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
 
     public void startProgram() throws IOException {
 
@@ -55,8 +57,25 @@ public class Storage {
     public void endProgram() throws IOException {
 
         saveNewCardsInFile();
+        saveNewImages();
         savaUsersInFile();
+    }
 
+    private void saveNewImages() {
+        for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
+            BufferedImage bImage = null;
+            try {
+                File initialImage = new File(entry.getValue());
+                bImage = ImageIO.read(initialImage);
+                ImageIO.write(bImage, "png",
+                        new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                                + entry.getKey().getName() + ".png"));
+                entry.getKey().setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                        + entry.getKey().getName() + ".png");
+            } catch (Exception e) {
+                System.out.println("Exception occured :" + e.getMessage());
+            }
+        }
     }
 
     private void saveNewCardsInFile() throws IOException {
@@ -69,17 +88,17 @@ public class Storage {
                 csvWriter.flush();
                 csvWriter.close();
             } else if (entry.getValue().getCardType().equals(CardType.SPELL)) {
-                 csvWriter =new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Spell.csv",true));
-                 SpellCard spellCard = (SpellCard) entry.getValue();
-                 csvWriter.writeNext(spellCard.toCSVFormatString());
-                 csvWriter.flush();
-                 csvWriter.close();
+                csvWriter = new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Spell.csv", true));
+                SpellCard spellCard = (SpellCard) entry.getValue();
+                csvWriter.writeNext(spellCard.toCSVFormatString());
+                csvWriter.flush();
+                csvWriter.close();
             } else {
-                 csvWriter =new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Trap.csv",true));
-                 TrapCard trapCard = (TrapCard) entry.getValue();
-                 csvWriter.writeNext(trapCard.toCSVFormatString());
-                 csvWriter.flush();
-                 csvWriter.close();
+                csvWriter = new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Trap.csv", true));
+                TrapCard trapCard = (TrapCard) entry.getValue();
+                csvWriter.writeNext(trapCard.toCSVFormatString());
+                csvWriter.flush();
+                csvWriter.close();
             }
         }
     }
@@ -245,7 +264,7 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-            
+
             e.printStackTrace();
             System.exit(0);
         }
@@ -309,7 +328,7 @@ public class Storage {
             fileReader.close();
 
             if (rootNode.isJsonObject()) {
-                  
+
                 JsonObject details = rootNode.getAsJsonObject();
                 User user = new User(details.get("name").getAsString(), details.get("nickname").getAsString(),
                         details.get("password").getAsString(), details.get("imagePath").getAsString());
@@ -320,7 +339,7 @@ public class Storage {
             }
         }
 
-        for( int i = 0; i < allUsers.size(); i ++){
+        for (int i = 0; i < allUsers.size(); i++) {
             System.out.println(allUsers.get(i).getName() + allUsers.get(i).getPassword());
         }
     }
@@ -422,6 +441,10 @@ public class Storage {
 
     public static void addCardToNewCardsCrated(Card newCard) {
         newCardsCreated.put(newCard.getCardName(), newCard);
+    }
+
+    public static HashMap<User, String> getNewImagesThatChanges() {
+        return newImagesThatChanges;
     }
 
     public static Card getUnknownCard() {

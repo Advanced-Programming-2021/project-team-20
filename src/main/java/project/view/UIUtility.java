@@ -120,7 +120,7 @@ public class UIUtility {
         return new Image(stream);
     }
 
-    protected static void createOneRectangleForEachCard() {
+    public static void createOneRectangleForEachCard() {
 
         allMainDeckRectangle = new ArrayList<>();
         allSideDeckRectangle = new ArrayList<>();
