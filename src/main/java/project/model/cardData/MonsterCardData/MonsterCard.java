@@ -103,7 +103,7 @@ public class MonsterCard extends Card {
         } else if (cardDescription.equals("r")) {
             summoningRequirements.add(SummoningRequirement.CAN_BE_RITUAL_SUMMONED);
         }
-        if (cardName.equals("beast king barbaros")) {
+        if (cardName.equals("Beast King Barbaros")) {
             summoningRequirements.add(
                     SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             summoningRequirements
@@ -112,51 +112,51 @@ public class MonsterCard extends Card {
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
         }
-        if (cardName.equals("terratiger, the empowered warrior")) {
+        if (cardName.equals("Terratiger, the empowered warrior")) {
             uponSummoningEffects.add(
                     UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
         }
-        if (cardName.equals("the tricky")) {
+        if (cardName.equals("The Tricky")) {
             summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
             // summoningRequirements.add(SummoningRequirement.CAN_BE_NORMAL_SUMMONED);
             summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
             summoningRequirements.add(SummoningRequirement.TRIBUTE_1_MONSTER);
             summoningRequirements.add(SummoningRequirement.DISCARD_1_CARD);
-        } else if (cardName.equals("gate guardian")) {
+        } else if (cardName.equals("Gate Guardian")) {
             summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
             summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
-        } else if (cardName.equals("exploder dragon")) {
+        } else if (cardName.equals("Exploder Dragon")) {
             beingAttackedEffects.add(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES);
             beingAttackedEffects
                     .add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
-        } else if (cardName.equals("yomi ship")) {
+        } else if (cardName.equals("Yomi Ship")) {
             beingAttackedEffects
                     .add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
-        } else if (cardName.equals("marshmallon")) {
+        } else if (cardName.equals("Marshmallon")) {
             beingAttackedEffects.add(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE);
             beingAttackedEffects
                     .add(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE);
-        } else if (cardName.equals("texchanger")) {
+        } else if (cardName.equals("Texchanger")) {
             beingAttackedEffects.add(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN);
             beingAttackedEffects
                     .add(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN);
-        } else if (cardName.equals("man-eater bug")) {
+        } else if (cardName.equals("Man-Eater bug")) {
             flipEffects.add(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD);
-        } else if (cardName.equals("suijin")) {
+        } else if (cardName.equals("Suijin")) {
             beingAttackedEffects.add(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN);
-        } else if (cardName.equals("herald of creation")) {
+        } else if (cardName.equals("Herald Of Creation")) {
             optionalMonsterEffects.add(
                     OptionalMonsterEffect.ONCE_PER_TURN_DISCARD_1_CARD_SEND_LEVEL_7_OR_MORE_MONSTER_FROM_GY_TO_HAND);
-        } else if (cardName.equals("scanner")) {
+        } else if (cardName.equals("Scanner")) {
             optionalMonsterEffects.add(
                     OptionalMonsterEffect.ONCE_PER_TURN_CHOOSE_A_MONSTER_IN_YOUR_OPPONENTS_GRAVEYARD_AND_COPY_ALL_CHARACTERISTICS_UNTIL_THE_END_OF_THAT_TURN);
-        } else if (cardName.equals("the calculator")) {
+        } else if (cardName.equals("The Calculator")) {
             continuousMonsterEffects.add(
                     ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL);
-        } else if (cardName.equals("mirage dragon")) {
+        } else if (cardName.equals("Mirage Dragon")) {
             continuousMonsterEffects
                     .add(ContinuousMonsterEffect.OPPONENT_CANNOT_ACTIVATE_TRAP_CARDS_WHILE_THIS_CARD_IS_FACE_UP);
-        } else if (cardName.equals("command knight")) {
+        } else if (cardName.equals("Command Knight")) {
             continuousMonsterEffects.add(ContinuousMonsterEffect.ALL_MONSTERS_OWNER_CONTROLS_GAIN_400_ATK);
             continuousMonsterEffects.add(ContinuousMonsterEffect.CANNOT_BE_ATTACKED_IF_YOU_CONTROL_ANOTHER_MONSTER);
         }

@@ -121,34 +121,45 @@ public class CardView extends Rectangle {
     }
 
     public void showCardImage() {
+        this.setFill(giveImageForThisCardView());
+    }
+
+    private ImagePattern giveImageForThisCardView() {
         Bounds bounds = this.localToScene(this.getBoundsInLocal());
         if (shouldBeInvisible) {
-            this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/ingameicons/breaking/1.png").toExternalForm())));
+            return new ImagePattern(new Image(CardView.class.getResource("/project/ingameicons/breaking/1.png").toExternalForm()));
         } else if (canBeSeen) {
             if (card.getCardType().equals(CardType.MONSTER)) {
                 if (shouldBeSeen180DegreesReversed) {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm()),
-                        upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false));
+                    return new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm()),
+                        upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false);
                 } else {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm())));
+                    return new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm()));
                 }
             } else {
                 if (shouldBeSeen180DegreesReversed) {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm()),
-                        upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false));
+                    return new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm()),
+                        upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false);
                 } else {
-                    this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm())));
+                    return new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm()));
                 }
             }
         } else {
             if (shouldBeSeen180DegreesReversed) {
-                this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/card_back.png").toExternalForm()),
-                    upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false));
+                return new ImagePattern(new Image(CardView.class.getResource("/project/cards/card_back.png").toExternalForm()),
+                    upperLeftX + CardView.getCardWidth(), upperLeftY + CardView.getCardHeight(), -CardView.getCardWidth(), -CardView.getCardHeight(), false);
             } else {
-                this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/card_back.png").toExternalForm())));
+                return new ImagePattern(new Image(CardView.class.getResource("/project/cards/card_back.png").toExternalForm()));
             }
         }
+    }
 
+    public ImagePattern giveImageVeryNormally() {
+        if (card.getCardType().equals(CardType.MONSTER)) {
+            return new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + cardName + ".jpg").toExternalForm()));
+        } else {
+            return new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + cardName + ".jpg").toExternalForm()));
+        }
     }
 
     public void setLabel(RowOfCardLocation label) {

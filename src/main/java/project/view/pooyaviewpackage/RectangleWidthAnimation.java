@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -63,7 +64,10 @@ public class RectangleWidthAnimation extends Application {
         container.setLayoutX(100);
         container.setLayoutY(100);
         container.setAlignment(Pos.CENTER_RIGHT);
-        primaryStage.setScene(new Scene(new Group(container, animationButton), 500, 350));
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.getChildren().add(container);
+        anchorPane.getChildren().add(animationButton);
+        primaryStage.setScene(new Scene(anchorPane, 500, 350));
         primaryStage.show();
     }
 }

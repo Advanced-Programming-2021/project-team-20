@@ -53,93 +53,93 @@ public class SpellCard extends Card {
         this.sentToGraveyardEffects = new ArrayList<>();
         this.userReplyForActivations = new ArrayList<>();
         this.cardLocationsToWhichEquipSpellIsApplied = new ArrayList<>();
-        if (cardName.equals("dark hole")) {
+        if (cardName.equals("Dark Hole")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD);
-        } else if (cardName.equals("harpie's feather duster")) {
+        } else if (cardName.equals("Harpie's Feather Duster")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS);
-        } else if (cardName.equals("raigeki")) {
+        } else if (cardName.equals("Raigeki")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS);
-        } else if (cardName.equals("sword of dark destruction")) {
+        } else if (cardName.equals("Sword Of Dark Destruction")) {
             equipSpellEffects.add(EquipSpellEffect.FIEND_OR_SPELLCASTER_EQUIPPED_MONSTER_GAINS_400_ATK_LOSE_200_DEF);
             logicalActivationRequirements
                     .add(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_FIEND_OR_SPELLCASTER_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("black pendant")) {
+        } else if (cardName.equals("Black Pendant")) {
             equipSpellEffects.add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_500_ATK);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("united we stand")) {
+        } else if (cardName.equals("United We Stand")) {
             equipSpellEffects
                     .add(EquipSpellEffect.EQUIPPED_MONSTER_GAIN_800_ATK_DEF_FOR_EACH_FACE_UP_MONSTER_OWNER_CONTROLS);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("magnum shield")) {
+        } else if (cardName.equals("Magnum Shield")) {
             equipSpellEffects.add(EquipSpellEffect.WARRIOR_EQUIPPED_MONSTER_IF_DEFENSE_POSITION_GAIN_DEF_EQUAL_TO_ATK);
             equipSpellEffects.add(EquipSpellEffect.WARRIOR_EQUIPPED_MONSTER_IF_ATTACK_POSITION_GAIN_ATK_EQUAL_TO_DEF);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_CONTROL_WARRIOR_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_WARRIOR_MONSTER_OWNER_CONTROLS);
-        } else if (cardName.equals("umiruka")) {
+        } else if (cardName.equals("Umiiruka")) {
             fieldSpellEffects.add(FieldSpellEffect.AQUA_GAINS_500_ATK);
             fieldSpellEffects.add(FieldSpellEffect.AQUA_LOSES_400_DEF);
-        } else if (cardName.equals("closed forest")) {
+        } else if (cardName.equals("Closed Forest")) {
             fieldSpellEffects.add(FieldSpellEffect.BEAST_MONSTERS_OWNER_CONTROLS_GAIN_100_ATK_FOR_EACH_MONSTER_IN_GY);
-        } else if (cardName.equals("forest")) {
+        } else if (cardName.equals("Forest")) {
             fieldSpellEffects.add(FieldSpellEffect.INSECT_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.BEAST_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.BEASTWARRIOR_GAIN_200_ATK_DEF);
-        } else if (cardName.equals("yami")) {
+        } else if (cardName.equals("Yami")) {
             fieldSpellEffects.add(FieldSpellEffect.FIEND_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.SPELLCASTER_GAIN_200_ATK_DEF);
             fieldSpellEffects.add(FieldSpellEffect.FAIRY_LOSE_200_ATK_DEF);
-        } else if (cardName.equals("ring of defense")) {
+        } else if (cardName.equals("Ring Of Defense")) {
             quickSpellEffects
                     .add(QuickSpellEffect.TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0);
             logicalActivationRequirements
                     .add(LogicalActivationRequirement.TRAP_CARD_INFLICTING_DAMAGE_MUST_BE_ACTIVATED);
-        } else if (cardName.equals("mystical space typhoon")) {
+        } else if (cardName.equals("Mystical Space Typhoon")) {
             quickSpellEffects.add(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_TRAP_CARD_IN_FIELD);
-        } else if (cardName.equals("twin twisters")) {
+        } else if (cardName.equals("Twin Twisters")) {
             quickSpellEffects.add(QuickSpellEffect.DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_ONE_SPELL_CARD_IN_FIELD);
             userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_UP_TO_TWO_SPELL_TRAP_CARDS_IN_FIELD);
-        } else if (cardName.equals("messenger of peace")) {
+        } else if (cardName.equals("Messenger Of Peace")) {
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.MONSTERS_WITH_1500_OR_MORE_ATK_CANT_ATTACK);
             continuousSpellCardEffects.add(ContinuousSpellCardEffect.STANDBY_PHASE_PAY_100_LP_OR_DESTROY_CARD);
-        } else if (cardName.equals("spell absorption")) {
+        } else if (cardName.equals("Spell Absorption")) {
             continuousSpellCardEffects
                     .add(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS);
-        } else if (cardName.equals("supply squad")) {
+        } else if (cardName.equals("Supply Squad")) {
             continuousSpellCardEffects
                     .add(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD);
-        } else if (cardName.equals("pot of greed")) {
+        } else if (cardName.equals("Pot Of Greed")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.DRAW_2_CARDS);
-        } else if (cardName.equals("change of heart")) {
+        } else if (cardName.equals("Change Of Heart")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.CONTROL_ONE_OF_OPPONENTS_MONSTERS_UNTIL_END_PHASE);
             logicalActivationRequirements
                     .add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_ZONE_SLOT_EMPTY);
             logicalActivationRequirements.add(LogicalActivationRequirement.OPPONENT_MUST_CONTROL_AT_LEAST_1_MONSTER);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_OF_OPPONENTS_MONSTERS);
-        } else if (cardName.equals("swords of revealing light")) {
+        } else if (cardName.equals("Swords Of Revealing Light")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.FLIP_OPPONENT_MONSTER_CARDS);
             continuousSpellCardEffects
                     .add(ContinuousSpellCardEffect.UNTIL_THIS_CARD_IS_FACE_UP_ON_FIELD_OPPONENT_MONSTERS_CANT_ATTACK);
             continuousSpellCardEffects
                     .add(ContinuousSpellCardEffect.NUMBER_OF_TURNS_OF_ACTIVATION_REDUCES_BY_1_IN_EACH_TURN);
-        } else if (cardName.equals("terraforming")) {
+        } else if (cardName.equals("Terraforming")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.ADD_SPELL_FIELD_CARD_FROM_DECK_TO_HAND);
             logicalActivationRequirements
                     .add(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_SPELL_FIELD_CARD_FROM_OWNER_DECK);
-        } else if (cardName.equals("monster reborn")) {
+        } else if (cardName.equals("Monster Reborn")) {
             normalSpellCardEffects.add(NormalSpellCardEffect.SPECIAL_SUMMON_MONSTER_FROM_EITHER_GY);
             logicalActivationRequirements.add(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_1_MONSTER_IN_EITHER_GY);
             userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_EITHER_GY);
             userReplyForActivations
                     .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
-        } else if (cardName.equals("advanced ritual art")) {
+        } else if (cardName.equals("Advanced Ritual Art")) {
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_RITUAL_MONSTER_IN_HAND);
             logicalActivationRequirements.add(
                     LogicalActivationRequirement.OWNER_MUST_HAVE_CARDS_WITH_SUM_OF_LEVELS_AT_LEAST_RITUAL_MONSTERS_LEVEL_IN_DECK);

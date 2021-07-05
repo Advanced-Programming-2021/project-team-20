@@ -1,5 +1,6 @@
 package project.view.pooyaviewpackage;
 
+import javafx.animation.ParallelTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DuelView extends Application {
     // launch the application
@@ -54,6 +57,10 @@ public class DuelView extends Application {
     private static Transition transition;
     private static ControllerForView controllerForView;
     private static Group moreCardInfoGroup;
+
+
+
+
     private static Rectangle cardImageForCardMoreInfo;
     private static Rectangle cardAttributeForCardMoreInfo;
     private static Rectangle cardLevelStarForCardMoreInfo;
@@ -64,6 +71,9 @@ public class DuelView extends Application {
     private static Label cardFamilyForCardMoreInfo;
     private static ScrollPane scrollPaneForCardMoreInfo;
     private static VBox vBox;
+
+
+
     private static CardLocation cardLocationBeingDragged;
     private static CardLocation cardLocationDragDropped;
     private static SendingRequestsToServer sendingRequestsToServer;
@@ -282,7 +292,7 @@ public class DuelView extends Application {
         anchorPane.getChildren().add(opponentHealthStatus.getBackGroundRectangle());
         anchorPane.getChildren().add(opponentHealthStatus.getContainer());
         controllerForView.giveCardsAtTheBeginningOfGame();
-        System.out.println(battleFieldView.getUpperLeftX()+" wouiiiiiiiiiiiiiiiiiiiiiiiii");
+        System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
     }
@@ -421,7 +431,7 @@ public class DuelView extends Application {
             System.out.println("preparing " + cardView.getCard().getCardName());
             allCards.getChildren().add(cardView);
         }
-        moreCardInfoSection.updateCardMoreInfoSection((project.model.modelsforview.CardView) allCards.getChildren().get(0));
+        moreCardInfoSection.updateCardMoreInfoSection((CardView) allCards.getChildren().get(0), ((CardView)allCards.getChildren().get(0)).getCard().getCardDescription());
     }
 
 
@@ -527,19 +537,19 @@ public class DuelView extends Application {
     }
 
 
-    public void singleClickAction(MouseEvent mouseEvent, CardView cardView) {
-        cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(mouseEvent, null);
-        if (cardLocationSelecting != null) {
-            String output = GameManager.getDuelControllerByIndex(0).getInput("select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
-            //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-            System.out.println("single click: " + output);
-            output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
-            System.out.println("show card: " + output);
-            CardLocation cardLocation = controllerForView.giveCardLocationByCoordinateInView(mouseEvent, null);
-            System.out.println("cardLocation picking is " + cardLocation.getRowOfCardLocation() + " and " + cardLocation.getIndex());
-            moreCardInfoSection.updateCardMoreInfoSection(cardView);
-        }
-    }
+//    public void singleClickAction(MouseEvent mouseEvent, CardView cardView) {
+//        cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(mouseEvent, null);
+//        if (cardLocationSelecting != null) {
+//            String output = GameManager.getDuelControllerByIndex(0).getInput("select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+//            //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+//            System.out.println("single click: " + output);
+//            output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+//            System.out.println("show card: " + output);
+//            CardLocation cardLocation = controllerForView.giveCardLocationByCoordinateInView(mouseEvent, null);
+//            System.out.println("cardLocation picking is " + cardLocation.getRowOfCardLocation() + " and " + cardLocation.getIndex());
+//            moreCardInfoSection.updateCardMoreInfoSection(cardView);
+//        }
+//    }
 
     public void singleClickActionSpecial(TwoDimensionalPoint twoDimensionalPoint, CardView cardView) {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(twoDimensionalPoint, cardView);
@@ -549,9 +559,16 @@ public class DuelView extends Application {
             System.out.println("single click: " + output);
             output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
             System.out.println("show card: " + output);
+            String cardDescriptionUselessString = "Description: (.+)";
+            Pattern pattern = Pattern.compile(cardDescriptionUselessString);
+            Matcher matcher = pattern.matcher(output);
+            String ourDescriptionString = "";
+            if (matcher.find()) {
+                ourDescriptionString = matcher.group(1);
+            }
             CardLocation cardLocation = controllerForView.giveCardLocationByCoordinateInView(twoDimensionalPoint, cardView);
             System.out.println("cardLocation picking is " + cardLocation.getRowOfCardLocation() + " and " + cardLocation.getIndex());
-            moreCardInfoSection.updateCardMoreInfoSection(cardView);
+            moreCardInfoSection.updateCardMoreInfoSection(cardView, ourDescriptionString);
         }
     }
 

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
 import project.controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import project.controller.duel.GamePhaseControllers.SelectCardController;
 import project.controller.duel.PreliminaryPackage.GameManager;
+import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 import project.model.cardData.General.*;
@@ -799,21 +801,21 @@ public class DuelBoard {
 
         StringBuilder shownCardStringBuilder = new StringBuilder();
         shownCardStringBuilder.append("Name: " + cardName + "\n");
-        if (allMonsterCards.containsKey(cardName)) {
-            MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
+        if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardName))) {
+            MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardName));
             shownCardStringBuilder.append("Level: " + monsterCard.getLevel() + "\n");
             shownCardStringBuilder.append("Type: " + monsterCard.getMonsterCardFamily() + "\n");
             shownCardStringBuilder.append("ATK: " + MonsterCard.giveATKDEFConsideringEffects("attack", selectedCard, 0) + "\n");
             shownCardStringBuilder.append("DEF: " + MonsterCard.giveATKDEFConsideringEffects("defense", selectedCard, 0) + "\n");
             shownCardStringBuilder.append("Description: " + monsterCard.getCardDescription());
         } else {
-            if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
-                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
+            if (allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardName)).getCardType().equals(CardType.SPELL)) {
+                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardName));
                 shownCardStringBuilder.append("Spell\n");
                 shownCardStringBuilder.append("Type: " + spellCard.getSpellCardValue() + "\n");
                 shownCardStringBuilder.append("Description: " + spellCard.getCardDescription());
             } else {
-                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
+                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardName));
                 shownCardStringBuilder.append("Trap\n");
                 shownCardStringBuilder.append("Type: " + trapCard.getTrapCardValue() + "\n");
                 shownCardStringBuilder.append("Description: " + trapCard.getCardDescription());
