@@ -43,7 +43,7 @@ public class Storage {
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
 
-    public void startProgram() throws IOException {
+    public void startProgram() throws Exception {
 
         addUsersToArrayList();
         addMonsterCards();
@@ -171,7 +171,6 @@ public class Storage {
             String[] nextRecord;
 
             while ((nextRecord = csvReader.readNext()) != null) {
-
                 if (nextRecord[1].equals("Trap")) {
                     String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
                     allSpellAndTrapCards.put(correctCardName,
@@ -191,13 +190,11 @@ public class Storage {
     private void addSpellCards() {
 
         try {
-
             FileReader filereader = new FileReader(addressOfStorage + "CSV\\Spell.csv");
             CSVReader csvReader = new CSVReader(filereader);
             String[] nextRecord;
             int numberOfTurnsOfActivation = 120;
             while ((nextRecord = csvReader.readNext()) != null) {
-
                 if (nextRecord[1].equals("Spell")) {
                     if (nextRecord[0].startsWith("Swords of R")) {
                         numberOfTurnsOfActivation = 6;
@@ -249,12 +246,10 @@ public class Storage {
     }
 
     private void addMonsterCards() {
-
         try {
             FileReader filereader = new FileReader(addressOfStorage + "CSV\\Monster.csv");
             CSVReader csvReader = new CSVReader(filereader);
             String[] nextRecord;
-
             int firstRow = 0;
             while ((nextRecord = csvReader.readNext()) != null) {
                 if (firstRow > 0) {
@@ -326,7 +321,7 @@ public class Storage {
         return string.toUpperCase();
     }
 
-    private void addUsersToArrayList() throws IOException {
+    private void addUsersToArrayList() throws Exception {
 
         ArrayList<String> filenames = new ArrayList<>();
         File directory = new File(addressOfStorage + "Users\\");
@@ -348,7 +343,6 @@ public class Storage {
             fileReader.close();
 
             if (rootNode.isJsonObject()) {
-
                 JsonObject details = rootNode.getAsJsonObject();
                 User user = new User(details.get("name").getAsString(), details.get("nickname").getAsString(),
                     details.get("password").getAsString(), details.get("imagePath").getAsString());
@@ -370,7 +364,7 @@ public class Storage {
         return new Image(stream);
     }
 
-    private void addDecksAndUselessCardsToUser(User user, String filename) throws FileNotFoundException {
+    private void addDecksAndUselessCardsToUser(User user, String filename) throws Exception {
 
         FileReader fileReader = new FileReader(addressOfStorage + "Users\\" + filename + "\\DeckAndCards.json");
         Scanner myReader = new Scanner(fileReader);

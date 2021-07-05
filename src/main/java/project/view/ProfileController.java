@@ -90,45 +90,45 @@ public class ProfileController implements Initializable {
     public void changePassword(ActionEvent actionEvent) {
 
         if (currentPasswordField.getText().equals("") || newPasswordField.getText().equals("")) {
-            showAlert("FILL FIELDS");
+            showAlert("FILL FIELDS", "ERROR");
             currentPasswordField.setText("");
             newPasswordField.setText("");
             return;
         }
         String result = profile.changePassword(currentPasswordField.getText(), newPasswordField.getText());
         if (result.equals("current password is invalid")) {
-            showAlert("CURRENT PASSWORD IS WRONG");
+            showAlert("CURRENT PASSWORD IS WRONG", "ERROR");
         } else if (result.equals("please enter a new password")) {
-            showAlert("ENTER NEW PASSWORD");
+            showAlert("ENTER NEW PASSWORD", "ERROR");
         } else {
-            showAlert("PASSWORD CHANGED SUCCESSFULLY!");
+            showAlert("PASSWORD CHANGED SUCCESSFULLY!", "SUCCESSFUL");
         }
         currentPasswordField.setText("");
         newPasswordField.setText("");
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(CONFIRMATION, message, ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
     public void changeNickname(ActionEvent actionEvent) {
 
         if (newNicknameField.getText().equals("")) {
-            showAlert("FILL FIELDS");
+            showAlert("FILL FIELDS", "ERROR");
             return;
         }
 
         String result = profile.changeNickname(newNicknameField.getText());
         if (result.equals("user with nickname already exists")) {
-            showAlert("NEW NICKNAME IS REPEATED");
+            showAlert("NEW NICKNAME IS REPEATED","ERROR");
             newNicknameField.setText("");
             return;
         }
 
         nicknameLabel.setText(newNicknameField.getText());
         newNicknameField.setText("");
-        showAlert("NICKNAME CHANGED SUCCESSFULLY!");
+        showAlert("NICKNAME CHANGED SUCCESSFULLY!", "SUCCESSFUL");
     }
 
     public void backToMainMenu() {

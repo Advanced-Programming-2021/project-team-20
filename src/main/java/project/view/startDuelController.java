@@ -54,12 +54,15 @@ public class startDuelController implements Initializable {
         if (checkConditionsOfPlayers("AI")) {
             startGame();
         }
-        System.out.println("dadasdasdas");
     }
 
     public void singleDuelWithUser() {
         String userName = secondPlayerSingleDuelField.getText();
         isMatchGame = false;
+        if (userName.equals("")) {
+            showAlert("FILL FIELDS", "ERROR");
+            return;
+        }
         if (checkConditionsOfPlayers(userName)) {
             startGame();
         } else {
@@ -70,6 +73,10 @@ public class startDuelController implements Initializable {
     public void matchDuelWithUser() {
         String userName = secondPlayerMatchDuelField.getText();
         isMatchGame = true;
+        if (userName.equals("")) {
+            showAlert("FILL FIELDS", "ERROR");
+            return;
+        }
         if (checkConditionsOfPlayers(userName)) {
             startGame();
         } else {
@@ -81,7 +88,7 @@ public class startDuelController implements Initializable {
         int numberOfRounds = isMatchGame ? 3 : 1;
         String result = duelStarter.createGame(LoginController.getOnlineUser().getName(), secondPlayer, numberOfRounds);
         if (!result.equals("game started")) {
-            showAlert(result.toUpperCase());
+            showAlert(result.toUpperCase(), "ERROR");
             return false;
         }
         return true;
@@ -95,9 +102,9 @@ public class startDuelController implements Initializable {
         }
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(null, message, ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
     public void backToMainMenu() {
@@ -107,5 +114,4 @@ public class startDuelController implements Initializable {
             e.printStackTrace();
         }
     }
-
 }
