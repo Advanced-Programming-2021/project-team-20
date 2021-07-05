@@ -1,5 +1,6 @@
 package project.view.pooyaviewpackage;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.*;
@@ -51,8 +52,8 @@ public class HealthBarAndHealthPoints {
         backGroundRectangle.setArcWidth(3);
         healthBar.setX(5);
         healthBar.setY(isForAlly ? correctStageHeight + digitHeight + 5 : digitHeight + 5);
-        upperLeftYOfHelpfulHealthBar = (isForAlly ? correctStageHeight + digitHeight : digitHeight);
-        helpfulHealthRectangle = new Rectangle(upperLeftXOfHelpfulHealthBar, upperLeftYOfHelpfulHealthBar, 0, heightOfHealthBar);
+        upperLeftYOfHelpfulHealthBar = (isForAlly ? correctStageHeight + digitHeight + heightDistanceOfBackgroundHealthBar : digitHeight + heightDistanceOfBackgroundHealthBar);
+        helpfulHealthRectangle = new Rectangle(0, heightOfHealthBar);
         backGroundRectangle.setViewOrder(4);
         helpfulHealthRectangle.setViewOrder(2);
         healthBar.setViewOrder(3);
@@ -66,10 +67,11 @@ public class HealthBarAndHealthPoints {
         healthDigits.get(2).setFill(new ImagePattern(new Image(HealthBarAndHealthPoints.class.getResource("/project/ingameicons/numbers/0.png").toExternalForm())));
         healthDigits.get(3).setFill(new ImagePattern(new Image(HealthBarAndHealthPoints.class.getResource("/project/ingameicons/numbers/0.png").toExternalForm())));
         container = new VBox(helpfulHealthRectangle);
-        container.setLayoutX(HealthBarAndHealthPoints.getUpperLeftXOfHelpfulHealthBar());
+        container.setPrefWidth(upperLeftXOfHelpfulHealthBar);
         container.setLayoutY(upperLeftYOfHelpfulHealthBar);
-        container.setMaxWidth(HealthBarAndHealthPoints.getWidthOfHealthBar());
-        container.setMaxHeight(HealthBarAndHealthPoints.getHeightOfHealthBar());
+        container.setAlignment(Pos.CENTER_RIGHT);
+        //container.setMaxWidth(HealthBarAndHealthPoints.getWidthOfHealthBar());
+        //container.setMaxHeight(HealthBarAndHealthPoints.getHeightOfHealthBar());
 
     }
 

@@ -280,7 +280,7 @@ public class DuelView extends Application {
         anchorPane.getChildren().add(allyHealthStatus.getHealthDigits().get(2));
         anchorPane.getChildren().add(allyHealthStatus.getHealthDigits().get(3));
         anchorPane.getChildren().add(allyHealthStatus.getHealthBar());
-        anchorPane.getChildren().add(allyHealthStatus.getHelpfulHealthRectangle());
+        //anchorPane.getChildren().add(allyHealthStatus.getHelpfulHealthRectangle());
         anchorPane.getChildren().add(allyHealthStatus.getBackGroundRectangle());
         anchorPane.getChildren().add(allyHealthStatus.getContainer());
         anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(0));
@@ -288,7 +288,7 @@ public class DuelView extends Application {
         anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(2));
         anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(3));
         anchorPane.getChildren().add(opponentHealthStatus.getHealthBar());
-        anchorPane.getChildren().add(opponentHealthStatus.getHelpfulHealthRectangle());
+        //anchorPane.getChildren().add(opponentHealthStatus.getHelpfulHealthRectangle());
         anchorPane.getChildren().add(opponentHealthStatus.getBackGroundRectangle());
         anchorPane.getChildren().add(opponentHealthStatus.getContainer());
         controllerForView.giveCardsAtTheBeginningOfGame();
