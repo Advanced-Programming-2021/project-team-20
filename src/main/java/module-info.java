@@ -5,8 +5,7 @@ module PhaseOneProject {
     requires javafx.fxml;
     requires javafx.media;
     requires java.sql;
-  //  requires javax.image;
-
+    requires javax.image.io;
 
     opens project.view to javafx.fxml;
     exports project.view;
