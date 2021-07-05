@@ -28,9 +28,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import project.controller.non_duel.deckCommands.DeckCommands;
@@ -52,7 +49,7 @@ public class DeckMenuController implements Initializable {
     private static List<Rectangle> allScrollBarRectangle;
     private static List<Rectangle> allScrollBarBackGroundRectangles;
     private static AnchorPane anchorPane;
-    private static String deckname ;
+    private static String deckname;
     private Rectangle shownCardRectangle;
     private static List<Label> allCardDiscriptionLabels;
     private DeckCommands deckCommands = new DeckCommands();
@@ -338,11 +335,11 @@ public class DeckMenuController implements Initializable {
             label.setId(scrollCards.get(i).getCardName() + "label");
             if (i % 2 == 0) {
                 backGrouRectangle.setY(5 + 30 * i);
-                rectangle.setY(5+30 * i);
+                rectangle.setY(5 + 30 * i);
                 label.setLayoutY(42 + 30 * i);
             }
             if (i % 2 == 1) {
-                rectangle.setY(5+ 30 * (i - 1));
+                rectangle.setY(5 + 30 * (i - 1));
                 rectangle.setX(rectangle.getX() + 50);
                 backGrouRectangle.setY(5 + 30 * (i - 1));
                 backGrouRectangle.setX(55);
@@ -447,33 +444,39 @@ public class DeckMenuController implements Initializable {
     private void addCardDescription(String cardName) {
         Card card = Storage.getCardByName(cardName);
         String cardDiscription = card.getCardDescription();
-        Pane pane = new Pane();
+        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(5);
+        Pane pane;
+        if (scrollPane.getContent() == null) {
+            pane = new Pane();
+        } else {
+            pane = (Pane) scrollPane.getContent();
+        }
+        pane.getChildren().clear();
         Label label = allCardDiscriptionLabels.get(0);
         label.setText("  " + cardName);
-        label.setTextFill(Color.YELLOW);
+        label.setTextFill(Color.BLUE);
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
         StringBuilder sentencesForEachLabel = new StringBuilder();
-        int numberOfLabelUsed = 0;
+        int numberOfLabelUsed = 1;
         for (int i = 0; i < shortCardDescription.size(); i++) {
-            label = allCardDiscriptionLabels.get(i + 1);
+            label = allCardDiscriptionLabels.get(numberOfLabelUsed);
+            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
             if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
-                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                label.setLayoutY(20 * (numberOfLabelUsed ));
                 pane.getChildren().add(label);
                 numberOfLabelUsed++;
-            }
-            if (i == shortCardDescription.size()) {
+            } else
+            if (i + 1 == shortCardDescription.size()) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
-                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);
             }
-            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
         }
 
-        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(5);
         scrollPane.setContent(pane);
     }
 

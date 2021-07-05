@@ -182,7 +182,19 @@ public class ImportAndExportController implements Initializable {
 
         Card card = Storage.getCardByName(cardName);
         String cardDiscription = card.getCardDescription();
-        Pane pane = new Pane();
+        ScrollPane scrollPane = null;
+        if (isExportCard) {
+            scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
+        } else {
+            scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
+        }
+        Pane pane = null;
+        if (scrollPane.getContent() == null) {
+            pane = new Pane();
+        } else {
+            pane = (Pane) scrollPane.getContent();
+        }
+        pane.getChildren().clear();
         List<Label> allCardDiscriptionLabels = new ArrayList<>();
         if (isExportCard) {
             allCardDiscriptionLabels = allCardDiscriptionLabelsForExport;
@@ -191,35 +203,26 @@ public class ImportAndExportController implements Initializable {
         }
         Label label = allCardDiscriptionLabels.get(0);
         label.setText("  " + cardName);
-        label.setTextFill(Color.YELLOW);
+        label.setTextFill(Color.BLUE);
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
         StringBuilder sentencesForEachLabel = new StringBuilder();
-        int numberOfLabelUsed = 0;
+        int numberOfLabelUsed = 1;
         for (int i = 0; i < shortCardDescription.size(); i++) {
-            label = allCardDiscriptionLabels.get(i + 1);
+            label = allCardDiscriptionLabels.get(numberOfLabelUsed);
+            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
             if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
-                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);
                 numberOfLabelUsed++;
-            }
-            if (i == shortCardDescription.size()) {
+            } else if (i + 1 == shortCardDescription.size()) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
-                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);
             }
-
-            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
-        }
-
-        ScrollPane scrollPane = null;
-        if (isExportCard) {
-            scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
-        } else {
-            scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         }
         scrollPane.setContent(pane);
     }

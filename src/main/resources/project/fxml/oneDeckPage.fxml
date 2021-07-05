@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -18,9 +19,13 @@
       <ScrollPane layoutX="880.0" layoutY="-3.0" prefHeight="706.0" prefWidth="120.0" />
       <Pane layoutX="327.0" layoutY="36.0" prefHeight="430.0" prefWidth="525.0" styleClass="chart-plot-background4" stylesheets="@../css/abc.css" />
       <Pane layoutX="327.0" layoutY="474.0" prefHeight="142.0" prefWidth="525.0" styleClass="chart-plot-background5" stylesheets="@../css/abc.css" />
-      <ScrollPane layoutX="15.0" layoutY="459.0" prefHeight="162.0" prefWidth="213.0" styleClass="chart-plot-background4" stylesheets="@../css/abc.css" />
+      <ScrollPane layoutX="15.0" layoutY="459.0" prefHeight="162.0" prefWidth="213.0" stylesheets="@../css/abc.css">
+         <styleClass>
+            <String fx:value="chart-plot-background4" />
+            <String fx:value="scroll-bar" />
+         </styleClass></ScrollPane>
       <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#3ca1ff" height="651.0" layoutX="245.0" layoutY="29.0" stroke="#ffffffcd" strokeType="INSIDE" strokeWidth="4.0" width="75.0" />
-      <Label fx:id="deckNameLabel" layoutX="169.0" layoutY="518.0" prefHeight="71.0" prefWidth="228.0" rotate="270.0" text="Label" textFill="WHITE">
+      <Label fx:id="deckNameLabel" alignment="CENTER" layoutX="169.0" layoutY="518.0" prefHeight="71.0" prefWidth="228.0" rotate="270.0" text="Label" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>

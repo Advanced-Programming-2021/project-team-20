@@ -264,7 +264,6 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-
             e.printStackTrace();
             System.exit(0);
         }
@@ -337,10 +336,6 @@ public class Storage {
                 user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
             }
-        }
-
-        for (int i = 0; i < allUsers.size(); i++) {
-            System.out.println(allUsers.get(i).getName() + allUsers.get(i).getPassword());
         }
     }
 

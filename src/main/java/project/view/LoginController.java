@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 
@@ -87,8 +90,12 @@ public class LoginController implements Initializable {
     }
 
     private void createUser() {
-        Storage.addUserToAllUsers(new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
-                passwordFieldfORegister.getText(), chooseRandomImageForUser()));
+        String filePath = chooseRandomImageForUser();
+        User user = new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
+                passwordFieldfORegister.getText(), filePath);
+        user.setImage(UIUtility.createImages(filePath));
+        Storage.addUserToAllUsers(user);
+
     }
 
     private boolean doesUserWithThisUsernameAlreadyExists() {

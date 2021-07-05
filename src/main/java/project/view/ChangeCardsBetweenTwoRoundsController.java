@@ -89,8 +89,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         }
         changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
         equalDeckNameLabel.setText(deckname);
-        equalShowPlayerNameLabel.setText("PLAYERS TURN: " +  playerName);
-        getRectanglesFromUIUtilityForPanes(); 
+        equalShowPlayerNameLabel.setText("PLAYERS TURN: " + playerName);
+        getRectanglesFromUIUtilityForPanes();
         createMainDeck();
         createSideDeck();
         showNmberOfCardsInLabels();
@@ -313,32 +313,38 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     private void addCardDescription(String cardName) {
         Card card = Storage.getCardByName(cardName);
         String cardDiscription = card.getCardDescription();
-        Pane pane = new Pane();
+        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(4);
+        Pane pane;
+        if (scrollPane.getContent() == null) {
+            pane = new Pane();
+        } else {
+            pane = (Pane) scrollPane.getContent();
+        }
+        pane.getChildren().clear();
         Label label = allCardDiscriptionLabels.get(0);
         label.setText("  " + cardName);
-        label.setTextFill(Color.YELLOW);
+        label.setTextFill(Color.BLUE);
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
         StringBuilder sentencesForEachLabel = new StringBuilder();
-        int numberOfLabelUsed = 0;
+        int numberOfLabelUsed = 1;
         for (int i = 0; i < shortCardDescription.size(); i++) {
-            label = allCardDiscriptionLabels.get(i + 1);
+            label = allCardDiscriptionLabels.get(numberOfLabelUsed);
+            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
             if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
-                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);
                 numberOfLabelUsed++;
-            }
-            if (i == shortCardDescription.size()) {
+            } else if (i + 1 == shortCardDescription.size()) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
-                label.setLayoutY(20 * (numberOfLabelUsed + 1));
+                label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);
             }
-            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
         }
-        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(4);
+
         scrollPane.setContent(pane);
     }
 
@@ -381,7 +387,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
         copyPropertyToTransferredCard(transfferdRectangle, addedRectangle);
         pane.getChildren().add(addedRectangle);
-        changeCardsBetweenTwoRounds.addCardToMianOrSideDeck(transfferdRectangle.getId(), isTransferToMainDeck, currentPlayerWhoChangesDeck);
+        changeCardsBetweenTwoRounds.addCardToMianOrSideDeck(transfferdRectangle.getId(), isTransferToMainDeck,
+                currentPlayerWhoChangesDeck);
         deleteDraggedCard(transfferdRectangle);
     }
 

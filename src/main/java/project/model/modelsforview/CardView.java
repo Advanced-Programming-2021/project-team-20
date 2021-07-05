@@ -148,7 +148,6 @@ public class CardView extends Rectangle {
                 this.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/card_back.png").toExternalForm())));
             }
         }
-
     }
 
     public void setLabel(RowOfCardLocation label) {

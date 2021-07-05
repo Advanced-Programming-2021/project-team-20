@@ -110,10 +110,20 @@ public class UIUtility {
         allTypeOfCards.put("allTrapCardsInList", allTrapCradsInList);
     }
 
-    private static Image createImages(String path, String imagename) {
+    public static Image createImages(String path, String imagename) {
         InputStream stream = null;
         try {
             stream = new FileInputStream("src\\main\\resources\\project\\images\\" + path + imagename + ".PNG");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Image(stream);
+    }
+
+    public static Image createImages(String path) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(path);
         } catch (Exception e) {
             e.printStackTrace();
         }
