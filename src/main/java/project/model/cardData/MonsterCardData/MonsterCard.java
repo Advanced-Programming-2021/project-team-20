@@ -105,15 +105,16 @@ public class MonsterCard extends Card {
         }
         if (cardName.equals("beast king barbaros")) {
             summoningRequirements.add(
-                SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+                    SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             summoningRequirements
-                .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+                    .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_NORMAL_SUMMONED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
         }
         if (cardName.equals("terratiger, the empowered warrior")) {
-            uponSummoningEffects.add(UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
+            uponSummoningEffects.add(
+                    UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
         }
         if (cardName.equals("the tricky")) {
             summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
@@ -162,6 +163,7 @@ public class MonsterCard extends Card {
         if (enumValues != null) {
             setEnumValues(enumValues);
         }
+
     }
 
     public MonsterCard(MonsterCard monster) {
@@ -711,6 +713,42 @@ public class MonsterCard extends Card {
     @Override
     public Object clone() {
         return new MonsterCard(this);
+    }
+
+    public String[] toCSVFormatString() {
+        List<String> csvArray = new ArrayList<>();
+        csvArray.add(cardName);
+        csvArray.add(level + "");
+        csvArray.add(monsterCardAttribute + "");
+        csvArray.add(monsterCardFamily + "");
+        csvArray.add(monsterCardValue + "");
+        csvArray.add(attackPower + "");
+        csvArray.add(defensePower + "");
+        csvArray.add(cardDescription);
+        csvArray.add(cardPrice + "");
+        csvArray.add(toCSVformatEffectsOfCards(attackerEffects));
+        csvArray.add(toCSVformatEffectsOfCards(beingAttackedEffects));
+        csvArray.add(toCSVformatEffectsOfCards(continuousMonsterEffects));
+        csvArray.add(toCSVformatEffectsOfCards(flipEffects));
+        csvArray.add(toCSVformatEffectsOfCards(optionalMonsterEffects));
+        csvArray.add(toCSVformatEffectsOfCards(sentToGraveyardEffects));
+        csvArray.add(toCSVformatEffectsOfCards(summoningRequirements));
+        csvArray.add(toCSVformatEffectsOfCards(uponSummoningEffects));
+        String[] res = new String[csvArray.size()];
+        res = csvArray.toArray(res);
+        return res;
+    }
+
+    private String toCSVformatEffectsOfCards(ArrayList effects) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("#");
+        for (int i = 0; i < effects.size(); i++) {
+            stringBuilder.append(effects.get(i));
+            if (i + 1 < effects.size()) {
+                stringBuilder.append("#");
+            }
+        }
+        return stringBuilder.toString();
     }
 
 }

@@ -5,7 +5,10 @@ module Graphic.Copy {
     requires opencsv;
     requires gson;
     requires java.sql;
-    
+    // requires jmf;
+    requires jlayer;
+
     opens project.View to javafx.fxml;
+
     exports project.View;
 }

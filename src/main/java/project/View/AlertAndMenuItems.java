@@ -104,7 +104,7 @@ public class AlertAndMenuItems {
             public void handle(ActionEvent event) {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
-                System.out.println();
+         //       System.out.println();
                 // System.out.println("cardLocationSelecting is now " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
                 if (cardLocationSelecting != null) {
                     DuelView.getSendingRequestsToServer().sendNormalSummoningRequestToServer(cardView, cardLocationSelecting);
@@ -120,7 +120,7 @@ public class AlertAndMenuItems {
             public void handle(ActionEvent event) {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
-                System.out.println();
+        //        System.out.println();
                 // System.out.println("cardLocationSelecting is now " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
                 if (cardLocationSelecting != null) {
                     DuelView.getSendingRequestsToServer().sendChangingCardPositionRequestToServer(cardView, cardLocationSelecting);
@@ -136,7 +136,7 @@ public class AlertAndMenuItems {
             public void handle(ActionEvent event) {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
-                System.out.println();
+       //         System.out.println();
                 // System.out.println("cardLocationSelecting is now " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
                 if (cardLocationSelecting != null) {
                     DuelView.getSendingRequestsToServer().sendFlipSummoningRequestToServer(cardView, cardLocationSelecting);
@@ -154,8 +154,8 @@ public class AlertAndMenuItems {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
 
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
-                System.out.println();
-                System.out.println("cardLocationSelecting is now " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
+                // System.out.println();
+                // System.out.println("cardLocationSelecting is now " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
                 if (cardLocationSelecting != null) {
                     showAllAttackingMonsterOptions(cardLocationSelecting);
                 }
@@ -171,7 +171,7 @@ public class AlertAndMenuItems {
             public void handle(ActionEvent event) {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
-                System.out.println();
+         //       System.out.println();
                 //System.out.println("cardLocationSelecting is now " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
                 if (cardLocationSelecting != null) {
                     Alert alert = new Alert(CONFIRMATION, "Do you want to directly attack your opponent with your monster?", ButtonType.YES, ButtonType.NO);
@@ -214,7 +214,7 @@ public class AlertAndMenuItems {
     }
 
     public void showAllAttackingMonsterOptions(CardLocation cardLocationSelecting) {
-        System.out.println("show all attacking monster options");
+     //   System.out.println("show all attacking monster options");
         ButtonType attack1 = new ButtonType("Attack 1");
         ButtonType attack2 = new ButtonType("Attack 2");
         ButtonType attack3 = new ButtonType("Attack 3");

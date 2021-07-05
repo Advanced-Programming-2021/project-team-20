@@ -2,23 +2,16 @@ package project.View;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.controller.non_duel.storage.Storage;
-import project.model.User;
 
 public class MainView extends Application {
     private static Stage stage;
@@ -26,7 +19,7 @@ public class MainView extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        URL welcomeUrl = getClass().getResource("/project/fxml/mainMenu.fxml");
+        URL welcomeUrl = getClass().getResource("/project/fxml/loginPage.fxml");
         root = FXMLLoader.load(welcomeUrl);
         MainView.stage = stage;
         stage.setResizable(false);
@@ -40,10 +33,11 @@ public class MainView extends Application {
 
         Storage storage = new Storage();
         storage.startProgram();
+    //    Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
         UIUtility.createPreliminaryToStartProgram();
-        LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
+    //    LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
-    //    storage.endProgram();
+        storage.endProgram();
     }
 
     public void changeView(String fxml) throws IOException {

@@ -239,7 +239,7 @@ public class RockPaperScissorController implements Initializable {
         }
         if (player2Selection == 1) {
             player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterdStone")));
-        } else if (player1Selection == 2) {
+        } else if (player2Selection == 2) {
             player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterePaper")));
         } else {
             player2SelectionRectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("mouseEnterdScissorBaz")));

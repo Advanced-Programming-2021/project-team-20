@@ -17,9 +17,13 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -52,10 +56,6 @@ public class ImportAndExportController implements Initializable {
     private Rectangle importRectangle;
     @FXML
     private Rectangle exportRectangle;
-    @FXML
-    private Label importLabel;
-    @FXML
-    private Label exportLabel;
 
     private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Card>> allCardsInDifferentPages;
@@ -65,6 +65,7 @@ public class ImportAndExportController implements Initializable {
     private int whichPageIsShowing = 0;
     private static AnchorPane anchorPane;
     private String cardNameForExport = "";
+    private static Rectangle equalExportRectangle;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -73,11 +74,11 @@ public class ImportAndExportController implements Initializable {
             rectanglesToShowCards = UIUtility.getRectanglesToShowCardsInImportAndExportClass();
             addEffectsToRectanglesThatShowCards();
         }
-
+        equalExportRectangle = exportRectangle;
         allCardDiscriptionLabelsForExport = new ArrayList<>();
-        allCardDiscriptionLabelsForExport = List.copyOf(UIUtility.getAllCardDiscriptionLabels1());
+        allCardDiscriptionLabelsForExport = (UIUtility.getAllCardDiscriptionLabels1());
         allCardDiscriptionLabelsForImport = new ArrayList<>();
-        allCardDiscriptionLabelsForImport = List.copyOf(UIUtility.getAllCardDiscriptionLabels2());
+        allCardDiscriptionLabelsForImport = (UIUtility.getAllCardDiscriptionLabels2());
         if (allCardsInDifferentPages == null) {
             createPacksOfCardsForEachPage();
         }
@@ -93,6 +94,19 @@ public class ImportAndExportController implements Initializable {
         setEffectsOfButtons();
     }
 
+    public void createSceneAndCardPictures(AnchorPane pane) {
+        setAnchorPane(pane);
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
+        List<Card> allCards = UIUtility.getAllTypeOfCards().get("allCards");
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            Rectangle rectangle = rectanglesToShowCards.get(i);
+            rectangle.setFill(new ImagePattern(allCards.get(i).getImage()));
+            rectangle.setId(allCards.get(i).getCardName());
+            backgroundPane.getChildren().add(rectangle);
+        }
+        MainView.changeScene(pane);
+    }
+
     private void setEffectsOfButtons() {
         if (whichPageIsShowing + 1 == allCardsInDifferentPages.size()) {
             nextCardsbtn.setDisable(true);
@@ -106,7 +120,7 @@ public class ImportAndExportController implements Initializable {
             previousCardsbtn.setDisable(false);
         }
 
-        if(cardNameForExport.equals("")){
+        if (cardNameForExport.equals("")) {
             exportbtn.setDisable(true);
         } else {
             exportbtn.setDisable(false);
@@ -131,7 +145,7 @@ public class ImportAndExportController implements Initializable {
     }
 
     private void addEffectsToRectanglesThatShowCards() {
-        
+
         for (int i = 0; i < rectanglesToShowCards.size(); i++) {
             Rectangle rectangle = rectanglesToShowCards.get(i);
             rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -145,10 +159,10 @@ public class ImportAndExportController implements Initializable {
             rectangle.setOnMouseEntered(new EventHandler<Event>() {
                 @Override
                 public void handle(Event arg0) {
-                    exportRectangle.setFill(rectangle.getFill());
-                    exportRectangle.setOpacity(1);
+                    equalExportRectangle.setFill(rectangle.getFill());
+                    equalExportRectangle.setOpacity(1);
                     addCardDescription(rectangle.getId(), true);
-                    flipRectangle(exportRectangle);
+                    flipRectangle(equalExportRectangle);
                 }
             });
         }
@@ -176,9 +190,8 @@ public class ImportAndExportController implements Initializable {
             allCardDiscriptionLabels = allCardDiscriptionLabelsForImport;
         }
         Label label = allCardDiscriptionLabels.get(0);
-        label.setText(" " + cardName);
+        label.setText("  " + cardName);
         label.setTextFill(Color.YELLOW);
-        label.setFont(new Font(13));
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
@@ -186,7 +199,7 @@ public class ImportAndExportController implements Initializable {
         int numberOfLabelUsed = 0;
         for (int i = 0; i < shortCardDescription.size(); i++) {
             label = allCardDiscriptionLabels.get(i + 1);
-            if (sentencesForEachLabel.length() >= 20) {
+            if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
                 label.setLayoutY(20 * (numberOfLabelUsed + 1));
@@ -214,19 +227,6 @@ public class ImportAndExportController implements Initializable {
     private void addEffectToLabel(Label label, String text) {
         label.setText("  " + text);
         label.setTextFill(Color.BLACK);
-    }
-
-    public void createSceneAndCardPictures(AnchorPane pane) {
-        setAnchorPane(pane);
-        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
-        List<Card> allCards = UIUtility.getAllTypeOfCards().get("allCards");
-        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
-            Rectangle rectangle = rectanglesToShowCards.get(i);
-            rectangle.setFill(new ImagePattern(allCards.get(i).getImage()));
-            rectangle.setId(allCards.get(i).getCardName());
-            backgroundPane.getChildren().add(rectangle);
-        }
-        MainView.changeScene(pane);
     }
 
     public void nextPage() {
@@ -266,9 +266,7 @@ public class ImportAndExportController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         String result = importAndExport.importCard(file);
         if (result.equals("this card does not exist")) {
-            importLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            importLabel.setFont(new Font(24));
-            importLabel.setText("THIS FILE NOT A CARD");
+            showAlert("THIS FILE NOT A CARD");
             return;
         }
 
@@ -276,16 +274,15 @@ public class ImportAndExportController implements Initializable {
         Image image = Storage.getCardByName(result).getImage();
         importRectangle.setFill(new ImagePattern(image));
         importRectangle.setOpacity(1);
+        System.out.println(result);
         addCardDescription(result, false);
         importRectangle.setEffect(new DropShadow(+25000d, 0d, +2d, Color.BLACK));
         flipRectangle(importRectangle);
     }
 
     public void exportFiles() {
-        exportLabel.setFont(new Font(24.0));
         if (cardNameForExport.equals("")) {
-            exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            exportLabel.setText("CHOOSE A CARD");
+            showAlert("CHOOSE A CARD");
             return;
         }
 
@@ -296,14 +293,17 @@ public class ImportAndExportController implements Initializable {
         File file = fileChooser.showSaveDialog(MainView.getStage());
 
         if (importAndExport.exportCard(cardNameForExport, file).equals("ERROR")) {
-            exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            exportLabel.setText("FILE CANNOT BE EXPORTED");
+            showAlert("FILE CANNOT BE EXPORTED");
             return;
         }
-        exportLabel.setStyle("-fx-text-fill:green;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-        exportLabel.setText("FILE EXPORTED SUCCESSFULLY");
+        showAlert("FILE EXPORTED SUCCESSFULLY");
         cardNameForExport = "";
         setEffectsOfButtons();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(null, message, ButtonType.OK);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
     }
 
     public void backToMainMenu() {

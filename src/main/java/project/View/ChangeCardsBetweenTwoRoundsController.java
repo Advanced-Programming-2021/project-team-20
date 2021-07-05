@@ -33,11 +33,9 @@ import javafx.util.Duration;
 import project.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
-import project.controller.non_duel.deckCommands.DeckCommands;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.cardData.General.Card;
-import project.model.cardData.General.CardType;
 
 public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
@@ -45,13 +43,16 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     private Button confirmbtn;
     @FXML
     private Rectangle shownCardRectangle;
+    @FXML
+    private Label showPlayerNameLabel;
+    @FXML
+    private Label deckNameLabel;
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
     private static AnchorPane anchorPane;
 
     private static List<Label> allCardDiscriptionLabels;
     private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds;
-    private DeckCommands deckCommands = new DeckCommands();
     private static Label sizeOfMainDeckLabel;
     private static Label sizeOfAllMonsterCardsLabel;
     private static Label sizeOfAllSpellCardsLabel;
@@ -59,8 +60,10 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     private static boolean isAddedNecessaryThingsForTheFirstTime = false;
     private static Rectangle equalShownRectangle;
     private static Button equalConfirmbtn;
+    private static Label equalShowPlayerNameLabel;
+    private static Label equalDeckNameLabel;
     private static String currentPlayerWhoChangesDeck;
-    private static String allyPlayerName ;
+    private static String allyPlayerName;
     private static String opponentPlayerName;
     private int cardsAddedToMainDeck;
     private static List<String> mainDeckCards;
@@ -71,6 +74,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
         equalShownRectangle = shownCardRectangle;
         equalConfirmbtn = confirmbtn;
+        equalShowPlayerNameLabel = showPlayerNameLabel;
+        equalDeckNameLabel = deckNameLabel;
     }
 
     public void showPage(AnchorPane pane, String playerName, String deckname) {
@@ -83,8 +88,9 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         if (!isAddedNecessaryThingsForTheFirstTime) {
             initializeLabesForShowSizeOfDeck();
         }
-        // check createAllCardToRectangle
-        getRectanglesFromUIUtilityForPanes();
+        equalDeckNameLabel.setText(deckname);
+        equalShowPlayerNameLabel.setText("PLAYERS TURN: " +  playerName);
+        getRectanglesFromUIUtilityForPanes(); 
         createMainDeck();
         createSideDeck();
         showNmberOfCardsInLabels();
@@ -309,9 +315,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         String cardDiscription = card.getCardDescription();
         Pane pane = new Pane();
         Label label = allCardDiscriptionLabels.get(0);
-        label.setText(" " + cardName);
+        label.setText("  " + cardName);
         label.setTextFill(Color.YELLOW);
-        label.setFont(new Font(13));
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
@@ -319,7 +324,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         int numberOfLabelUsed = 0;
         for (int i = 0; i < shortCardDescription.size(); i++) {
             label = allCardDiscriptionLabels.get(i + 1);
-            if (sentencesForEachLabel.length() >= 20) {
+            if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
                 label.setLayoutY(20 * (numberOfLabelUsed + 1));

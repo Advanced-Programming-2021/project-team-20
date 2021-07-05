@@ -1,6 +1,8 @@
 package project.controller.duel.PreliminaryPackage;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +55,7 @@ public class DuelStarter {
             return "number of rounds is not supported";
         }
 
-    //    startNewGame(firstUser, secondUser, numberOfRounds);
+        // startNewGame(firstUser, secondUser, numberOfRounds);
         isDuelStarted = true;
         return "duel successfully started!\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
     }
@@ -96,10 +98,11 @@ public class DuelStarter {
         ArrayList<Card> firstUserSideDeck = getMainOrSideDeckCards(firstUserActiveDeck, false);
         ArrayList<Card> secondUserMainDeck = getMainOrSideDeckCards(secondUserActiveDeck, true);
         ArrayList<Card> secondUserSideDeck = getMainOrSideDeckCards(secondUserActiveDeck, false);
-
+        Collections.shuffle(firstUserMainDeck);
+        Collections.shuffle(secondUserMainDeck);
         GameManager gameManager = new GameManager();
-        gameManager.addANewGame(firstUserActiveDeck,firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,secondUserMainDeck, secondUserSideDeck,
-                firstUser.getName(), secondUser.getName(), roundsNumber);
+        gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
+                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
         GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
         GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
 

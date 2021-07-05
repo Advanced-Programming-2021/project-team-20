@@ -15,12 +15,12 @@
    <children>
       <Rectangle fx:id="shownCardRectangle" arcHeight="20.0" arcWidth="20.0" height="385.0" layoutX="15.0" layoutY="68.0" stroke="BLACK" strokeType="INSIDE" width="213.0" />
       <Button fx:id="backbtn" layoutX="64.0" layoutY="645.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="31.0" prefWidth="116.0" text="back" />
-      <ScrollPane layoutX="864.0" layoutY="-2.0" prefHeight="706.0" prefWidth="136.0" />
+      <ScrollPane layoutX="880.0" layoutY="-3.0" prefHeight="706.0" prefWidth="120.0" />
       <Pane layoutX="327.0" layoutY="36.0" prefHeight="430.0" prefWidth="525.0" styleClass="chart-plot-background4" stylesheets="@../css/abc.css" />
       <Pane layoutX="327.0" layoutY="474.0" prefHeight="142.0" prefWidth="525.0" styleClass="chart-plot-background5" stylesheets="@../css/abc.css" />
       <ScrollPane layoutX="15.0" layoutY="459.0" prefHeight="162.0" prefWidth="213.0" styleClass="chart-plot-background4" stylesheets="@../css/abc.css" />
       <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#3ca1ff" height="651.0" layoutX="245.0" layoutY="29.0" stroke="#ffffffcd" strokeType="INSIDE" strokeWidth="4.0" width="75.0" />
-      <Label fx:id="decknameLabel" layoutX="219.0" layoutY="559.0" prefHeight="71.0" prefWidth="128.0" rotate="270.0" text="Label" textFill="WHITE">
+      <Label fx:id="deckNameLabel" layoutX="169.0" layoutY="518.0" prefHeight="71.0" prefWidth="228.0" rotate="270.0" text="Label" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
@@ -122,8 +122,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Button fx:id="activateDeckbtn" layoutX="395.0" layoutY="645.0" mnemonicParsing="false" onAction="#activeDeck" prefHeight="31.0" prefWidth="116.0" text="activate " />
-      <Button fx:id="confirm" layoutX="656.0" layoutY="645.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="116.0" text="confirm" />
+      <Button fx:id="activateDeckbtn" layoutX="521.0" layoutY="645.0" mnemonicParsing="false" onAction="#activeDeck" prefHeight="31.0" prefWidth="116.0" text="activate " />
       <Label fx:id="activatedStatusLabel" alignment="CENTER" layoutX="26.0" layoutY="14.0" prefHeight="45.0" prefWidth="200.0">
          <font>
             <Font size="24.0" />

@@ -25,7 +25,7 @@ public class Cheat {
             return increaseLifePoints(Integer.parseInt(matcher.group("amount")), index);
         }
 
-        matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\S+)");
+        matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (.+)");
         if (matcher.find()) {
             return setWinner(matcher.group(1), index);
         }

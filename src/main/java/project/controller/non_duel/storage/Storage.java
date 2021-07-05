@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;
+import project.model.cardData.General.CardType;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
@@ -37,6 +38,7 @@ public class Storage {
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private static Card unknownCard;
     private String addressOfStorage = "Resourses\\";
+    private static HashMap<String, Card> newCardsCreated = new HashMap<>();
 
     public void startProgram() throws IOException {
 
@@ -50,10 +52,40 @@ public class Storage {
 
     }
 
-    public void endProgram() {
+    public void endProgram() throws IOException {
 
+        saveNewCardsInFile();
+        savaUsersInFile();
+
+    }
+
+    private void saveNewCardsInFile() throws IOException {
+        CSVWriter csvWriter = null;
+        for (Map.Entry<String, Card> entry : newCardsCreated.entrySet()) {
+            if (entry.getValue().getCardType().equals(CardType.MONSTER)) {
+                csvWriter = new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Monster.csv", true));
+                MonsterCard monsterCard = (MonsterCard) entry.getValue();
+                csvWriter.writeNext(monsterCard.toCSVFormatString());
+                csvWriter.flush();
+                csvWriter.close();
+            } else if (entry.getValue().getCardType().equals(CardType.SPELL)) {
+                 csvWriter =new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Spell.csv",true));
+                 SpellCard spellCard = (SpellCard) entry.getValue();
+                 csvWriter.writeNext(spellCard.toCSVFormatString());
+                 csvWriter.flush();
+                 csvWriter.close();
+            } else {
+                 csvWriter =new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Trap.csv",true));
+                 TrapCard trapCard = (TrapCard) entry.getValue();
+                 csvWriter.writeNext(trapCard.toCSVFormatString());
+                 csvWriter.flush();
+                 csvWriter.close();
+            }
+        }
+    }
+
+    private void savaUsersInFile() {
         File file;
-
         for (int i = 0; i < allUsers.size(); i++) {
             file = new File(addressOfStorage + "Users\\" + allUsers.get(i).getName());
             file.mkdir();
@@ -63,7 +95,7 @@ public class Storage {
                 fileWriter.write(toGsonFormat(allUsers.get(i)));
                 fileWriter.close();
             } catch (IOException e) {
-                System.out.println("some troubles");
+                e.printStackTrace();
                 System.exit(0);
             }
 
@@ -93,7 +125,7 @@ public class Storage {
                 fileWriter.write(wholeDecksOfUser.toString());
                 fileWriter.close();
             } catch (IOException e) {
-                System.out.println("some troubles");
+                e.printStackTrace();
                 System.exit(0);
             }
         }
@@ -130,7 +162,6 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-            System.out.println("some troubles");
             e.printStackTrace();
             System.exit(0);
         }
@@ -156,39 +187,39 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-            System.out.println("some troubles");
+            e.printStackTrace();
             System.exit(0);
         }
     }
 
     private HashMap<String, List<String>> addEffectsSpellCards(String[] cardValues) {
         HashMap<String, List<String>> enumValues = new HashMap<>();
-        enumValues.put("ContinuousSpellCardEffect", Arrays.asList(cardValues[6].split(",")));
-        enumValues.put("EquipSpellEffect", Arrays.asList(cardValues[7].split(",")));
-        enumValues.put("FieldSpellEffect", Arrays.asList(cardValues[8].split(",")));
-        enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[9].split(",")));
-        enumValues.put("NormalSpellCardEffect", Arrays.asList(cardValues[10].split(",")));
-        enumValues.put("SentToGraveyardEffect", Arrays.asList(cardValues[11].split(",")));
-        enumValues.put("QuickSpellEffect", Arrays.asList(cardValues[12].split(",")));
-        enumValues.put("RitualSpellEffect", Arrays.asList(cardValues[13].split(",")));
-        enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[14].split(",")));
+        enumValues.put("ContinuousSpellCardEffect", Arrays.asList(cardValues[6].split("#")));
+        enumValues.put("EquipSpellEffect", Arrays.asList(cardValues[7].split("#")));
+        enumValues.put("FieldSpellEffect", Arrays.asList(cardValues[8].split("#")));
+        enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[9].split("#")));
+        enumValues.put("NormalSpellCardEffect", Arrays.asList(cardValues[10].split("#")));
+        enumValues.put("SentToGraveyardEffect", Arrays.asList(cardValues[11].split("#")));
+        enumValues.put("QuickSpellEffect", Arrays.asList(cardValues[12].split("#")));
+        enumValues.put("RitualSpellEffect", Arrays.asList(cardValues[13].split("#")));
+        enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[14].split("#")));
         return enumValues;
     }
 
     private HashMap<String, List<String>> addEffectsTrapCards(String[] cardValues) {
         HashMap<String, List<String>> enumValues = new HashMap<>();
-        enumValues.put("ContinuousTrapCardEffect", Arrays.asList(cardValues[6].split(",")));
-        enumValues.put("FlipSummonTrapCardEffect", Arrays.asList(cardValues[7].split(",")));
-        enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[8].split(",")));
-        enumValues.put("MonsterAttackingTrapCardEffect", Arrays.asList(cardValues[9].split(",")));
-        enumValues.put("MonsterEffectActivationTrapCardEffect", Arrays.asList(cardValues[10].split(",")));
-        enumValues.put("NormalSummonTrapCardEffect", Arrays.asList(cardValues[11].split(",")));
-        enumValues.put("NormalTrapCardEffect", Arrays.asList(cardValues[12].split(",")));
-        enumValues.put("RitualSummonTrapCardEffect", Arrays.asList(cardValues[13].split(",")));
-        enumValues.put("SpecialSummonTrapCardEffect", Arrays.asList(cardValues[14].split(",")));
-        enumValues.put("SpellCardActivationTrapCardEffect", Arrays.asList(cardValues[15].split(",")));
-        enumValues.put("TrapCardActivationTrapCardEffect", Arrays.asList(cardValues[16].split(",")));
-        enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[17].split(",")));
+        enumValues.put("ContinuousTrapCardEffect", Arrays.asList(cardValues[6].split("#")));
+        enumValues.put("FlipSummonTrapCardEffect", Arrays.asList(cardValues[7].split("#")));
+        enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[8].split("#")));
+        enumValues.put("MonsterAttackingTrapCardEffect", Arrays.asList(cardValues[9].split("#")));
+        enumValues.put("MonsterEffectActivationTrapCardEffect", Arrays.asList(cardValues[10].split("#")));
+        enumValues.put("NormalSummonTrapCardEffect", Arrays.asList(cardValues[11].split("#")));
+        enumValues.put("NormalTrapCardEffect", Arrays.asList(cardValues[12].split("#")));
+        enumValues.put("RitualSummonTrapCardEffect", Arrays.asList(cardValues[13].split("#")));
+        enumValues.put("SpecialSummonTrapCardEffect", Arrays.asList(cardValues[14].split("#")));
+        enumValues.put("SpellCardActivationTrapCardEffect", Arrays.asList(cardValues[15].split("#")));
+        enumValues.put("TrapCardActivationTrapCardEffect", Arrays.asList(cardValues[16].split("#")));
+        enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[17].split("#")));
         return enumValues;
     }
 
@@ -214,7 +245,8 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-            System.out.println("some troubles");
+            
+            e.printStackTrace();
             System.exit(0);
         }
     }
@@ -233,15 +265,14 @@ public class Storage {
     private HashMap<String, List<String>> addEffectsMonsterCards(String[] cardValues) {
 
         HashMap<String, List<String>> enumValues = new HashMap<>();
-        enumValues.put("AttackerEffect", Arrays.asList(cardValues[9].split(",")));
-        enumValues.put("BeingAttackedEffect", Arrays.asList(cardValues[10].split(",")));
-        enumValues.put("ContinuousMonsterEffect", Arrays.asList(cardValues[11].split(",")));
-        enumValues.put("FlipEffect", Arrays.asList(cardValues[12].split(",")));
-        enumValues.put("OptionalMonsterEffect", Arrays.asList(cardValues[13].split(",")));
-        enumValues.put("SentToGraveyardEffect", Arrays.asList(cardValues[14].split(",")));
-        enumValues.put("SummoningRequirement", Arrays.asList(cardValues[15].split(",")));
-        enumValues.put("UponSummoningEffect", Arrays.asList(cardValues[16].split(",")));
-
+        enumValues.put("AttackerEffect", Arrays.asList(cardValues[9].split("#")));
+        enumValues.put("BeingAttackedEffect", Arrays.asList(cardValues[10].split("#")));
+        enumValues.put("ContinuousMonsterEffect", Arrays.asList(cardValues[11].split("#")));
+        enumValues.put("FlipEffect", Arrays.asList(cardValues[12].split("#")));
+        enumValues.put("OptionalMonsterEffect", Arrays.asList(cardValues[13].split("#")));
+        enumValues.put("SentToGraveyardEffect", Arrays.asList(cardValues[14].split("#")));
+        enumValues.put("SummoningRequirement", Arrays.asList(cardValues[15].split("#")));
+        enumValues.put("UponSummoningEffect", Arrays.asList(cardValues[16].split("#")));
         return enumValues;
     }
 
@@ -284,8 +315,7 @@ public class Storage {
                         details.get("password").getAsString(), details.get("imagePath").getAsString());
                 user.setScore(details.get("score").getAsInt());
                 user.setMoney(details.get("money").getAsInt());
-                //it was commented because it made problem on my device (Javad)
-                //user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
+                user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
             }
         }
@@ -294,7 +324,7 @@ public class Storage {
     private Image createImageOfUsers(String path) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream(path );
+            stream = new FileInputStream(path);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -384,6 +414,10 @@ public class Storage {
             return allSpellAndTrapCards.get(cardName);
         }
         return null;
+    }
+
+    public static void addCardToNewCardsCrated(Card newCard) {
+        newCardsCreated.put(newCard.getCardName(), newCard);
     }
 
     public static Card getUnknownCard() {
