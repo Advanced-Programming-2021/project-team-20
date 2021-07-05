@@ -78,7 +78,7 @@ public class Profile {
             bImage = ImageIO.read(initialImage);
             ImageIO.write(bImage, "jpg", new File("C://Users/Rou/Desktop/image.png"));
         } catch (IOException e) {
-              System.out.println("Exception occured :" + e.getMessage());
+            System.out.println("Exception occured :" + e.getMessage());
         }
     }
 }
