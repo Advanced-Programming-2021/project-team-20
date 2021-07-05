@@ -43,15 +43,15 @@ public class AlertAndMenuItems {
         });
     }
 
-    public void getRitualSummoningMenuItem(CardView cardView, MenuItem item, DuelView duelView) {
-        item.setText("Ritual Summon");
+    public void getShowGraveyardMenuItem(CardView cardView, MenuItem item, DuelView duelView) {
+        item.setText("Show Graveyard");
         item.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
                 if (cardLocationSelecting != null) {
-                    DuelView.getSendingRequestsToServer().sendRitualSummoningRequestToServer(cardView, cardLocationSelecting, duelView);
+                    DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardView, cardLocationSelecting, duelView);
                 }
                 //label.setText("Select Menu Item 1");
             }
@@ -246,7 +246,7 @@ public class AlertAndMenuItems {
         } else if (result.equals(specialSummonButton)) {
             DuelView.getSendingRequestsToServer().sendSpecialSummoningRequestToServer(cardViewBeingDragged, initialCardLocation, duelView);
         } else if (result.equals(ritualSummonButton)) {
-            DuelView.getSendingRequestsToServer().sendRitualSummoningRequestToServer(cardViewBeingDragged, initialCardLocation, duelView);
+            DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardViewBeingDragged, initialCardLocation, duelView);
         } else if (result.equals(setButton)) {
             DuelView.getSendingRequestsToServer().sendSettingRequestToServer(cardViewBeingDragged, initialCardLocation);
         }

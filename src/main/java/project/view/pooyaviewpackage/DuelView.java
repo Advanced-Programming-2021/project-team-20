@@ -78,6 +78,70 @@ public class DuelView extends Application {
     private static GamePhaseButton mainPhaseTwoLabel;
     private static GamePhaseButton endPhaseLabel;
     private static GamePhaseButton nextPhaseLabel;
+    private static String graveyardString = "";
+    private static String deckString = "";
+    private static boolean isAllySeeingGraveyard;
+    private static boolean isClassWaitingForUserToChooseCardFromGraveyard = false;
+    private static boolean isClassWaitingForUserToChooseCardFromDeck = false;
+    private static HealthBarAndHealthPoints allyHealthStatus;
+    private static HealthBarAndHealthPoints opponentHealthStatus;
+
+
+    public static HealthBarAndHealthPoints getAllyHealthStatus() {
+        return allyHealthStatus;
+    }
+
+    public static HealthBarAndHealthPoints getOpponentHealthStatus() {
+        return opponentHealthStatus;
+    }
+
+    public static void setAllyHealthStatus(HealthBarAndHealthPoints allyHealthStatus) {
+        DuelView.allyHealthStatus = allyHealthStatus;
+    }
+
+    public static void setOpponentHealthStatus(HealthBarAndHealthPoints opponentHealthStatus) {
+        DuelView.opponentHealthStatus = opponentHealthStatus;
+    }
+
+    public static boolean isIsClassWaitingForUserToChooseCardFromGraveyard() {
+        return isClassWaitingForUserToChooseCardFromGraveyard;
+    }
+
+    public static boolean isIsClassWaitingForUserToChooseCardFromDeck() {
+        return isClassWaitingForUserToChooseCardFromDeck;
+    }
+
+    public static void setIsClassWaitingForUserToChooseCardFromGraveyard(boolean isClassWaitingForUserToChooseCardFromGraveyard) {
+        DuelView.isClassWaitingForUserToChooseCardFromGraveyard = isClassWaitingForUserToChooseCardFromGraveyard;
+    }
+
+    public static void setIsClassWaitingForUserToChooseCardFromDeck(boolean isClassWaitingForUserToChooseCardFromDeck) {
+        DuelView.isClassWaitingForUserToChooseCardFromDeck = isClassWaitingForUserToChooseCardFromDeck;
+    }
+
+    public static String getDeckString() {
+        return deckString;
+    }
+
+    public static void setDeckString(String deckString) {
+        DuelView.deckString = deckString;
+    }
+
+    public static boolean isIsAllySeeingGraveyard() {
+        return isAllySeeingGraveyard;
+    }
+
+    public static void setIsAllySeeingGraveyard(boolean isAllySeeingGraveyard) {
+        DuelView.isAllySeeingGraveyard = isAllySeeingGraveyard;
+    }
+
+    public static String getGraveyardString() {
+        return graveyardString;
+    }
+
+    public static void setGraveyardString(String graveyardString) {
+        DuelView.graveyardString = graveyardString;
+    }
 
     public DuelView() {
         executor = new ScheduledThreadPoolExecutor(1);
@@ -201,7 +265,24 @@ public class DuelView extends Application {
         anchorPane.getChildren().add(mainPhaseTwoLabel);
         anchorPane.getChildren().add(endPhaseLabel);
         anchorPane.getChildren().add(nextPhaseLabel);
+        anchorPane.getChildren().add(allyHealthStatus.getHealthDigits().get(0));
+        anchorPane.getChildren().add(allyHealthStatus.getHealthDigits().get(1));
+        anchorPane.getChildren().add(allyHealthStatus.getHealthDigits().get(2));
+        anchorPane.getChildren().add(allyHealthStatus.getHealthDigits().get(3));
+        anchorPane.getChildren().add(allyHealthStatus.getHealthBar());
+        anchorPane.getChildren().add(allyHealthStatus.getHelpfulHealthRectangle());
+        anchorPane.getChildren().add(allyHealthStatus.getBackGroundRectangle());
+        anchorPane.getChildren().add(allyHealthStatus.getContainer());
+        anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(0));
+        anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(1));
+        anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(2));
+        anchorPane.getChildren().add(opponentHealthStatus.getHealthDigits().get(3));
+        anchorPane.getChildren().add(opponentHealthStatus.getHealthBar());
+        anchorPane.getChildren().add(opponentHealthStatus.getHelpfulHealthRectangle());
+        anchorPane.getChildren().add(opponentHealthStatus.getBackGroundRectangle());
+        anchorPane.getChildren().add(opponentHealthStatus.getContainer());
         controllerForView.giveCardsAtTheBeginningOfGame();
+        System.out.println(battleFieldView.getUpperLeftX()+" wouiiiiiiiiiiiiiiiiiiiiiiiii");
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
     }
@@ -292,111 +373,19 @@ public class DuelView extends Application {
                 String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
                 System.out.println("&" + output + "&");
                 PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-//                if (output.contains("end phase")) {
-//                    try {
-//                        Thread.sleep(300);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                drawPhaseLabel.updateImage(PhaseInGame.ALLY_END_PHASE);
-//                                standByPhaseLabel.updateImage(PhaseInGame.ALLY_END_PHASE);
-//                                mainPhaseOneLabel.updateImage(PhaseInGame.ALLY_END_PHASE);
-//                                battlePhaseLabel.updateImage(PhaseInGame.ALLY_END_PHASE);
-//                                mainPhaseTwoLabel.updateImage(PhaseInGame.ALLY_END_PHASE);
-//                                endPhaseLabel.updateImage(PhaseInGame.ALLY_END_PHASE);
-//                            }
-//                        });
-//
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if (output.contains("draw phase")) {
-//                    try {
-//                        Thread.sleep(300);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                drawPhaseLabel.updateImage(PhaseInGame.ALLY_DRAW_PHASE);
-//                                standByPhaseLabel.updateImage(PhaseInGame.ALLY_DRAW_PHASE);
-//                                mainPhaseOneLabel.updateImage(PhaseInGame.ALLY_DRAW_PHASE);
-//                                battlePhaseLabel.updateImage(PhaseInGame.ALLY_DRAW_PHASE);
-//                                mainPhaseTwoLabel.updateImage(PhaseInGame.ALLY_DRAW_PHASE);
-//                                endPhaseLabel.updateImage(PhaseInGame.ALLY_DRAW_PHASE);
-//                            }
-//                        });
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if (output.contains("standby phase")) {
-//                    try {
-//                        Thread.sleep(300);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                drawPhaseLabel.updateImage(PhaseInGame.ALLY_STANDBY_PHASE);
-//                                standByPhaseLabel.updateImage(PhaseInGame.ALLY_STANDBY_PHASE);
-//                                mainPhaseOneLabel.updateImage(PhaseInGame.ALLY_STANDBY_PHASE);
-//                                battlePhaseLabel.updateImage(PhaseInGame.ALLY_STANDBY_PHASE);
-//                                mainPhaseTwoLabel.updateImage(PhaseInGame.ALLY_STANDBY_PHASE);
-//                                endPhaseLabel.updateImage(PhaseInGame.ALLY_STANDBY_PHASE);
-//                            }
-//                        });
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if (output.contains("main phase 1")) {
-//                    try {
-//                        Thread.sleep(300);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                drawPhaseLabel.updateImage(PhaseInGame.ALLY_MAIN_PHASE_1);
-//                                standByPhaseLabel.updateImage(PhaseInGame.ALLY_MAIN_PHASE_1);
-//                                mainPhaseOneLabel.updateImage(PhaseInGame.ALLY_MAIN_PHASE_1);
-//                                battlePhaseLabel.updateImage(PhaseInGame.ALLY_MAIN_PHASE_1);
-//                                mainPhaseTwoLabel.updateImage(PhaseInGame.ALLY_MAIN_PHASE_1);
-//                                endPhaseLabel.updateImage(PhaseInGame.ALLY_MAIN_PHASE_1);
-//                            }
-//                        });
-//
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if (!(output.contains("draw phase") || output.contains("standby phase") || output.contains("end phase") || output.contains("main phase 1"))) {
-//                    drawPhaseLabel.updateImage(phaseInGame);
-                    standByPhaseLabel.updateImage(phaseInGame);
-                    mainPhaseOneLabel.updateImage(phaseInGame);
-                    battlePhaseLabel.updateImage(phaseInGame);
-                    mainPhaseTwoLabel.updateImage(phaseInGame);
-                    endPhaseLabel.updateImage(phaseInGame);
-     //           }
+                standByPhaseLabel.updateImage(phaseInGame);
+                mainPhaseOneLabel.updateImage(phaseInGame);
+                battlePhaseLabel.updateImage(phaseInGame);
+                mainPhaseTwoLabel.updateImage(phaseInGame);
+                endPhaseLabel.updateImage(phaseInGame);
                 if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
                     DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                    //transition.applyTransitionForDrawingACard(GameManager.getDuelControllerByIndex(0).getTurn() == 1);
                 }
 
-
-//                ArrayList<project.model.modelsforview.CardView> allymonsters = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_MONSTER_ZONE);
-//                for (project.model.modelsforview.CardView cardView : allymonsters) {
-//                    System.out.println("gua monster " + cardView.getCard().getCardName());
-//                }
-//
-//                ArrayList<project.model.modelsforview.CardView> allyhands = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
-//                for (project.model.modelsforview.CardView cardView : allyhands) {
-//                    System.out.println("gua hand " + cardView.getCard().getCardName());
-//                }
-//
-//                ArrayList<project.model.modelsforview.CardView> allygraveyards = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE);
-//                for (project.model.modelsforview.CardView cardView : allygraveyards) {
-//                    System.out.println("gua graveyard " + cardView.getCard().getCardName());
-//                }
             }
         });
-
+        allyHealthStatus = new HealthBarAndHealthPoints(true, 8000);
+        opponentHealthStatus = new HealthBarAndHealthPoints(false, 8000);
         System.out.println(" what upper left x  we see is " + battleFieldView.getUpperLeftX());
         System.out.println("what height we see is " + battleFieldView.getHeight());
         ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(0).getAllyCardsInHand();

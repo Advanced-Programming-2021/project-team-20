@@ -1,12 +1,15 @@
 package project.view.pooyaviewpackage;
 
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
@@ -146,7 +149,7 @@ public class Transition {
         if (initialCardLocation != null) {
             if (initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) ||
                 initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE) || initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
-               return flipCardBackAndForthConsideringCardImage(cardView, true, 250);
+                return flipCardBackAndForthConsideringCardImage(cardView, true, 250);
                 // return applyTransitionForActivatingSpellTrapInSpellZoneSuper(cardView);
             } else {
                 return applyTransitionForActivatingSpellTrapFromHandSuper(cardView);
@@ -430,9 +433,6 @@ public class Transition {
     }
 
 
-
-
-
     public Object applyTransitionForSendingCardToGraveyard(CardView cardView, int turn, boolean doYouWantTranslateTransition) {
         DestroyCardTransition destroyCardTransition;
         TranslateTransition translateTransition;
@@ -451,7 +451,7 @@ public class Transition {
             });
             setOnFinishedForDestroyCardTransition(destroyCardTransition, turn, true, cardView);
             return troubleFlipTransition;
-        } else if (cardView.isCanBeSeen() && (!doYouWantTranslateTransition||shouldBeRotatedNintyDegrees)) {
+        } else if (cardView.isCanBeSeen() && (!doYouWantTranslateTransition || shouldBeRotatedNintyDegrees)) {
             //monster face up attack / face up defense position
             destroyCardTransition = new DestroyCardTransition(cardView, shouldBeRotatedNintyDegrees);
             setOnFinishedForDestroyCardTransition(destroyCardTransition, turn, shouldBeRotatedNintyDegrees, cardView);
@@ -465,36 +465,6 @@ public class Transition {
             parallelTransition.getChildren().add(translateTransition);
             return parallelTransition;
         }
-//        if (!cardView.isCanBeSeen()) {
-//        }
-//
-//        if (shouldBeRotatedNintyDegrees) {
-//            destroyCardTransition = new DestroyCardTransition(cardView, true);
-//            setOnFinishedForDestroyCardTransition(destroyCardTransition, turn, true, cardView);
-//            treatSendingMonsterToGraveyard(cardView, troubleFlipTransition, destroyCardTransition);
-//            if (!cardView.isCanBeSeen()) {
-//                return troubleFlipTransition;
-//            } else {
-//                ParallelTransition parallelTransition = new ParallelTransition();
-//                parallelTransition.getChildren().add(destroyCardTransition);
-//                return parallelTransition;
-//            }
-//        } else {
-//            if (doYouWantTranslateTransition) {
-//
-//            } else {
-//                destroyCardTransition = new DestroyCardTransition(cardView, false);
-//                setOnFinishedForDestroyCardTransition(destroyCardTransition, turn, false, cardView);
-//                treatSendingMonsterToGraveyard(cardView, troubleFlipTransition, destroyCardTransition);
-//                if (!cardView.isCanBeSeen()) {
-//                    return troubleFlipTransition;
-//                } else {
-//                    ParallelTransition parallelTransition = new ParallelTransition();
-//                    parallelTransition.getChildren().add(destroyCardTransition);
-//                    return parallelTransition;
-//                }
-//            }
-//        }
     }
 
     public void treatSendingMonsterToGraveyard(CardView cardView, TroubleFlipTransition troubleFlipTransition, DestroyCardTransition destroyCardTransition) {
@@ -540,6 +510,38 @@ public class Transition {
     }
 
 
+    public Timeline applyTransitionForHealthBar(boolean isForAlly, int increaseInHealth, int previousHealth) {
+        HealthBarAndHealthPoints healthBarAndHealthPoints;
+        double upperLeftY;
+        if (isForAlly) {
+            healthBarAndHealthPoints = DuelView.getAllyHealthStatus();
+        } else {
+            healthBarAndHealthPoints = DuelView.getOpponentHealthStatus();
+        }
+        upperLeftY = healthBarAndHealthPoints.getUpperLeftYOfHelpfulHealthBar();
+        //    Rectangle statusBar = new Rectangle(100, //100, 300, 100);
+        // Button animationButton = new Button("Animate width decrease by 25");
+        // animationButton.setOnAction(event -> {
+        //  System.out.println("Animation start: width = " + statusBar.getWidth())
+        Rectangle helpfulRectangle = healthBarAndHealthPoints.getHelpfulHealthRectangle();
+        double realFinalWidth = helpfulRectangle.getWidth() - healthBarAndHealthPoints.getHealthBar().getWidth() * increaseInHealth / previousHealth;
+        System.out.println("realFinalWidth is " + realFinalWidth);
+        if (realFinalWidth < 0) {
+            realFinalWidth = 0;
+        }
+        if (realFinalWidth > 200) {
+            realFinalWidth = 200;
+        }
+        System.out.println("realFinalWidth is " + realFinalWidth + " after adjustments");
+
+        KeyValue widthValue = new KeyValue(helpfulRectangle.widthProperty(), realFinalWidth);
+        KeyFrame frame = new KeyFrame(Duration.seconds(0.4), widthValue);
+        Timeline timeline = new Timeline(frame);
+        VBox container = healthBarAndHealthPoints.getContainer();
+        System.out.println("container coordinates are\nlayout x = "+container.getLayoutX()+" layout y = "+container.getLayoutY());
+        container.setAlignment(Pos.CENTER_RIGHT);
+        return timeline;
+    }
 }
 
 class TroubleFlipTransition {

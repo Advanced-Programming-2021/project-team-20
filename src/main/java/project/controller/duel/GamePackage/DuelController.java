@@ -41,6 +41,20 @@ public class DuelController {
     private ArrayList<String> allInputs = new ArrayList<>();
     private String superAlmightyChangesString = "";
     private String availableCardLocationForUseForClient = "";
+    private String changesInLifePointsToBeGivenToClient = "";
+
+    public String getChangesInLifePointsToBeGivenToClient() {
+        return changesInLifePointsToBeGivenToClient;
+    }
+
+    public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
+        changesInLifePointsToBeGivenToClient += string;
+        changesInLifePointsToBeGivenToClient += "\n";
+    }
+
+    public void clearChangesInLifePointsToBeGivenToClient() {
+        changesInLifePointsToBeGivenToClient = "";
+    }
 
     public String getSuperAlmightyChangesString() {
         return superAlmightyChangesString;
@@ -60,7 +74,7 @@ public class DuelController {
     }
 
     public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
-        if (string!=null){
+        if (string != null) {
             availableCardLocationForUseForClient += string.getRowOfCardLocation();
             availableCardLocationForUseForClient += "\n";
             availableCardLocationForUseForClient += string.getIndex();
@@ -529,6 +543,10 @@ public class DuelController {
 
         User winnerUser = Storage.getUserByName(playingUsers.get(turn - 1));
         User loserUser = Storage.getUserByName(playingUsers.get(-turn + 2));
+        //if (winnerUser == null){
+        //    System.out.println("WINNER USER IS NULL");
+        //}
+        //System.out.println(maxLifePointOfPlayers.get(turn-1)+" is maximum HP of players");
         winnerUser.setMoney(numberOfRounds * (1000 + maxLifePointOfPlayers.get(turn - 1)) + winnerUser.getMoney());
         winnerUser.setScore(numberOfRounds * (1000) + winnerUser.getScore());
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
@@ -765,6 +783,7 @@ public class DuelController {
     }
 
     public void increaseLifePoints(int lifePoints, int turn) {
+        addStringToChangesInLifePointsToBeGivenToClient("user with turn " + turn + " is increasing in health by " + lifePoints);
         this.lifePoints.set(turn - 1, this.lifePoints.get(turn - 1) + lifePoints);
     }
 

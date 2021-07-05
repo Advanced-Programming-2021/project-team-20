@@ -1,16 +1,15 @@
 package project.view.pooyaviewpackage;
 
 import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import project.controller.duel.GamePackage.DuelBoard;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.*;
 import project.model.modelsforview.CardView;
-import project.view.pooyaviewpackage.TroubleFlipTransition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AdvancedCardMovingController {
     private ArrayList<Card> allyCardsInHand = new ArrayList<>();
@@ -50,32 +49,8 @@ public class AdvancedCardMovingController {
     private ArrayList<CardLocation> opponentCardsInDeckDeletions = new ArrayList<>();
     private ArrayList<CardLocation> opponentCardsInGraveyardDeletions = new ArrayList<>();
     private ArrayList<CardLocation> pureDeletionArraylist = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> allyCardsInHandAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> allySpellCardsAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> allySpellFieldCardAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> allyMonsterCardsAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> allyCardsInDeckAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> allyCardsInGraveyardAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> opponentCardsInHandAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> opponentSpellCardsAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> opponentSpellFieldCardAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> opponentMonsterCardsAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> opponentCardsInDeckAdditions = new ArrayList<>();
-    private ArrayList<CardAndCardLocation> opponentCardsInGraveyardAdditions = new ArrayList<>();
     private boolean firstTime = true;
     private boolean secondTime = false;
-    private Handler allyHandZoneHandler;
-    private Handler allyDeckZoneHandler;
-    private Handler allyGraveyardZoneHandler;
-    private Handler allyMonsterZoneHandler;
-    private Handler allySpellZoneHandler;
-    private Handler allySpellFieldZoneHandler;
-    private Handler opponentHandZoneHandler;
-    private Handler opponentDeckZoneHandler;
-    private Handler opponentGraveyardZoneHandler;
-    private Handler opponentMonsterZoneHandler;
-    private Handler opponentSpellZoneHandler;
-    private Handler opponentSpellFieldZoneHandler;
 
 
     public void getWholeBoardInformationFromServer() {
@@ -145,53 +120,6 @@ public class AdvancedCardMovingController {
 
     }
 
-    public void deletion(ArrayList<Card> previous, ArrayList<Card> now, ArrayList<CardLocation> deletionArray, RowOfCardLocation rowOfCardLocation) {
-        //considers ally monster and spell zones as index arrays not yugioh indexes
-        int helpIndex = 0;
-        for (int i = 0; i < previous.size(); i++) {
-            if (previous.get(i) != null && (now.size() == 0 || now.get(helpIndex) != null)) {
-                if (now.size() == 0 || !previous.get(i).equals(now.get(helpIndex))) {
-                    deletionArray.add(new CardLocation(rowOfCardLocation, i + 1));
-                    pureDeletionArraylist.add(new CardLocation(rowOfCardLocation, i + 1));
-                } else {
-                    helpIndex++;
-                }
-            }
-        }
-    }
-
-    public void doubleDeletion(ArrayList<Card> previousFirst, ArrayList<Card> nowFirst, ArrayList<CardLocation> deletionArrayFirst,
-                               ArrayList<Card> previousSecond, ArrayList<Card> nowSecond, ArrayList<CardLocation> deletionArraySecond, RowOfCardLocation rowOfCardLocation) {
-        RowOfCardLocation rowOfCardLocationFirst = rowOfCardLocation;
-        RowOfCardLocation rowOfCardLocationSecond = giveOpponentRowFromAllyRow(rowOfCardLocationFirst);
-        deletion(previousFirst, nowFirst, deletionArrayFirst, rowOfCardLocationFirst);
-        deletion(previousSecond, nowSecond, deletionArraySecond, rowOfCardLocationSecond);
-    }
-
-    public void addition(ArrayList<Card> previous, ArrayList<Card> now, ArrayList<CardAndCardLocation> additionArray, RowOfCardLocation rowOfCardLocation) {
-        int helpIndex = 0;
-        for (int i = 0; i < now.size(); i++) {
-            if (now.get(i) != null && (previous.size() == 0 || previous.get(helpIndex) != null)) {
-                if (previous.size() == 0 || !now.get(i).equals(previous.get(helpIndex))) {
-                    System.out.println("ADDDITION ARRAY CARD = " + now.get(i).getCardName() + " cardLocation = " + rowOfCardLocation + " " + (i + 1));
-                    additionArray.add(new CardAndCardLocation(now.get(i), new CardLocation(rowOfCardLocation, i + 1)));
-                    if (pureDeletionArraylist.contains(new CardLocation(rowOfCardLocation, i + 1))) {
-                        helpIndex++;
-                    }
-                } else {
-                    helpIndex++;
-                }
-            }
-        }
-    }
-
-    public void doubleAddition(ArrayList<Card> previousFirst, ArrayList<Card> nowFirst, ArrayList<CardAndCardLocation> additionArrayFirst,
-                               ArrayList<Card> previousSecond, ArrayList<Card> nowSecond, ArrayList<CardAndCardLocation> additionArraySecond, RowOfCardLocation rowOfCardLocation) {
-        RowOfCardLocation rowOfCardLocationFirst = rowOfCardLocation;
-        RowOfCardLocation rowOfCardLocationSecond = giveOpponentRowFromAllyRow(rowOfCardLocationFirst);
-        addition(previousFirst, nowFirst, additionArrayFirst, rowOfCardLocationFirst);
-        addition(previousSecond, nowSecond, additionArraySecond, rowOfCardLocationSecond);
-    }
 
     public RowOfCardLocation giveOpponentRowFromAllyRow(RowOfCardLocation rowOfCardLocation) {
         if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
@@ -208,75 +136,6 @@ public class AdvancedCardMovingController {
         return null;
     }
 
-    public void prepareDeletionsAndAdditions() {
-        doubleDeletion(allyCardsInDeck, allyCardsInDeckNew, allyCardsInDeckDeletions, opponentCardsInDeck, opponentCardsInDeckNew, opponentCardsInDeckDeletions, RowOfCardLocation.ALLY_DECK_ZONE);
-        doubleDeletion(allyCardsInGraveyard, allyCardsInGraveyardNew, allyCardsInGraveyardDeletions, opponentCardsInGraveyard, opponentCardsInGraveyardNew, opponentCardsInGraveyardDeletions, RowOfCardLocation.ALLY_GRAVEYARD_ZONE);
-        doubleDeletion(allyCardsInHand, allyCardsInHandNew, allyCardsInHandDeletions, opponentCardsInHand, opponentCardsInHandNew, opponentCardsInHandDeletions, RowOfCardLocation.ALLY_HAND_ZONE);
-        doubleDeletion(allyMonsterCards, allyMonsterCardsNew, allyMonsterCardsDeletions, opponentMonsterCards, opponentMonsterCardsNew, opponentMonsterCardsDeletions, RowOfCardLocation.ALLY_MONSTER_ZONE);
-        doubleDeletion(allySpellCards, allySpellCardsNew, allySpellCardsDeletions, opponentSpellCards, opponentSpellCardsNew, opponentSpellCardsDeletions, RowOfCardLocation.ALLY_SPELL_ZONE);
-        doubleDeletion(allySpellFieldCard, allySpellFieldCardNew, allySpellFieldCardDeletions, opponentSpellFieldCard, opponentSpellFieldCardNew, opponentSpellFieldCardDeletions, RowOfCardLocation.ALLY_SPELL_FIELD_ZONE);
-        doubleAddition(allyCardsInDeck, allyCardsInDeckNew, allyCardsInDeckAdditions, opponentCardsInDeck, opponentCardsInDeckNew, opponentCardsInDeckAdditions, RowOfCardLocation.ALLY_DECK_ZONE);
-        doubleAddition(allyCardsInGraveyard, allyCardsInGraveyardNew, allyCardsInGraveyardAdditions, opponentCardsInGraveyard, opponentCardsInGraveyardNew, opponentCardsInGraveyardAdditions, RowOfCardLocation.ALLY_GRAVEYARD_ZONE);
-        doubleAddition(allyCardsInHand, allyCardsInHandNew, allyCardsInHandAdditions, opponentCardsInHand, opponentCardsInHandNew, opponentCardsInHandAdditions, RowOfCardLocation.ALLY_HAND_ZONE);
-        doubleAddition(allyMonsterCards, allyMonsterCardsNew, allyMonsterCardsAdditions, opponentMonsterCards, opponentMonsterCardsNew, opponentMonsterCardsAdditions, RowOfCardLocation.ALLY_MONSTER_ZONE);
-        doubleAddition(allySpellCards, allySpellCardsNew, allySpellCardsAdditions, opponentSpellCards, opponentSpellCardsNew, opponentSpellCardsAdditions, RowOfCardLocation.ALLY_SPELL_ZONE);
-        doubleAddition(allySpellFieldCard, allySpellFieldCardNew, allySpellFieldCardAdditions, opponentSpellFieldCard, opponentSpellFieldCardNew, opponentSpellFieldCardAdditions, RowOfCardLocation.ALLY_SPELL_FIELD_ZONE);
-        giveAbstractClassHandlerArrayLists();
-    }
-
-    HashMap<CardLocation, CardAndCardViewPair> cardAndCardViewPairHashMap = new HashMap<>();
-
-    public void putValuesInCardAndCardViewHashMap() {
-        ArrayList<CardView> cardViews = new ArrayList<>();
-        for (int i = 0; i < DuelView.getAllCards().getChildren().size(); i++) {
-            cardViews.add((CardView) DuelView.getAllCards().getChildren().get(i));
-        }
-        for (int i = 0; i < cardViews.size(); i++) {
-            CardView cardView = cardViews.get(i);
-            CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
-            System.out.println("card = " + cardView.getCard().getCardName() + " at cardlocation = " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex());
-            Card card = getCardByCardLocation(cardLocation);
-            if (card != null) {
-                if (card.getCardName().equals(cardView.getCard().getCardName())) {
-                    System.out.println("being newed cardAndCardViewPairHashMap is cardLocation = " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex() + " card = " + card.getCardName());
-                    cardAndCardViewPairHashMap.put(cardLocation, new CardAndCardViewPair(cardView, card, cardLocation));
-                }
-            }
-        }
-    }
-
-    public void refreshWholeBattleField() {
-        allyHandZoneHandler = new AllyHandZoneHandler();
-        allyDeckZoneHandler = new AllyDeckZoneHandler();
-        allyGraveyardZoneHandler = new AllyGraveyardZoneHandler();
-        allyMonsterZoneHandler = new AllyMonsterZoneHandler();
-        allySpellZoneHandler = new AllySpellZoneHandler();
-        allySpellFieldZoneHandler = new AllySpellFieldZoneHandler();
-        opponentDeckZoneHandler = new OpponentDeckZoneHandler();
-        opponentGraveyardZoneHandler = new OpponentGraveyardZoneHandler();
-        opponentHandZoneHandler = new OpponentGraveyardZoneHandler();
-        opponentMonsterZoneHandler = new OpponentMonsterZoneHandler();
-        opponentSpellZoneHandler = new OpponentSpellZoneHandler();
-        opponentSpellFieldZoneHandler = new OpponentSpellFieldZoneHandler();
-        allyHandZoneHandler.setNextHandler(allyDeckZoneHandler);
-        allyGraveyardZoneHandler.setNextHandler(opponentGraveyardZoneHandler);
-        opponentGraveyardZoneHandler.setNextHandler(allySpellZoneHandler);
-        allySpellZoneHandler.setNextHandler(opponentSpellZoneHandler);
-        opponentSpellZoneHandler.setNextHandler(allySpellFieldZoneHandler);
-        allySpellFieldZoneHandler.setNextHandler(opponentSpellFieldZoneHandler);
-        opponentSpellFieldZoneHandler.setNextHandler(allyMonsterZoneHandler);
-        allyMonsterZoneHandler.setNextHandler(opponentMonsterZoneHandler);
-        opponentMonsterZoneHandler.setNextHandler(allyHandZoneHandler);
-        allyHandZoneHandler.setNextHandler(opponentHandZoneHandler);
-        opponentHandZoneHandler.setNextHandler(allyDeckZoneHandler);
-        allyDeckZoneHandler.setNextHandler(opponentDeckZoneHandler);
-        for (int i = 0; i < pureDeletionArraylist.size(); i++) {
-            System.out.println("pureDeletionArraylist " + pureDeletionArraylist.get(i).getRowOfCardLocation() + " " + pureDeletionArraylist.get(i).getIndex());
-            CardAndCardViewPair cardAndCardViewPair = cardAndCardViewPairHashMap.get(pureDeletionArraylist.get(i));
-
-            allyHandZoneHandler.handle(cardAndCardViewPair);
-        }
-    }
 
     private Card getCardByCardLocation(CardLocation cardLocation) {
         RowOfCardLocation rowOfCardLocation = cardLocation.getRowOfCardLocation();
@@ -311,35 +170,60 @@ public class AdvancedCardMovingController {
         }
     }
 
-    public void giveAbstractClassHandlerArrayLists() {
-        Handler.setAllyCardsInDeckAdditions(allyCardsInDeckAdditions);
-        Handler.setAllyCardsInHandAdditions(allyCardsInHandAdditions);
-        Handler.setAllyCardsInGraveyardAdditions(allyCardsInGraveyardAdditions);
-        Handler.setAllyMonsterCardsAdditions(allyMonsterCardsAdditions);
-        Handler.setAllySpellCardsAdditions(allySpellCardsAdditions);
-        Handler.setAllySpellFieldCardAdditions(allySpellFieldCardAdditions);
-        Handler.setOpponentCardsInDeckAdditions(opponentCardsInDeckAdditions);
-        Handler.setOpponentCardsInHandAdditions(opponentCardsInHandAdditions);
-        Handler.setOpponentCardsInGraveyardAdditions(opponentCardsInGraveyardAdditions);
-        Handler.setOpponentMonsterCardsAdditions(opponentMonsterCardsAdditions);
-        Handler.setOpponentSpellCardsAdditions(opponentSpellCardsAdditions);
-        Handler.setOpponentSpellFieldCardAdditions(opponentSpellFieldCardAdditions);
-    }
-
 
     public void advanceForwardBattleField() {
         String string = GameManager.getDuelControllerByIndex(0).getSuperAlmightyChangesString();
+        String anotherString = GameManager.getDuelControllerByIndex(0).getChangesInLifePointsToBeGivenToClient();
         System.out.println("all in all\n" + string + "\n\n");
         if (!string.equals("")) {
             String[] commands = string.split("\n");
-            Object[] allActions = new Object[commands.length];
+            Object[] allActions = new Object[commands.length + 1];
             prepareOneElementOfAllActions(allActions, 0, commands);
+            GameManager.getDuelControllerByIndex(0).clearSuperAlmightyString();
+        } else if (!anotherString.equals("")) {
+            Object[] allActions = new Object[1];
+            prepareOneElementOfAllActions(allActions, 0, null);
             GameManager.getDuelControllerByIndex(0).clearSuperAlmightyString();
         }
     }
 
 
     public void prepareOneElementOfAllActions(Object[] allActions, int i, String[] commands) {
+        if (i == allActions.length - 1) {
+            String string = GameManager.getDuelControllerByIndex(0).getChangesInLifePointsToBeGivenToClient();
+            System.out.println("WITNESS CHANGES IN LIFE POINTS I HAVE RECEIVED\n" + string);
+            if (!string.equals("")) {
+                String[] substrings = string.split("\n");
+                int totalAllyIncreaseInHealth = 0;
+                int totalOpponentIncreaseInHealth = 0;
+                for (int j = 0; j < substrings.length; j++) {
+                    int turn = Integer.parseInt(substrings[j].split(" ")[3]);
+                    int increaseInHealth = Integer.parseInt(substrings[j].split(" ")[9]);
+                    System.out.println("TURN SI " + turn + " AND INCREASEINHEALTH IS " + increaseInHealth);
+                    if (turn == 1) {
+                        totalAllyIncreaseInHealth += increaseInHealth;
+                    } else {
+                        totalOpponentIncreaseInHealth += increaseInHealth;
+                    }
+                }
+                UpdateHealthPointsTransition allyTransition = DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition();
+                allyTransition.setIncreaseInHealth(allyTransition.getIncreaseInHealth() + totalAllyIncreaseInHealth);
+                UpdateHealthPointsTransition opponentTransition = DuelView.getOpponentHealthStatus().getUpdateHealthPointsTransition();
+                opponentTransition.setIncreaseInHealth(opponentTransition.getIncreaseInHealth() + totalOpponentIncreaseInHealth);
+                ParallelTransition parallelTransition = new ParallelTransition();
+                parallelTransition.getChildren().add(DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition());
+                parallelTransition.getChildren().add(DuelView.getOpponentHealthStatus().getUpdateHealthPointsTransition());
+                //parallelTransition.getChildren().add();
+                parallelTransition.getChildren().add(DuelView.getTransition().applyTransitionForHealthBar(true, totalAllyIncreaseInHealth,
+                    DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
+                parallelTransition.getChildren().add(DuelView.getTransition().applyTransitionForHealthBar(false, totalOpponentIncreaseInHealth,
+                    DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
+                allActions[i] = parallelTransition;
+                GameManager.getDuelControllerByIndex(0).clearChangesInLifePointsToBeGivenToClient();
+                parallelTransition.play();
+            }
+            return;
+        }
         System.out.println(commands[i]);
         String[] subCommands = commands[i].split(" ");
         RowOfCardLocation initialRowOfCardLocation = RowOfCardLocation.valueOf(subCommands[1]);
@@ -391,7 +275,7 @@ public class AdvancedCardMovingController {
         }
 
         Object object = allActions[i];
-        if (i != allActions.length - 1) {
+        if (i <= allActions.length - 1) {
             if (object instanceof ParallelTransition) {
                 ParallelTransition parallelTransition = (ParallelTransition) object;
                 if (i != allActions.length - 1) {
@@ -399,12 +283,6 @@ public class AdvancedCardMovingController {
                     parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent actionEvent) {
-//                        Object object = allActions[finalI + 1];
-//                        if (object instanceof ParallelTransition) {
-//                            ((ParallelTransition) object).play();
-//                        } else if (object instanceof TroubleFlipTransition) {
-//                            ((TroubleFlipTransition) object).getStHideFront().play();
-//                        }
                             prepareOneElementOfAllActions(allActions, i + 1, commands);
                         }
                     });
@@ -415,12 +293,6 @@ public class AdvancedCardMovingController {
                 troubleFlipTransition.getStShowBack().setOnFinished(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-//                    Object object = allActions[finalI + 1];
-//                    if (object instanceof ParallelTransition) {
-//                        ((ParallelTransition) object).play();
-//                    } else if (object instanceof TroubleFlipTransition) {
-//                        ((TroubleFlipTransition) object).getStHideFront().play();
-//                    }
                         prepareOneElementOfAllActions(allActions, i + 1, commands);
                     }
                 });
@@ -436,436 +308,5 @@ public class AdvancedCardMovingController {
 
 }
 
-abstract class Handler {
-    protected Handler nextHandler;
-    protected static ArrayList<CardAndCardLocation> allyCardsInHandAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> allySpellCardsAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> allySpellFieldCardAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> allyMonsterCardsAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> allyCardsInDeckAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> allyCardsInGraveyardAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> opponentCardsInHandAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> opponentSpellCardsAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> opponentSpellFieldCardAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> opponentMonsterCardsAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> opponentCardsInDeckAdditions = new ArrayList<>();
-    protected static ArrayList<CardAndCardLocation> opponentCardsInGraveyardAdditions = new ArrayList<>();
 
-    public static void setAllyCardsInHandAdditions(ArrayList<CardAndCardLocation> allyCardsInHandAdditions) {
-        Handler.allyCardsInHandAdditions = allyCardsInHandAdditions;
-    }
 
-    public static void setAllySpellCardsAdditions(ArrayList<CardAndCardLocation> allySpellCardsAdditions) {
-        Handler.allySpellCardsAdditions = allySpellCardsAdditions;
-    }
-
-    public static void setAllySpellFieldCardAdditions(ArrayList<CardAndCardLocation> allySpellFieldCardAdditions) {
-        Handler.allySpellFieldCardAdditions = allySpellFieldCardAdditions;
-    }
-
-    public static void setAllyMonsterCardsAdditions(ArrayList<CardAndCardLocation> allyMonsterCardsAdditions) {
-        Handler.allyMonsterCardsAdditions = allyMonsterCardsAdditions;
-    }
-
-    public static void setAllyCardsInDeckAdditions(ArrayList<CardAndCardLocation> allyCardsInDeckAdditions) {
-        Handler.allyCardsInDeckAdditions = allyCardsInDeckAdditions;
-    }
-
-    public static void setAllyCardsInGraveyardAdditions(ArrayList<CardAndCardLocation> allyCardsInGraveyardAdditions) {
-        Handler.allyCardsInGraveyardAdditions = allyCardsInGraveyardAdditions;
-    }
-
-    public static void setOpponentCardsInHandAdditions(ArrayList<CardAndCardLocation> opponentCardsInHandAdditions) {
-        Handler.opponentCardsInHandAdditions = opponentCardsInHandAdditions;
-    }
-
-    public static void setOpponentSpellCardsAdditions(ArrayList<CardAndCardLocation> opponentSpellCardsAdditions) {
-        Handler.opponentSpellCardsAdditions = opponentSpellCardsAdditions;
-    }
-
-    public static void setOpponentSpellFieldCardAdditions(ArrayList<CardAndCardLocation> opponentSpellFieldCardAdditions) {
-        Handler.opponentSpellFieldCardAdditions = opponentSpellFieldCardAdditions;
-    }
-
-    public static void setOpponentMonsterCardsAdditions(ArrayList<CardAndCardLocation> opponentMonsterCardsAdditions) {
-        Handler.opponentMonsterCardsAdditions = opponentMonsterCardsAdditions;
-    }
-
-    public static void setOpponentCardsInDeckAdditions(ArrayList<CardAndCardLocation> opponentCardsInDeckAdditions) {
-        Handler.opponentCardsInDeckAdditions = opponentCardsInDeckAdditions;
-    }
-
-    public static void setOpponentCardsInGraveyardAdditions(ArrayList<CardAndCardLocation> opponentCardsInGraveyardAdditions) {
-        Handler.opponentCardsInGraveyardAdditions = opponentCardsInGraveyardAdditions;
-    }
-
-    public void setNextHandler(Handler nextHandler) {
-        this.nextHandler = nextHandler;
-    }
-
-    public abstract void handle(CardAndCardViewPair cardAndCardViewPair);
-}
-
-class AllyHandZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allyCardsInHandAdditions;
-        boolean waiting = true;
-
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                //   DuelView.getTransition().sendCardToHandZone(cardAndCardViewPair.getCardView(),
-                //       allyCardsInHandAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) ? 1 : 2);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class AllyDeckZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allyCardsInDeckAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class AllyGraveyardZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allyCardsInGraveyardAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToGraveyardZone(cardAndCardViewPair.getCardView(),
-                    allyCardsInGraveyardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE) ? 1 : 2, 100).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    allyCardsInGraveyardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE) ? RowOfCardLocation.ALLY_GRAVEYARD_ZONE : RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class AllyMonsterZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allyMonsterCardsAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToMonsterZone(cardAndCardViewPair.getCardView(),
-                    allyMonsterCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    allyMonsterCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE) ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class AllySpellZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allySpellCardsAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToSpellZone(cardAndCardViewPair.getCardView(),
-                    allySpellCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    allySpellCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) ? RowOfCardLocation.ALLY_SPELL_ZONE : RowOfCardLocation.OPPONENT_SPELL_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class AllySpellFieldZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allySpellFieldCardAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToSpellZone(cardAndCardViewPair.getCardView(),
-                    allySpellFieldCardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    allySpellFieldCardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) ? RowOfCardLocation.ALLY_SPELL_FIELD_ZONE : RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class OpponentHandZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = opponentCardsInHandAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToSpellZone(cardAndCardViewPair.getCardView(),
-                    opponentCardsInHandAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    opponentCardsInHandAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) ? RowOfCardLocation.ALLY_HAND_ZONE : RowOfCardLocation.OPPONENT_HAND_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class OpponentDeckZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = allyCardsInHandAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class OpponentGraveyardZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = opponentCardsInGraveyardAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToGraveyardZone(cardAndCardViewPair.getCardView(),
-                    opponentCardsInGraveyardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE) ? 1 : 2, 100).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    opponentCardsInGraveyardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE) ? RowOfCardLocation.ALLY_GRAVEYARD_ZONE : RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class OpponentMonsterZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = opponentMonsterCardsAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToMonsterZone(cardAndCardViewPair.getCardView(),
-                    opponentMonsterCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    opponentMonsterCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE) ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class OpponentSpellZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = opponentSpellCardsAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToSpellZone(cardAndCardViewPair.getCardView(),
-                    opponentSpellCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    opponentSpellCardsAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) ? RowOfCardLocation.ALLY_SPELL_ZONE : RowOfCardLocation.OPPONENT_SPELL_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class OpponentSpellFieldZoneHandler extends Handler {
-
-    @Override
-    public void handle(CardAndCardViewPair cardAndCardViewPair) {
-        ArrayList<CardAndCardLocation> finalPossibleDestination = opponentSpellFieldCardAdditions;
-        boolean waiting = true;
-        int index = 0;
-        while (waiting && index < finalPossibleDestination.size()) {
-            if (cardAndCardViewPair.getCard().getCardName().equals(finalPossibleDestination.get(index).getCard().getCardName())) {
-                //action for adding card to ally hand zone place
-                DuelView.getControllerForView().sendCardToSpellZone(cardAndCardViewPair.getCardView(),
-                    opponentSpellFieldCardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) ? 1 : 2).play();
-                cardAndCardViewPair.getCardView().setLabel(
-                    opponentSpellFieldCardAdditions.get(index).getCardLocation().getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) ? RowOfCardLocation.ALLY_SPELL_FIELD_ZONE : RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE);
-                finalPossibleDestination.remove(index);
-                waiting = false;
-            } else {
-                index++;
-            }
-        }
-        if (index == finalPossibleDestination.size()) {
-            //nextHandler.handle(cardAndCardViewPair);
-        }
-    }
-}
-
-class CardAndCardViewPair {
-    private Card card;
-    private CardView cardView;
-    private CardLocation cardLocation;
-
-    public CardAndCardViewPair(CardView cardView, Card card, CardLocation cardLocation) {
-        this.cardView = cardView;
-        this.card = card;
-        this.cardLocation = cardLocation;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public CardView getCardView() {
-        return cardView;
-    }
-
-    public CardLocation getCardLocation() {
-        return cardLocation;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
-    public void setCardView(CardView cardView) {
-        this.cardView = cardView;
-    }
-
-    public void setCardLocation(CardLocation cardLocation) {
-        this.cardLocation = cardLocation;
-    }
-}
-
-class CardAndCardLocation {
-    private Card card;
-    private CardLocation cardLocation;
-
-    public CardAndCardLocation(Card card, CardLocation cardLocation) {
-        this.card = card;
-        this.cardLocation = cardLocation;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public CardLocation getCardLocation() {
-        return cardLocation;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
-    public void setCardLocation(CardLocation cardLocation) {
-        this.cardLocation = cardLocation;
-    }
-}

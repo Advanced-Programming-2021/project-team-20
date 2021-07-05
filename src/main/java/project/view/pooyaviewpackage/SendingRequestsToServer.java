@@ -1,6 +1,7 @@
 package project.view.pooyaviewpackage;
 
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.controller.duel.Utility.Utility;
 import project.model.cardData.General.CardLocation;
@@ -120,28 +121,33 @@ public class SendingRequestsToServer {
         }
     }
 
-    public void sendRitualSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+    public void sendShowGraveyardRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
+        String output = GameManager.getDuelControllerByIndex(0).getInput("show graveyard", true);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
         System.out.println("&" + output);
-        DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
-        output = GameManager.getDuelControllerByIndex(0).getInput("ritual summon", true);
-        System.out.println("*" + output);
-        if (output.contains("successfully")) {
+        CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+        DuelView.setIsAllySeeingGraveyard(cardLocation.getRowOfCardLocation().toString().startsWith("ALLY"));
+        //DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
+        //output = GameManager.getDuelControllerByIndex(0).getInput("ritual summon", true);
 
-
-            //   DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView).play();
-            //alone
-
-
-        } else {
-            DuelView.setCardLocationToSendCardTo(null);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Ritual Summoning Message");
-            alert.setContentText(output);
-            alert.showAndWait();
-        }
+        //System.out.println("*\n" + );
+        DuelView.setGraveyardString(output);
+        new GraveyardScene().start(new Stage());
+//        if (output.contains("successfully")) {
+//
+//
+//            //   DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView).play();
+//            //alone
+//
+//
+//        } else {
+//            DuelView.setCardLocationToSendCardTo(null);
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText("Ritual Summoning Message");
+//            alert.setContentText(output);
+//            alert.showAndWait();
+//        }
     }
 
     public void sendSettingRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {

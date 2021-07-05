@@ -67,7 +67,7 @@ public class CardView extends Rectangle {
         DuelView.getShowOptionsToUser().getNormalSummoningMenuItem(this, item1, duelView);
         DuelView.getShowOptionsToUser().getTributeSummoningMenuItem(this, item2, duelView);
         DuelView.getShowOptionsToUser().getSpecialSummoningMenuItem(this, item3, duelView);
-        DuelView.getShowOptionsToUser().getRitualSummoningMenuItem(this, item4, duelView);
+        DuelView.getShowOptionsToUser().getShowGraveyardMenuItem(this, item4, duelView);
         DuelView.getShowOptionsToUser().getSettingMenuItem(this, item5);
         DuelView.getShowOptionsToUser().getActivateEffectMenuItem(this, item6);
         DuelView.getShowOptionsToUser().getChangeCardPositionMenuItem(this, item7);
@@ -187,6 +187,7 @@ public class CardView extends Rectangle {
 
     public void updateContextMenu() {
         Bounds bounds = this.localToScene(this.getBoundsInLocal());
+        CardView cardView = this;
         String name = this.getCard().getCardName();
         Platform.runLater(new Runnable() {
             @Override
@@ -203,7 +204,7 @@ public class CardView extends Rectangle {
                 item10.setVisible(false);
                 int turn = GameManager.getDuelControllerByIndex(0).getTurn();
                 PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-
+                int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
                 int belongingTurn = 2;
                 double meanY = (bounds.getMinY() + bounds.getMaxY()) / 2;
                 System.out.println("PREPARE FOR THE ALMIGHTY JIGEN with meanY = " + meanY);
@@ -215,45 +216,47 @@ public class CardView extends Rectangle {
                 boolean battlePhases = phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE) || phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE);
 
                 System.out.println("belongingTurn = " + belongingTurn + " turn = " + turn + " boundsx = " + bounds.getMinX() + " boundsy = " + meanY + " name = " + name);
-                if (belongingTurn == turn) {
-                    System.out.println("correct turn name = " + name);
-                    if (card.getCardType().equals(CardType.MONSTER)) {
-                        if (mainPhases) {
-                            System.out.println("mainphase name = " + name);
-                            if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-                                System.out.println("inside monster zone name = " + name);
-                                item6.setVisible(true);
-                                item7.setVisible(true);
-                                item8.setVisible(true);
-                            } else if (label.equals(RowOfCardLocation.ALLY_HAND_ZONE) || label.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
-                                System.out.println("outside monster zone name = " + name);
-                                item1.setVisible(true);
-                                item2.setVisible(true);
-                                item3.setVisible(true);
-                                item4.setVisible(true);
+                CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+                if (cardLocation.getRowOfCardLocation().toString().contains("GRAVEYARD")) {
+                    item4.setVisible(true);
+                } else {
+                    if (belongingTurn == turn) {
+                        System.out.println("correct turn name = " + name);
+                        if (card.getCardType().equals(CardType.MONSTER)) {
+                            if (mainPhases) {
+                                System.out.println("mainphase name = " + name);
+                                if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+                                    System.out.println("inside monster zone name = " + name);
+                                    item6.setVisible(true);
+                                    item7.setVisible(true);
+                                    item8.setVisible(true);
+                                } else if (label.equals(RowOfCardLocation.ALLY_HAND_ZONE) || label.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+                                    System.out.println("outside monster zone name = " + name);
+                                    item1.setVisible(true);
+                                    item2.setVisible(true);
+                                    item3.setVisible(true);
+                                    item5.setVisible(true);
+                                }
+                            } else if (battlePhases) {
+                                if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+                                    System.out.println("battle phase monster zone name = " + name);
+                                    item9.setVisible(true);
+                                    item10.setVisible(true);
+                                }
+                            }
+                        } else {
+                            if (mainPhases) {
                                 item5.setVisible(true);
+                                item6.setVisible(true);
                             }
-                        } else if (battlePhases) {
-                            if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-                                System.out.println("battle phase monster zone name = " + name);
-                                item9.setVisible(true);
-                                item10.setVisible(true);
-                            }
-                        }
-                    } else {
-                        if (mainPhases) {
-                            item5.setVisible(true);
-                            item6.setVisible(true);
                         }
                     }
                 }
+
             }
         });
 
     }
-
-
-
 
 
     public void applyClickingAbilitiesToCardView(DuelView duelView) {
@@ -319,9 +322,6 @@ public class CardView extends Rectangle {
 //        });
 
     }
-
-
-
 
 
 }
