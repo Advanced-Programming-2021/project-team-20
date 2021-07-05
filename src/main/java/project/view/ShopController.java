@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.shop.Shop;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
@@ -126,7 +127,15 @@ public class ShopController implements Initializable {
                 InputStream stream = null;
 //                System.out.println(allCards.get(cardNumber).getCardName());
 //                cardNumber++;
-                String id = names[upToWhichCardAreShown].replaceAll(" ", "");
+                HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+                HashMap<String, Card> allSpellTrapCards = Storage.getAllSpellAndTrapCards();
+                String id;
+                try {
+                    id = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown])).getCardName();
+                } catch (Exception e){
+                    id = allSpellTrapCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown])).getCardName();
+                }
+                //String id = names[upToWhichCardAreShown];
 
                 try {
                     stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
