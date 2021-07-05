@@ -144,4 +144,11 @@ public class Utility {
         }
         return "";
     }
+
+
+    public static String giveCardNameRemovingRedundancy(String cardName){
+        String string = cardName.replaceAll(" ", "");
+        string = string.toLowerCase();
+        return string.replaceAll(",", "");
+    }
 }

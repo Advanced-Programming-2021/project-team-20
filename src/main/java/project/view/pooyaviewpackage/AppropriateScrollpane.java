@@ -18,9 +18,9 @@ public class AppropriateScrollpane extends Application {
     public void start(Stage stage) throws Exception {
         AnchorPane anchorPane = new AnchorPane();
         VBox vBox = new VBox();
-    //    String wholeDescription = "\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\n\n\n\n\n\n\n\n";
-        String wholeDescription = "dfkjsdfjskdfsd fsdjfksdjfs dfskjdf sjd fn sdfsjdfnksdfs dfkjsdfnjskdf sdfjjsd kfsdjf" +
-            "sdklfnsdfjk sdfkjsdflwefd qwfpqwiofjndfnsd vsdv jsdmv skdjvsldjkfs dfjskdfjsbf sdjfskdf sdfsjdfkenfjksbdf sf";
+        String wholeDescription = "\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\n\n\n\n\n\n\n\n";
+//        String wholeDescription = "dfkjsdfjskdfsd fsdjfksdjfs dfskjdf sjd fn sdfsjdfnksdfs dfkjsdfnjskdf sdfjjsd kfsdjf" +
+//            "sdklfnsdfjk sdfkjsdflwefd qwfpqwiofjndfnsd vsdv jsdmv skdjvsldjkfs dfjskdfjsbf sdjfskdf sdfsjdfkenfjksbdf sf";
         List<String> shortDescription = new ArrayList<>();
         shortDescription = Arrays.asList(wholeDescription.split(" "));
         StringBuilder sentencesForEachLabel = new StringBuilder();
