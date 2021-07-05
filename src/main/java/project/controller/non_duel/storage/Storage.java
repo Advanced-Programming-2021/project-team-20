@@ -16,7 +16,8 @@ import java.util.Scanner;
 
 import com.google.gson.*;
 import com.opencsv.*;
-
+import javax.imageio.*;
+import java.awt.image.*;
 import javafx.scene.image.Image;
 import project.controller.duel.Utility.Utility;
 import project.model.Deck;
@@ -40,6 +41,7 @@ public class Storage {
     private static Card unknownCard;
     private String addressOfStorage = "Resourses\\";
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
+    private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
 
     public void startProgram() throws IOException {
 
@@ -56,8 +58,25 @@ public class Storage {
     public void endProgram() throws IOException {
 
         saveNewCardsInFile();
+        saveNewImages();
         savaUsersInFile();
+    }
 
+    private void saveNewImages() {
+        for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
+            BufferedImage bImage = null;
+            try {
+                File initialImage = new File(entry.getValue());
+                bImage = ImageIO.read(initialImage);
+                ImageIO.write(bImage, "png",
+                        new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                                + entry.getKey().getName() + ".png"));
+                entry.getKey().setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                        + entry.getKey().getName() + ".png");
+            } catch (Exception e) {
+                System.out.println("Exception occured :" + e.getMessage());
+            }
+        }
     }
 
     private void saveNewCardsInFile() throws IOException {
@@ -252,7 +271,6 @@ public class Storage {
             }
             csvReader.close();
         } catch (Exception e) {
-
             e.printStackTrace();
             System.exit(0);
         }
@@ -339,10 +357,6 @@ public class Storage {
                 user.setImage(createImageOfUsers(details.get("imagePath").getAsString()));
                 addDecksAndUselessCardsToUser(user, filenames.get(i));
             }
-        }
-
-        for (int i = 0; i < allUsers.size(); i++) {
-            System.out.println(allUsers.get(i).getName() + allUsers.get(i).getPassword());
         }
     }
 
@@ -445,6 +459,10 @@ public class Storage {
 
     public static void addCardToNewCardsCrated(Card newCard) {
         newCardsCreated.put(newCard.getCardName(), newCard);
+    }
+
+    public static HashMap<User, String> getNewImagesThatChanges() {
+        return newImagesThatChanges;
     }
 
     public static Card getUnknownCard() {

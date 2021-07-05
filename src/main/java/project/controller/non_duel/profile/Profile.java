@@ -10,8 +10,7 @@ import javafx.scene.image.Image;
 import project.view.LoginController;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
-import javax.imageio.*;
-import java.awt.image.*;
+
 
 public class Profile {
 
@@ -59,7 +58,6 @@ public class Profile {
     }
 
     public void changeImage(String imagePath) {
-        writeImage(imagePath);
         InputStream stream = null;
         try {
             stream = new FileInputStream(imagePath);
@@ -67,17 +65,6 @@ public class Profile {
             e.printStackTrace();
         }
         LoginController.getOnlineUser().setImage(new Image(stream));
-
-    }
-
-    private void writeImage(String imagePath) {
-        BufferedImage bImage = null;
-        try {
-            File initialImage = new File(imagePath);
-            bImage = ImageIO.read(initialImage);
-            ImageIO.write(bImage, "jpg", new File("/image.png"));
-        } catch (IOException e) {
-            System.out.println("Exception occured :" + e.getMessage());
-        }
+        Storage.getNewImagesThatChanges().put(LoginController.getOnlineUser() , imagePath);
     }
 }

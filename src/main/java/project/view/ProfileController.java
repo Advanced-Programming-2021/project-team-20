@@ -21,6 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import project.controller.non_duel.profile.Profile;
@@ -47,12 +50,20 @@ public class ProfileController implements Initializable {
     private PasswordField newPasswordField;
     @FXML
     private TextField newNicknameField;
+    @FXML
+    private Label myUserNmaeLabel;
+    @FXML
+    private Label myNicknameLabel;
     private Profile profile = new Profile();
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         showImage((LoginController.getOnlineUser().getImage()));
+        myUserNmaeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        myNicknameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        nicknameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         nicknameLabel.setText(LoginController.getOnlineUser().getNickname());
+        usernameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         usernameLabel.setText(LoginController.getOnlineUser().getName());
     }
 
@@ -65,13 +76,15 @@ public class ProfileController implements Initializable {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image");
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("images", "*.png"));
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("images", "*.jpg"));
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("images", "*.PNG"));
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("images", "*.JPG"));
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("images", "*.png"));
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("images", "*.jpg"));
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("images", "*.PNG"));
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("images", "*.JPG"));
         File file = fileChooser.showOpenDialog(MainView.getStage());
-        profile.changeImage(file.getAbsolutePath());
-        rectangleImage.setFill(new ImagePattern(LoginController.getOnlineUser().getImage()));
+        if (file != null) {
+            profile.changeImage(file.getAbsolutePath());
+            rectangleImage.setFill(new ImagePattern(LoginController.getOnlineUser().getImage()));
+        }
     }
 
     public void changePassword(ActionEvent actionEvent) {

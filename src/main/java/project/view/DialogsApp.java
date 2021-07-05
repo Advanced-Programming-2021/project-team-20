@@ -84,6 +84,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -140,12 +142,12 @@ public class DialogsApp extends Application {
 
         CustomDialog(String header, String content) {
             Pane root = new Pane();
-            BackgroundFill background_fill = new BackgroundFill(Color.PINK, 
-                                          CornerRadii.EMPTY, Insets.EMPTY);
+            // BackgroundFill background_fill = new BackgroundFill(Color.PINK, 
+            //                               CornerRadii.EMPTY, Insets.EMPTY);
   
-            // create Background
-            Background background = new Background(background_fill);
-            root.setBackground(background);
+            // // create Background
+            // Background background = new Background(background_fill);
+            // root.setBackground(background);
             scale1.setFromX(0.01);
             scale1.setFromY(0.01);
             scale1.setToY(1.0);
@@ -162,15 +164,15 @@ public class DialogsApp extends Application {
             initStyle(StageStyle.TRANSPARENT);
             initModality(Modality.APPLICATION_MODAL);
 
-            Rectangle bg = new Rectangle(350, 150, Color.WHITESMOKE);
+            Rectangle bg = new Rectangle(350, 150, Color.GRAY);
             bg.setStroke(Color.BLACK);
             bg.setStrokeWidth(1.5);
 
             Text headerText = new Text(header);
-            headerText.setFont(Font.font(20));
+            headerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 
             Text contentText = new Text(content);
-            contentText.setFont(Font.font(16));
+            contentText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
             VBox box = new VBox(10,
                     headerText,
@@ -180,9 +182,11 @@ public class DialogsApp extends Application {
             box.setPadding(new Insets(15));
 
             Button btn = new Button("OK");
-            btn.setTranslateX(bg.getWidth() - 50);
-            btn.setTranslateY(bg.getHeight() - 50);
+            btn.getStyleClass().add("C");
+            btn.setTranslateX(bg.getWidth() - 75);
+            btn.setTranslateY(bg.getHeight() - 75);
             btn.setOnAction(e -> closeDialog());
+            btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 
             root.getChildren().addAll(bg, box, btn);
 
@@ -204,8 +208,8 @@ public class DialogsApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(createContent()));
-        stage.show();
+stage.setScene(new Scene(createContent()));
+                stage.show();
     }
 
     public static void main(String[] args) {

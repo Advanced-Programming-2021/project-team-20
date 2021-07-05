@@ -110,7 +110,7 @@ public class UIUtility {
         allTypeOfCards.put("allTrapCardsInList", allTrapCradsInList);
     }
 
-    private static Image createImages(String path, String imagename) {
+    public static Image createImages(String path, String imagename) {
         InputStream stream = null;
         try {
             stream = new FileInputStream("src\\main\\resources\\project\\images\\" + path + imagename + ".PNG");
@@ -120,7 +120,17 @@ public class UIUtility {
         return new Image(stream);
     }
 
-    protected static void createOneRectangleForEachCard() {
+    public static Image createImages(String path) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Image(stream);
+    }
+
+    public static void createOneRectangleForEachCard() {
 
         allMainDeckRectangle = new ArrayList<>();
         allSideDeckRectangle = new ArrayList<>();

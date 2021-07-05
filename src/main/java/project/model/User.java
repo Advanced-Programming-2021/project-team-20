@@ -25,9 +25,6 @@ public class User {
         this.money = 100000;
     }
 
-    public User() {
-    }
-
     public String getImagePath() {
         return imagePath;
     }
@@ -92,7 +89,6 @@ public class User {
         Deck deck = decks.get(deckname);
         allUselessCards.addAll(deck.getMainDeck());
         allUselessCards.addAll(deck.getSideDeck());
-    //    System.out.println("in delete deck method");
         decks.remove(deckname);
     }
 
