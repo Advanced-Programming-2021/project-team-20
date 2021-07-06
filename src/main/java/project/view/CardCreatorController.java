@@ -15,12 +15,15 @@ import javafx.scene.paint.ImagePattern;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import project.controller.duel.CardEffects.MonsterEffectEnums.*;
+import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.*;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
+import project.model.cardData.SpellCardData.SpellCardValue;
 import project.view.LoginController;
 import project.view.MainView;
 
@@ -45,6 +48,12 @@ public class CardCreatorController implements Initializable {
     private int monsterAttributeNumber;
     private int monsterFamilyNumber;
     private int monsterValuesNumber;
+
+
+
+    private int numberOfTurnsForActivationSpell;
+    private String spellCardValue;
+    private ArrayList<Integer> numberOfSelectedEnumSpell;
 
 
     @FXML
@@ -1175,9 +1184,442 @@ public class CardCreatorController implements Initializable {
 
 
 
+
+
+
+
     private void continueGettingSpellInformation() {
+        //TODO Should I get oncePerTurnCardEffectUsed??
+        getNumberOfTurnsForActivation();
+    }
+
+
+
+
+
+
+
+
+
+
+    private void getNumberOfTurnsForActivation() {
+        Label label = new Label("Enter number of turns for activation");
+        label.setLayoutX(450);
+        label.setLayoutY(100);
+
+        TextField textField = new TextField();
+        textField.setLayoutY(200);
+        textField.setLayoutX(450);
+
+        Button button = new Button("OK");
+        button.setLayoutX(450);
+        button.setLayoutY(300);
+        button.setOnAction(ActionEvent -> getSpellCardValue(textField, label, button));
+
+        anchorPane.getChildren().add(label);
+        anchorPane.getChildren().add(textField);
+        anchorPane.getChildren().add(button);
 
     }
+
+
+
+
+
+
+    private void getSpellCardValue(TextField textField, Label label, Button button) {
+        Pattern pattern = Pattern.compile("^\\d+$");
+        String numberOfTurns = textField.getText();
+        if (!numberOfTurns.isEmpty() && pattern.matcher(numberOfTurns).matches()) {
+            numberOfTurnsForActivationSpell = Integer.parseInt(numberOfTurns);
+            anchorPane.getChildren().remove(textField);
+            anchorPane.getChildren().remove(label);
+            anchorPane.getChildren().remove(button);
+
+            Label newLabel = new Label("Please choose one of these");
+            newLabel.setLayoutY(100);
+            newLabel.setLayoutX(450);
+
+            VBox vbox = new VBox();
+            vbox.setLayoutY(150);
+            vbox.setLayoutX(450);
+
+            ArrayList<Button> buttons = new ArrayList<>();
+            SpellCardValue[] spellCardValues = SpellCardValue.values();
+            for (SpellCardValue cardValue : spellCardValues) {
+                String name = cardValue.toString();
+                buttons.add(new Button(name));
+            }
+
+            for (Button button1 : buttons) {
+                vbox.getChildren().add(button1);
+            }
+
+            for (int i = 0; i < buttons.size(); i++) {
+                switch (i) {
+                    case 0:
+                        buttons.get(i).setOnAction(ActionEvent -> normalSpell(vbox, label));
+                        break;
+                    case 1:
+                        buttons.get(i).setOnAction(ActionEvent -> equipSpell(vbox,label));
+                        break;
+                    case 2:
+                        buttons.get(i).setOnAction(ActionEvent -> fieldSpell(vbox, label));
+                        break;
+                    case 3:
+                        buttons.get(i).setOnAction(ActionEvent -> ritualSpell(vbox, label));
+                        break;
+                    case 4:
+                        buttons.get(i).setOnAction(ActionEvent -> quickPlaySpell(vbox, label));
+                        break;
+                    case 5:
+                        buttons.get(i).setOnAction(ActionEvent -> continuousSpell(vbox, label));
+                        break;
+
+                }
+            }
+
+            numberOfSelectedEnumSpell = new ArrayList<>();
+            anchorPane.getChildren().add(vbox);
+            anchorPane.getChildren().add(label);
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    private void continuousSpell(VBox vbox, Label label) {
+        spellCardValue = SpellCardValue.CONTINUOUS.toString();
+        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(label);
+
+
+        ContinuousSpellCardEffect[] effects = ContinuousSpellCardEffect.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (ContinuousSpellCardEffect effect : effects) {
+            String name = effect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, numberOfSelectedEnumSpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> getUserReplyForActivations(vBox, buttonForFinish));
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    private void quickPlaySpell(VBox vbox, Label label) {
+        spellCardValue = SpellCardValue.QUICK_PLAY.toString();
+        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(label);
+
+
+        QuickSpellEffect[] effects = QuickSpellEffect.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (QuickSpellEffect effect : effects) {
+            String name = effect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, numberOfSelectedEnumSpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> getUserReplyForActivations(vBox, buttonForFinish));
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void ritualSpell(VBox vbox, Label label) {
+        spellCardValue = SpellCardValue.RITUAL.toString();
+        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(label);
+
+
+        RitualSpellEffect[] effects = RitualSpellEffect.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (RitualSpellEffect effect : effects) {
+            String name = effect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, numberOfSelectedEnumSpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> getUserReplyForActivations(vBox, buttonForFinish));
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    private void fieldSpell(VBox vbox, Label label) {
+        spellCardValue = SpellCardValue.FIELD.toString();
+        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(label);
+
+        FieldSpellEffect[] effects = FieldSpellEffect.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (FieldSpellEffect effect : effects) {
+            String name = effect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, numberOfSelectedEnumSpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> getUserReplyForActivations(vBox, buttonForFinish));
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    private void equipSpell(VBox vbox, Label label) {
+        spellCardValue = SpellCardValue.EQUIP.toString();
+        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(label);
+
+        EquipSpellEffect[] effects = EquipSpellEffect.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (EquipSpellEffect effect : effects) {
+            String name = effect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, numberOfSelectedEnumSpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> getUserReplyForActivations(vBox, buttonForFinish));
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void normalSpell(VBox vbox, Label label) {
+        spellCardValue = SpellCardValue.NORMAL.toString();
+        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(label);
+
+        NormalSpellCardEffect[] normalSpellCardEffects = NormalSpellCardEffect.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (NormalSpellCardEffect normalSpellCardEffect : normalSpellCardEffects) {
+            String name = normalSpellCardEffect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, numberOfSelectedEnumSpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> getUserReplyForActivations(vBox, buttonForFinish));
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
+
+    }
+
+
+
+
+
+
+
+
+
+
+    private void getUserReplyForActivations(VBox vBox, Button buttonForFinish) {
+        System.out.println(numberOfSelectedEnumSpell);
+    }
+
+
+
+
+
 
 
 
