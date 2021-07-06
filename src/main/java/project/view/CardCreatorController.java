@@ -23,6 +23,7 @@ import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
+import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.view.LoginController;
 import project.view.MainView;
@@ -54,6 +55,7 @@ public class CardCreatorController implements Initializable {
     private int numberOfTurnsForActivationSpell;
     private String spellCardValue;
     private ArrayList<Integer> numberOfSelectedEnumSpell;
+    private ArrayList<Integer> selectedUserReplySpell;
 
 
     @FXML
@@ -1612,8 +1614,46 @@ public class CardCreatorController implements Initializable {
 
 
 
-    private void getUserReplyForActivations(VBox vBox, Button buttonForFinish) {
+    private void getUserReplyForActivations(VBox vBox1, Button buttonForFinish1) {
         System.out.println(numberOfSelectedEnumSpell);
+
+        anchorPane.getChildren().remove(vBox1);
+        anchorPane.getChildren().remove(buttonForFinish1);
+
+        selectedUserReplySpell = new ArrayList<>();
+        UserReplyForActivation[] effects = UserReplyForActivation.values();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        VBox vBox = new VBox();
+
+        for (UserReplyForActivation normalSpellCardEffect : effects) {
+            String name = normalSpellCardEffect.toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedUserReplySpell, buttons);
+                }
+            });
+        }
+
+        buttonForFinish.setOnAction(ActionEvent -> createSpellCard());
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        vBox.setLayoutX(450);
+        vBox.setLayoutY(100);
+
+        buttonForFinish.setLayoutX(450);
+        buttonForFinish.setLayoutY(500);
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
     }
 
 
@@ -1622,6 +1662,88 @@ public class CardCreatorController implements Initializable {
 
 
 
+
+
+
+
+    private void createSpellCard() {
+        System.out.println(selectedUserReplySpell);
+
+        HashMap<String, List<String>> enumValues = new HashMap<>();
+
+        EquipSpellEffect[] equipSpellEffects = EquipSpellEffect.values();
+        FieldSpellEffect[] fieldSpellEffects = FieldSpellEffect.values();
+        NormalSpellCardEffect[] normalSpellCardEffects = NormalSpellCardEffect.values();
+        QuickSpellEffect[] quickSpellEffects = QuickSpellEffect.values();
+        RitualSpellEffect[] ritualSpellEffects = RitualSpellEffect.values();
+        ContinuousSpellCardEffect[] continuousSpellCardEffects = ContinuousSpellCardEffect.values();
+
+
+        ArrayList<String> strings = new ArrayList<>();
+        ArrayList<String> userReplyArrayList = new ArrayList<>();
+        int counter = 0;
+        switch (spellCardValue) {
+            case "NORMAL":
+                for (NormalSpellCardEffect normalSpellCardEffect : normalSpellCardEffects) {
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(normalSpellCardEffect));
+                    counter++;
+                }
+                enumValues.put("NormalSpellCardEffect", strings);
+                break;
+            case "EQUIP":
+                for (EquipSpellEffect effect : equipSpellEffects) {
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    counter++;
+                }
+                enumValues.put("EquipSpellEffect", strings);
+                break;
+            case "FIELD":
+                for (FieldSpellEffect effect : fieldSpellEffects) {
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    counter++;
+                }
+                enumValues.put("FieldSpellEffect", strings);
+                break;
+            case "RITUAL":
+                for (RitualSpellEffect effect : ritualSpellEffects) {
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    counter++;
+                }
+                enumValues.put("RitualSpellEffect", strings);
+                break;
+            case "QUICK_PLAY":
+                for (QuickSpellEffect effect : quickSpellEffects) {
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    counter++;
+                }
+                enumValues.put("QuickSpellEffect", strings);
+                break;
+            case "CONTINUOUS":
+                for (ContinuousSpellCardEffect effect : continuousSpellCardEffects) {
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    counter++;
+                }
+                enumValues.put("ContinuousSpellCardEffect", strings);
+                break;
+        }
+
+
+        UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
+        counter = 0;
+        for (UserReplyForActivation userReplyForActivation : userReplyForActivations) {
+            if (selectedUserReplySpell.contains(Integer.valueOf(counter))) userReplyArrayList.add(String.valueOf(userReplyForActivation));
+            counter++;
+        }
+
+        enumValues.put("UserReplyForActivation", userReplyArrayList);
+        SpellCard spellCard = new SpellCard(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues, cardImage);
+
+        Storage.addCardToNewCardsCrated(spellCard);
+        //TODO : calculate card price
+        //Should I add all of them even if they are empty?
+
+    }
 
 
     private void removeThingsInTheGetNumberOfAllowedUsages() {
