@@ -25,7 +25,7 @@ public class Cheat {
             return increaseLifePoints(Integer.parseInt(matcher.group("amount")), index);
         }
 
-        matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\S+)");
+        matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\.+)");
         if (matcher.find()) {
             return setWinner(matcher.group(1), index);
         }
@@ -127,10 +127,10 @@ public class Cheat {
 
     private String addAdditionCardToHand(String cardname, int index) {
         int turn = GameManager.getDuelControllerByIndex(index).getTurn();
-
+        String cardName = Utility.giveCardNameRemovingRedundancy(cardname);
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allMonsterCards.containsKey(cardname)) {
-            MonsterCard monster = (MonsterCard) allMonsterCards.get(cardname);
+        if (allMonsterCards.containsKey(cardName)) {
+            MonsterCard monster = (MonsterCard) allMonsterCards.get(cardName);
             GameManager.getDuelBoardByIndex(index).addCardToHand((MonsterCard) monster.clone(), turn);
             GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
                 + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE "+"cardName is "+cardname);
@@ -139,14 +139,14 @@ public class Cheat {
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(cardname)) {
-            if (allSpellAndTrapCards.get(cardname).getCardType().equals(CardType.SPELL)) {
-                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardname);
+        if (allSpellAndTrapCards.containsKey(cardName)) {
+            if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
+                SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(index).addCardToHand((SpellCard) spellCard.clone(), turn);
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
                     + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE "+"cardName is "+cardname);
             } else {
-                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardname);
+                TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(index).addCardToHand((TrapCard) trapCard.clone(), turn);
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
                     + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE "+"cardName is "+cardname);
