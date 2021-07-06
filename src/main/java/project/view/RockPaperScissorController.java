@@ -29,7 +29,6 @@ import project.controller.duel.PreliminaryPackage.GameManager;
 
 public class RockPaperScissorController implements Initializable {
 
-    private static final AlertType CONFIRMATION = null;
     @FXML
     private Rectangle scissor2Rectangle;
     @FXML
@@ -148,10 +147,10 @@ public class RockPaperScissorController implements Initializable {
 
     private void handleAIPlayerSelection() {
         // try {
-        //     Thread.sleep(500);
+        // Thread.sleep(500);
         // } catch (InterruptedException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
         // }
         if (player1Selection == 1) {
             player2Selection = 3;
@@ -194,7 +193,7 @@ public class RockPaperScissorController implements Initializable {
         backRectanglesToFirstPlace();
         attackChosenRectangles();
         if (player1Selection == player2Selection) {
-            showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN");
+            showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION");
             player1Selection = 0;
             player2Selection = 0;
             didPlayer2Select = false;
@@ -205,14 +204,14 @@ public class RockPaperScissorController implements Initializable {
             GameManager.getDuelControllerByIndex(0).setTurn(1);
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
-            showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME");
-            new DuelView().start(new Stage());
+            showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION");
+            new DuelView().start(MainView.getStage());
         } else {
             GameManager.getDuelControllerByIndex(0).setTurn(1);
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
-            showAlert("PLAYER " + opponentPlayerName + " WON THE GAME AND MUST START GAME");
-            new DuelView().start(new Stage());
+            showAlert("PLAYER " + opponentPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION");
+            new DuelView().start(MainView.getStage());
         }
     }
 
@@ -223,9 +222,9 @@ public class RockPaperScissorController implements Initializable {
         }
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(CONFIRMATION, message, ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
     private void attackChosenRectangles() {

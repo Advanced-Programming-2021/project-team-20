@@ -147,6 +147,7 @@ public class DeckMenuController implements Initializable {
         });
 
         sideDeckPane.setOnDragDropped(e -> {
+            System.out.println(e.getGestureSource());
             transferCardToMainOrSideDeck(e, sideDeckPane, false);
             showNmberOfCardsInLabels();
         });
@@ -200,20 +201,18 @@ public class DeckMenuController implements Initializable {
         }
 
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
-        deleteDraggedCard(transfferdRectangle);
-
         String nameOfAddedCard = transfferdRectangle.getId();
         if (nameOfAddedCard.contains("scrollBar")) {
             nameOfAddedCard = nameOfAddedCard.replace("scrollBar", "");
         }
         copyPropertyToTransferredCard(transfferdRectangle, addedRectangle, nameOfAddedCard);
         pane.getChildren().add(addedRectangle);
+        deleteDraggedCard(transfferdRectangle);
         deckCommands.addCardToMainOrSideDeck(deckname, nameOfAddedCard, isTransferToMainDeck,
                 LoginController.getOnlineUser().getName());
     }
 
     private void deleteDraggedCard(Rectangle transfferdRectangle) {
-
         Pane mainDeckPane = (Pane) anchorPane.getChildren().get(3);
         if (mainDeckPane.getChildren().contains(transfferdRectangle)) {
             deleteCardFromMianOrSideDeck(transfferdRectangle, mainDeckPane, true);
@@ -292,7 +291,7 @@ public class DeckMenuController implements Initializable {
     private List<Card> getListOfCards(List<String> stringFormatCardInputs) {
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < stringFormatCardInputs.size(); i++) {
-            cards.add(Storage.getCardByName(stringFormatCardInputs.get(i)));
+            cards.add(Storage.getCardByName((stringFormatCardInputs.get(i))));
         }
         return cards;
     }
@@ -466,11 +465,10 @@ public class DeckMenuController implements Initializable {
             if (sentencesForEachLabel.length() >= 15) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 sentencesForEachLabel.setLength(0);
-                label.setLayoutY(20 * (numberOfLabelUsed ));
+                label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);
                 numberOfLabelUsed++;
-            } else
-            if (i + 1 == shortCardDescription.size()) {
+            } else if (i + 1 == shortCardDescription.size()) {
                 addEffectToLabel(label, sentencesForEachLabel.toString());
                 label.setLayoutY(20 * (numberOfLabelUsed));
                 pane.getChildren().add(label);

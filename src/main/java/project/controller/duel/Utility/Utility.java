@@ -57,8 +57,10 @@ public class Utility {
     }
 
     public static int changeYuGiOhIndexToArrayIndex(int cardIndex, RowOfCardLocation rowOfCardLocation) {
-        boolean seeminglyChoosingSelf = rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE);
-        boolean seeminglyChoosingOther = rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE);
+        boolean seeminglyChoosingSelf = rowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                || rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE);
+        boolean seeminglyChoosingOther = rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
+                || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE);
         if (seeminglyChoosingSelf) {
             if (cardIndex == 1) {
                 return 3;
@@ -88,7 +90,8 @@ public class Utility {
     }
 
     public static int changeArrayIndexFromOneToFiveToYuGiOhIndex(int cardIndex, boolean choosingSelf) {
-        if (!choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 2 || choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
+        if (!choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 2
+                || choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
             if (cardIndex == 1) {
                 return 5;
             } else if (cardIndex == 2) {
@@ -145,8 +148,7 @@ public class Utility {
         return "";
     }
 
-
-    public static String giveCardNameRemovingRedundancy(String cardName){
+    public static String giveCardNameRemovingRedundancy(String cardName) {
         String string = cardName.replaceAll(" ", "");
         string = string.toLowerCase();
         return string.replaceAll(",", "");

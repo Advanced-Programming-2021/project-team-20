@@ -12,12 +12,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
@@ -76,7 +73,7 @@ public class WholeDeckPageMenuController implements Initializable {
         addInformationLabelOfDeckToPane();
         createNewPage();
         setEffectsOfEditAndDeleteButtons();
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
         MainView.changeScene(pane);
     }
 
@@ -91,14 +88,13 @@ public class WholeDeckPageMenuController implements Initializable {
 
     private void addEffectsToFourRectangleToShowDeck() {
         fourRectangleToShowDecks = UIUtility.getFourRectangleToShowDecks();
-        showCardsInDeck();
+       // showCardsInDeck();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
             fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent arg0) {
                     firstTimeMouseEnteredRectangle = System.currentTimeMillis();
-                //  /   thread.start();
                 }
             });
             
@@ -110,9 +106,7 @@ public class WholeDeckPageMenuController implements Initializable {
                     equalDeckNameLabel.setText(chosenDeck);
                 }
             });
-
             fourRectangleToShowDecks.get(i).setOnMouseExited(MouseEvent -> {
-            
             });
         }
     }
@@ -140,7 +134,7 @@ public class WholeDeckPageMenuController implements Initializable {
                 decksInOnePage = new ArrayList<>();
             }
         }
-        if (!decksInDifferentPages.contains(decksInOnePage)) {
+        if (!decksInDifferentPages.contains(decksInOnePage) && decksInOnePage.size() > 0) {
             decksInDifferentPages.add(decksInOnePage);
         }
     }
@@ -161,15 +155,17 @@ public class WholeDeckPageMenuController implements Initializable {
                     break;
                 }
             }
-            editDecksInDifferentPageWhenCardDeleted();
+            editDecksInDifferentPageWhenDeckDeleted();
         }
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
         createNewPage();
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
         setEffectsOfEditAndDeleteButtons();
+        showAlert("DECK DELETED SUCCESSFULLY!", "SUCCESSFUL");
     }
 
-    private void editDecksInDifferentPageWhenCardDeleted() {
+    private void editDecksInDifferentPageWhenDeckDeleted() {
         for (int i = 0; i < decksInDifferentPages.size(); i++) {
             if (decksInDifferentPages.get(i).size() < 4 && decksInDifferentPages.size() > i + 1) {
                 decksInDifferentPages.get(i).add(decksInDifferentPages.get(i + 1).get(0));
@@ -190,21 +186,22 @@ public class WholeDeckPageMenuController implements Initializable {
         }
         new DeckMenuController().showPage(pane, chosenDeck);
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
     }
 
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
         String result = deckCommands.createDeck(createdDeckName, LoginController.getOnlineUser().getName());
         if (createdDeckName.equals("")) {
-            showAlert("ENTER DECK NAME");
+            showAlert("ENTER DECK NAME", "ERROR");
             return;
         }
         if (result.equals("deck already exists")) {
-            showAlert("DECK ALREADY EXISTS");
+            showAlert("DECK ALREADY EXISTS","ERROR");
             createdDeckNameField.setText("");
             return;
         }
-        showAlert("DECK CREATED SUCCESSFULLY!");
+        showAlert("DECK CREATED SUCCESSFULLY!", "SUCCESSFUL");
         createdDeckNameField.setText("");
         Deck deck = LoginController.getOnlineUser().getDecks().get(createdDeckName);
         if (decksInDifferentPages.get(decksInDifferentPages.size() - 1).size() == 4) {
@@ -217,15 +214,15 @@ public class WholeDeckPageMenuController implements Initializable {
                 createNewPage();
             }
         }
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(null, message, ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
-    private void setEffectOfpreviousAndnextCardsbtn() {
+    private void setEffectOfpreviousAndnextDecksbtn() {
 
         if (currentPageToShowDecks + 1 == decksInDifferentPages.size()) {
             equalToNextPagebtn.setDisable(true);
@@ -254,6 +251,8 @@ public class WholeDeckPageMenuController implements Initializable {
         currentPageToShowDecks++;
         createNewPage();
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
+        setEffectsOfEditAndDeleteButtons();
     }
 
     private void createNewPage() {
@@ -302,13 +301,15 @@ public class WholeDeckPageMenuController implements Initializable {
                 }
             }
         }
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
     }
 
     public void backToPreviousPage() {
         currentPageToShowDecks--;
         createNewPage();
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
+        setEffectsOfEditAndDeleteButtons();
     }
 
     public void backToMainMenu() {

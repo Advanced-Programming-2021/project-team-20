@@ -269,7 +269,7 @@ public class ImportAndExportController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         String result = importAndExport.importCard(file);
         if (result.equals("this card does not exist")) {
-            showAlert("THIS FILE NOT A CARD");
+            showAlert("THIS FILE NOT A CARD","ERROR");
             return;
         }
 
@@ -285,7 +285,7 @@ public class ImportAndExportController implements Initializable {
 
     public void exportFiles() {
         if (cardNameForExport.equals("")) {
-            showAlert("CHOOSE A CARD");
+            showAlert("CHOOSE A CARD", "ERROR");
             return;
         }
 
@@ -296,17 +296,17 @@ public class ImportAndExportController implements Initializable {
         File file = fileChooser.showSaveDialog(MainView.getStage());
 
         if (importAndExport.exportCard(cardNameForExport, file).equals("ERROR")) {
-            showAlert("FILE CANNOT BE EXPORTED");
+            showAlert("FILE CANNOT BE EXPORTED", "ERROR");
             return;
         }
-        showAlert("FILE EXPORTED SUCCESSFULLY");
+        showAlert("FILE EXPORTED SUCCESSFULLY", "SUCCCESSFUL");
         cardNameForExport = "";
         setEffectsOfButtons();
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(null, message, ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
     public void backToMainMenu() {

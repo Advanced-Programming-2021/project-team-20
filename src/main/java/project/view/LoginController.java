@@ -6,8 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 
@@ -41,20 +38,20 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        //
+      
     }
 
     public void loginUser(ActionEvent ev) {
         if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
-            showAlert("FILL FIELDS");
+            showAlert("FILL FIELDS","ERROR");
             passwordField.setText("");
             usernameField.setText("");
         } else if (Storage.getUserByName(usernameField.getText()) == null) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH");
+            showAlert("USERNAME AND PASSWORD DID NOT MATCH", "ERROR");
             passwordField.setText("");
             usernameField.setText("");
         } else if (!Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH");
+            showAlert("USERNAME AND PASSWORD DID NOT MATCH","ERROR");
             passwordField.setText("");
             usernameField.setText("");
         } else {
@@ -67,21 +64,21 @@ public class LoginController implements Initializable {
         }
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(null, message, ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
     public void signUpUser() {
         if (usernameFieldForRegister.getText().equals("") || nickNameFieldForRegister.getText().equals("")
                 || passwordFieldfORegister.getText().equals("")) {
-            showAlert("FILL FIELDS");
+            showAlert("FILL FIELDS", "ERROR");
         } else if (doesUserWithThisUsernameAlreadyExists()) {
-            showAlert("USERNAME IS REPEATED");
+            showAlert("USERNAME IS REPEATED","ERROR");
         } else if (doesUserWithThisNicknameAlreadyExists()) {
-            showAlert("NICKNAME IS REPEATED");
+            showAlert("NICKNAME IS REPEATED", "ERROR");
         } else {
-            showAlert("USER CREATED SUCCESSFULLY!");
+            showAlert("USER CREATED SUCCESSFULLY!", "SUCCESSFUL");
             createUser();
         }
         usernameFieldForRegister.setText("");
