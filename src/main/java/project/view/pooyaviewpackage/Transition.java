@@ -9,6 +9,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.controller.duel.PreliminaryPackage.GameManager;
@@ -17,6 +19,7 @@ import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.modelsforview.CardView;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Transition {

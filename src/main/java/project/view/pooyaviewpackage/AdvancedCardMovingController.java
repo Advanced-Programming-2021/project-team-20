@@ -2,17 +2,17 @@ package project.view.pooyaviewpackage;
 
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import project.controller.duel.GamePackage.DuelBoard;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.*;
 import project.model.modelsforview.CardView;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class AdvancedCardMovingController {
     private ArrayList<Card> allyCardsInHand = new ArrayList<>();
@@ -92,7 +92,7 @@ public class AdvancedCardMovingController {
         int helpIndex = 0;
         for (int i = 0; i < changeConductorsInStringForm.size(); i++) {
             for (int j = 0; j < changeConductorsInStringForm.get(i).size(); j++) {
-                System.out.println("this string is being added "+changeConductorsInStringForm.get(i).get(j));
+                System.out.println("this string is being added " + changeConductorsInStringForm.get(i).get(j));
                 allChangeConductorsObjects.add(new ChangeConductor(changeConductorsInStringForm.get(i).get(j), helpIndex));
                 helpIndex++;
             }
@@ -146,7 +146,7 @@ public class AdvancedCardMovingController {
 //        }
     }
 
-    public Object giveObjectForThisSingleString(String change) {
+    public ObjectOfChange giveObjectForThisSingleString(String change) {
         if (change.startsWith("&")) {
             int turn = Integer.parseInt(change.split(" ")[3]);
             int increaseInHealth = Integer.parseInt(change.split(" ")[9]);
@@ -170,7 +170,7 @@ public class AdvancedCardMovingController {
                 DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
             parallelTransition.getChildren().add(DuelView.getTransition().applyTransitionForHealthBar(false, realIncreaseInHealthForOpponent,
                 DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
-            return parallelTransition;
+            return new ObjectOfChange(parallelTransition, action.HP_LOSS);
         } else {
             System.out.println("Look dude my string is " + change);
             String[] subCommands = change.split(" ");
@@ -190,38 +190,38 @@ public class AdvancedCardMovingController {
                 //changing card positions not considered
                 if (finalCardPosition.equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
                     if (initialRowOfCardLocation.toString().contains("MONSTER")) {
-                        return DuelView.getTransition().applyTransitionForFlipSummoning(cardView);
+                        return new ObjectOfChange(DuelView.getTransition().applyTransitionForFlipSummoning(cardView), action.SUMMON);
                     } else {
-                        return DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
+                        return new ObjectOfChange(DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView), action.SUMMON);
                     }
                 } else if (finalCardPosition.equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) {
-                    return DuelView.getTransition().applyTransitionForSettingMonsterCard(cardView);
+                    return new ObjectOfChange(DuelView.getTransition().applyTransitionForSettingMonsterCard(cardView), action.SET);
                 } else if (finalCardPosition.equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                     if (initialRowOfCardLocation.toString().contains("MONSTER")) {
-                        return DuelView.getTransition().flipCardBackAndForthConsideringCardImage(cardView, true, 250);
+                        return new ObjectOfChange(DuelView.getTransition().flipCardBackAndForthConsideringCardImage(cardView, true, 250), action.NOT_APPLICABLE);
                     } else {
-                        return DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView);
+                        return new ObjectOfChange(DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView), action.SUMMON);
                     }
                 }
             } else if (finalDestination.equals("spell")) {
                 if (staying) {
-                    return DuelView.getTransition().flipCardBackAndForthConsideringCardImage(cardView, finalCardPosition.equals(CardPosition.FACE_UP_ACTIVATED_POSITION), 250);
+                    return new ObjectOfChange(DuelView.getTransition().flipCardBackAndForthConsideringCardImage(cardView, finalCardPosition.equals(CardPosition.FACE_UP_ACTIVATED_POSITION), 250), action.ACTIVATE_EFFECT);
                 } else {
                     if (finalCardPosition.equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                        return DuelView.getTransition().applyTransitionForActivatingSpellTrapSuper(cardView);
+                        return new ObjectOfChange(DuelView.getTransition().applyTransitionForActivatingSpellTrapSuper(cardView), action.ACTIVATE_EFFECT);
                     } else if (finalCardPosition.equals(CardPosition.FACE_DOWN_SPELL_SET_POSITION)) {
-                        return DuelView.getTransition().applyTransitionForSettingSpellTrapCard(cardView);
+                        return new ObjectOfChange(DuelView.getTransition().applyTransitionForSettingSpellTrapCard(cardView), action.SET);
                     }
                 }
             } else if (finalDestination.equals("graveyard")) {
-                return DuelView.getTransition().applyTransitionForSendingCardToGraveyard(cardView, sideOfFinalDestination,
+                return new ObjectOfChange(DuelView.getTransition().applyTransitionForSendingCardToGraveyard(cardView, sideOfFinalDestination,
                     !(cardView.getCard().getCardType().equals(CardType.MONSTER) &&
                         (initialRowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) ||
-                            initialRowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE))));
+                            initialRowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)))), action.NOT_APPLICABLE);
             } else if (finalDestination.equals("hand")) {
-                return DuelView.getTransition().sendCardToHandZone(cardView, sideOfFinalDestination);
+                return new ObjectOfChange(DuelView.getTransition().sendCardToHandZone(cardView, sideOfFinalDestination), action.NOT_APPLICABLE);
             }
-            return new ParallelTransition();
+            return new ObjectOfChange(new ParallelTransition(), action.NOT_APPLICABLE);
         }
     }
 
@@ -346,7 +346,7 @@ interface conductChange {
 }
 
 class ChangeConductor implements conductChange {
-    Object object;
+    ObjectOfChange objectOfChange;
     String information;
     int helpIndex;
 
@@ -357,33 +357,113 @@ class ChangeConductor implements conductChange {
 
     @Override
     public void conductChange() {
-        this.object = DuelView.getAdvancedCardMovingController().giveObjectForThisSingleString(information);
-        if (helpIndex != DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().size()-1){
-        chainThisChangeConductorToYourself();}
-        if (object instanceof ParallelTransition) {
-            ((ParallelTransition) object).play();
-        } else if (object instanceof TroubleFlipTransition) {
-            ((TroubleFlipTransition) object).getStHideFront().play();
+        this.objectOfChange = DuelView.getAdvancedCardMovingController().giveObjectForThisSingleString(information);
+        if (helpIndex != DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().size() - 1) {
+            chainThisChangeConductorToYourself();
+        }
+        AudioClip audioClip = objectOfChange.giveMediaPlayerBasedOnAction();
+        if (objectOfChange.getObject() instanceof ParallelTransition) {
+            ((ParallelTransition) objectOfChange.getObject()).play();
+            if (audioClip != null) {
+                audioClip.play();
+            }
+        } else if (objectOfChange.getObject() instanceof TroubleFlipTransition) {
+            ((TroubleFlipTransition) objectOfChange.getObject()).getStHideFront().play();
+            if (audioClip != null) {
+                audioClip.play();
+            }
         }
     }
 
     public void chainThisChangeConductorToYourself() {
-        if (object instanceof ParallelTransition) {
-            ParallelTransition parallelTransition = ((ParallelTransition) object);
+        if (objectOfChange.getObject() instanceof ParallelTransition) {
+            ParallelTransition parallelTransition = ((ParallelTransition) objectOfChange.getObject());
             parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex+1).conductChange();
+                    DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex + 1).conductChange();
                 }
             });
-        } else if (object instanceof TroubleFlipTransition) {
-            ScaleTransition troubleFlipTransition = ((TroubleFlipTransition) object).getStHideFront();
+        } else if (objectOfChange.getObject() instanceof TroubleFlipTransition) {
+            ScaleTransition troubleFlipTransition = ((TroubleFlipTransition) objectOfChange.getObject()).getStHideFront();
             troubleFlipTransition.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex+1).conductChange();
+                    DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex + 1).conductChange();
                 }
             });
         }
     }
+}
+
+class ObjectOfChange {
+    Object object;
+    action action;
+
+    public ObjectOfChange(Object object, action action) {
+        this.object = object;
+        this.action = action;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public project.view.pooyaviewpackage.action getAction() {
+        return action;
+    }
+
+    public AudioClip giveMediaPlayerBasedOnAction() {
+        if (this.action.equals(project.view.pooyaviewpackage.action.SUMMON)) {
+            if (!DuelView.isIsGameMute()) {
+                String bip = "src/main/resources/project/ingameicons/music/summoning_music.mp3";
+                Media hit = new Media(Paths.get(bip).toUri().toString());
+                AudioClip mediaPlayer = new AudioClip(hit.getSource());
+                mediaPlayer.setVolume(0.6);
+                return mediaPlayer;
+            }
+        } else if (this.action.equals(project.view.pooyaviewpackage.action.ACTIVATE_EFFECT)) {
+            if (!DuelView.isIsGameMute()) {
+                String bip = "src/main/resources/project/ingameicons/music/activate_effect_music.mp3";
+                Media hit = new Media(Paths.get(bip).toUri().toString());
+                AudioClip mediaPlayer = new AudioClip(hit.getSource());
+                mediaPlayer.setVolume(0.7);
+                return mediaPlayer;
+            }
+        } else if (this.action.equals(project.view.pooyaviewpackage.action.SET)) {
+            if (!DuelView.isIsGameMute()) {
+                String bip = "src/main/resources/project/ingameicons/music/setting_card_music.mp3";
+                Media hit = new Media(Paths.get(bip).toUri().toString());
+                AudioClip mediaPlayer = new AudioClip(hit.getSource());
+                mediaPlayer.setVolume(0.6);
+                return mediaPlayer;
+            }
+        } else if (this.action.equals(project.view.pooyaviewpackage.action.HP_LOSS)) {
+            if (!DuelView.isIsGameMute()) {
+                String bip = "src/main/resources/project/ingameicons/music/hp_decrease_music.mp3";
+                Media hit = new Media(Paths.get(bip).toUri().toString());
+                AudioClip mediaPlayer = new AudioClip(hit.getSource());
+                mediaPlayer.setVolume(0.6);
+                return mediaPlayer;
+            }
+        } else if (this.action.equals(project.view.pooyaviewpackage.action.FIELD_SPELL_CHANGE)) {
+            if (!DuelView.isIsGameMute()) {
+                String bip = "src/main/resources/project/ingameicons/music/field_spell_change_music.mp3";
+                Media hit = new Media(Paths.get(bip).toUri().toString());
+                AudioClip mediaPlayer = new AudioClip(hit.getSource());
+                mediaPlayer.setVolume(0.6);
+                return mediaPlayer;
+            }
+        }
+        return null;
+    }
+}
+
+enum action {
+    SUMMON,
+    SET,
+    ACTIVATE_EFFECT,
+    HP_LOSS,
+    FIELD_SPELL_CHANGE,
+    NOT_APPLICABLE,
 }

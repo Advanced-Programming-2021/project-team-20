@@ -119,7 +119,7 @@ public class FakeMain {
         secondPlayerDeck.add(new SpellCard("Raigeki", "", SpellCardValue.NORMAL, null, 3, 60, 0, null, null));
 
 
-        secondPlayerDeck.add(new MonsterCard(1800, 1200, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Leotron", "", null, 3, 0, null, null));
+        secondPlayerDeck.add(new MonsterCard(1800, 1200, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Terratiger, the Empowered Warrior", "", null, 3, 0, null, null));
         //terratiger effect won't work because of invalid string name in controller
         secondPlayerDeck.add(new TrapCard("Mirror Force", "", TrapCardValue.NORMAL, null, 3, 60, 0, null, null));
         secondPlayerDeck.add(new MonsterCard(200, 1800, 2, MonsterCardAttribute.LIGHT, MonsterCardFamily.SPELLCASTER, MonsterCardValue.NORMAL, "Bitron", "", null, 3, 0, null, null));

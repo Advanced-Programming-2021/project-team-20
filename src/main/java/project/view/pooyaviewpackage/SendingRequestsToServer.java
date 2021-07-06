@@ -24,14 +24,14 @@ public class SendingRequestsToServer {
         System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("normal summon", true);
-        System.out.println("*" + output);
+        System.out.println("***Normal Summoning Message from server received is : " + output);
         if (output.contains("successfully")) {
 
 
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
 
             if (output.contains("do you")){
-                String doYouWantToActivate = "(do you want (.+)?)";
+                String doYouWantToActivate = "(o you want to activate your monster card's effect?)";
                 Pattern doYouWantToActivatePattern = Pattern.compile(doYouWantToActivate);
                 Matcher matcherForDoYouWantToActivate = doYouWantToActivatePattern.matcher(output);
                 String nowItWillBeString = "now it will be (\\S+)'s turn";
@@ -39,15 +39,19 @@ public class SendingRequestsToServer {
                 Matcher match = nowItWillBePattern.matcher(output);
                 String nowItWillBeTurn = "";
                 System.out.println("WHOUUUUUUU");
+                boolean isTrue = false;
                 if (match.find()) {
                     nowItWillBeTurn = output.substring(match.start(), match.end());
                     DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn+"\nDo you want to activate your trap or spell?");
-
+                    isTrue = true;
                     // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
                 }
-                if (matcherForDoYouWantToActivate.find()){
+                if (!match.find() && isTrue){
+                    System.out.println("&*&*&*&*&* YOU MUST SCATTER IF YOU SEE THIS MESSAGE");
+                }
+                if (matcherForDoYouWantToActivate.find() && !match.find()){
                     String stringShownToUser = matcherForDoYouWantToActivate.group(1);
-                    DuelView.getShowOptionsToUser().doYouWantToAlert(stringShownToUser);
+                    DuelView.getShowOptionsToUser().doYouWantToAlert("D"+stringShownToUser);
 
                 }
                 System.out.println(nowItWillBeTurn+"p");

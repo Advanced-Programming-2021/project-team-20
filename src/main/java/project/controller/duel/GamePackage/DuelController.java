@@ -45,7 +45,7 @@ public class DuelController {
     public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
         changesInLifePointsToBeGivenToClient += string;
         changesInLifePointsToBeGivenToClient += "\n";
-        System.out.println("If you will allow me changesInLifePoints is adding\n"+string+"\nto wholeReport");
+        System.out.println("If you will allow me changesInLifePoints is adding\n" + string + "\nto wholeReport");
         wholeReportToClient += "&";
         wholeReportToClient += string;
         wholeReportToClient += "\n";
@@ -62,7 +62,7 @@ public class DuelController {
     public void addStringToSuperAlmightyString(String string) {
         superAlmightyChangesString += string;
         superAlmightyChangesString += "\n";
-        System.out.println("If you will allow me superAlmightyString is adding\n"+string+"\nto wholeReport");
+        System.out.println("If you will allow me superAlmightyString is adding\n" + string + "\nto wholeReport");
         wholeReportToClient += string;
         wholeReportToClient += "\n";
     }
@@ -101,7 +101,7 @@ public class DuelController {
     public void addStringToWhatUsersSay(String string) {
         whatUsersSay += string;
         whatUsersSay += "\n";
-        System.out.println("If you will allow me whatUsersSay is adding\n"+string+"\nto wholeReport");
+        System.out.println("If you will allow me whatUsersSay is adding\n" + string + "\nto wholeReport");
         wholeReportToClient += string;
         wholeReportToClient += "\n";
     }

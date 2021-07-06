@@ -9,8 +9,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import project.controller.duel.GamePackage.PhaseInGame;
 import project.controller.duel.PreliminaryPackage.FakeMain;
 import project.controller.duel.PreliminaryPackage.GameManager;
@@ -20,6 +24,7 @@ import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.modelsforview.*;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -59,7 +64,28 @@ public class DuelView extends Application {
     private static Group moreCardInfoGroup;
 
 
+    private static MediaPlayer backgroundMusic;
+    private static MediaView mediaView;
+    private static boolean isGameMute;
+    private static boolean isGamePaused;
+    private static Button pause;
+    private static Button mute;
 
+    public static boolean isIsGameMute() {
+        return isGameMute;
+    }
+
+    public static boolean isIsGamePaused() {
+        return isGamePaused;
+    }
+
+    public static void setIsGameMute(boolean isGameMute) {
+        DuelView.isGameMute = isGameMute;
+    }
+
+    public static void setIsGamePaused(boolean isGamePaused) {
+        DuelView.isGamePaused = isGamePaused;
+    }
 
     private static Rectangle cardImageForCardMoreInfo;
     private static Rectangle cardAttributeForCardMoreInfo;
@@ -71,7 +97,6 @@ public class DuelView extends Application {
     private static Label cardFamilyForCardMoreInfo;
     private static ScrollPane scrollPaneForCardMoreInfo;
     private static VBox vBox;
-
 
 
     private static CardLocation cardLocationBeingDragged;
@@ -363,7 +388,48 @@ public class DuelView extends Application {
 
     private void prepareObjectsForWorking() {
         battleFieldView = new BattleFieldView();
-
+        URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
+        backgroundMusic = new MediaPlayer(new Media(resource.toString()));
+        mediaView = new MediaView();
+        mediaView.setMediaPlayer(backgroundMusic);
+        //backgroundMusic.setAutoPlay(true);
+        backgroundMusic.setVolume(0.4);
+        backgroundMusic.setOnEndOfMedia(new Runnable() {
+            public void run() {
+                backgroundMusic.seek(Duration.ZERO);
+            }
+        });
+       // backgroundMusic.play();
+        isGameMute = false;
+        isGamePaused = false;
+        pause = new Button("pause");
+        mute = new Button("mute");
+        pause.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (isGamePaused) {
+                    isGamePaused = false;
+                    pause.setText("pause");
+                } else {
+                    isGamePaused = true;
+                    pause.setText("resume");
+                }
+            }
+        });
+        mute.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (backgroundMusic.isMute()) {
+                    backgroundMusic.setMute(false);
+                    isGameMute = false;
+                    mute.setText("mute");
+                } else {
+                    backgroundMusic.setMute(true);
+                    isGameMute = true;
+                    mute.setText("unmute");
+                }
+            }
+        });
         drawPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_DRAW_PHASE);
         standByPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_STANDBY_PHASE);
         mainPhaseOneLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -431,7 +497,7 @@ public class DuelView extends Application {
             System.out.println("preparing " + cardView.getCard().getCardName());
             allCards.getChildren().add(cardView);
         }
-        moreCardInfoSection.updateCardMoreInfoSection((CardView) allCards.getChildren().get(0), ((CardView)allCards.getChildren().get(0)).getCard().getCardDescription());
+        moreCardInfoSection.updateCardMoreInfoSection((CardView) allCards.getChildren().get(0), ((CardView) allCards.getChildren().get(0)).getCard().getCardDescription());
     }
 
 
