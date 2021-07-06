@@ -27,12 +27,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import project.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
+import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.cardData.General.Card;
@@ -208,10 +208,10 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         HashMap<String, Card> allSpellAndTrapCard = Storage.getAllSpellAndTrapCards();
         for (int i = 0; i < mainDeckCards.size(); i++) {
-            if (allMonsterCards.containsKey(mainDeckCards.get(i))) {
+            if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
                 numberOfMonsterCards++;
             } else {
-                if (allSpellAndTrapCard.containsKey(mainDeckCards.get(i))) {
+                if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
                     numberOfSpellCards++;
                 } else {
                     numberOfTrapCards++;

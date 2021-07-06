@@ -30,7 +30,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.deckCommands.DeckCommands;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
@@ -148,6 +147,7 @@ public class DeckMenuController implements Initializable {
         });
 
         sideDeckPane.setOnDragDropped(e -> {
+            System.out.println(e.getGestureSource());
             transferCardToMainOrSideDeck(e, sideDeckPane, false);
             showNmberOfCardsInLabels();
         });
@@ -201,14 +201,13 @@ public class DeckMenuController implements Initializable {
         }
 
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
-        deleteDraggedCard(transfferdRectangle);
-
-        String nameOfAddedCard = Utility.giveCardNameRemovingRedundancy(transfferdRectangle.getId());
+        String nameOfAddedCard = transfferdRectangle.getId();
         if (nameOfAddedCard.contains("scrollBar")) {
             nameOfAddedCard = nameOfAddedCard.replace("scrollBar", "");
         }
         copyPropertyToTransferredCard(transfferdRectangle, addedRectangle, nameOfAddedCard);
         pane.getChildren().add(addedRectangle);
+        deleteDraggedCard(transfferdRectangle);
         deckCommands.addCardToMainOrSideDeck(deckname, nameOfAddedCard, isTransferToMainDeck,
                 LoginController.getOnlineUser().getName());
     }
@@ -292,7 +291,7 @@ public class DeckMenuController implements Initializable {
     private List<Card> getListOfCards(List<String> stringFormatCardInputs) {
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < stringFormatCardInputs.size(); i++) {
-            cards.add(Storage.getCardByName(Utility.giveCardNameRemovingRedundancy(stringFormatCardInputs.get(i))));
+            cards.add(Storage.getCardByName((stringFormatCardInputs.get(i))));
         }
         return cards;
     }

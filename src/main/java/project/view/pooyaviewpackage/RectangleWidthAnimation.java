@@ -50,7 +50,7 @@ import javafx.util.Duration;
 public class RectangleWidthAnimation extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Rectangle statusBar = new Rectangle(300, 100);
+        Rectangle statusBar = new Rectangle(0, 200);
         Button animationButton = new Button("Animate width increase by 25");
         animationButton.setOnAction(event -> {
             System.out.println("Animation start: width = " + statusBar.getWidth());
@@ -61,7 +61,8 @@ public class RectangleWidthAnimation extends Application {
             timeline.setOnFinished(finishedEvent -> System.out.println("Animation end: width = " + statusBar.getWidth()));
         });
         VBox container = new VBox(statusBar);
-        container.setLayoutX(100);
+        //container.setLayoutX(100);
+        container.setPrefWidth(425);
         container.setLayoutY(100);
         container.setAlignment(Pos.CENTER_RIGHT);
         AnchorPane anchorPane = new AnchorPane();

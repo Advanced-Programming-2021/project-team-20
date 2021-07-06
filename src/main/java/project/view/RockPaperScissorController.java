@@ -205,13 +205,13 @@ public class RockPaperScissorController implements Initializable {
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
             showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION");
-            new DuelView().start(new Stage());
+            new DuelView().start(MainView.getStage());
         } else {
             GameManager.getDuelControllerByIndex(0).setTurn(1);
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
             showAlert("PLAYER " + opponentPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION");
-            new DuelView().start(new Stage());
+            new DuelView().start(MainView.getStage());
         }
     }
 

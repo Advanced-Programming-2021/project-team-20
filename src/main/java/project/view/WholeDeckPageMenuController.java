@@ -73,7 +73,7 @@ public class WholeDeckPageMenuController implements Initializable {
         addInformationLabelOfDeckToPane();
         createNewPage();
         setEffectsOfEditAndDeleteButtons();
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
         MainView.changeScene(pane);
     }
 
@@ -88,14 +88,13 @@ public class WholeDeckPageMenuController implements Initializable {
 
     private void addEffectsToFourRectangleToShowDeck() {
         fourRectangleToShowDecks = UIUtility.getFourRectangleToShowDecks();
-        showCardsInDeck();
+       // showCardsInDeck();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
             fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent arg0) {
                     firstTimeMouseEnteredRectangle = System.currentTimeMillis();
-                //  /   thread.start();
                 }
             });
             
@@ -107,9 +106,7 @@ public class WholeDeckPageMenuController implements Initializable {
                     equalDeckNameLabel.setText(chosenDeck);
                 }
             });
-
             fourRectangleToShowDecks.get(i).setOnMouseExited(MouseEvent -> {
-            
             });
         }
     }
@@ -137,7 +134,7 @@ public class WholeDeckPageMenuController implements Initializable {
                 decksInOnePage = new ArrayList<>();
             }
         }
-        if (!decksInDifferentPages.contains(decksInOnePage)) {
+        if (!decksInDifferentPages.contains(decksInOnePage) && decksInOnePage.size() > 0) {
             decksInDifferentPages.add(decksInOnePage);
         }
     }
@@ -158,15 +155,17 @@ public class WholeDeckPageMenuController implements Initializable {
                     break;
                 }
             }
-            editDecksInDifferentPageWhenCardDeleted();
+            editDecksInDifferentPageWhenDeckDeleted();
         }
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
         createNewPage();
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
         setEffectsOfEditAndDeleteButtons();
+        showAlert("DECK DELETED SUCCESSFULLY!", "SUCCESSFUL");
     }
 
-    private void editDecksInDifferentPageWhenCardDeleted() {
+    private void editDecksInDifferentPageWhenDeckDeleted() {
         for (int i = 0; i < decksInDifferentPages.size(); i++) {
             if (decksInDifferentPages.get(i).size() < 4 && decksInDifferentPages.size() > i + 1) {
                 decksInDifferentPages.get(i).add(decksInDifferentPages.get(i + 1).get(0));
@@ -187,6 +186,7 @@ public class WholeDeckPageMenuController implements Initializable {
         }
         new DeckMenuController().showPage(pane, chosenDeck);
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
     }
 
     public void createNewDeck() {
@@ -214,7 +214,7 @@ public class WholeDeckPageMenuController implements Initializable {
                 createNewPage();
             }
         }
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
     }
 
     private void showAlert(String message, String typeOfMessage) {
@@ -222,7 +222,7 @@ public class WholeDeckPageMenuController implements Initializable {
         customDialog.openDialog();
     }
 
-    private void setEffectOfpreviousAndnextCardsbtn() {
+    private void setEffectOfpreviousAndnextDecksbtn() {
 
         if (currentPageToShowDecks + 1 == decksInDifferentPages.size()) {
             equalToNextPagebtn.setDisable(true);
@@ -251,6 +251,8 @@ public class WholeDeckPageMenuController implements Initializable {
         currentPageToShowDecks++;
         createNewPage();
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
+        setEffectsOfEditAndDeleteButtons();
     }
 
     private void createNewPage() {
@@ -299,13 +301,15 @@ public class WholeDeckPageMenuController implements Initializable {
                 }
             }
         }
-        setEffectOfpreviousAndnextCardsbtn();
+        setEffectOfpreviousAndnextDecksbtn();
     }
 
     public void backToPreviousPage() {
         currentPageToShowDecks--;
         createNewPage();
         chosenDeck = "";
+        equalDeckNameLabel.setText("");
+        setEffectsOfEditAndDeleteButtons();
     }
 
     public void backToMainMenu() {

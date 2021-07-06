@@ -166,9 +166,9 @@ public class DeckCommands {
         User user = Storage.getUserByName(playerName);
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isDeleteFromMainDeck) {
-            allDecksOfUser.get(deckname).deleteCardFromMainDeck(Utility.giveCardNameRemovingRedundancy(cardname));
+            allDecksOfUser.get(deckname).deleteCardFromMainDeck((cardname));
         } else {
-            allDecksOfUser.get(deckname).deleteCardFromSideDeck(Utility.giveCardNameRemovingRedundancy(cardname));
+            allDecksOfUser.get(deckname).deleteCardFromSideDeck((cardname));
         }
     }
 
@@ -177,9 +177,9 @@ public class DeckCommands {
         User user = Storage.getUserByName(playerName);
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isCardAddedToMainDeck) {
-            allDecksOfUser.get(deckname).addCardToMainDeck(Utility.giveCardNameRemovingRedundancy(cardname));
+            allDecksOfUser.get(deckname).addCardToMainDeck((cardname));
         } else {
-            allDecksOfUser.get(deckname).addCardToSideDeck(Utility.giveCardNameRemovingRedundancy(cardname));
+            allDecksOfUser.get(deckname).addCardToSideDeck((cardname));
         }
     }
 
@@ -196,11 +196,10 @@ public class DeckCommands {
     public boolean canAddCardToDeck(String deckname, String cardname, String playerName) {
 
         HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
-
         int numberOfCardsInDeck = allDecksOfUser.get(deckname).numberOfCardsInDeck(cardname);
         int numberOfAllowedUsages = 0;
         if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
-            numberOfAllowedUsages = allSpellAndTrapCard.get(cardname).getNumberOfAllowedUsages();
+            numberOfAllowedUsages = allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(cardname)).getNumberOfAllowedUsages();
         } else if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
             numberOfAllowedUsages = 3;
         }
@@ -220,7 +219,6 @@ public class DeckCommands {
     }
 
     public String deleteDeck(String deckname, String playerName) {
-
         Storage.getUserByName(playerName).deleteDeck(deckname);
         return "deck deleted successfully!";
     }
@@ -247,7 +245,8 @@ public class DeckCommands {
             if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
                 numberOfMonsterCards++;
             } else {
-                if (allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i))).getCardType().equals(CardType.SPELL)) {
+                if (allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i))).getCardType()
+                        .equals(CardType.SPELL)) {
                     numberOfSpellCards++;
                 } else {
                     numberOfTrapCards++;

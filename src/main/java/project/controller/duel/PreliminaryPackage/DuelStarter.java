@@ -55,7 +55,6 @@ public class DuelStarter {
             return "number of rounds is not supported";
         }
 
-        // startNewGame(firstUser, secondUser, numberOfRounds);
         isDuelStarted = true;
         return "duel successfully started!\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
     }

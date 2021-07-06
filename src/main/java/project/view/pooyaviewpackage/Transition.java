@@ -512,13 +512,13 @@ public class Transition {
 
     public Timeline applyTransitionForHealthBar(boolean isForAlly, int increaseInHealth, int previousHealth) {
         HealthBarAndHealthPoints healthBarAndHealthPoints;
-        double upperLeftY;
+        //double upperLeftY;
         if (isForAlly) {
             healthBarAndHealthPoints = DuelView.getAllyHealthStatus();
         } else {
             healthBarAndHealthPoints = DuelView.getOpponentHealthStatus();
         }
-        upperLeftY = healthBarAndHealthPoints.getUpperLeftYOfHelpfulHealthBar();
+       // upperLeftY = healthBarAndHealthPoints.getUpperLeftYOfHelpfulHealthBar();
         //    Rectangle statusBar = new Rectangle(100, //100, 300, 100);
         // Button animationButton = new Button("Animate width decrease by 25");
         // animationButton.setOnAction(event -> {
@@ -536,11 +536,10 @@ public class Transition {
 
         KeyValue widthValue = new KeyValue(helpfulRectangle.widthProperty(), realFinalWidth);
         KeyFrame frame = new KeyFrame(Duration.seconds(0.4), widthValue);
-        Timeline timeline = new Timeline(frame);
-        VBox container = healthBarAndHealthPoints.getContainer();
-        System.out.println("container coordinates are\nlayout x = "+container.getLayoutX()+" layout y = "+container.getLayoutY());
-        container.setAlignment(Pos.CENTER_RIGHT);
-        return timeline;
+        //  VBox container = healthBarAndHealthPoints.getContainer();
+      //  System.out.println("container coordinates are\nlayout x = "+container.getLayoutX()+" layout y = "+container.getLayoutY());
+
+        return new Timeline(frame);
     }
 }
 
