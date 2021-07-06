@@ -266,12 +266,14 @@ public class ControllerForView {
     }
 
     public CardView getCardViewByCardLocation(CardLocation cardLocation) {
+        System.out.println("The requested cardLocation is "+cardLocation.getRowOfCardLocation()+" "+cardLocation.getIndex());
         ArrayList<CardView> cardViews = giveCardViewWithThisLabel(cardLocation.getRowOfCardLocation());
         for (int i = 0; i < cardViews.size(); i++) {
             if (cardViews.get(i) == null) {
                 System.out.println("\nTHIS IS AN INTERESTNG REPORT " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex() + " is null");
             }
             CardLocation thisCardLocation = giveCardLocationByCoordinateInView(null, cardViews.get(i));
+          //  System.out.println("\nTHIS IS AN wonderful REPORT " + thisCardLocation.getRowOfCardLocation() + " " + thisCardLocation.getIndex() + " is null");
             if (thisCardLocation != null && thisCardLocation.getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && thisCardLocation.getIndex() == cardLocation.getIndex()) {
 
 
@@ -281,7 +283,7 @@ public class ControllerForView {
         System.out.println("card o locasion " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex());
         cardViews = giveCardViewWithThisLabel(cardLocation.getRowOfCardLocation());
         for (int i = 0; i < cardViews.size(); i++) {
-            System.out.println(cardViews.get(i).getCard().getCardName());
+            System.out.println("qwerty here! "+cardViews.get(i).getCard().getCardName()+" at index = "+i);
             //CardLocation thisCardLocation = giveCardLocationByCoordinateInView(null, cardViews.get(i));
             //if (thisCardLocation != null && thisCardLocation.getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && thisCardLocation.getIndex() == cardLocation.getIndex()) {
             //    return cardViews.get(i);

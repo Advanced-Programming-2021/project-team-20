@@ -105,42 +105,55 @@ public class AI {
         shouldRedirectAIMind = false;
         if (aiActionType.equals(AIActionType.NORMAL_SUMMON)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": normal summon*");
             return "normal summon";
         } else if (aiActionType.equals(AIActionType.SPECIAL_SUMMON)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": special summon*");
             return "special summon";
         } else if (aiActionType.equals(AIActionType.SET)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": set*");
             return "set";
         } else if (aiActionType.equals(AIActionType.ACTIVATE_EFFECT)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": activate effect*");
             return "activate effect";
         } else if (aiActionType.equals(AIActionType.ATTACK_1)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": attack 1*");
             return "attack 1";
         } else if (aiActionType.equals(AIActionType.ATTACK_2)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": attack 2*");
             return "attack 2";
         } else if (aiActionType.equals(AIActionType.ATTACK_3)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": attack 3*");
             return "attack 3";
         } else if (aiActionType.equals(AIActionType.ATTACK_4)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": attack 4*");
             return "attack 4";
         } else if (aiActionType.equals(AIActionType.ATTACK_5)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": attack 5*");
             return "attack 5";
         } else if (aiActionType.equals(AIActionType.ATTACK_DIRECTLY)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": attack direct*");
             return "attack direct";
         } else if (aiActionType.equals(AIActionType.CHANGE_CARD_POSITION_TO_ATTACK)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": set --position attack*");
             return "set --position attack";
         } else if (aiActionType.equals(AIActionType.CHANGE_CARD_POSITION_TO_DEFENSE)) {
             aiActionType = AIActionType.NOTHING;
+            GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": set --position defense*");
             return "set --position defense";
         }
         aiActionType = AIActionType.NOTHING;
+        GameManager.getDuelControllerByIndex(0).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*");
         return "next phase";
     }
 

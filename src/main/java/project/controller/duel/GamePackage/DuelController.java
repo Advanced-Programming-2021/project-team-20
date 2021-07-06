@@ -1,7 +1,6 @@
 package project.controller.duel.GamePackage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import project.controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import project.controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
@@ -9,16 +8,12 @@ import project.controller.duel.GamePackage.ActionConductors.NormalSummonConducto
 import project.controller.duel.GamePackage.ai.AI;
 import project.controller.duel.GamePhaseControllers.*;
 import project.controller.duel.PreliminaryPackage.GameManager;
-import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.Utility.Utility;
 import project.controller.duel.cheat.Cheat;
 import project.controller.non_duel.mainController.MainController;
 import project.controller.non_duel.storage.Storage;
-import project.model.Deck;
 import project.model.User;
-import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
-import project.model.cardData.MonsterCardData.MonsterCard;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
@@ -50,6 +45,10 @@ public class DuelController {
     public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
         changesInLifePointsToBeGivenToClient += string;
         changesInLifePointsToBeGivenToClient += "\n";
+        System.out.println("If you will allow me changesInLifePoints is adding\n"+string+"\nto wholeReport");
+        wholeReportToClient += "&";
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
     }
 
     public void clearChangesInLifePointsToBeGivenToClient() {
@@ -63,6 +62,9 @@ public class DuelController {
     public void addStringToSuperAlmightyString(String string) {
         superAlmightyChangesString += string;
         superAlmightyChangesString += "\n";
+        System.out.println("If you will allow me superAlmightyString is adding\n"+string+"\nto wholeReport");
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
     }
 
     public void clearSuperAlmightyString() {
@@ -84,6 +86,38 @@ public class DuelController {
 
     public void clearAvailableCardLocationForUseForClient() {
         availableCardLocationForUseForClient = "";
+    }
+
+    private String whatUsersSay;
+
+    public String getWhatUsersSay() {
+        return whatUsersSay;
+    }
+
+    public void clearWhatUsersSay() {
+        whatUsersSay = "";
+    }
+
+    public void addStringToWhatUsersSay(String string) {
+        whatUsersSay += string;
+        whatUsersSay += "\n";
+        System.out.println("If you will allow me whatUsersSay is adding\n"+string+"\nto wholeReport");
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
+    }
+
+    private String wholeReportToClient = "";
+
+    public String getWholeReportToClient() {
+        return wholeReportToClient;
+    }
+
+    public void clearWholeReportToClient() {
+        //maybe first method should be cleared sooner, in its original function
+        //clearAvailableCardLocationForUseForClient();
+        clearChangesInLifePointsToBeGivenToClient();
+        clearSuperAlmightyString();
+        wholeReportToClient = "";
     }
 
     public DuelController(String firstUser, String secondUser, int numberOfRounds) {
@@ -156,7 +190,7 @@ public class DuelController {
         }
 
         if (!isPlayersChangedDecks) {
-        //    return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(string, 0);
+            //    return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(string, 0);
         } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
             return setTurnForGame.setTurnBetweenTwoPlayer(string, 0);
         }
@@ -552,7 +586,7 @@ public class DuelController {
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         MainController mainController = MainController.getInstance();
-      //  mainController.setDuel(new StartDuel());
+        //  mainController.setDuel(new StartDuel());
         mainController.exitMenu();
         isGameOver = true;
         return winnerUser.getName() + " won the whole match with score: "

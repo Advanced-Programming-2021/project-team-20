@@ -326,7 +326,7 @@ public class AIMainPhaseMind {
                 GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
 
         }
-        return "next phase\n";
+        return "next phase";
     }
 
 
