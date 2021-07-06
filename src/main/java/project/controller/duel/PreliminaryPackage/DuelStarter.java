@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import project.view.LoginController;
+import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
@@ -45,12 +46,12 @@ public class DuelStarter {
         if (getActiveDeck(secondUser) == null) {
             return secondUser.getName() + " has no active deck";
         }
-        if (!isThisDeckValid(firstUser)) {
-            return firstUser.getName() + "’s deck is invalid";
-        }
-        if (!isThisDeckValid(secondUser)) {
-            return secondUser.getName() + "’s deck is invalid";
-        }
+        // if (!isThisDeckValid(firstUser)) {
+        //     return firstUser.getName() + "’s deck is invalid";
+        // }
+        // if (!isThisDeckValid(secondUser)) {
+        //     return secondUser.getName() + "’s deck is invalid";
+        // }
         if (!isItsRoundNumberCorrect(numberOfRounds)) {
             return "number of rounds is not supported";
         }
@@ -63,6 +64,7 @@ public class DuelStarter {
         if (!doesThisUserNameExist(firstUserName)) {
             return "user " + firstUserName + " not found";
         }
+
         if (!doesThisUserNameExist(secondUserName)) {
             return "user " + secondUserName + " not found";
         }
@@ -74,18 +76,19 @@ public class DuelStarter {
             return firstUserName + " has no active deck";
         }
 
+        if (!isThisDeckValid(firstUserActiveDeck)) {
+            return firstUserName + " has not valid deck";
+        }
+
         Deck secondUserActiveDeck = getActiveDeck(secondUser);
         if (secondUserActiveDeck == null) {
             return secondUserName + " has no active deck";
         }
 
-        if (!isThisDeckValid(firstUser)) {
-            return firstUserName + " has not valid deck";
-        }
-
-        if (!isThisDeckValid(secondUser)) {
+        if (!isThisDeckValid(secondUserActiveDeck)) {
             return secondUserName + " has not valid deck";
         }
+        
         startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
         return "game started";
     }
@@ -121,15 +124,16 @@ public class DuelStarter {
         }
 
         for (int i = 0; i < cardsToBeCloned.size(); i++) {
-            if (allMonsterCards.containsKey(cardsToBeCloned.get(i))) {
-                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardsToBeCloned.get(i));
+            String cardName = Utility.giveCardNameRemovingRedundancy(cardsToBeCloned.get(i));
+            if (allMonsterCards.containsKey(cardName)) {
+                MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
                 cardsInMainOrSideDeck.add((MonsterCard) monsterCard.clone());
-            } else if (allSpellAndTrapCards.containsKey(cardsToBeCloned.get(i))) {
-                if (Card.isCardASpell(allSpellAndTrapCards.get(cardsToBeCloned.get(i)))) {
-                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardsToBeCloned.get(i));
+            } else if (allSpellAndTrapCards.containsKey(cardName)) {
+                if (Card.isCardASpell(allSpellAndTrapCards.get(cardName))) {
+                    SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
                     cardsInMainOrSideDeck.add((SpellCard) spellCard.clone());
                 } else {
-                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardsToBeCloned.get(i));
+                    TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
                     cardsInMainOrSideDeck.add((TrapCard) trapCard.clone());
                 }
             }
@@ -137,13 +141,7 @@ public class DuelStarter {
         return cardsInMainOrSideDeck;
     }
 
-    private boolean isThisDeckValid(User user) {
-        HashMap<String, Deck> allDecks = user.getDecks();
-        Deck deck = null;
-        for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
-            if (allDecks.get(entry.getKey()).getIsDeckActive())
-                deck = allDecks.get(entry.getKey());
-        }
+    private boolean isThisDeckValid(Deck deck) {
         if (deck.getSizeOfMainDeck() >= 40 && deck.getSizeOfMainDeck() <= 60)
             return true;
         return false;

@@ -88,7 +88,7 @@ public class WholeDeckPageMenuController implements Initializable {
 
     private void addEffectsToFourRectangleToShowDeck() {
         fourRectangleToShowDecks = UIStorage.getFourRectangleToShowDecks();
-       // showCardsInDeck();
+        // showCardsInDeck();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
             fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -97,7 +97,7 @@ public class WholeDeckPageMenuController implements Initializable {
                     firstTimeMouseEnteredRectangle = System.currentTimeMillis();
                 }
             });
-            
+
             fourRectangleToShowDecks.get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent t) {
@@ -197,7 +197,7 @@ public class WholeDeckPageMenuController implements Initializable {
             return;
         }
         if (result.equals("deck already exists")) {
-            showAlert("DECK ALREADY EXISTS","ERROR");
+            showAlert("DECK ALREADY EXISTS", "ERROR");
             createdDeckNameField.setText("");
             return;
         }
@@ -265,7 +265,6 @@ public class WholeDeckPageMenuController implements Initializable {
                 if (2 * i + j >= decksInDifferentPages.get(currentPageToShowDecks).size()) {
                     fourRectangleToShowDecks.get(i * 2 + j).setOpacity(0);
                     fourRectangleToShowDecks.get(i * 2 + j).setId("");
-                    labelsToShowInformationOfDeck.get("deckname" + i + "" + j).setText("");
                     labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j).setText("");
                     labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j).setText("");
                     labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j).setText("");
@@ -275,11 +274,15 @@ public class WholeDeckPageMenuController implements Initializable {
                     fourRectangleToShowDecks.get(i * 2 + j).setOpacity(1);
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
+                    // System.out.println(fourRectangleToShowDecks.get(2 * i + j).getId() + " " + 2
+                    // * i + j);
                     HashMap<String, Integer> sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(
                             decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(),
                             LoginController.getOnlineUser().getName());
-
-                    labelsToShowInformationOfDeck.get("deckname" + i + "" + j)
+                    if (fourRectangleToShowDecks.get(2 * i + j).getId().equals("JustMonster")) {
+                        System.out.println("mainDeck" + i + "" + j);
+                    }
+                    labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
                             .setText(sizeOfEachPart.get("mainDeckSize") + "");
                     if (sizeOfEachPart.get("mainDeckSize") < 40) {
                         fourRectangleToShowDecks.get(i * 2 + j)
@@ -288,10 +291,8 @@ public class WholeDeckPageMenuController implements Initializable {
                         fourRectangleToShowDecks.get(i * 2 + j)
                                 .setFill(new ImagePattern(UIStorage.getDecksImage().get("validDeck")));
                     }
-                    labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
-                            .setText(sizeOfEachPart.get("sideDeckSize") + "");
                     labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j)
-                            .setText(sizeOfEachPart.get("monstersSize") + "");
+                            .setText(sizeOfEachPart.get("sideDeckSize") + "");
                     labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j)
                             .setText(sizeOfEachPart.get("monstersSize") + "");
                     labelsToShowInformationOfDeck.get("spellsSize" + i + "" + j)
