@@ -8,21 +8,28 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import project.controller.duel.CardEffects.MonsterEffectEnums.*;
+import project.controller.non_duel.storage.Storage;
+import project.model.cardData.General.CardPosition;
+import project.model.cardData.MonsterCardData.MonsterCard;
+import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
 
+import java.lang.reflect.Array;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.time.temporal.ValueRange;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class CardCreatorController implements Initializable {
     private String cardType;
     private String cardName;
     private int numberOfAllowedUsages;
+    private int levelOfMonsterCard;
     private int attackPowerMonsterCard;
     private int defencePowerMonsterCard;
     private int monsterAttributeNumber;
@@ -96,6 +103,17 @@ public class CardCreatorController implements Initializable {
     Button buttonForFinishFlipEffect;
 
 
+    ArrayList<Button> buttonsForOptionalMonsterEffect;
+    ArrayList<Integer> selectedOptionalMonsterEffect;
+    VBox vBoxForOptionalMonsterEffect;
+    Button buttonForFinishOptionalMonsterEffect;
+
+
+
+    ArrayList<Button> buttonsForSentToGraveyardEffect;
+    ArrayList<Integer> selectedSentToGraveyardEffect;
+    VBox vBoxForSentToGraveyardEffect;
+    Button buttonForFinishSentToGraveyardEffect;
 
 
 
@@ -348,6 +366,7 @@ public class CardCreatorController implements Initializable {
         String level = textFieldForGettingLevelMonsterCard.getText();
         Pattern pattern = Pattern.compile("^\\d+$");
         if (!level.isEmpty() && pattern.matcher(level).matches()) {
+            levelOfMonsterCard = Integer.parseInt(level);
             removeThingsInGetLevelMonsterCard();
 
             buttonsForMonsterCardAttribute = new ArrayList<>();
@@ -759,7 +778,7 @@ public class CardCreatorController implements Initializable {
         vBoxForFlipEffect.setLayoutX(400);
         buttonForFinishFlipEffect.setLayoutY(400);
         buttonForFinishFlipEffect.setLayoutX(400);
-        buttonForFinishFlipEffect.setOnAction(ActionEvent -> System.out.println(selectedFlipEffect));
+        buttonForFinishFlipEffect.setOnAction(ActionEvent -> getOptionalMonsterEffectFromUser());
 
         for (Button button : buttonsForFlipEffect) {
             vBoxForFlipEffect.getChildren().add(button);
@@ -769,10 +788,178 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinishFlipEffect);
     }
 
+    private void getOptionalMonsterEffectFromUser() {
+        System.out.println(selectedFlipEffect);
+        anchorPane.getChildren().remove(vBoxForFlipEffect);
+        anchorPane.getChildren().remove(buttonForFinishFlipEffect);
+
+
+
+        buttonsForOptionalMonsterEffect = new ArrayList<>();
+        buttonForFinishOptionalMonsterEffect = new Button("OK");
+
+        OptionalMonsterEffect[] optionalMonsterEffect = OptionalMonsterEffect.values();
+
+        for (OptionalMonsterEffect e : optionalMonsterEffect) {
+            String buttonName = e.toString();
+            buttonsForOptionalMonsterEffect.add(new Button(buttonName));
+        }
+
+
+        selectedOptionalMonsterEffect = new ArrayList<>();
+
+        for (int i = 0; i < buttonsForOptionalMonsterEffect.size(); i++) {
+            int finalI = i;
+            buttonsForOptionalMonsterEffect.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedOptionalMonsterEffect, buttonsForOptionalMonsterEffect);
+                }
+            });
+        }
+
+
+        vBoxForOptionalMonsterEffect = new VBox();
+        vBoxForOptionalMonsterEffect.setLayoutY(100);
+        vBoxForOptionalMonsterEffect.setLayoutX(400);
+        buttonForFinishOptionalMonsterEffect.setLayoutY(400);
+        buttonForFinishOptionalMonsterEffect.setLayoutX(400);
+        buttonForFinishOptionalMonsterEffect.setOnAction(ActionEvent -> getSentToGraveyardEffectFromUser());
+
+        for (Button button : buttonsForOptionalMonsterEffect) {
+            vBoxForOptionalMonsterEffect.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBoxForOptionalMonsterEffect);
+        anchorPane.getChildren().add(buttonForFinishOptionalMonsterEffect);
+    }
+
+    private void getSentToGraveyardEffectFromUser() {
+        System.out.println(selectedOptionalMonsterEffect);
+        anchorPane.getChildren().remove(vBoxForOptionalMonsterEffect);
+        anchorPane.getChildren().remove(buttonForFinishOptionalMonsterEffect);
+
+
+
+        buttonsForSentToGraveyardEffect = new ArrayList<>();
+        buttonForFinishSentToGraveyardEffect = new Button("OK");
+
+        SentToGraveyardEffect[] sentToGraveyardEffect = SentToGraveyardEffect.values();
+
+        for (SentToGraveyardEffect e : sentToGraveyardEffect) {
+            String buttonName = e.toString();
+            buttonsForSentToGraveyardEffect.add(new Button(buttonName));
+        }
+
+
+        selectedSentToGraveyardEffect = new ArrayList<>();
+
+        for (int i = 0; i < buttonsForSentToGraveyardEffect.size(); i++) {
+            int finalI = i;
+            buttonsForSentToGraveyardEffect.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selectedSentToGraveyardEffect, buttonsForSentToGraveyardEffect);
+                }
+            });
+        }
+
+
+        vBoxForSentToGraveyardEffect = new VBox();
+        vBoxForSentToGraveyardEffect.setLayoutY(100);
+        vBoxForSentToGraveyardEffect.setLayoutX(400);
+        buttonForFinishSentToGraveyardEffect.setLayoutY(400);
+        buttonForFinishSentToGraveyardEffect.setLayoutX(400);
+        buttonForFinishSentToGraveyardEffect.setOnAction(ActionEvent -> finishMonsterCardCreator());
+
+        for (Button button : buttonsForSentToGraveyardEffect) {
+            vBoxForSentToGraveyardEffect.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBoxForSentToGraveyardEffect);
+        anchorPane.getChildren().add(buttonForFinishSentToGraveyardEffect);
+    }
+
+    private void finishMonsterCardCreator() {
+        //Attribute
+        MonsterCardAttribute[] allValues = MonsterCardAttribute.values();
+        MonsterCardAttribute attribute = null;
+        int counter = 0;
+        for (MonsterCardAttribute allValue : allValues) {
+            if (counter == monsterAttributeNumber) attribute = allValue;
+            counter++;
+        }
+        //Family
+        MonsterCardFamily[] allValuesFamily = MonsterCardFamily.values();
+        MonsterCardFamily family = null;
+        counter = 0;
+        for (MonsterCardFamily monsterCardFamily : allValuesFamily) {
+            if (counter == monsterFamilyNumber) family = monsterCardFamily;
+            counter++;
+        }
+        //Value
+        MonsterCardValue[] allValuesValue = MonsterCardValue.values();
+        MonsterCardValue value = null;
+        counter = 0;
+        for (MonsterCardValue monsterCardValue : allValuesValue) {
+            if (counter == monsterValuesNumber) value= monsterCardValue;
+            counter++;
+        }
+        //Enums
+        HashMap<String, List<String>> monsterHashMap = new HashMap<>();
+        //add SummoningRequirement
+        SummoningRequirement[] summoningRequirements = SummoningRequirement.values();
+        ArrayList<String> selectedArrayList = new ArrayList<>();
+        counter = 0;
+        for (SummoningRequirement summoningRequirement : summoningRequirements) {
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) selectedArrayList.add(String.valueOf(summoningRequirement));
+            counter++;
+        }
+        monsterHashMap.put("SummoningRequirement", selectedArrayList);
+        //add UponSummoningEffect
+        UponSummoningEffect[] uponSummoningEffects = UponSummoningEffect.values();
+        ArrayList<String> selectedUponSummoning = new ArrayList<>();
+        counter = 0;
+        for (UponSummoningEffect uponSummoningEffect : uponSummoningEffects) {
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) selectedUponSummoning.add(String.valueOf(uponSummoningEffect));
+            counter++;
+        }
+        monsterHashMap.put("UponSummoningEffect", selectedUponSummoning);
+
+        //add BeingAttackedEffect
+        BeingAttackedEffect[] beingAttackedEffects = BeingAttackedEffect.values();
+        ArrayList<String> selectedBeingAttacked = new ArrayList<>();
+        counter = 0;
+        for (BeingAttackedEffect beingAttackedEffect : beingAttackedEffects) {
+            if (selectedBeingAttackedEffect.contains(Integer.valueOf(counter))) selectedBeingAttacked.add(String.valueOf(beingAttackedEffect));
+            counter++;
+        }
+        monsterHashMap.put("BeingAttackedEffect", selectedBeingAttacked);
+
+        //add ContinuousMonsterEffect
+        ContinuousMonsterEffect[] continuousMonsterEffects = ContinuousMonsterEffect.values();
+        ArrayList<String> selectedContinuousMonster = new ArrayList<>();
+        counter = 0;
+        for (ContinuousMonsterEffect continuousMonsterEffect : continuousMonsterEffects) {
+            if (selectedContinuousMonsterEffect.contains(Integer.valueOf(counter))) selectedContinuousMonster.add(String.valueOf(continuousMonsterEffect));
+            counter++;
+        }
+        monsterHashMap.put("ContinuousMonsterEffect", selectedContinuousMonster);
+
+        //add FlipEffect
+        FlipEffect[] flipEffects = FlipEffect.values();
 
 
 
 
+        MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attribute,
+                family, value, cardName, "", CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, new Image(""));
+        Storage.addCardToNewCardsCrated(monsterCard);
+        //what is card description?
+        //what is card position?
+        //TODO -> calculate card price
+        //TODO -> get image
+    }
 
 
     private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {

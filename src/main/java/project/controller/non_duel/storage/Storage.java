@@ -322,13 +322,14 @@ public class Storage {
     }
 
     private Image createImageOfUsers(String path) {
-        InputStream stream = null;
-        try {
-            stream = new FileInputStream(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new Image(stream);
+//        InputStream stream = null;
+//        try {
+//            stream = new FileInputStream(path);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new Image(stream);
+        return null;
     }
 
     private void addDecksAndUselessCardsToUser(User user, String filename) throws FileNotFoundException {
