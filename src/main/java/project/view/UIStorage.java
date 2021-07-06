@@ -19,7 +19,7 @@ import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 import javafx.geometry.Pos;
 
-public class UIUtility {
+public class UIStorage {
 
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
@@ -54,6 +54,7 @@ public class UIUtility {
         decksImage = new HashMap<>();
         decksImage.put("validDeck", createImages("deckpage\\", "validDeck"));
         decksImage.put("invalidDeck", createImages("deckpage\\", "invalidDeck"));
+        decksImage.put("aaaa", createImages("deckPage\\", "Capture"));
     }
 
     private static void createImagesForRockPaperScissorController() {

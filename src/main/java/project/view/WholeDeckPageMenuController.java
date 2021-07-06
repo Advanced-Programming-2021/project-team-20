@@ -78,7 +78,7 @@ public class WholeDeckPageMenuController implements Initializable {
     }
 
     private void addInformationLabelOfDeckToPane() {
-        labelsToShowInformationOfDeck = UIUtility.getLabelsToShowInformationOfDeck();
+        labelsToShowInformationOfDeck = UIStorage.getLabelsToShowInformationOfDeck();
         AnchorPane pane = (AnchorPane) anchorPane.getChildren().get(4);
 
         for (Map.Entry<String, Label> entry : labelsToShowInformationOfDeck.entrySet()) {
@@ -87,7 +87,7 @@ public class WholeDeckPageMenuController implements Initializable {
     }
 
     private void addEffectsToFourRectangleToShowDeck() {
-        fourRectangleToShowDecks = UIUtility.getFourRectangleToShowDecks();
+        fourRectangleToShowDecks = UIStorage.getFourRectangleToShowDecks();
        // showCardsInDeck();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
@@ -283,10 +283,10 @@ public class WholeDeckPageMenuController implements Initializable {
                             .setText(sizeOfEachPart.get("mainDeckSize") + "");
                     if (sizeOfEachPart.get("mainDeckSize") < 40) {
                         fourRectangleToShowDecks.get(i * 2 + j)
-                                .setFill(new ImagePattern(UIUtility.getDecksImage().get("invalidDeck")));
+                                .setFill(new ImagePattern(UIStorage.getDecksImage().get("invalidDeck")));
                     } else {
                         fourRectangleToShowDecks.get(i * 2 + j)
-                                .setFill(new ImagePattern(UIUtility.getDecksImage().get("validDeck")));
+                                .setFill(new ImagePattern(UIStorage.getDecksImage().get("validDeck")));
                     }
                     labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
                             .setText(sizeOfEachPart.get("sideDeckSize") + "");

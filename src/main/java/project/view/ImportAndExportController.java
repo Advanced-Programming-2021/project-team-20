@@ -71,14 +71,14 @@ public class ImportAndExportController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
 
         if (rectanglesToShowCards == null) {
-            rectanglesToShowCards = UIUtility.getRectanglesToShowCardsInImportAndExportClass();
+            rectanglesToShowCards = UIStorage.getRectanglesToShowCardsInImportAndExportClass();
             addEffectsToRectanglesThatShowCards();
         }
         equalExportRectangle = exportRectangle;
         allCardDiscriptionLabelsForExport = new ArrayList<>();
-        allCardDiscriptionLabelsForExport = (UIUtility.getAllCardDiscriptionLabels1());
+        allCardDiscriptionLabelsForExport = (UIStorage.getAllCardDiscriptionLabels1());
         allCardDiscriptionLabelsForImport = new ArrayList<>();
-        allCardDiscriptionLabelsForImport = (UIUtility.getAllCardDiscriptionLabels2());
+        allCardDiscriptionLabelsForImport = (UIStorage.getAllCardDiscriptionLabels2());
         if (allCardsInDifferentPages == null) {
             createPacksOfCardsForEachPage();
         }
@@ -88,7 +88,7 @@ public class ImportAndExportController implements Initializable {
             sizeOfCardsInDifferentPages += allCardsInDifferentPages.get(i).size();
         }
 
-        if (sizeOfCardsInDifferentPages != UIUtility.getAllTypeOfCards().get("allCards").size()) {
+        if (sizeOfCardsInDifferentPages != UIStorage.getAllTypeOfCards().get("allCards").size()) {
             createPacksOfCardsForEachPage();
         }
         setEffectsOfButtons();
@@ -97,7 +97,7 @@ public class ImportAndExportController implements Initializable {
     public void createSceneAndCardPictures(AnchorPane pane) {
         setAnchorPane(pane);
         AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
-        List<Card> allCards = UIUtility.getAllTypeOfCards().get("allCards");
+        List<Card> allCards = UIStorage.getAllTypeOfCards().get("allCards");
         for (int i = 0; i < rectanglesToShowCards.size(); i++) {
             Rectangle rectangle = rectanglesToShowCards.get(i);
             rectangle.setFill(new ImagePattern(allCards.get(i).getImage()));
@@ -129,7 +129,7 @@ public class ImportAndExportController implements Initializable {
 
     private void createPacksOfCardsForEachPage() {
         allCardsInDifferentPages = new ArrayList<>();
-        List<Card> allCards = UIUtility.getAllTypeOfCards().get("allCards");
+        List<Card> allCards = UIStorage.getAllTypeOfCards().get("allCards");
         List<Card> cardsInOnePage = new ArrayList<>();
 
         for (int i = 0; i < Math.floorDiv(allCards.size(), 30) + 1; i++) {
