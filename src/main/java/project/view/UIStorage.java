@@ -54,7 +54,8 @@ public class UIStorage {
         decksImage = new HashMap<>();
         decksImage.put("validDeck", createImages("deckpage\\", "validDeck"));
         decksImage.put("invalidDeck", createImages("deckpage\\", "invalidDeck"));
-        // decksImage.put("aaaa", createImages("deckPage\\", "Capture"));
+        decksImage.put("validActivateDeck", createImages("deckPage\\", "validActivateDeck"));
+        decksImage.put("invalidActivateDeck", createImages("deckPage\\", "invalidActivateDeck"));
     }
 
     private static void createImagesForRockPaperScissorController() {

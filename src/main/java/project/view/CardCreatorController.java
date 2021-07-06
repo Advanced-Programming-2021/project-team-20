@@ -1350,8 +1350,6 @@ public class CardCreatorController implements Initializable {
 
     }
 
-<<<<<<< HEAD
-=======
 
 
 
@@ -1493,7 +1491,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
->>>>>>> 881047a72047817f2a57d56f5491b7448afe7b9d
     private void removeThingsInTheGetNumberOfAllowedUsages() {
         anchorPane.getChildren().remove(labelForGettingNumberOfAllowedUsagesFromUser);
         anchorPane.getChildren().remove(buttonOneForNumberOfAllowedUsages);
