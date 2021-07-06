@@ -366,9 +366,10 @@ public class MonsterCard extends Card {
 
     private void setEnumValues(HashMap<String, List<String>> enumValues) {
 
-        for (int i = 1; i < enumValues.get("AttackerEffect").size(); i++) {
-            attackerEffects.add(AttackerEffect.valueOf(enumValues.get("AttackerEffects").get(i)));
-        }
+        //I commented this line because it made error during creating new  card in CardCreatorController
+//        for (int i = 1; i < enumValues.get("AttackerEffect").size(); i++) {
+//            attackerEffects.add(AttackerEffect.valueOf(enumValues.get("AttackerEffects").get(i)));
+//        }
 
         for (int i = 1; i < enumValues.get("BeingAttackedEffect").size(); i++) {
             beingAttackedEffects.add(BeingAttackedEffect.valueOf(enumValues.get("BeingAttackedEffect").get(i)));

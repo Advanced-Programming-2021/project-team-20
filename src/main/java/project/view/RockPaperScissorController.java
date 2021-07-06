@@ -94,7 +94,7 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void fillRectangles() {
-        imagesForRockPaperScissor = UIUtility.getImagesForRockPaperScissorController();
+        imagesForRockPaperScissor = UIStorage.getImagesForRockPaperScissorController();
         scissor1Rectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("scissor")));
         scissor2Rectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("scissor")));
         stone1Rectangle.setFill(new ImagePattern(imagesForRockPaperScissor.get("stone")));
