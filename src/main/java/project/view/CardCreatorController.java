@@ -17,6 +17,8 @@ import javafx.stage.Popup;
 import project.controller.duel.CardEffects.MonsterEffectEnums.*;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.*;
+import project.controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
+import project.controller.duel.CardEffects.TrapEffectEnums.*;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.MonsterCardData.MonsterCard;
@@ -32,12 +34,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.temporal.ValueRange;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class CardCreatorController implements Initializable {
+    private String imagePath;
     private String cardType;
     private String cardName;
     private String cardDescription;
@@ -51,13 +56,13 @@ public class CardCreatorController implements Initializable {
     private int monsterValuesNumber;
 
 
-
     private int numberOfTurnsForActivationSpell;
     private String spellCardValue;
     private ArrayList<Integer> numberOfSelectedEnumSpell;
     private ArrayList<Integer> selectedUserReplySpell;
 
 
+    private int numberOfTurnsForActivationForTrapCard;
     private int trapCardValueNumber;
     private ArrayList<Integer> flipSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterAttackingTrapCardEffectNumbers;
@@ -66,7 +71,7 @@ public class CardCreatorController implements Initializable {
 
     private ArrayList<Integer> normalTrapCardEffectNumbers;
     private ArrayList<Integer> ritualSummonTrapCardEffectNumbers;
-    private ArrayList<Integer> SpecialSummonTrapCardEffecNumbers;
+    private ArrayList<Integer> specialSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterEffectActivationTrapCardEffectNumbers;
 
     private ArrayList<Integer> spellCardActivationTrapCardEffectNumbers;
@@ -155,12 +160,10 @@ public class CardCreatorController implements Initializable {
     Button buttonForFinishOptionalMonsterEffect;
 
 
-
     ArrayList<Button> buttonsForSentToGraveyardEffect;
     ArrayList<Integer> selectedSentToGraveyardEffect;
     VBox vBoxForSentToGraveyardEffect;
     Button buttonForFinishSentToGraveyardEffect;
-
 
 
     @Override
@@ -191,14 +194,12 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
     private void monsterCard() {
         cardType = "monster";
         removeThreeButtons();
         getCardNameFromUser();
 
     }
-
 
 
     private void trapCard() {
@@ -208,7 +209,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
     private void spellCard() {
         cardType = "spell";
         removeThreeButtons();
@@ -216,23 +216,11 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-    private void removeThreeButtons(){
+    private void removeThreeButtons() {
         anchorPane.getChildren().remove(spellButton);
         anchorPane.getChildren().remove(trapButton);
         anchorPane.getChildren().remove(monsterButton);
     }
-
-
-
-
-
 
 
     private void getCardNameFromUser() {
@@ -254,12 +242,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
     private void setCardName() {
         if (!textFieldForGettingCardNameFromUser.getText().isEmpty()) {
             cardName = textFieldForGettingCardNameFromUser.getText();
@@ -267,10 +249,6 @@ public class CardCreatorController implements Initializable {
             getCardDescription();
         }
     }
-
-
-
-
 
 
     private void getCardDescription() {
@@ -294,11 +272,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
     private void getCardImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image");
@@ -310,11 +283,10 @@ public class CardCreatorController implements Initializable {
         if (file != null) {
             changeImage(file.getAbsolutePath());
         }
+        imagePath = file.getAbsolutePath();
         getNumberOfAllowedUsages();
 
     }
-
-
 
 
     private void changeImage(String imagePath) {
@@ -328,22 +300,11 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
     private void removeThingsInTheGetCardNameScene() {
         anchorPane.getChildren().remove(labelForGettingCardNameFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardNameFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardNameFromUser);
     }
-
-
-
-
-
 
 
     private void getNumberOfAllowedUsages() {
@@ -368,23 +329,11 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
     private void removeThingsInGettingCardDescription() {
         anchorPane.getChildren().remove(labelForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardDescriptionFromUser);
     }
-
-
-
-
-
-
 
 
     private void getCardInformationBasedOnTheCardType(int numberOfAllowedUsages) {
@@ -394,9 +343,6 @@ public class CardCreatorController implements Initializable {
         else if (cardType.equals("spell")) continueGettingSpellInformation();
         else continueGettingTrapInformation();
     }
-
-
-
 
 
     private void continueGettingMonsterInformation() {
@@ -416,10 +362,6 @@ public class CardCreatorController implements Initializable {
         buttonForGettingAttackPowerMonsterCard.setOnAction(actionEvent -> getDefencePowerMonsterCard());
         anchorPane.getChildren().add(buttonForGettingAttackPowerMonsterCard);
     }
-
-
-
-
 
 
     private void getDefencePowerMonsterCard() {
@@ -447,10 +389,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
     private void getLevelMonsterCard() {
         String defencePower = textFieldForGettingDefencePowerMonsterCard.getText();
         Pattern pattern = Pattern.compile("^\\d+$");
@@ -475,12 +413,6 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().add(buttonForGettingLevelMonsterCard);
         }
     }
-
-
-
-
-
-
 
 
     private void monsterCardAttributeFunction() {
@@ -515,13 +447,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
     private void monsterCardFamilyAction(int finalI) {
 
         monsterAttributeNumber = finalI;
@@ -529,12 +454,12 @@ public class CardCreatorController implements Initializable {
         buttonsForMonsterCardFamily = new ArrayList<>();
         MonsterCardFamily[] values = MonsterCardFamily.values();
 
-        for (int i = 0; i < values.length/2; i++) {
+        for (int i = 0; i < values.length / 2; i++) {
             String name = values[i].toString();
             buttonsForMonsterCardFamily.add(new Button(name));
         }
 
-        for (int i = 0; i < values.length/2; i++) {
+        for (int i = 0; i < values.length / 2; i++) {
             int finalI1 = i;
             buttonsForMonsterCardFamily.get(i).setOnAction(ActionEvent -> monsterCardValuesFunction(finalI1));
         }
@@ -550,12 +475,12 @@ public class CardCreatorController implements Initializable {
 
 
         buttonsForMonsterCardFamily2 = new ArrayList<>();
-        for (int i = values.length/2; i < values.length; i++) {
+        for (int i = values.length / 2; i < values.length; i++) {
             String name = values[i].toString();
             buttonsForMonsterCardFamily2.add(new Button(name));
         }
 
-        for (int i = 0; i < values.length/2; i++) {
+        for (int i = 0; i < values.length / 2; i++) {
             int finalI1 = i;
             buttonsForMonsterCardFamily2.get(i).setOnAction(ActionEvent -> monsterCardValuesFunction(finalI1 + 12));
         }
@@ -570,13 +495,6 @@ public class CardCreatorController implements Initializable {
 
         anchorPane.getChildren().add(vboxForMonsterCardFamily2);
     }
-
-
-
-
-
-
-
 
 
     private void monsterCardValuesFunction(int finalI1) {
@@ -609,17 +527,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     private void endOfCreatingMonsterCardWithoutEffects(int finalI2) {
         monsterValuesNumber = finalI2;
         anchorPane.getChildren().remove(vboxForMonsterCardValues);
@@ -650,16 +557,6 @@ public class CardCreatorController implements Initializable {
 //        getOptionalMonsterEffectFromUser();
 //        getSentToGraveyardEffectFromUser();
     }
-
-
-
-
-
-
-
-
-
-
 
 
     private void getSummoningRequirementFromUser() {
@@ -701,13 +598,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(finishButtonForSummoningRequirement);
 
     }
-
-
-
-
-
-
-
 
 
     private void getUponSummoningEffectFromUser() {
@@ -754,10 +644,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinishUponSummoningEffect);
 
     }
-
-
-
-
 
 
     private void getBeingAttackedEffectFromUser() {
@@ -807,16 +693,10 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
     private void getContinuousMonsterEffectFromUser() {
         System.out.println(selectedBeingAttackedEffect);
         anchorPane.getChildren().remove(vBoxForBeingAttackedEffect);
         anchorPane.getChildren().remove(buttonForFinishBeingAttackedEffect);
-
 
 
         buttonsForContinuousMonsterEffect = new ArrayList<>();
@@ -858,16 +738,10 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
     private void getFlipEffectFromUser() {
         System.out.println(selectedContinuousMonsterEffect);
         anchorPane.getChildren().remove(vBoxForContinuousMonsterEffect);
         anchorPane.getChildren().remove(buttonForFinishContinuousMonsterEffect);
-
 
 
         buttonsForFlipEffect = new ArrayList<>();
@@ -910,20 +784,10 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
     private void getOptionalMonsterEffectFromUser() {
         System.out.println(selectedFlipEffect);
         anchorPane.getChildren().remove(vBoxForFlipEffect);
         anchorPane.getChildren().remove(buttonForFinishFlipEffect);
-
 
 
         buttonsForOptionalMonsterEffect = new ArrayList<>();
@@ -966,22 +830,10 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     private void getSentToGraveyardEffectFromUser() {
         System.out.println(selectedOptionalMonsterEffect);
         anchorPane.getChildren().remove(vBoxForOptionalMonsterEffect);
         anchorPane.getChildren().remove(buttonForFinishOptionalMonsterEffect);
-
 
 
         buttonsForSentToGraveyardEffect = new ArrayList<>();
@@ -1024,14 +876,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
     private void finishMonsterCardCreator() {
         //Attribute
         MonsterCardAttribute[] allValues = MonsterCardAttribute.values();
@@ -1054,7 +898,7 @@ public class CardCreatorController implements Initializable {
         MonsterCardValue value = null;
         counter = 0;
         for (MonsterCardValue monsterCardValue : allValuesValue) {
-            if (counter == monsterValuesNumber) value= monsterCardValue;
+            if (counter == monsterValuesNumber) value = monsterCardValue;
             counter++;
         }
         //Start Enums
@@ -1064,7 +908,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedArrayList = new ArrayList<>();
         counter = 0;
         for (SummoningRequirement summoningRequirement : summoningRequirements) {
-            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) selectedArrayList.add(String.valueOf(summoningRequirement));
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter)))
+                selectedArrayList.add(String.valueOf(summoningRequirement));
             counter++;
         }
         monsterHashMap.put("SummoningRequirement", selectedArrayList);
@@ -1073,7 +918,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedUponSummoning = new ArrayList<>();
         counter = 0;
         for (UponSummoningEffect uponSummoningEffect : uponSummoningEffects) {
-            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) selectedUponSummoning.add(String.valueOf(uponSummoningEffect));
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter)))
+                selectedUponSummoning.add(String.valueOf(uponSummoningEffect));
             counter++;
         }
         monsterHashMap.put("UponSummoningEffect", selectedUponSummoning);
@@ -1083,7 +929,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedBeingAttacked = new ArrayList<>();
         counter = 0;
         for (BeingAttackedEffect beingAttackedEffect : beingAttackedEffects) {
-            if (selectedBeingAttackedEffect.contains(Integer.valueOf(counter))) selectedBeingAttacked.add(String.valueOf(beingAttackedEffect));
+            if (selectedBeingAttackedEffect.contains(Integer.valueOf(counter)))
+                selectedBeingAttacked.add(String.valueOf(beingAttackedEffect));
             counter++;
         }
         monsterHashMap.put("BeingAttackedEffect", selectedBeingAttacked);
@@ -1093,7 +940,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedContinuousMonster = new ArrayList<>();
         counter = 0;
         for (ContinuousMonsterEffect continuousMonsterEffect : continuousMonsterEffects) {
-            if (selectedContinuousMonsterEffect.contains(Integer.valueOf(counter))) selectedContinuousMonster.add(String.valueOf(continuousMonsterEffect));
+            if (selectedContinuousMonsterEffect.contains(Integer.valueOf(counter)))
+                selectedContinuousMonster.add(String.valueOf(continuousMonsterEffect));
             counter++;
         }
         monsterHashMap.put("ContinuousMonsterEffect", selectedContinuousMonster);
@@ -1113,7 +961,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedOptionalMonster = new ArrayList<>();
         counter = 0;
         for (OptionalMonsterEffect optionalMonsterEffect : optionalMonsterEffects) {
-            if (selectedOptionalMonsterEffect.contains(Integer.valueOf(counter))) selectedOptionalMonster.add(String.valueOf(optionalMonsterEffect));
+            if (selectedOptionalMonsterEffect.contains(Integer.valueOf(counter)))
+                selectedOptionalMonster.add(String.valueOf(optionalMonsterEffect));
             counter++;
         }
         monsterHashMap.put("OptionalMonsterEffect", selectedOptionalMonster);
@@ -1123,17 +972,18 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedSent = new ArrayList<>();
         counter = 0;
         for (SentToGraveyardEffect sentToGraveyardEffect : sentToGraveyardEffects) {
-            if (selectedSentToGraveyardEffect.contains(Integer.valueOf(counter))) selectedSent.add(String.valueOf(sentToGraveyardEffect));
+            if (selectedSentToGraveyardEffect.contains(Integer.valueOf(counter)))
+                selectedSent.add(String.valueOf(sentToGraveyardEffect));
             counter++;
         }
         monsterHashMap.put("SentToGraveyardEffect", selectedSent);
 
 
-
-
         MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attribute,
             family, value, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, cardImage);
         Storage.addCardToNewCardsCrated(monsterCard);
+        Storage.saveNewImagesOfCardsInFile(monsterCard, imagePath);
+
 
         //TODO -> calculate card price
 
@@ -1141,27 +991,15 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
     private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
         if (integersValues.contains(finalI)) {
             integersValues.remove(Integer.valueOf(finalI));
             buttons.get(finalI).setStyle("-fx-background-color: #e6e9ec");
-        }
-        else {
+        } else {
             integersValues.add(finalI);
             buttons.get(finalI).setStyle("-fx-background-color: #0c7bea;");
         }
     }
-
-
-
-
-
-
 
 
     private void removeThingsInGetLevelMonsterCard() {
@@ -1171,10 +1009,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
     private void removeThingsInGetDefencePowerMonsterCard() {
         anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingDefencePowerMonsterCard);
@@ -1182,18 +1016,11 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
     private void removeThingsInContinueGettingMonsterInformation() {
         anchorPane.getChildren().remove(labelForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingAttackPowerMonsterCard);
     }
-
-
-
 
 
     private void continueGettingTrapInformation() {
@@ -1220,21 +1047,166 @@ public class CardCreatorController implements Initializable {
     }
 
     private void getTrapCardValue(TextField textField, Label label, Button button) {
+        Pattern pattern = Pattern.compile("^\\d+$");
+        if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
+            numberOfTurnsForActivationForTrapCard = Integer.parseInt(textField.getText());
+            flipSummonTrapCardEffectNumbers = new ArrayList<>();
+            monsterAttackingTrapCardEffectNumbers = new ArrayList<>();
+            normalSummonTrapCardEffectNumbers = new ArrayList<>();
+            tributeSummonTrapCardEffectNumbers = new ArrayList<>();
+            normalTrapCardEffectNumbers = new ArrayList<>();
+            ritualSummonTrapCardEffectNumbers = new ArrayList<>();
+            specialSummonTrapCardEffectNumbers = new ArrayList<>();
+            monsterEffectActivationTrapCardEffectNumbers = new ArrayList<>();
+            spellCardActivationTrapCardEffectNumbers = new ArrayList<>();
+            trapCardActivationTrapCardEffectNumbers = new ArrayList<>();
+            userReplyForActivationNumbers = new ArrayList<>();
+            anchorPane.getChildren().remove(textField);
+            anchorPane.getChildren().remove(label);
+            anchorPane.getChildren().remove(button);
 
+//            gotoTrapFunctionEffect();
+        }
+    }
+
+    private void gotoTrapFunctionEffect(VBox previousVbox, Button previousButton, String enumClassName, String nextMethod) {
+//        System.out.println(selectedFlipEffect);
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+
+
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button buttonForFinish = new Button("OK");
+        ArrayList<Integer> selectedEffects = null;
+
+        if (enumClassName.equals("FlipSummonTrapCardEffect")) {
+            FlipSummonTrapCardEffect[] effects = FlipSummonTrapCardEffect.values();
+            for (FlipSummonTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = flipSummonTrapCardEffectNumbers;
+        } else if (enumClassName.equals("MonsterAttackingTrapCardEffect")) {
+            MonsterAttackingTrapCardEffect[] effects = MonsterAttackingTrapCardEffect.values();
+            for (MonsterAttackingTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = monsterAttackingTrapCardEffectNumbers;
+        } else if (enumClassName.equals("NormalSummonTrapCardEffect")) {
+            NormalSummonTrapCardEffect[] effects = NormalSummonTrapCardEffect.values();
+            for (NormalSummonTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = normalSummonTrapCardEffectNumbers;
+        } else if (enumClassName.equals("TributeSummonTrapCardEffect")) {
+            TributeSummonTrapCardEffect[] effects = TributeSummonTrapCardEffect.values();
+            for (TributeSummonTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = tributeSummonTrapCardEffectNumbers;
+        } else if (enumClassName.equals("NormalTrapCardEffect")) {
+            NormalTrapCardEffect[] effects = NormalTrapCardEffect.values();
+            for (NormalTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = normalTrapCardEffectNumbers;
+        } else if (enumClassName.equals("RitualSummonTrapCardEffect")) {
+            RitualSummonTrapCardEffect[] effects = RitualSummonTrapCardEffect.values();
+            for (RitualSummonTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = ritualSummonTrapCardEffectNumbers;
+        } else if (enumClassName.equals("SpecialSummonTrapCardEffect")) {
+            SpecialSummonTrapCardEffect[] effects = SpecialSummonTrapCardEffect.values();
+            for (SpecialSummonTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = specialSummonTrapCardEffectNumbers;
+        } else if (enumClassName.equals("MonsterEffectActivationTrapCardEffect")) {
+            MonsterEffectActivationTrapCardEffect[] effects = MonsterEffectActivationTrapCardEffect.values();
+            for (MonsterEffectActivationTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = monsterEffectActivationTrapCardEffectNumbers;
+        } else if (enumClassName.equals("SpellCardActivationTrapCardEffect")) {
+            SpellCardActivationTrapCardEffect[] effects = SpellCardActivationTrapCardEffect.values();
+            for (SpellCardActivationTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = spellCardActivationTrapCardEffectNumbers;
+        } else if (enumClassName.equals("TrapCardActivationTrapCardEffect")) {
+            TrapCardActivationTrapCardEffect[] effects = TrapCardActivationTrapCardEffect.values();
+            for (TrapCardActivationTrapCardEffect e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = trapCardActivationTrapCardEffectNumbers;
+        } else if (enumClassName.equals("UserReplyForActivation")) {
+            UserReplyForActivation[] effects = UserReplyForActivation.values();
+            for (UserReplyForActivation e : effects) {
+                String buttonName = e.toString();
+                buttons.add(new Button(buttonName));
+            }
+            selectedEffects = userReplyForActivationNumbers;
+        }
+
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            ArrayList<Integer> finalSelectedEffects = selectedEffects;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, finalSelectedEffects, buttons);
+                }
+            });
+        }
+
+
+        VBox vBox = new VBox();
+        vBox.setLayoutY(100);
+        vBox.setLayoutX(400);
+        buttonForFinish.setLayoutY(400);
+        buttonForFinish.setLayoutX(400);
+        Method method = null;
+        try {
+            method = Class.forName("project.view.CardCreatorController").getMethod(nextMethod, VBox.class, Button.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Method finalMethod = method;
+        buttonForFinish.setOnAction(ActionEvent -> {
+            try {
+                finalMethod.invoke(null, vBox, buttonForFinish);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
+
+        for (Button button : buttons) {
+            vBox.getChildren().add(button);
+        }
+
+        anchorPane.getChildren().add(vBox);
+        anchorPane.getChildren().add(buttonForFinish);
     }
 
 
     private void continueGettingSpellInformation() {
         getNumberOfTurnsForActivation();
     }
-
-
-
-
-
-
-
-
 
 
     private void getNumberOfTurnsForActivation() {
@@ -1256,10 +1228,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(button);
 
     }
-
-
-
-
 
 
     private void getSpellCardValue(TextField textField, Label label, Button button) {
@@ -1296,7 +1264,7 @@ public class CardCreatorController implements Initializable {
                         buttons.get(i).setOnAction(ActionEvent -> normalSpell(vbox, label));
                         break;
                     case 1:
-                        buttons.get(i).setOnAction(ActionEvent -> equipSpell(vbox,label));
+                        buttons.get(i).setOnAction(ActionEvent -> equipSpell(vbox, label));
                         break;
                     case 2:
                         buttons.get(i).setOnAction(ActionEvent -> fieldSpell(vbox, label));
@@ -1320,15 +1288,6 @@ public class CardCreatorController implements Initializable {
 
         }
     }
-
-
-
-
-
-
-
-
-
 
 
     private void continuousSpell(VBox vbox, Label label) {
@@ -1373,16 +1332,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     private void quickPlaySpell(VBox vbox, Label label) {
         spellCardValue = SpellCardValue.QUICK_PLAY.toString();
         anchorPane.getChildren().remove(vbox);
@@ -1423,20 +1372,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void ritualSpell(VBox vbox, Label label) {
@@ -1481,16 +1416,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     private void fieldSpell(VBox vbox, Label label) {
         spellCardValue = SpellCardValue.FIELD.toString();
         anchorPane.getChildren().remove(vbox);
@@ -1530,16 +1455,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
     }
-
-
-
-
-
-
-
-
-
-
 
 
     private void equipSpell(VBox vbox, Label label) {
@@ -1583,20 +1498,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private void normalSpell(VBox vbox, Label label) {
         spellCardValue = SpellCardValue.NORMAL.toString();
         anchorPane.getChildren().remove(vbox);
@@ -1637,14 +1538,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinish);
 
     }
-
-
-
-
-
-
-
-
 
 
     private void getUserReplyForActivations(VBox vBox1, Button buttonForFinish1) {
@@ -1690,15 +1583,6 @@ public class CardCreatorController implements Initializable {
     }
 
 
-
-
-
-
-
-
-
-
-
     private void createSpellCard() {
         System.out.println(selectedUserReplySpell);
 
@@ -1718,53 +1602,67 @@ public class CardCreatorController implements Initializable {
         switch (spellCardValue) {
             case "NORMAL":
                 for (NormalSpellCardEffect normalSpellCardEffect : normalSpellCardEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(normalSpellCardEffect));
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                        strings.add(String.valueOf(normalSpellCardEffect));
                     counter++;
                 }
-                enumValues.put("NormalSpellCardEffect", strings);
+
                 break;
             case "EQUIP":
                 for (EquipSpellEffect effect : equipSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                        strings.add(String.valueOf(effect));
                     counter++;
                 }
-                enumValues.put("EquipSpellEffect", strings);
+
                 break;
             case "FIELD":
                 for (FieldSpellEffect effect : fieldSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                        strings.add(String.valueOf(effect));
                     counter++;
                 }
-                enumValues.put("FieldSpellEffect", strings);
+
                 break;
             case "RITUAL":
                 for (RitualSpellEffect effect : ritualSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                        strings.add(String.valueOf(effect));
                     counter++;
                 }
-                enumValues.put("RitualSpellEffect", strings);
+
                 break;
             case "QUICK_PLAY":
                 for (QuickSpellEffect effect : quickSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                        strings.add(String.valueOf(effect));
                     counter++;
                 }
-                enumValues.put("QuickSpellEffect", strings);
+
                 break;
             case "CONTINUOUS":
                 for (ContinuousSpellCardEffect effect : continuousSpellCardEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) strings.add(String.valueOf(effect));
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                        strings.add(String.valueOf(effect));
                     counter++;
                 }
-                enumValues.put("ContinuousSpellCardEffect", strings);
+
                 break;
         }
-
+        enumValues.put("NormalSpellCardEffect", strings);
+        enumValues.put("EquipSpellEffect", strings);
+        enumValues.put("FieldSpellEffect", strings);
+        enumValues.put("RitualSpellEffect", strings);
+        enumValues.put("QuickSpellEffect", strings);
+        enumValues.put("ContinuousSpellCardEffect", strings);
+        enumValues.put("LogicalActivationRequirement", new ArrayList<>());
+        enumValues.put("SentToGraveyardEffect", new ArrayList<>());
 
         UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
         counter = 0;
         for (UserReplyForActivation userReplyForActivation : userReplyForActivations) {
-            if (selectedUserReplySpell.contains(Integer.valueOf(counter))) userReplyArrayList.add(String.valueOf(userReplyForActivation));
+            if (selectedUserReplySpell.contains(Integer.valueOf(counter)))
+                userReplyArrayList.add(String.valueOf(userReplyForActivation));
             counter++;
         }
 
@@ -1773,15 +1671,12 @@ public class CardCreatorController implements Initializable {
             CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues, cardImage);
 
         Storage.addCardToNewCardsCrated(spellCard);
+        Storage.saveNewImagesOfCardsInFile(spellCard, imagePath);
         //TODO : calculate card price
         //Should I add all of them even if they are empty?
 
+        System.out.println("Card created successfully");
     }
-
-
-
-
-
 
 
     private void removeThingsInTheGetNumberOfAllowedUsages() {
@@ -1789,8 +1684,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().remove(buttonOneForNumberOfAllowedUsages);
         anchorPane.getChildren().remove(buttonThreeForNumberOfAllowedUsages);
     }
-
-
 
 
 }
