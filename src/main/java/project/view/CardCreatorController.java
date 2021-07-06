@@ -11,6 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import project.controller.duel.CardEffects.MonsterEffectEnums.*;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.CardPosition;
@@ -18,7 +21,12 @@ import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
+import project.view.LoginController;
+import project.view.MainView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.time.temporal.ValueRange;
@@ -28,6 +36,8 @@ import java.util.regex.Pattern;
 public class CardCreatorController implements Initializable {
     private String cardType;
     private String cardName;
+    private String cardDescription;
+    private Image cardImage;
     private int numberOfAllowedUsages;
     private int levelOfMonsterCard;
     private int attackPowerMonsterCard;
@@ -49,15 +59,24 @@ public class CardCreatorController implements Initializable {
     Label labelForGettingCardNameFromUser;
     TextField textFieldForGettingCardNameFromUser;
     Button buttonForGettingCardNameFromUser;
+
+
+    Label labelForGettingCardDescriptionFromUser;
+    TextField textFieldForGettingCardDescriptionFromUser;
+    Button buttonForGettingCardDescriptionFromUser;
+
     Label labelForGettingNumberOfAllowedUsagesFromUser;
     Button buttonOneForNumberOfAllowedUsages;
     Button buttonThreeForNumberOfAllowedUsages;
+
     Label labelForGettingAttackPowerMonsterCard;
     TextField textFieldForGettingAttackPowerMonsterCard;
     Button buttonForGettingAttackPowerMonsterCard;
+
     Label labelForGettingDefencePowerMonsterCard;
     TextField textFieldForGettingDefencePowerMonsterCard;
     Button buttonForGettingDefencePowerMonsterCard;
+
     Label labelForGettingLevelMonsterCard;
     TextField textFieldForGettingLevelMonsterCard;
     Button buttonForGettingLevelMonsterCard;
@@ -218,10 +237,67 @@ public class CardCreatorController implements Initializable {
         if (!textFieldForGettingCardNameFromUser.getText().isEmpty()) {
             cardName = textFieldForGettingCardNameFromUser.getText();
             removeThingsInTheGetCardNameScene();
-            getNumberOfAllowedUsages();
+            getCardDescription();
         }
     }
 
+
+
+
+
+
+    private void getCardDescription() {
+        labelForGettingCardDescriptionFromUser = new Label("Please enter the description for your card");
+        labelForGettingCardDescriptionFromUser.setLayoutX(100);
+        labelForGettingCardDescriptionFromUser.setLayoutX(400);
+
+        textFieldForGettingCardDescriptionFromUser = new TextField();
+        textFieldForGettingCardDescriptionFromUser.setLayoutX(450);
+        textFieldForGettingCardDescriptionFromUser.setLayoutY(200);
+
+        buttonForGettingCardDescriptionFromUser = new Button("OK");
+        buttonForGettingCardDescriptionFromUser.setLayoutY(400);
+        buttonForGettingCardDescriptionFromUser.setLayoutX(450);
+        buttonForGettingCardDescriptionFromUser.setOnAction(ActionEvent -> getCardImage());
+
+        anchorPane.getChildren().add(labelForGettingCardDescriptionFromUser);
+        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
+        anchorPane.getChildren().add(buttonForGettingCardDescriptionFromUser);
+
+    }
+
+
+
+
+
+
+
+    private void getCardImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images", "*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images", "*.jpg"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images", "*.PNG"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images", "*.JPG"));
+        File file = fileChooser.showOpenDialog(MainView.getStage());
+        if (file != null) {
+           changeImage(file.getAbsolutePath());
+        }
+        getNumberOfAllowedUsages();
+    }
+
+
+
+
+    private void changeImage(String imagePath) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(imagePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cardImage = new Image(stream);
+    }
 
 
 
@@ -243,6 +319,8 @@ public class CardCreatorController implements Initializable {
 
 
     private void getNumberOfAllowedUsages() {
+        cardDescription = textFieldForGettingCardDescriptionFromUser.getText();
+        removeThingsInGettingCardDescription();
         labelForGettingNumberOfAllowedUsagesFromUser = new Label("Choose one of them for number of allowed usages");
         labelForGettingNumberOfAllowedUsagesFromUser.setLayoutY(100);
         labelForGettingNumberOfAllowedUsagesFromUser.setLayoutX(360);
@@ -260,6 +338,21 @@ public class CardCreatorController implements Initializable {
         buttonThreeForNumberOfAllowedUsages.setLayoutX(500);
         anchorPane.getChildren().add(buttonThreeForNumberOfAllowedUsages);
     }
+
+
+
+
+
+
+
+
+    private void removeThingsInGettingCardDescription() {
+        anchorPane.getChildren().remove(labelForGettingCardDescriptionFromUser);
+        anchorPane.getChildren().remove(textFieldForGettingCardDescriptionFromUser);
+        anchorPane.getChildren().remove(buttonForGettingCardDescriptionFromUser);
+    }
+
+
 
 
 
@@ -1011,13 +1104,10 @@ public class CardCreatorController implements Initializable {
 
 
         MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attribute,
-            family, value, cardName, "", CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, new Image(""));
+            family, value, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, cardImage);
         Storage.addCardToNewCardsCrated(monsterCard);
-        //what is card description?
-        //what is card position?
+
         //TODO -> calculate card price
-        //TODO -> get image
-        //notice : it doesn't creat card because it should have a picture
 
         System.out.println("Card Created and added to storage successfully");
     }
