@@ -1,5 +1,6 @@
 package project.view;
 
+
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -22,6 +23,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class CustomDialog extends Stage {
+    private RockPaperScissorController rockPaperScissorController;
     private static final Interpolator EXP_IN = new Interpolator() {
         @Override
         protected double curve(double t) {
@@ -43,26 +45,47 @@ public class CustomDialog extends Stage {
     public CustomDialog(String header, String content) {
         Pane root = new Pane();
 
-        scale1.setFromX(0.01);
-        scale1.setFromY(0.01);
-        scale1.setToY(1.0);
-        scale1.setDuration(Duration.seconds(0.33));
-        scale1.setInterpolator(EXP_IN);
-        scale1.setNode(root);
-
-        scale2.setFromX(0.01);
-        scale2.setToX(1.0);
-        scale2.setDuration(Duration.seconds(0.33));
-        scale2.setInterpolator(EXP_OUT);
-        scale2.setNode(root);
+        setScale1(root);
+        setScale2(root);
 
         initStyle(StageStyle.TRANSPARENT);
         initModality(Modality.APPLICATION_MODAL);
-        
-        Rectangle bg = new Rectangle(400, 150, Color.GRAY);
-        bg.setStroke(Color.BLACK);
-        bg.setStrokeWidth(1.5);
+        Rectangle bg = createRectanle(content);
+        VBox box = createVBox(header, content);
+        Button btn = createButton(bg, false);
+        root.getChildren().addAll(bg, box, btn);
+        setScene(new Scene(root, null));
+    }
 
+    public CustomDialog(String header, String content, RockPaperScissorController rockPaperScissorController) {
+        Pane root = new Pane();
+        this.rockPaperScissorController = rockPaperScissorController;
+        setScale1(root);
+        setScale2(root);
+
+        initStyle(StageStyle.TRANSPARENT);
+        initModality(Modality.APPLICATION_MODAL);
+        Rectangle bg = createRectanle(content);
+        VBox box = createVBox(header, content);
+        Button btn = createButton(bg, true);
+        root.getChildren().addAll(bg, box, btn);
+        setScene(new Scene(root, null));
+    }
+
+    private Button createButton(Rectangle bg, boolean isRockPaperScissorController) {
+        Button btn = new Button("OK");
+        btn.setTranslateX(bg.getWidth() - 75);
+        btn.setTranslateY(bg.getHeight() - 50);
+        if (isRockPaperScissorController) {
+           btn.setOnAction(e -> closeDialogInRockPaperScissorControllerClass());
+        } else {
+            btn.setOnAction(e -> closeDialog());
+        }
+        btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        return btn;
+    }
+
+    private VBox createVBox(String header, String content) {
         Text headerText = new Text(header);
         headerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 
@@ -71,16 +94,35 @@ public class CustomDialog extends Stage {
 
         VBox box = new VBox(10, headerText, new Separator(Orientation.HORIZONTAL), contentText);
         box.setPadding(new Insets(15));
+        return box;
+    }
 
-        Button btn = new Button("OK");
-        btn.setTranslateX(bg.getWidth() - 75);
-        btn.setTranslateY(bg.getHeight() - 50);
-        btn.setOnAction(e -> closeDialog());
-        btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+    private Rectangle createRectanle(String content) {
+        int length = 400;
+        if (content.length() > 30) {
+            length = content.length() * 13;
+        }
+        Rectangle bg = new Rectangle(length, 150, Color.GRAY);
+        bg.setStroke(Color.BLACK);
+        bg.setStrokeWidth(1.5);
+        return bg;
+    }
 
-        root.getChildren().addAll(bg, box, btn);
+    private void setScale2(Pane root) {
+        scale2.setFromX(0.01);
+        scale2.setToX(1.0);
+        scale2.setDuration(Duration.seconds(0.33));
+        scale2.setInterpolator(EXP_OUT);
+        scale2.setNode(root);
+    }
 
-        setScene(new Scene(root, null));
+    private void setScale1(Pane root) {
+        scale1.setFromX(0.01);
+        scale1.setFromY(0.01);
+        scale1.setToY(1.0);
+        scale1.setDuration(Duration.seconds(0.33));
+        scale1.setInterpolator(EXP_IN);
+        scale1.setNode(root);
     }
 
     public void openDialog() {
@@ -94,4 +136,21 @@ public class CustomDialog extends Stage {
         anim.setCycleCount(2);
         anim.playFrom(Duration.seconds(0.66));
     }
+
+    private void closeDialogInRockPaperScissorControllerClass(){
+        anim.setOnFinished(e -> close());
+        anim.setAutoReverse(true);
+        anim.setCycleCount(2);
+        anim.playFrom(Duration.seconds(0.66));
+        anim.setOnFinished(e -> doActionsAfterClose());
+    }
+
+    private void doActionsAfterClose() {
+        if(rockPaperScissorController.didAnyOneWin()){
+            rockPaperScissorController.startDuel();
+        } else {
+            rockPaperScissorController.startTransition();
+        }
+    }
+
 }

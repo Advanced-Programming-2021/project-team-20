@@ -14,14 +14,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.view.pooyaviewpackage.DuelView;
 import project.view.transitions.RockPaperScissorTransition;
@@ -56,6 +52,7 @@ public class RockPaperScissorController implements Initializable {
     private HashMap<String, Image> imagesForRockPaperScissor;
     private boolean canSecondPlayerSelect = false;
     private boolean didPlayer2Select = false;
+    private boolean didAnyOneWin = false;
     private int player1Selection;
     private int player2Selection;
     private static String allyPlayerName;
@@ -146,12 +143,6 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void handleAIPlayerSelection() {
-        // try {
-        // Thread.sleep(500);
-        // } catch (InterruptedException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
         if (player1Selection == 1) {
             player2Selection = 3;
         } else {
@@ -193,26 +184,30 @@ public class RockPaperScissorController implements Initializable {
         backRectanglesToFirstPlace();
         attackChosenRectangles();
         if (player1Selection == player2Selection) {
-            showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION");
+            showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION", false);
             player1Selection = 0;
             player2Selection = 0;
             didPlayer2Select = false;
             canSecondPlayerSelect = false;
-            startTransition();
+            didAnyOneWin = false;
         } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
                 || (player1Selection == 3 && player2Selection == 2)) {
             GameManager.getDuelControllerByIndex(0).setTurn(1);
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
-            showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION");
-            new DuelView().start(MainView.getStage());
+            didAnyOneWin = true;
+            showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
             GameManager.getDuelControllerByIndex(0).setTurn(1);
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
-            showAlert("PLAYER " + opponentPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION");
-            new DuelView().start(MainView.getStage());
+            didAnyOneWin = true;
+            showAlert("PLAYER " + opponentPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         }
+    }
+
+    public void startDuel(){
+        new DuelView().start(MainView.getStage());
     }
 
     private void backRectanglesToFirstPlace() {
@@ -222,9 +217,10 @@ public class RockPaperScissorController implements Initializable {
         }
     }
 
-    private void showAlert(String message, String typeOfMessage) {
-        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+    private void showAlert(String message, String typeOfMessage, boolean didAnyOneWin) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message, this);
         customDialog.openDialog();
+        //customDialog.setO
     }
 
     private void attackChosenRectangles() {
@@ -268,7 +264,6 @@ public class RockPaperScissorController implements Initializable {
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 createFadeTransition(transitionPlayerSelection.getNode());
@@ -319,7 +314,7 @@ public class RockPaperScissorController implements Initializable {
         startTransition();
     }
 
-    private void startTransition() {
+    public void startTransition() {
         if (!didPlayer2Select) {
             transition1.play();
             transition2.play();
@@ -328,5 +323,9 @@ public class RockPaperScissorController implements Initializable {
             transition5.play();
             transition6.play();
         }
+    }
+
+    public boolean didAnyOneWin(){
+        return didAnyOneWin;
     }
 }

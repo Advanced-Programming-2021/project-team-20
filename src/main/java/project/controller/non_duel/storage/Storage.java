@@ -17,6 +17,7 @@ import java.util.Scanner;
 import com.google.gson.*;
 import com.opencsv.*;
 import javax.imageio.*;
+
 import java.awt.image.*;
 import javafx.scene.image.Image;
 import project.controller.duel.Utility.Utility;
@@ -42,6 +43,7 @@ public class Storage {
     private String addressOfStorage = "Resourses\\";
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
+    private static HashMap<String, Image> newImageOfNewCards = new HashMap<>();
 
     public void startProgram() throws Exception {
 
@@ -53,37 +55,29 @@ public class Storage {
         unknownCard = new Card("cardName", null, "", null, 10, 125, null);
         unknownCard.setImage(createImageOfCards("Unknown"));
 
-        // for (Map.Entry<String, Card> entry : allMonsterCards.entrySet()) {
-        //     System.out.println(entry.getKey());
-        // }
-
-        // for (Map.Entry<String, Card> entry : allSpellAndTrapCards.entrySet()) {
-        //     System.out.println(entry.getKey());
-        // }
     }
 
     public void endProgram() throws IOException {
-
         saveNewCardsInFile();
-        saveNewImages();
+        /// saveNewImageOfUsers();
         savaUsersInFile();
     }
 
-    private void saveNewImages() {
-        for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
-            BufferedImage bImage = null;
-            try {
-                File initialImage = new File(entry.getValue());
-                bImage = ImageIO.read(initialImage);
-                ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
-                                + entry.getKey().getName() + ".png"));
-                entry.getKey().setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
-                        + entry.getKey().getName() + ".png");
-            } catch (Exception e) {
-                System.out.println("Exception occured :" + e.getMessage());
-            }
+    public static void saveNewImageOfUsers(User user, String imagePath) {
+        // for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
+        BufferedImage bImage = null;
+        try {
+            File initialImage = new File(imagePath);
+            bImage = ImageIO.read(initialImage);
+            ImageIO.write(bImage, "png",
+                    new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                            + user.getName() + ".png"));
+            user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                    + user.getName() + ".png");
+        } catch (Exception e) {
+            System.out.println("Exception occured :" + e.getMessage());
         }
+        // }
     }
 
     private void saveNewCardsInFile() throws IOException {
@@ -92,6 +86,7 @@ public class Storage {
             if (entry.getValue().getCardType().equals(CardType.MONSTER)) {
                 csvWriter = new CSVWriter(new FileWriter(addressOfStorage + "CSV\\Monster.csv", true));
                 MonsterCard monsterCard = (MonsterCard) entry.getValue();
+                // saveNewImagesOfCardsInFile(monsterCard);
                 csvWriter.writeNext(monsterCard.toCSVFormatString());
                 csvWriter.flush();
                 csvWriter.close();
@@ -108,6 +103,22 @@ public class Storage {
                 csvWriter.flush();
                 csvWriter.close();
             }
+        }
+    }
+
+    public static void saveNewImagesOfCardsInFile(Card card, String imagePath) {
+        try {
+            File file = new File(imagePath);
+            BufferedImage bImage = ImageIO.read(file);
+            if (card.getCardType().equals(CardType.MONSTER)) {
+                ImageIO.write(bImage, "jpg",
+                        new File("src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName()+ ".jpg"));
+            } else {
+                ImageIO.write(bImage, "jpg",
+                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -441,6 +452,10 @@ public class Storage {
         return allSpellAndTrapCards;
     }
 
+    public static void addNewImageForNewCards(String cardName, Image cardImage) {
+
+    }
+
     public static boolean doesCardExist(String cardName) {
         String correctCardName = Utility.giveCardNameRemovingRedundancy(cardName);
         return allMonsterCards.containsKey(correctCardName) || allSpellAndTrapCards.containsKey(correctCardName);
@@ -461,9 +476,9 @@ public class Storage {
         newCardsCreated.put(newCard.getCardName(), newCard);
     }
 
-    public static HashMap<User, String> getNewImagesThatChanges() {
-        return newImagesThatChanges;
-    }
+    // public static HashMap<User, String> getNewImagesThatChanges() {
+    // return newImagesThatChanges;
+    // }
 
     public static Card getUnknownCard() {
         return unknownCard;
