@@ -788,6 +788,16 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinishFlipEffect);
     }
 
+
+
+
+
+
+
+
+
+
+
     private void getOptionalMonsterEffectFromUser() {
         System.out.println(selectedFlipEffect);
         anchorPane.getChildren().remove(vBoxForFlipEffect);
@@ -833,6 +843,18 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(vBoxForOptionalMonsterEffect);
         anchorPane.getChildren().add(buttonForFinishOptionalMonsterEffect);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void getSentToGraveyardEffectFromUser() {
         System.out.println(selectedOptionalMonsterEffect);
@@ -880,6 +902,15 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinishSentToGraveyardEffect);
     }
 
+
+
+
+
+
+
+
+
+
     private void finishMonsterCardCreator() {
         //Attribute
         MonsterCardAttribute[] allValues = MonsterCardAttribute.values();
@@ -905,7 +936,7 @@ public class CardCreatorController implements Initializable {
             if (counter == monsterValuesNumber) value= monsterCardValue;
             counter++;
         }
-        //Enums
+        //Start Enums
         HashMap<String, List<String>> monsterHashMap = new HashMap<>();
         //add SummoningRequirement
         SummoningRequirement[] summoningRequirements = SummoningRequirement.values();
@@ -948,6 +979,33 @@ public class CardCreatorController implements Initializable {
 
         //add FlipEffect
         FlipEffect[] flipEffects = FlipEffect.values();
+        ArrayList<String> selectedFlip = new ArrayList<>();
+        counter = 0;
+        for (FlipEffect flipEffect : flipEffects) {
+            if (selectedFlipEffect.contains(Integer.valueOf(counter))) selectedFlip.add(String.valueOf(flipEffect));
+            counter++;
+        }
+        monsterHashMap.put("FlipEffect", selectedFlip);
+
+        //add OptionalMonsterEffect
+        OptionalMonsterEffect[] optionalMonsterEffects = OptionalMonsterEffect.values();
+        ArrayList<String> selectedOptionalMonster = new ArrayList<>();
+        counter = 0;
+        for (OptionalMonsterEffect optionalMonsterEffect : optionalMonsterEffects) {
+            if (selectedOptionalMonsterEffect.contains(Integer.valueOf(counter))) selectedOptionalMonster.add(String.valueOf(optionalMonsterEffect));
+            counter++;
+        }
+        monsterHashMap.put("OptionalMonsterEffect", selectedOptionalMonster);
+
+        //add SentToGraveyardEffect
+        SentToGraveyardEffect[] sentToGraveyardEffects = SentToGraveyardEffect.values();
+        ArrayList<String> selectedSent = new ArrayList<>();
+        counter = 0;
+        for (SentToGraveyardEffect sentToGraveyardEffect : sentToGraveyardEffects) {
+            if (selectedSentToGraveyardEffect.contains(Integer.valueOf(counter))) selectedSent.add(String.valueOf(sentToGraveyardEffect));
+            counter++;
+        }
+        monsterHashMap.put("SentToGraveyardEffect", selectedSent);
 
 
 
@@ -959,7 +1017,15 @@ public class CardCreatorController implements Initializable {
         //what is card position?
         //TODO -> calculate card price
         //TODO -> get image
+        //notice : it doesn't creat card because it should have a picture
+
+        System.out.println("Card Created and added to storage successfully");
     }
+
+
+
+
+
 
 
     private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
@@ -978,6 +1044,8 @@ public class CardCreatorController implements Initializable {
 
 
 
+
+
     private void removeThingsInGetLevelMonsterCard() {
         anchorPane.getChildren().remove(labelForGettingLevelMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingLevelMonsterCard);
@@ -987,11 +1055,14 @@ public class CardCreatorController implements Initializable {
 
 
 
+
+
     private void removeThingsInGetDefencePowerMonsterCard() {
         anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingDefencePowerMonsterCard);
     }
+
 
 
 
