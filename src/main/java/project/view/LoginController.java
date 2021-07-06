@@ -90,7 +90,7 @@ public class LoginController implements Initializable {
         String filePath = chooseRandomImageForUser();
         User user = new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
                 passwordFieldfORegister.getText(), filePath);
-        user.setImage(UIUtility.createImages(filePath));
+        user.setImage(UIStorage.createImages(filePath));
         Storage.addUserToAllUsers(user);
 
     }

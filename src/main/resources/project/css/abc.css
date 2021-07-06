@@ -49,6 +49,21 @@
    -fx-background-size: 100%  100%;
 }
 
+.chart-plot-background9{
+   -fx-background-image: url("wholeDecksBackGroundPage.jpg");
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background10{
+   -fx-background-image: url("wholeDeckPageEditDeck.PNG");
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background11{
+   -fx-background-image: url("wholeDeckPageCreateDeck.PNG");
+   -fx-background-size: 100%  100%;
+}
+
 .table-view {
    -fx-base: #1d1d1d;
    -fx-control-inner-background: #1d1d1d;

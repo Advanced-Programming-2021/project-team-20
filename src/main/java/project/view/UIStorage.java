@@ -19,7 +19,7 @@ import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 import javafx.geometry.Pos;
 
-public class UIUtility {
+public class UIStorage {
 
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
@@ -54,6 +54,7 @@ public class UIUtility {
         decksImage = new HashMap<>();
         decksImage.put("validDeck", createImages("deckpage\\", "validDeck"));
         decksImage.put("invalidDeck", createImages("deckpage\\", "invalidDeck"));
+        // decksImage.put("aaaa", createImages("deckPage\\", "Capture"));
     }
 
     private static void createImagesForRockPaperScissorController() {
@@ -180,18 +181,11 @@ public class UIUtility {
     public static void initializeLabelsToShowInfornationOfDeck() {
         labelsToShowInformationOfDeck = new HashMap<>();
         Label label = new Label();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                label = new Label();
-                createLabelForDeckname(label, i, j);
-                labelsToShowInformationOfDeck.put("deckname" + i + "" + j, label);
-            }
-        }
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 0, 0);
+                createLabelForSizeOfOtherParts(label, i, j, -15, 45);
                 labelsToShowInformationOfDeck.put("mainDeck" + i + "" + j, label);
             }
         }
@@ -199,7 +193,7 @@ public class UIUtility {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 90, 0);
+                createLabelForSizeOfOtherParts(label, i, j, 15, 45);
                 labelsToShowInformationOfDeck.put("sideDeck" + i + "" + j, label);
             }
         }
@@ -207,7 +201,7 @@ public class UIUtility {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, -50, 60);
+                createLabelForSizeOfOtherParts(label, i, j, -30, 90);
                 labelsToShowInformationOfDeck.put("monstersSize" + i + "" + j, label);
             }
         }
@@ -215,7 +209,7 @@ public class UIUtility {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 50, 60);
+                createLabelForSizeOfOtherParts(label, i, j, 0, 90);
                 labelsToShowInformationOfDeck.put("spellsSize" + i + "" + j, label);
             }
         }
@@ -223,26 +217,30 @@ public class UIUtility {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 label = new Label();
-                createLabelForSizeOfOtherParts(label, i, j, 150, 60);
+                createLabelForSizeOfOtherParts(label, i, j, 30, 90);
                 labelsToShowInformationOfDeck.put("trapsSize" + i + "" + j, label);
             }
         }
     }
 
-    private static void createLabelForDeckname(Label label, int row, int column) {
-        label.setPrefSize(270, 50);
-        label.setFont(new Font(20));
-        label.setLayoutX(10 + 310 * column);
-        label.setLayoutY(210 * row);
-        label.setAlignment(Pos.CENTER);
-    }
+    // private static void createLabelForDeckname(Label label, int row, int column) {
+    //     label.setPrefSize(30, 30);
+    //     label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+    //     label.setTextFill(Color.BLUE);
+    //     label.setAlignment(Pos.CENTER);
+    //     label.setLayoutY(35  + 204 * column);
+    //     label.setLayoutX(140 + 305 * row);
+    //     label.setAlignment(Pos.CENTER);
+    // }
 
     private static void createLabelForSizeOfOtherParts(Label label, int row, int column, int translateX,
             int translateY) {
-        label.setPrefSize(100, 50);
-        label.setFont(new Font(20));
-        label.setLayoutY(51 + 210 * row + translateY);
-        label.setLayoutX(52 + 310 * column + translateX);
+        label.setPrefSize(30, 30);
+        label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+        label.setAlignment(Pos.CENTER);
+        label.setTextFill(Color.BLUE);
+        label.setLayoutY(204 * row + translateY);
+        label.setLayoutX(140 + 305 * column + translateX);
         label.setAlignment(Pos.CENTER);
     }
 

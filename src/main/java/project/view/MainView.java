@@ -34,7 +34,7 @@ public class MainView extends Application {
         Storage storage = new Storage();
         storage.startProgram();
      //   Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
-        UIUtility.createPreliminaryToStartProgram();
+        UIStorage.createPreliminaryToStartProgram();
     //    LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
         storage.endProgram();

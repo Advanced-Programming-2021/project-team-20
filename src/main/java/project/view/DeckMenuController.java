@@ -73,8 +73,8 @@ public class DeckMenuController implements Initializable {
     public void showPage(AnchorPane pane, String chosenDeck) {
         setAnchorPane(pane);
         deckname = chosenDeck;
-        allScrollBarLabels = UIUtility.getAllScrollBarLabels();
-        allCardDiscriptionLabels = UIUtility.getAllCardDiscriptionLabels1();
+        allScrollBarLabels = UIStorage.getAllScrollBarLabels();
+        allCardDiscriptionLabels = UIStorage.getAllCardDiscriptionLabels1();
         if (!isAddedNecessaryThingsForTheFirstTime) {
             initializeLabesForShowSizeOfDeck();
         }
@@ -101,10 +101,10 @@ public class DeckMenuController implements Initializable {
     }
 
     private void initializeLabesForShowSizeOfDeck() {
-        sizeOfMainDeckLabel = UIUtility.getNumberOfCardslabels().get(0);
-        sizeOfAllMonsterCardsLabel = UIUtility.getNumberOfCardslabels().get(1);
-        sizeOfAllSpellCardsLabel = UIUtility.getNumberOfCardslabels().get(2);
-        sizeOfAllTrapCardsLabel = UIUtility.getNumberOfCardslabels().get(3);
+        sizeOfMainDeckLabel = UIStorage.getNumberOfCardslabels().get(0);
+        sizeOfAllMonsterCardsLabel = UIStorage.getNumberOfCardslabels().get(1);
+        sizeOfAllSpellCardsLabel = UIStorage.getNumberOfCardslabels().get(2);
+        sizeOfAllTrapCardsLabel = UIStorage.getNumberOfCardslabels().get(3);
         anchorPane.getChildren().add(sizeOfMainDeckLabel);
         anchorPane.getChildren().add(sizeOfAllMonsterCardsLabel);
         anchorPane.getChildren().add(sizeOfAllSpellCardsLabel);
@@ -262,10 +262,10 @@ public class DeckMenuController implements Initializable {
     }
 
     private void getRectanglesFromUIUtilityForPanes() {
-        allMainDeckRectangle = UIUtility.getAllMainDeckRectangle();
-        allScrollBarRectangle = UIUtility.getAllScrollBarRectangle();
-        allSideDeckRectangle = UIUtility.getAllSideDeckRectangle();
-        allScrollBarBackGroundRectangles = UIUtility.getAllScrollBarBackGroundRectangles();
+        allMainDeckRectangle = UIStorage.getAllMainDeckRectangle();
+        allScrollBarRectangle = UIStorage.getAllScrollBarRectangle();
+        allSideDeckRectangle = UIStorage.getAllSideDeckRectangle();
+        allScrollBarBackGroundRectangles = UIStorage.getAllScrollBarBackGroundRectangles();
     }
 
     private void createMainDeck() {
@@ -317,7 +317,7 @@ public class DeckMenuController implements Initializable {
     }
 
     private void createScrollPaneWithAllUselessCards() {
-        List<Card> scrollCards = UIUtility.getAllTypeOfCards().get("allCards");
+        List<Card> scrollCards = UIStorage.getAllTypeOfCards().get("allCards");
         Pane pane = new Pane();
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         for (int i = 0; i < scrollCards.size(); i++) {

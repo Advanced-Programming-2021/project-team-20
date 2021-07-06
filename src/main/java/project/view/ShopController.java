@@ -1,6 +1,5 @@
 package project.view;
 
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,7 +40,7 @@ public class ShopController implements Initializable {
     private Label importLabel;
     @FXML
     private Label exportLabel;
-//    private ImportAndExport importAndExport = new ImportAndExport();
+    // private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Rectangle>> allCardsInDifferentPages;
     private int whichPageIsShowing = 0;
     private static int upToWhichCardAreShown;
@@ -52,12 +51,10 @@ public class ShopController implements Initializable {
     }
     private static AnchorPane anchorPane;
     private Rectangle chosenRectangleForExport;
-//    private static ArrayList<String> allCardNamesFirstPage;
-//    private static ArrayList<String> allCardNamesSecondPage;
-//    private static ArrayList<String> allCardNamesThirdPage;
-//    static {
-
-
+    // private static ArrayList<String> allCardNamesFirstPage;
+    // private static ArrayList<String> allCardNamesSecondPage;
+    // private static ArrayList<String> allCardNamesThirdPage;
+    // static {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -65,12 +62,12 @@ public class ShopController implements Initializable {
         allCards.putAll(Storage.getAllMonsterCards());
         allCards.putAll(Storage.getAllSpellAndTrapCards());
         System.out.println(allCards.size());
-//        ArrayList<String> names = new ArrayList<>();
+        // ArrayList<String> names = new ArrayList<>();
         names = allCards.keySet().toArray(new String[0]);
-//        Collections.sort(names);
-//        for (int i = 0; i < allCards.size(); i++) {
-//            System.out.println(names[i].replaceAll(" ", ""));
-//        }
+        // Collections.sort(names);
+        // for (int i = 0; i < allCards.size(); i++) {
+        // System.out.println(names[i].replaceAll(" ", ""));
+        // }
         int sizeOfWholeCards = allCards.size();
         if (allCardsInDifferentPages == null) {
             allCardsInDifferentPages = new ArrayList<>();
@@ -125,30 +122,31 @@ public class ShopController implements Initializable {
                 rectangle.setX(290 + 65 * j);
                 rectangle.setY(110 + 65 * k);
                 InputStream stream = null;
-//                System.out.println(allCards.get(cardNumber).getCardName());
-//                cardNumber++;
+                // System.out.println(allCards.get(cardNumber).getCardName());
+                // cardNumber++;
                 HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
                 HashMap<String, Card> allSpellTrapCards = Storage.getAllSpellAndTrapCards();
                 String id;
                 try {
-                    id = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown])).getCardName();
-                } catch (Exception e){
-                    id = allSpellTrapCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown])).getCardName();
+                    id = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown]))
+                            .getCardName();
+                } catch (Exception e) {
+                    id = allSpellTrapCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown]))
+                            .getCardName();
                 }
-                //String id = names[upToWhichCardAreShown];
+                // String id = names[upToWhichCardAreShown];
 
                 try {
-                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
-                    + id + ".jpg");
-//                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
-//                            + allCardsInOnePage.get(cardNumber).get + ".jpg");
+                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\" + id + ".jpg");
+                    // stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
+                    // + allCardsInOnePage.get(cardNumber).get + ".jpg");
                 } catch (Exception e) {
                     System.out.println(id);
-//                    e.printStackTrace();
+                    // e.printStackTrace();
                 }
-//                System.out.println(allCards.size());
-//                cardNumber++;
-                //?
+                // System.out.println(allCards.size());
+                // cardNumber++;
+                // ?
                 assert stream != null;
                 Image image = new Image(stream);
                 rectangle.setFill(new ImagePattern(image));
@@ -156,8 +154,9 @@ public class ShopController implements Initializable {
                 rectangle.setArcWidth(20);
 
                 rectangle.setId(names[upToWhichCardAreShown]);
-                if (upToWhichCardAreShown < 73) upToWhichCardAreShown++;
-                //rectangle.setId("arg0");
+                if (upToWhichCardAreShown < 73)
+                    upToWhichCardAreShown++;
+                // rectangle.setId("arg0");
                 // rectangle.setText
                 DropShadow e = new DropShadow();
                 e.setWidth(6);
@@ -173,9 +172,9 @@ public class ShopController implements Initializable {
                         chosenRectangleForExport = rectangle;
                         System.out.println(rectangle.getId());
                         chosenCardName = rectangle.getId();
-              //          System.out.println("Chosen is : " + chosenCardName);
-//                        System.out.println(rectangle.toString());
-//                        System.out.println("qqq");
+                        // System.out.println("Chosen is : " + chosenCardName);
+                        // System.out.println(rectangle.toString());
+                        // System.out.println("qqq");
                     }
                 });
                 allCardsInOnePage.add(rectangle);
@@ -191,9 +190,9 @@ public class ShopController implements Initializable {
             pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsShowing).get(i));
             MainView.changeScene(pane);
             // try {
-            //     Thread.sleep(500);
+            // Thread.sleep(500);
             // } catch (Exception e) {
-            //     System.out.println("TODO: handle exception");
+            // System.out.println("TODO: handle exception");
             // }
         }
     }
@@ -212,21 +211,16 @@ public class ShopController implements Initializable {
         anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
     }
 
-
     public void buyCard() {
         System.out.println("Trying to buy");
         if (chosenCardName == null) {
             System.out.println("Please choose a card first!");
-        }
-        else {
+        } else {
             exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
             String answerOfShop = new Shop().findCommand("shop buy " + chosenCardName);
             exportLabel.setText(answerOfShop);
         }
     }
-
-
-
 
     public void backToMainMenu() {
         try {

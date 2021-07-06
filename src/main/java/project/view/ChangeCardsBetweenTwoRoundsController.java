@@ -83,7 +83,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         currentPlayerWhoChangesDeck = playerName;
         this.deckname = deckname;
         initializePlayersAndDecks();
-        allCardDiscriptionLabels = UIUtility.getAllCardDiscriptionLabels1();
+        allCardDiscriptionLabels = UIStorage.getAllCardDiscriptionLabels1();
         if (!isAddedNecessaryThingsForTheFirstTime) {
             initializeLabesForShowSizeOfDeck();
         }
@@ -274,10 +274,10 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void initializeLabesForShowSizeOfDeck() {
-        sizeOfMainDeckLabel = UIUtility.getNumberOfCardslabels().get(0);
-        sizeOfAllMonsterCardsLabel = UIUtility.getNumberOfCardslabels().get(1);
-        sizeOfAllSpellCardsLabel = UIUtility.getNumberOfCardslabels().get(2);
-        sizeOfAllTrapCardsLabel = UIUtility.getNumberOfCardslabels().get(3);
+        sizeOfMainDeckLabel = UIStorage.getNumberOfCardslabels().get(0);
+        sizeOfAllMonsterCardsLabel = UIStorage.getNumberOfCardslabels().get(1);
+        sizeOfAllSpellCardsLabel = UIStorage.getNumberOfCardslabels().get(2);
+        sizeOfAllTrapCardsLabel = UIStorage.getNumberOfCardslabels().get(3);
         anchorPane.getChildren().add(sizeOfMainDeckLabel);
         anchorPane.getChildren().add(sizeOfAllMonsterCardsLabel);
         anchorPane.getChildren().add(sizeOfAllSpellCardsLabel);
@@ -285,8 +285,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void getRectanglesFromUIUtilityForPanes() {
-        allMainDeckRectangle = UIUtility.getAllMainDeckRectangle();
-        allSideDeckRectangle = UIUtility.getAllSideDeckRectangle();
+        allMainDeckRectangle = UIStorage.getAllMainDeckRectangle();
+        allSideDeckRectangle = UIStorage.getAllSideDeckRectangle();
     }
 
     private void addOnDragDetectedEffectForCard(Rectangle rectangle) {

@@ -1,5 +1,6 @@
 package project.controller.non_duel.shop;
 
+import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
@@ -7,6 +8,7 @@ import project.model.cardData.General.CardType;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
+import project.view.LoginController;
 
 import java.util.*;
 
@@ -16,25 +18,25 @@ public class Shop {
 
         if (ShopPatterns.isItBuyPattern(command)) {
             String cardName = ShopPatterns.getBoughtCardName(command);
-         //   int userAmount = Profile.getOnlineUser().getMoney();
+            int userAmount = LoginController.getOnlineUser().getMoney();
             if (!isItInvalidCardName(cardName)) {
                 return "there is no card with this name";
             }
             Card card = getCardWithName(cardName);
             int cardAmount = card.getCardPrice();
-            // if (cardAmount > userAmount) {
-            //     return "not enough money";
-            // }
-            // Profile.getOnlineUser().setMoney(userAmount - cardAmount);
-            // Profile.getOnlineUser().addCardToAllUselessCards(cardName);
-            // return "successful buy";
+            if (cardAmount > userAmount) {
+                return "not enough money";
+            }
+            LoginController.getOnlineUser().setMoney(userAmount - cardAmount);
+            LoginController.getOnlineUser().addCardToAllUselessCards(card.getCardName());
+            return "successful buy";
         }
 
         else if (ShopPatterns.isItShowAllPattern(command)) {
             return showAllCards();
         }
 
-        if(command.matches("card show (.+)")){
+        if (command.matches("card show (.+)")) {
             return showCard(ShopPatterns.getShownCardName(command));
         }
         return "invalid command!";
@@ -95,12 +97,13 @@ public class Shop {
     }
 
     private Card getCardWithName(String cardName) {
+        String cardname = Utility.giveCardNameRemovingRedundancy(cardName);
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allSpellAndTrapCards.get(cardName) != null)
-            return allSpellAndTrapCards.get(cardName);
-        if (allMonsterCards.get(cardName) != null)
-            return allMonsterCards.get(cardName);
+        if (allSpellAndTrapCards.get(cardname) != null)
+            return allSpellAndTrapCards.get(cardname);
+        if (allMonsterCards.get(cardname) != null)
+            return allMonsterCards.get(cardname);
         return null;
     }
 
