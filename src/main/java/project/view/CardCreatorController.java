@@ -284,6 +284,7 @@ public class CardCreatorController implements Initializable {
            changeImage(file.getAbsolutePath());
         }
         getNumberOfAllowedUsages();
+
     }
 
 

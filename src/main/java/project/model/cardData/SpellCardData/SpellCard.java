@@ -20,20 +20,20 @@ import project.model.cardData.General.CardPosition;
 import project.model.cardData.General.CardType;
 
 public class SpellCard extends Card {
-    private int highestNumberOfTurnsOfActivation;
+    private int highestNumberOfTurnsOfActivation;//
     private int numberOfTurnsForActivation;
     private boolean oncePerTurnCardEffectUsed;
     private SpellCardValue spellCardValue;
     private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects;
     private ArrayList<EquipSpellEffect> equipSpellEffects;
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
-    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;
+    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;//
     private ArrayList<NormalSpellCardEffect> normalSpellCardEffects;
     private ArrayList<QuickSpellEffect> quickSpellEffects;
     private ArrayList<RitualSpellEffect> ritualSpellEffects;
-    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;
+    private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;//
     private ArrayList<UserReplyForActivation> userReplyForActivations;
-    private ArrayList<CardLocation> cardLocationsToWhichEquipSpellIsApplied;
+    private ArrayList<CardLocation> cardLocationsToWhichEquipSpellIsApplied;//
 
     public SpellCard(String cardName, String cardDescription, SpellCardValue spellCardValue, CardPosition cardPosition,
             int numberOfAllowedUsages, int numberOfTurnsForActivation, int cardPrice,
