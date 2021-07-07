@@ -23,7 +23,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.view.pooyaviewpackage.DuelView;
-import project.view.pooyaviewpackage.newDuelView;
 import project.view.transitions.RockPaperScissorTransition;
 import project.controller.duel.PreliminaryPackage.GameManager;
 
