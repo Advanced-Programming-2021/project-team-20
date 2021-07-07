@@ -1,5 +1,6 @@
 package project.view;
 
+import java.io.IOException;
 
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -9,6 +10,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -16,11 +18,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import project.controller.duel.PreliminaryPackage.GameManager;
+import project.model.Deck;
 
 public class CustomDialog extends Stage {
     private RockPaperScissorController rockPaperScissorController;
@@ -72,12 +77,60 @@ public class CustomDialog extends Stage {
         setScene(new Scene(root, null));
     }
 
+    public CustomDialog(String header, String content, boolean isOneRoundOfDuelEnded) {
+        Pane root = new Pane();
+        setScale1(root);
+        setScale2(root);
+
+        initStyle(StageStyle.TRANSPARENT);
+        initModality(Modality.APPLICATION_MODAL);
+        Rectangle bg = createRectanle(content);
+        VBox box = createVBox(header, content);
+        Button btn = createButtonWhenOneRoundOfDuelEnded(bg, isOneRoundOfDuelEnded);
+        root.getChildren().addAll(bg, box, btn);
+        setScene(new Scene(root, null));
+    }
+
+    private Button createButtonWhenOneRoundOfDuelEnded(Rectangle bg, boolean isOneRoundOfDuelEnded) {
+        Button btn = new Button("OK");
+        btn.setTranslateX(bg.getWidth() - 75);
+        btn.setTranslateY(bg.getHeight() - 50);
+        if (isOneRoundOfDuelEnded) {
+            btn.setOnAction(e -> callChangeCardsBetweenTwoRounds());
+        } else {
+            btn.setOnAction(e -> callMainMenu());
+        }
+        btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        return btn;
+    }
+
+    private void callMainMenu() {
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void callChangeCardsBetweenTwoRounds() {
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("/project/fxml/changeCardsBetweenTwoRoundsPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String currentPlayerWhoChangesDeck = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
+        Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck();
+        new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
+                activeDeck.getDeckname());
+    }
+
     private Button createButton(Rectangle bg, boolean isRockPaperScissorController) {
         Button btn = new Button("OK");
         btn.setTranslateX(bg.getWidth() - 75);
         btn.setTranslateY(bg.getHeight() - 50);
         if (isRockPaperScissorController) {
-           btn.setOnAction(e -> closeDialogInRockPaperScissorControllerClass());
+            btn.setOnAction(e -> closeDialogInRockPaperScissorControllerClass());
         } else {
             btn.setOnAction(e -> closeDialog());
         }
@@ -137,7 +190,7 @@ public class CustomDialog extends Stage {
         anim.playFrom(Duration.seconds(0.66));
     }
 
-    private void closeDialogInRockPaperScissorControllerClass(){
+    private void closeDialogInRockPaperScissorControllerClass() {
         anim.setOnFinished(e -> close());
         anim.setAutoReverse(true);
         anim.setCycleCount(2);
@@ -146,7 +199,7 @@ public class CustomDialog extends Stage {
     }
 
     private void doActionsAfterClose() {
-        if(rockPaperScissorController.didAnyOneWin()){
+        if (rockPaperScissorController.didAnyOneWin()) {
             rockPaperScissorController.startDuel();
         } else {
             rockPaperScissorController.startTransition();

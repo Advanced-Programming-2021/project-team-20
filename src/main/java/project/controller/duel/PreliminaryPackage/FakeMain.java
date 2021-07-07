@@ -48,17 +48,17 @@ public class FakeMain {
         Storage storage = (new Storage());
         try {
             storage.startProgram();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         ArrayList<Card> firstPlayerDeck = new ArrayList<>();
         ArrayList<Card> secondPlayerDeck = new ArrayList<>();
         addCardsToFirstPlayer(firstPlayerDeck);
         addCardsToSecondPlayer(secondPlayerDeck);
-        gameManager.addANewGame(null,firstPlayerDeck,  null,null,secondPlayerDeck, null, "zenos", "AII", 1);
+        gameManager.addANewGame(null, firstPlayerDeck, null, null, secondPlayerDeck, null, "zenos", "AII", 1);
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
         duelController.startDuel(0);
-        //System.out.println(duelController.startDuel(0));
+        // System.out.println(duelController.startDuel(0));
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
         System.out.println(duelBoard.showDuelBoard(0));
         boolean continueInput = true;

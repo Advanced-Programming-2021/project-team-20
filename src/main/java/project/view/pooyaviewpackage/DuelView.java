@@ -25,6 +25,7 @@ import project.model.cardData.General.Card;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.modelsforview.*;
+import project.view.CustomDialog;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -733,12 +734,14 @@ public class DuelView extends Application {
         }
     }
 
-    private void endOneRoundOfDuel() {
-       
+    private void endOneRoundOfDuel(String result) {
+        CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, true);
+        customDialog.openDialog();
     }
 
-    private void endGame() {
-
+    private void endGame(String result) {
+        CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, false);
+        customDialog.openDialog();
     }
 
     public static AnchorPane getAnchorPane() {
