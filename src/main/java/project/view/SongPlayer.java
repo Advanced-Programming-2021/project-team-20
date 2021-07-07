@@ -9,9 +9,10 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 public class SongPlayer {
-    private static MediaPlayer backgroundMusic;
+    private MediaPlayer backgroundMusic;
     private MediaView mediaView;
-
+    private MediaPlayer shortMusic;
+    private MediaView shortMediaView;
     private static SongPlayer songPlayer;
 
     private SongPlayer() {
@@ -38,6 +39,21 @@ public class SongPlayer {
             }
         });
         backgroundMusic.play();
+    }
+
+    public void playShortMusic(String url){
+        URL resource = getClass().getResource(url);
+        shortMusic = new MediaPlayer(new Media(resource.toString()));
+        shortMediaView = new MediaView();
+        shortMediaView.setMediaPlayer(backgroundMusic);
+        shortMusic.setAutoPlay(true);
+        shortMusic.setVolume(0.4);
+        shortMusic.setOnEndOfMedia(new Runnable() {
+            public void run() {
+                shortMusic.seek(Duration.ZERO);
+            }
+        });
+        shortMusic.play();
     }
 
     public void pauseMusic() {

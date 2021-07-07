@@ -99,7 +99,7 @@ public class DeckMenuController implements Initializable {
         shownCardRectangle = (Rectangle) pane.getChildren().get(0);
         shownCardRectangle.setFill(new ImagePattern(Storage.getUnknownCard().getImage()));
         equalDeckNameLabel.setText(chosenDeck);
-       
+
         MainView.changeScene(pane);
     }
 
@@ -139,6 +139,7 @@ public class DeckMenuController implements Initializable {
 
         mainDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, mainDeckPane, true);
+            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
             showNmberOfCardsInLabels();
         });
 
@@ -150,8 +151,8 @@ public class DeckMenuController implements Initializable {
         });
 
         sideDeckPane.setOnDragDropped(e -> {
-            System.out.println(e.getGestureSource());
             transferCardToMainOrSideDeck(e, sideDeckPane, false);
+            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
             showNmberOfCardsInLabels();
         });
 
@@ -165,6 +166,7 @@ public class DeckMenuController implements Initializable {
 
         scrollPane.setOnDragDropped(e -> {
             transferCardToScrollBar(e);
+            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
             showNmberOfCardsInLabels();
         });
     }
