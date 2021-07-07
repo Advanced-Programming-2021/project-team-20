@@ -1,5 +1,6 @@
 package project.view;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,14 +13,17 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.view.pooyaviewpackage.DuelView;
+import project.view.pooyaviewpackage.newDuelView;
 import project.view.transitions.RockPaperScissorTransition;
 import project.controller.duel.PreliminaryPackage.GameManager;
 
@@ -207,7 +211,13 @@ public class RockPaperScissorController implements Initializable {
     }
 
     public void startDuel(){
-        new DuelView().start(MainView.getStage());
+        AnchorPane anchorPane = null;
+        try {
+            anchorPane = FXMLLoader.load(getClass().getResource("/project/fxml/wholeDecksPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new newDuelView().showPage(anchorPane);
     }
 
     private void backRectanglesToFirstPlace() {
