@@ -70,6 +70,8 @@ public class ImportAndExportController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/importAndExport.mp3");
         if (rectanglesToShowCards == null) {
             rectanglesToShowCards = UIStorage.getRectanglesToShowCardsInImportAndExportClass();
             addEffectsToRectanglesThatShowCards();

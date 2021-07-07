@@ -22,20 +22,22 @@ public class MainView extends Application {
         URL welcomeUrl = getClass().getResource("/project/fxml/loginPage.fxml");
         root = FXMLLoader.load(welcomeUrl);
         MainView.stage = stage;
+
         stage.setResizable(false);
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.show();
-        
+       
+
     }
 
     public static void main(String[] args) throws Exception {
 
         Storage storage = new Storage();
         storage.startProgram();
-     //   Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
+        // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
         UIStorage.createPreliminaryToStartProgram();
-    //    LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
+        // LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
         storage.endProgram();
     }

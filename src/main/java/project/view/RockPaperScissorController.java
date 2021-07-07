@@ -64,6 +64,8 @@ public class RockPaperScissorController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/RockPaperScissorController.mp3");
         rotateRectangles(stone1Rectangle, 1);
         determineInitialCoordinates(stone1Rectangle);
         rotateRectangles(stone2Rectangle, 2);
@@ -211,13 +213,7 @@ public class RockPaperScissorController implements Initializable {
     }
 
     public void startDuel(){
-        AnchorPane anchorPane = null;
-        try {
-            anchorPane = FXMLLoader.load(getClass().getResource("/project/fxml/wholeDecksPage.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        new newDuelView().showPage(anchorPane);
+        new DuelView().start(MainView.getStage());
     }
 
     private void backRectanglesToFirstPlace() {
@@ -230,7 +226,6 @@ public class RockPaperScissorController implements Initializable {
     private void showAlert(String message, String typeOfMessage, boolean didAnyOneWin) {
         CustomDialog customDialog = new CustomDialog(typeOfMessage, message, this);
         customDialog.openDialog();
-        //customDialog.setO
     }
 
     private void attackChosenRectangles() {

@@ -72,6 +72,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/DeckMenu.mp3");
         equalShownRectangle = shownCardRectangle;
         equalConfirmbtn = confirmbtn;
         equalShowPlayerNameLabel = showPlayerNameLabel;

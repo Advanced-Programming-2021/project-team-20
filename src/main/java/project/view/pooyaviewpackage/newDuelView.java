@@ -5,13 +5,10 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
 
-import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
-import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -22,7 +19,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.controller.duel.GamePackage.PhaseInGame;
-import project.controller.duel.PreliminaryPackage.FakeMain;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.controller.duel.cheat.Cheat;
 import project.model.cardData.General.*;
@@ -137,7 +133,6 @@ public class newDuelView implements Initializable {
     }
 
     public void showPage(AnchorPane anchorPane) {
-        anchorPane = new AnchorPane();
         System.out.println(battleFieldView == null);
         anchorPane.setOnMouseClicked(e -> {
             if (shouldDuelViewClickingAbilitiesWork) {
@@ -236,18 +231,18 @@ public class newDuelView implements Initializable {
             e.consume();
         });
 
-        Scene scene = new Scene(anchorPane, 1200, 1000);
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                checkCheatCommands(keyEvent);
-            }
-        });
+        // Scene scene = new Scene(anchorPane, 1200, 1000);
+        // scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        //     @Override
+        //     public void handle(KeyEvent keyEvent) {
+        //         checkCheatCommands(keyEvent);
+        //     }
+        // });
 
             // stage.setScene(scene);
         // stage.show();
-        stageWidth = scene.getWidth();
-        stageHeight = scene.getHeight();
+        // stageWidth = scene.getWidth();
+        // stageHeight = scene.getHeight();
         prepareObjectsForWorking();
         anchorPane.getChildren().add(battleFieldView);
         anchorPane.getChildren().add(allCards);
