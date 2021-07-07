@@ -133,11 +133,11 @@ public class newDuelView implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-
+        prepareArrayListsForWorking();
     }
 
     public void showPage(AnchorPane anchorPane) {
-        anchorPane = new AnchorPane();
+        newDuelView.anchorPane = anchorPane;
         System.out.println(battleFieldView == null);
         anchorPane.setOnMouseClicked(e -> {
             if (shouldDuelViewClickingAbilitiesWork) {
@@ -246,8 +246,8 @@ public class newDuelView implements Initializable {
 
             // stage.setScene(scene);
         // stage.show();
-        stageWidth = scene.getWidth();
-        stageHeight = scene.getHeight();
+        stageWidth = anchorPane.getScene().getWidth();
+        stageHeight = anchorPane.getScene().getHeight();
         prepareObjectsForWorking();
         anchorPane.getChildren().add(battleFieldView);
         anchorPane.getChildren().add(allCards);
@@ -325,6 +325,7 @@ public class newDuelView implements Initializable {
     // }
 
     private void prepareArrayListsForWorking() {
+        battleFieldView = new BattleFieldView();
         allCards = new Group();
         nextPhaseButton = new NextPhaseButton();
         transition = new Transition();
@@ -367,7 +368,7 @@ public class newDuelView implements Initializable {
     }
 
     private void prepareObjectsForWorking() {
-        battleFieldView = new BattleFieldView();
+
         URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
         backgroundMusic = new MediaPlayer(new Media(resource.toString()));
         mediaView = new MediaView();

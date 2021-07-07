@@ -650,8 +650,11 @@ public class Effect {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
-        MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(finalMainCardLocation);
-        return monsterCard.getAttackPower() >= 1000;
+        if (Card.isCardAMonster(duelBoard.getCardByCardLocation(finalMainCardLocation))){
+            MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(finalMainCardLocation);
+            return monsterCard.getAttackPower() >= 1000;
+        }
+        return false;
     }
 
     public static boolean logicalActivationRequirementTrapMonsterIsSummonedOrSpellTrapMonsterEffectIncludingSpecialSummoningIsActivated(int index) {

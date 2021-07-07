@@ -8,6 +8,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.controller.duel.GamePackage.PhaseInGame;
 import project.view.pooyaviewpackage.DuelView;
+import project.view.pooyaviewpackage.newDuelView;
 
 import java.sql.Time;
 import java.util.ArrayList;

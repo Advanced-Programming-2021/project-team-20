@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DuelView extends Application {
+public class DuelView {
     // launch the application
     private static Stage stage;
     private static double stageWidth;
@@ -160,7 +160,7 @@ public class DuelView extends Application {
     }
 
     public static void setIsClassWaitingForUserToChooseCardFromGraveyard(
-            boolean isClassWaitingForUserToChooseCardFromGraveyard) {
+        boolean isClassWaitingForUserToChooseCardFromGraveyard) {
         DuelView.isClassWaitingForUserToChooseCardFromGraveyard = isClassWaitingForUserToChooseCardFromGraveyard;
     }
 
@@ -196,15 +196,16 @@ public class DuelView extends Application {
         executor = new ScheduledThreadPoolExecutor(1);
         executor.setRemoveOnCancelPolicy(true);
     }
-    @Override
-    public void start(Stage stage) {
+
+    public AnchorPane getAnchorpane(Stage stage) {
         cheatCodes.setLength(0);
-       // FakeMain.call();
+        // FakeMain.call();
         areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
         prepareArrayListsForWorking();
         DuelView.stage = stage;
-        stage.setTitle("Duel Page");
-        anchorPane = new AnchorPane();
+        DuelView.stage.setTitle("Duel Page");
+
+        DuelView.anchorPane = new AnchorPane();
         System.out.println(battleFieldView == null);
         anchorPane.setOnMouseClicked(e -> {
             if (shouldDuelViewClickingAbilitiesWork) {
@@ -230,8 +231,8 @@ public class DuelView extends Application {
                                         System.out.println("cardLocationSelecting is " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
 
                                         if (cardLocationSelecting != null) {
-                                            System.out.println("this is what i am sending to server because you double clicked here:\n"+
-                                                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting)+" end");
+                                            System.out.println("this is what i am sending to server because you double clicked here:\n" +
+                                                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting) + " end");
                                             String output = GameManager.getDuelControllerByIndex(0).getInput("select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
                                             System.out.println("&@&@&@&@& " + output);
 
@@ -291,17 +292,8 @@ public class DuelView extends Application {
             e.consume();
         });
 
-        Scene scene = new Scene(anchorPane, 1200, 1000);
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                checkCheatCommands(keyEvent);
-            }
-        });
-        stage.setScene(scene);
-        //stage.show();
-        stageWidth = scene.getWidth();
-        stageHeight = scene.getHeight();
+        stageWidth = 1200;
+        stageHeight = 1000;
         prepareObjectsForWorking();
         anchorPane.getChildren().add(battleFieldView);
         anchorPane.getChildren().add(allCards);
@@ -348,9 +340,13 @@ public class DuelView extends Application {
         System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
+        return anchorPane;
+       // MainView.changeScene(anchorPane);
     }
 
-
+    public static void callStage(){
+        new DuelStage();
+    }
 //    public static void main(String args[]) {
 //        launch(args);
 //    }
@@ -618,7 +614,6 @@ public class DuelView extends Application {
     }
 
 
-    @Override
     public void stop() {
         executor.shutdown();
     }
@@ -906,10 +901,10 @@ public class DuelView extends Application {
     public static AdvancedCardMovingController getAdvancedCardMovingController() {
         return advancedCardMovingController;
     }
-
-    public static void setStage(Stage stage) {
-        DuelView.stage = stage;
-    }
+//
+//    public static void setStage(Stage stage) {
+//        DuelView.stage = stage;
+//    }
 
     public static void setStageWidth(double stageWidth) {
         DuelView.stageWidth = stageWidth;

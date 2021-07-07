@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import project.view.pooyaviewpackage.DuelStage;
 import project.view.pooyaviewpackage.DuelView;
 import project.view.pooyaviewpackage.newDuelView;
 import project.view.transitions.RockPaperScissorTransition;
@@ -211,13 +212,14 @@ public class RockPaperScissorController implements Initializable {
     }
 
     public void startDuel(){
-        AnchorPane anchorPane = null;
-        try {
-            anchorPane = FXMLLoader.load(getClass().getResource("/project/fxml/wholeDecksPage.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        new newDuelView().showPage(anchorPane);
+//        AnchorPane anchorPane = null;
+//        try {
+//            anchorPane = FXMLLoader.load(getClass().getResource("/project/fxml/duelPage.fxml"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        DuelView.callStage();
+        //DuelView.main(null);
     }
 
     private void backRectanglesToFirstPlace() {
