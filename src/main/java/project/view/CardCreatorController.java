@@ -27,6 +27,8 @@ import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
+import project.model.cardData.TrapCardData.TrapCard;
+import project.model.cardData.TrapCardData.TrapCardValue;
 import project.view.LoginController;
 import project.view.MainView;
 
@@ -1064,13 +1066,123 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().remove(textField);
             anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
+            //TODO -> get TrapValue
 
-//            gotoTrapFunctionEffect();
+            getFlipSummonTrapCardEffect(textField, label, button);
+
         }
     }
 
+    public void getFlipSummonTrapCardEffect(TextField textField, Label label, Button button) {
+        anchorPane.getChildren().remove(textField);
+        anchorPane.getChildren().remove(label);
+        anchorPane.getChildren().remove(button);
+
+        VBox vbox = new VBox();
+        Button button1 = new Button();
+        anchorPane.getChildren().add(vbox);
+        anchorPane.getChildren().add(button1);
+        gotoTrapFunctionEffect(vbox, button1, "FlipSummonTrapCardEffect", "getMonsterAttackingTrapCardEffect");
+    }
+
+    public void getMonsterAttackingTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "MonsterAttackingTrapCardEffect", "getNormalSummonTrapCardEffect");
+    }
+
+
+    public void getNormalSummonTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "NormalSummonTrapCardEffect", "getTributeSummonTrapCardEffect");
+    }
+
+    public void getTributeSummonTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "TributeSummonTrapCardEffect", "getNormalTrapCardEffect");
+    }
+
+    public void getNormalTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "NormalTrapCardEffect", "getRitualSummonTrapCardEffect");
+    }
+
+    public void getRitualSummonTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "RitualSummonTrapCardEffect", "getSpecialSummonTrapCardEffect");
+    }
+
+    public void getSpecialSummonTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "SpecialSummonTrapCardEffect", "getMonsterEffectActivationTrapCardEffect");
+    }
+
+    public void getMonsterEffectActivationTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "MonsterEffectActivationTrapCardEffect", "getSpellCardActivationTrapCardEffect");
+    }
+
+    public void getSpellCardActivationTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "SpellCardActivationTrapCardEffect", "getTrapCardActivationTrapCardEffect");
+    }
+
+    public void getTrapCardActivationTrapCardEffect(VBox vBox, Button button) {
+        gotoTrapFunctionEffect(vBox, button, "TrapCardActivationTrapCardEffect", "getUserReplyForActivation");
+    }
+
+    public void getUserReplyForActivation(VBox vBox, Button button) {
+        anchorPane.getChildren().remove(vBox);
+        anchorPane.getChildren().remove(button);
+
+        VBox newVbox = new VBox();
+        ArrayList<Button> buttons = new ArrayList<>();
+        Button finishButton = new Button("OK");
+        ArrayList<Integer> selected = selectedUserReplySpell;
+        UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
+        for (UserReplyForActivation userReplyForActivation : userReplyForActivations) {
+            String name = userReplyForActivation.toString();
+            buttons.add(new Button(name));
+        }
+
+
+        for (int i = 0; i < buttons.size(); i++) {
+            int finalI = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI, selected, buttons);
+                }
+            });
+        }
+
+
+
+
+        newVbox.setLayoutY(100);
+        newVbox.setLayoutX(400);
+        finishButton.setLayoutY(400);
+        finishButton.setLayoutX(400);
+        finishButton.setOnAction(ActionEvent -> finishTrapCard());
+
+        for (Button button1 : buttons) {
+            vBox.getChildren().add(button1);
+        }
+
+        anchorPane.getChildren().add(newVbox);
+        anchorPane.getChildren().add(finishButton);
+    }
+
+    private void finishTrapCard() {
+        System.out.println("Trying to create");
+        int counter = 0;
+        TrapCardValue trapValue = null;
+        TrapCardValue[] trapCardValues = TrapCardValue.values();
+        for (TrapCardValue trapCardValue : trapCardValues) {
+            if (trapCardValueNumber == counter) trapValue = trapCardValue;
+            counter++;
+        }
+
+        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapValue, CardPosition.NOT_APPLICABLE,
+            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, new HashMap<>(), cardImage);
+        Storage.addCardToNewCardsCrated(trapCard);
+        Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
+        System.out.println("card was created");
+    }
+
+
     private void gotoTrapFunctionEffect(VBox previousVbox, Button previousButton, String enumClassName, String nextMethod) {
-//        System.out.println(selectedFlipEffect);
         anchorPane.getChildren().remove(previousButton);
         anchorPane.getChildren().remove(previousVbox);
 
@@ -1187,7 +1299,8 @@ public class CardCreatorController implements Initializable {
         Method finalMethod = method;
         buttonForFinish.setOnAction(ActionEvent -> {
             try {
-                finalMethod.invoke(null, vBox, buttonForFinish);
+//                finalMethod.invoke(null, vBox, buttonForFinish);
+                finalMethod.invoke(vBox, buttonForFinish);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
