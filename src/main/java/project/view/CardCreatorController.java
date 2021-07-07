@@ -70,8 +70,6 @@ public class CardCreatorController implements Initializable {
     private VBox previousVbox;
     private Button previousButton;
     private String enumClassName = "";
-    private String nextMethod = "";
-    private Method currentMethod;
     private ArrayList<Integer> flipSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterAttackingTrapCardEffectNumbers;
     private ArrayList<Integer> normalSummonTrapCardEffectNumbers;
@@ -209,7 +207,7 @@ public class CardCreatorController implements Initializable {
 
     }
 
-
+ 
     private void trapCard() {
         cardType = "trap";
         removeThreeButtons();
@@ -337,20 +335,23 @@ public class CardCreatorController implements Initializable {
         cardDescription = textFieldForGettingCardDescriptionFromUser.getText();
         removeThingsInGettingCardDescription();
         labelForGettingNumberOfAllowedUsagesFromUser = new Label("Choose one of them for number of allowed usages");
-        labelForGettingNumberOfAllowedUsagesFromUser.setLayoutY(100);
-        labelForGettingNumberOfAllowedUsagesFromUser.setLayoutX(360);
+        labelForGettingNumberOfAllowedUsagesFromUser.setLayoutY(200);
+        labelForGettingNumberOfAllowedUsagesFromUser.setLayoutX(250);
+        labelForGettingNumberOfAllowedUsagesFromUser.setStyle("-fx-background-color: #f5eeee; -fx-font-size: 25");
         anchorPane.getChildren().add(labelForGettingNumberOfAllowedUsagesFromUser);
 
         buttonOneForNumberOfAllowedUsages = new Button("One");
         buttonOneForNumberOfAllowedUsages.setOnAction(actionEvent -> getCardInformationBasedOnTheCardType(1));
-        buttonOneForNumberOfAllowedUsages.setLayoutY(130);
-        buttonOneForNumberOfAllowedUsages.setLayoutX(450);
+        buttonOneForNumberOfAllowedUsages.setLayoutY(240);
+        buttonOneForNumberOfAllowedUsages.setLayoutX(400);
+        buttonOneForNumberOfAllowedUsages.setStyle("-fx-font-size: 30");
         anchorPane.getChildren().add(buttonOneForNumberOfAllowedUsages);
 
         buttonThreeForNumberOfAllowedUsages = new Button("Three");
         buttonThreeForNumberOfAllowedUsages.setOnAction(actionEvent -> getCardInformationBasedOnTheCardType(3));
-        buttonThreeForNumberOfAllowedUsages.setLayoutY(130);
-        buttonThreeForNumberOfAllowedUsages.setLayoutX(500);
+        buttonThreeForNumberOfAllowedUsages.setLayoutY(240);
+        buttonThreeForNumberOfAllowedUsages.setLayoutX(550);
+        buttonThreeForNumberOfAllowedUsages.setStyle("-fx-font-size: 30");
         anchorPane.getChildren().add(buttonThreeForNumberOfAllowedUsages);
     }
 
@@ -1131,85 +1132,84 @@ public class CardCreatorController implements Initializable {
     public void getFlipSummonTrapCardEffect(int finalI1) {
         trapCardValueNumber = finalI1;
         System.out.println(trapCardValueNumber);
-        anchorPane.getChildren().remove(previousVbox);
 
         enumClassName = "FlipSummonTrapCardEffect";
-        nextMethod = "getMonsterAttackingTrapCardEffect";
-        gotoTrapFunctionEffect();
+        trapController();
+//        nextMethod = "getMonsterAttackingTrapCardEffect";
+//        gotoTrapFunctionEffect();
     }
 
-    public void getMonsterAttackingTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "MonsterAttackingTrapCardEffect";
-        nextMethod = "getNormalSummonTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-
-    public void getNormalSummonTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "NormalSummonTrapCardEffect";
-        nextMethod = "getTributeSummonTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getTributeSummonTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "TributeSummonTrapCardEffect";
-        nextMethod = "getNormalTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getNormalTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "NormalTrapCardEffect";
-        nextMethod = "getRitualSummonTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getRitualSummonTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "RitualSummonTrapCardEffect";
-        nextMethod = "getSpecialSummonTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getSpecialSummonTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "SpecialSummonTrapCardEffect";
-        nextMethod = "getMonsterEffectActivationTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getMonsterEffectActivationTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "MonsterEffectActivationTrapCardEffect";
-        nextMethod = "getSpellCardActivationTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getSpellCardActivationTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "SpellCardActivationTrapCardEffect";
-        nextMethod = "getTrapCardActivationTrapCardEffect";
-        gotoTrapFunctionEffect();
-    }
-
-    public void getTrapCardActivationTrapCardEffect() {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
-        enumClassName = "TrapCardActivationTrapCardEffect";
-        nextMethod = "getUserReplyForActivation";
-        gotoTrapFunctionEffect();
-    }
+//    public void getMonsterAttackingTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "MonsterAttackingTrapCardEffect";
+////        nextMethod = "getNormalSummonTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//
+//    public void getNormalSummonTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "NormalSummonTrapCardEffect";
+////        nextMethod = "getTributeSummonTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getTributeSummonTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "TributeSummonTrapCardEffect";
+////        nextMethod = "getNormalTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getNormalTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "NormalTrapCardEffect";
+////        nextMethod = "getRitualSummonTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getRitualSummonTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "RitualSummonTrapCardEffect";
+////        nextMethod = "getSpecialSummonTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getSpecialSummonTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "SpecialSummonTrapCardEffect";
+////        nextMethod = "getMonsterEffectActivationTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getMonsterEffectActivationTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "MonsterEffectActivationTrapCardEffect";
+////        nextMethod = "getSpellCardActivationTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getSpellCardActivationTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "SpellCardActivationTrapCardEffect";
+////        nextMethod = "getTrapCardActivationTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
+//
+//    public void getTrapCardActivationTrapCardEffect() {
+//        anchorPane.getChildren().remove(previousButton);
+//        anchorPane.getChildren().remove(previousVbox);
+//        enumClassName = "TrapCardActivationTrapCardEffect";
+//        gotoTrapFunctionEffect();
+//    }
 
     public void getUserReplyForActivation() {
         anchorPane.getChildren().remove(previousButton);
@@ -1281,6 +1281,7 @@ public class CardCreatorController implements Initializable {
 
 
     private void gotoTrapFunctionEffect() {
+
 
         System.out.println("we are in:" + enumClassName);
 
@@ -1388,24 +1389,10 @@ public class CardCreatorController implements Initializable {
         previousVbox.setLayoutX(400);
         previousButton.setLayoutY(400);
         previousButton.setLayoutX(400);
-        Method method = null;
-        try {
-            method = Class.forName("project.view.CardCreatorController").getDeclaredMethod(nextMethod);
-            System.out.println("method:" + method.getName());
-        } catch (NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        currentMethod = method;
-        System.out.println(currentMethod.getName());
         previousButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                try {
-                    System.out.println("a----" + currentMethod.getName());
-                    currentMethod.invoke(null);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                trapController();
             }
         });
 //        buttonForFinish.setOnAction(ActionEvent -> {
@@ -1425,6 +1412,55 @@ public class CardCreatorController implements Initializable {
 
         anchorPane.getChildren().add(previousVbox);
         anchorPane.getChildren().add(previousButton);
+    }
+
+    private void trapController() {
+        if (anchorPane.getChildren().contains(previousButton)) {
+            anchorPane.getChildren().remove(previousButton);
+        }
+        if (anchorPane.getChildren().contains(previousVbox)) {
+            anchorPane.getChildren().remove(previousVbox);
+        }
+
+        switch (enumClassName) {
+            case "FlipSummonTrapCardEffect":
+                enumClassName = "MonsterAttackingTrapCardEffect";
+                break;
+            case "MonsterAttackingTrapCardEffect":
+                enumClassName = "NormalSummonTrapCardEffect";
+                break;
+            case "NormalSummonTrapCardEffect":
+                enumClassName = "TributeSummonTrapCardEffect";
+                break;
+            case "TributeSummonTrapCardEffect":
+                enumClassName = "NormalTrapCardEffect";
+                break;
+            case "NormalTrapCardEffect":
+                enumClassName = "RitualSummonTrapCardEffect";
+                break;
+            case "RitualSummonTrapCardEffect":
+                enumClassName = "SpecialSummonTrapCardEffect";
+                break;
+            case "SpecialSummonTrapCardEffect":
+                enumClassName = "MonsterEffectActivationTrapCardEffect";
+                break;
+            case "MonsterEffectActivationTrapCardEffect":
+                enumClassName = "SpellCardActivationTrapCardEffect";
+                break;
+            case "SpellCardActivationTrapCardEffect":
+                enumClassName = "TrapCardActivationTrapCardEffect";
+                break;
+            case "TrapCardActivationTrapCardEffect":
+                enumClassName = "UserReplyForActivation";
+                break;
+            case "UserReplyForActivation":
+                enumClassName = "a";
+                break;
+        }
+        if (!enumClassName.equals("a")) gotoTrapFunctionEffect();
+        else {
+            finishTrapCard();
+        }
     }
 
 

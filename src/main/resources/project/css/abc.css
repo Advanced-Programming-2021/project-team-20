@@ -64,6 +64,16 @@
    -fx-background-size: 100%  100%;
 }
 
+.chart-plot-background12{
+   -fx-background-image: url("shop.jpg");
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background13{
+   -fx-background-image: url("shopCards.PNG");
+   -fx-background-size: 100%  100%;
+}
+
 .table-view {
    -fx-base: #1d1d1d;
    -fx-control-inner-background: #1d1d1d;

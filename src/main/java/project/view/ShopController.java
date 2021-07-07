@@ -1,31 +1,35 @@
 package project.view;
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import project.controller.duel.Utility.Utility;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import project.controller.non_duel.shop.Shop;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 
-import java.io.*;
 import java.net.URL;
 import java.util.*;
 
 public class ShopController implements Initializable {
     @FXML
-    private Button importbtn;
-    @FXML
-    private Button exportbtn;
+    private Button buybtn;
     @FXML
     private Button backbtn;
     @FXML
@@ -33,46 +37,52 @@ public class ShopController implements Initializable {
     @FXML
     private Button nextCardsbtn;
     @FXML
-    private Rectangle importRectangle;
+    private Rectangle showCardRectangle;
     @FXML
-    private Rectangle exportRectangle;
+    private Label selectedCardNameLabel;
     @FXML
-    private Label exportLabel;
-    private static List<List<Rectangle>> allCardsInDifferentPages;
+    private AnchorPane showCardsAnchorPane;
+    @FXML
+    private Label numbserOfShoppingCardsLabel;
+    @FXML
+    private Label numberOfUselessCardsLabel;
+    private static List<List<Card>> allCardsInDifferentPages;
+    private List<Label> allCardDiscriptionLabels;
     private int whichPageIsShowing = 0;
-    private static int upToWhichCardAreShown = 0;
-    private static String chosenCardName;
-    private String[] names;
+    private static String cardNameForBuy = "";
+    private static List<Rectangle> rectanglesToShowCards;
     private static AnchorPane anchorPane;
-    private Rectangle chosenRectangleForExport;
+    private static Rectangle equalShowCardRectangle;
+    private Shop shop = new Shop();
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        HashMap<String, Card> allCards = new HashMap<>();
-        allCards.putAll(Storage.getAllMonsterCards());
-        allCards.putAll(Storage.getAllSpellAndTrapCards());
-        System.out.println(allCards.size());
-        names = allCards.keySet().toArray(new String[0]);
-
-        int sizeOfWholeCards = allCards.size();
+        if (rectanglesToShowCards == null) {
+            rectanglesToShowCards = UIStorage.getAllShopRectangles();
+            addEffectsToRectanglesThatShowCards();
+        }
+        allCardDiscriptionLabels = UIStorage.getAllCardDiscriptionLabels1();
+        equalShowCardRectangle = showCardRectangle;
         if (allCardsInDifferentPages == null) {
-            allCardsInDifferentPages = new ArrayList<>();
-            for (int i = 0; i < Math.floorDiv(sizeOfWholeCards, 64) + 1; i++) {
-                allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards, (i + 1))));
-            }
+            createPacksOfCardsForEachPage();
+        }
+        int sizeOfCardsInDifferentPages = 0;
+        for (int i = 0; i < allCardsInDifferentPages.size(); i++) {
+            sizeOfCardsInDifferentPages += allCardsInDifferentPages.get(i).size();
         }
 
-        // if (sizeOfWholeCards > allCardsInDifferentPages.size() * 64) {
-        // allCardsInDifferentPages = new ArrayList<>();
-        // for (int i = 0; i < Math.floorDiv(sizeOfWholeCards, 64) + 1; i++) {
-        // allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards,
-        // (i + 1))));
-        // }
-        // }
-        // setEffectOfpreviousAndnextCardsbtn();
+        if (sizeOfCardsInDifferentPages != UIStorage.getAllTypeOfCards().get("allCards").size()) {
+            createPacksOfCardsForEachPage();
+        }
+        selectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        numberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        numberOfUselessCardsLabel.setTextFill(Color.BLUE);
+        numbserOfShoppingCardsLabel.setTextFill(Color.BLUE);
+        numbserOfShoppingCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        setEffectsOfButtons();
     }
 
-    private void setEffectOfpreviousAndnextCardsbtn() {
+    private void setEffectsOfButtons() {
         if (whichPageIsShowing + 1 == allCardsInDifferentPages.size()) {
             nextCardsbtn.setDisable(true);
         } else {
@@ -84,97 +94,176 @@ public class ShopController implements Initializable {
         } else {
             previousCardsbtn.setDisable(false);
         }
+
+        if (cardNameForBuy.equals("")) {
+            buybtn.setDisable(true);
+        } else {
+            buybtn.setDisable(false);
+        }
     }
 
-    private List<Card> generateOnePackOfCards(HashMap<String, Card> allCards, int pageNumber) {
-        List<Card> onePackOfCard = new ArrayList<>();
-        int counterCard = 0;
-        for (Map.Entry<String, Card> e : allCards.entrySet()) {
-            if (counterCard > (pageNumber - 1) * 64) {
-                onePackOfCard.add(e.getValue());
-            }
-            counterCard++;
-            if (counterCard >= 64 * pageNumber) {
-                break;
-            }
+    private void addEffectsToRectanglesThatShowCards() {
+
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            Rectangle rectangle = rectanglesToShowCards.get(i);
+            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent t) {
+                    cardNameForBuy = rectangle.getId();
+                    setEffectsOfButtons();
+                    setEffectsOfBuyButtonAndShowLabel();
+                }
+            });
+
+            rectangle.setOnMouseEntered(new EventHandler<Event>() {
+                @Override
+                public void handle(Event arg0) {
+                    equalShowCardRectangle.setFill(rectangle.getFill());
+                    equalShowCardRectangle.setOpacity(1);
+                    addCardDescription(rectangle.getId());
+                    showNumberOfBoughtCards(rectangle.getId());
+                    flipRectangle(equalShowCardRectangle);
+                }
+            });
         }
-        return onePackOfCard;
     }
 
-    private List<Rectangle> generateRectangleCardsInOnPage(List<Card> onePackOfCard) {
-        List<Rectangle> allCardsInOnePage = new ArrayList<>();
-        for (int j = 0; j < 6; j++) {
-            for (int k = 0; k < 6; k++) {
-                Rectangle rectangle = new Rectangle(55, 65);
-                rectangle.setX(290 + 65 * j);
-                rectangle.setY(110 + 65 * k);
-                HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-                HashMap<String, Card> allSpellTrapCards = Storage.getAllSpellAndTrapCards();
+    private void showNumberOfBoughtCards(String cardName) {
+        HashMap<String, Integer> numberOfCards = shop.getNumberOfCards(cardName);
+        numberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
+        numbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
+    }
 
-                rectangle.setArcHeight(20);
-                rectangle.setArcWidth(20);
+    private void setEffectsOfBuyButtonAndShowLabel() {
 
-                rectangle.setId(names[upToWhichCardAreShown]);
-                if (upToWhichCardAreShown < 73)
-                    upToWhichCardAreShown++;
-                // rectangle.setId("arg0");
-                // rectangle.setText
-                DropShadow e = new DropShadow();
-                e.setWidth(6);
-                e.setHeight(6);
-                e.setOffsetX(4);
-                e.setOffsetY(4);
-                rectangle.setEffect(e);
-                rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent t) {
-                        exportRectangle.setFill(rectangle.getFill());
-                        exportRectangle.setOpacity(1);
-                        chosenRectangleForExport = rectangle;
-                        System.out.println(rectangle.getId());
-                        chosenCardName = rectangle.getId();
-                        // System.out.println("Chosen is : " + chosenCardName);
-                        // System.out.println(rectangle.toString());
-                        // System.out.println("qqq");
-                    }
-                });
-                allCardsInOnePage.add(rectangle);
+        if (Storage.getCardByName(cardNameForBuy).getCardPrice() > LoginController.getOnlineUser().getMoney()) {
+            selectedCardNameLabel.setTextFill(Color.RED);
+            selectedCardNameLabel.setText("Selected Card To Buy: " + cardNameForBuy + " (Not Enough Money)");
+            buybtn.setDisable(true);
+        } else {
+            buybtn.setDisable(false);
+            selectedCardNameLabel.setTextFill(Color.BLUE);
+            selectedCardNameLabel.setText("Selected Card To Buy: " + cardNameForBuy);
+        }
+    }
+
+    private void flipRectangle(Rectangle rectangle) {
+        RotateTransition rotator = new RotateTransition(Duration.millis(1000), rectangle);
+        rotator.setAxis(Rotate.Y_AXIS);
+        rotator.setFromAngle(180);
+        rotator.setToAngle(0);
+        rotator.setInterpolator(Interpolator.LINEAR);
+        rotator.setCycleCount(1);
+        rotator.play();
+    }
+
+    private void addCardDescription(String cardName) {
+        Card card = Storage.getCardByName(cardName);
+        String cardDiscription = card.getCardDescription();
+        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
+        Pane pane;
+        if (scrollPane.getContent() == null) {
+            pane = new Pane();
+        } else {
+            pane = (Pane) scrollPane.getContent();
+        }
+        pane.getChildren().clear();
+        Label label = allCardDiscriptionLabels.get(0);
+        label.setText("  " + cardName);
+        label.setTextFill(Color.BLUE);
+        pane.getChildren().add(label);
+        List<String> shortCardDescription = new ArrayList<>();
+        shortCardDescription = Arrays.asList(cardDiscription.split(" "));
+        StringBuilder sentencesForEachLabel = new StringBuilder();
+        int numberOfLabelUsed = 1;
+        for (int i = 0; i < shortCardDescription.size(); i++) {
+            label = allCardDiscriptionLabels.get(numberOfLabelUsed);
+            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
+            if (sentencesForEachLabel.length() >= 15) {
+                addEffectToLabel(label, sentencesForEachLabel.toString());
+                sentencesForEachLabel.setLength(0);
+                label.setLayoutY(20 * (numberOfLabelUsed));
+                pane.getChildren().add(label);
+                numberOfLabelUsed++;
+            } else if (i + 1 == shortCardDescription.size()) {
+                addEffectToLabel(label, sentencesForEachLabel.toString());
+                label.setLayoutY(20 * (numberOfLabelUsed));
+                pane.getChildren().add(label);
             }
         }
-        return allCardsInOnePage;
+
+        scrollPane.setContent(pane);
+    }
+
+    private void addEffectToLabel(Label label, String text) {
+        label.setText("  " + text);
+        label.setTextFill(Color.BLACK);
+    }
+
+    private void createPacksOfCardsForEachPage() {
+        allCardsInDifferentPages = new ArrayList<>();
+        List<Card> allCards = UIStorage.getAllTypeOfCards().get("allCards");
+        List<Card> cardsInOnePage = new ArrayList<>();
+
+        for (int i = 0; i < Math.floorDiv(allCards.size(), 24) + 1; i++) {
+            for (int j = 0; j < rectanglesToShowCards.size(); j++) {
+                if (i * 24 + j >= allCards.size()) {
+                    break;
+                }
+                cardsInOnePage.add(allCards.get(i * 24 + j));
+            }
+            allCardsInDifferentPages.add(cardsInOnePage);
+            cardsInOnePage = new ArrayList<>();
+        }
     }
 
     public void createSceneAndCardPictures(AnchorPane pane) {
         setAnchorPane(pane);
-        MainView.changeScene(pane);
-        for (int i = 0; i < allCardsInDifferentPages.get(whichPageIsShowing).size(); i++) {
-            pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsShowing).get(i));
-            MainView.changeScene(pane);
+        List<Card> allCards = UIStorage.getAllTypeOfCards().get("allCards");
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            Rectangle rectangle = rectanglesToShowCards.get(i);
+            rectangle.setFill(new ImagePattern(allCards.get(i).getImage()));
+            rectangle.setId(allCards.get(i).getCardName());
+            backgroundPane.getChildren().add(rectangle);
         }
+        MainView.changeScene(anchorPane);
     }
 
     public void nextPage() {
-        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
         whichPageIsShowing++;
-        setEffectOfpreviousAndnextCardsbtn();
-        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        setEffectsOfButtons();
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            if (i >= allCardsInDifferentPages.get(whichPageIsShowing).size()) {
+                backgroundPane.getChildren().remove(rectanglesToShowCards.get(i));
+                continue;
+            }
+            rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
+            rectanglesToShowCards.get(i)
+                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+        }
     }
 
     public void previousPage() {
-        anchorPane.getChildren().removeAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        AnchorPane backgroundPane = (AnchorPane) anchorPane.getChildren().get(1);
         whichPageIsShowing--;
-        setEffectOfpreviousAndnextCardsbtn();
-        anchorPane.getChildren().addAll(allCardsInDifferentPages.get(whichPageIsShowing));
+        setEffectsOfButtons();
+        for (int i = 0; i < rectanglesToShowCards.size(); i++) {
+            if (i >= backgroundPane.getChildren().size()) {
+                backgroundPane.getChildren().add(rectanglesToShowCards.get(i));
+            }
+            rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
+            rectanglesToShowCards.get(i)
+                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+        }
     }
 
     public void buyCard() {
-        System.out.println("Trying to buy");
-        if (chosenCardName == null) {
+        if (cardNameForBuy == null) {
             System.out.println("Please choose a card first!");
         } else {
-            exportLabel.setStyle("-fx-text-fill:red;-fx-padding:4 0 8 0;-fx-font-weight:bold");
-            String answerOfShop = new Shop().findCommand("shop buy " + chosenCardName);
-            exportLabel.setText(answerOfShop);
+            String answerOfShop = shop.findCommand("shop buy " + cardNameForBuy);
         }
     }
 

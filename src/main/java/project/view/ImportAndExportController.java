@@ -56,6 +56,7 @@ public class ImportAndExportController implements Initializable {
     private Rectangle importRectangle;
     @FXML
     private Rectangle exportRectangle;
+   
 
     private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Card>> allCardsInDifferentPages;
@@ -69,7 +70,6 @@ public class ImportAndExportController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-
         if (rectanglesToShowCards == null) {
             rectanglesToShowCards = UIStorage.getRectanglesToShowCardsInImportAndExportClass();
             addEffectsToRectanglesThatShowCards();
@@ -269,7 +269,7 @@ public class ImportAndExportController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         String result = importAndExport.importCard(file);
         if (result.equals("this card does not exist")) {
-            showAlert("THIS FILE NOT A CARD","ERROR");
+            showAlert("THIS FILE NOT A CARD", "ERROR");
             return;
         }
 

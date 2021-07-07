@@ -27,6 +27,7 @@ public class UIStorage {
     private static List<Rectangle> allScrollBarBackGroundRectangles;
     private static List<Rectangle> fourRectangleToShowDecks;
     private static List<Rectangle> rectanglesToShowCardsInImportAndExportClass;
+    private static List<Rectangle> allShopRectangles;
     private static HashMap<String, Image> decksImage;
     private static List<Label> allScrollBarLabels = new ArrayList<>();
     private static List<Label> numberOfCardslabels = new ArrayList<>();
@@ -46,6 +47,7 @@ public class UIStorage {
         createAllTypeOfCards();
         initializeLabelsToShowInfornationOfDeck();
         createRectanglesToShowCardsInImportAndExportClass();
+        createRectanglesForShop();
         createDeckImages();
         createImagesForRockPaperScissorController();
     }
@@ -130,6 +132,18 @@ public class UIStorage {
             e.printStackTrace();
         }
         return new Image(stream);
+    }
+
+    private static void createRectanglesForShop() {
+        allShopRectangles = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 6; j++) {
+                Rectangle rectangle = new Rectangle(45, 65);
+                rectangle.setX(3 + 50 * j);
+                rectangle.setY(4 + 71 * i);
+                allShopRectangles.add(rectangle);
+            }
+        }
     }
 
     public static void createOneRectangleForEachCard() {
@@ -224,14 +238,15 @@ public class UIStorage {
         }
     }
 
-    // private static void createLabelForDeckname(Label label, int row, int column) {
-    //     label.setPrefSize(30, 30);
-    //     label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
-    //     label.setTextFill(Color.BLUE);
-    //     label.setAlignment(Pos.CENTER);
-    //     label.setLayoutY(35  + 204 * column);
-    //     label.setLayoutX(140 + 305 * row);
-    //     label.setAlignment(Pos.CENTER);
+    // private static void createLabelForDeckname(Label label, int row, int column)
+    // {
+    // label.setPrefSize(30, 30);
+    // label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+    // label.setTextFill(Color.BLUE);
+    // label.setAlignment(Pos.CENTER);
+    // label.setLayoutY(35 + 204 * column);
+    // label.setLayoutX(140 + 305 * row);
+    // label.setAlignment(Pos.CENTER);
     // }
 
     private static void createLabelForSizeOfOtherParts(Label label, int row, int column, int translateX,
@@ -286,6 +301,10 @@ public class UIStorage {
             label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14));
             allCardDiscriptionLabels2.add(new Label());
         }
+    }
+
+    public static List<Rectangle> getAllShopRectangles() {
+        return allShopRectangles;
     }
 
     public static HashMap<String, Image> getImagesForRockPaperScissorController() {
