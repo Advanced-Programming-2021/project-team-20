@@ -3,6 +3,8 @@ package project.controller.non_duel.shop;
 import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
+import project.model.Deck;
+import project.model.User;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 import project.model.cardData.MonsterCardData.MonsterCard;
@@ -109,5 +111,19 @@ public class Shop {
 
     private boolean isItInvalidCardName(String cardName) {
         return (Storage.doesCardExist(cardName));
+    }
+
+    public HashMap<String, Integer> getNumberOfCards(String cardName) {
+        HashMap<String, Integer> numberOfCards = new HashMap<>();
+        User user = LoginController.getOnlineUser();
+        HashMap<String, Deck> allDecks = user.getDecks();
+        int numberOfCardsInDeck = 0;
+        for (Map.Entry<String, Deck> entrySet : allDecks.entrySet()) {
+            numberOfCardsInDeck += entrySet.getValue().numberOfCardsInDeck(cardName);
+        }
+        int numberOfUselessCards = Collections.frequency(user.getAllUselessCards(), cardName);
+        numberOfCards.put("numberOfBoughtCards", numberOfCardsInDeck + numberOfUselessCards);
+        numberOfCards.put("uselessCards", numberOfUselessCards);
+        return numberOfCards;
     }
 }

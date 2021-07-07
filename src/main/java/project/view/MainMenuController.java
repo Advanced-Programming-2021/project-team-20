@@ -15,7 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import project.controller.duel.PreliminaryPackage.DuelStarter;
 
 public class MainMenuController implements Initializable {
 
@@ -40,21 +39,21 @@ public class MainMenuController implements Initializable {
     }
 
     private void playMusic() {
-    //     String path = "src\\main\\resources\\project\\musics\\MAINMENU.mp3";
-    //     try{
-    //         FileInputStream fis = new FileInputStream(path);
-    //        Player playMP3 = new Player(fis);
-    //        playMP3.play();
-    //    }  catch(Exception e){
-    //         System.out.println(e);
-    //       }
+        // String path = "src\\main\\resources\\project\\musics\\MAINMENU.mp3";
+        // try{
+        // FileInputStream fis = new FileInputStream(path);
+        // Player playMP3 = new Player(fis);
+        // playMP3.play();
+        // } catch(Exception e){
+        // System.out.println(e);
+        // }
     }
 
     public void duelMenu() {
         try {
-        new MainView().changeView("/project/fxml/startDuelPage.fxml");
+            new MainView().changeView("/project/fxml/startDuelPage.fxml");
         } catch (IOException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
