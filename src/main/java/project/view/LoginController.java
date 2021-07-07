@@ -38,12 +38,13 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-      
+            SongPlayer.getInstance().pauseMusic();
+            SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
     }
 
     public void loginUser(ActionEvent ev) {
         if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
-            showAlert("FILL FIELDS","ERROR");
+            showAlert("FILL FIELDS", "ERROR");
             passwordField.setText("");
             usernameField.setText("");
         } else if (Storage.getUserByName(usernameField.getText()) == null) {
@@ -51,7 +52,7 @@ public class LoginController implements Initializable {
             passwordField.setText("");
             usernameField.setText("");
         } else if (!Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH","ERROR");
+            showAlert("USERNAME AND PASSWORD DID NOT MATCH", "ERROR");
             passwordField.setText("");
             usernameField.setText("");
         } else {
@@ -74,7 +75,7 @@ public class LoginController implements Initializable {
                 || passwordFieldfORegister.getText().equals("")) {
             showAlert("FILL FIELDS", "ERROR");
         } else if (doesUserWithThisUsernameAlreadyExists()) {
-            showAlert("USERNAME IS REPEATED","ERROR");
+            showAlert("USERNAME IS REPEATED", "ERROR");
         } else if (doesUserWithThisNicknameAlreadyExists()) {
             showAlert("NICKNAME IS REPEATED", "ERROR");
         } else {

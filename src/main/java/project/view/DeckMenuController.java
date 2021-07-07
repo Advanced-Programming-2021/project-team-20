@@ -65,6 +65,8 @@ public class DeckMenuController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/DeckMenu.mp3");
         equalActivatedStatusLabel = activatedStatusLabel;
         equalActivateDeckbtn = activateDeckbtn;
         equalDeckNameLabel = deckNameLabel;
@@ -97,6 +99,7 @@ public class DeckMenuController implements Initializable {
         shownCardRectangle = (Rectangle) pane.getChildren().get(0);
         shownCardRectangle.setFill(new ImagePattern(Storage.getUnknownCard().getImage()));
         equalDeckNameLabel.setText(chosenDeck);
+       
         MainView.changeScene(pane);
     }
 

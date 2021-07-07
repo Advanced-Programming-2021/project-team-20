@@ -22,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import project.view.pooyaviewpackage.DuelStage;
 import project.view.pooyaviewpackage.DuelView;
 import project.view.pooyaviewpackage.newDuelView;
 import project.view.transitions.RockPaperScissorTransition;
@@ -65,6 +64,8 @@ public class RockPaperScissorController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/RockPaperScissorController.mp3");
         rotateRectangles(stone1Rectangle, 1);
         determineInitialCoordinates(stone1Rectangle);
         rotateRectangles(stone2Rectangle, 2);

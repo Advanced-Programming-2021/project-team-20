@@ -1,24 +1,19 @@
 package project.view;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javax.print.attribute.standard.Media;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+
 import javafx.util.Duration;
 
 public class MainMenuController implements Initializable {
@@ -42,20 +37,8 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        prepareBackgroundMusic();
-    }
-
-    public void prepareBackgroundMusic() {
-        // URL resource = getClass().getResource("/project/music/my-music.mp3");
-        // backgroundMusic = new MediaPlayer(new Media(resource.toString()));
-        // mediaView.setMediaPlayer(backgroundMusic);
-        // backgroundMusic.setAutoPlay(true);
-        // backgroundMusic.setOnEndOfMedia(new Runnable() {
-        //     public void run() {
-        //         backgroundMusic.seek(Duration.ZERO);
-        //     }
-        // });
-        // backgroundMusic.play();
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/MainMenu.mp3");
     }
 
     public void duelMenu() {

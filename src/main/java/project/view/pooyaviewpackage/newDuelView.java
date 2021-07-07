@@ -133,7 +133,7 @@ public class newDuelView implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        prepareArrayListsForWorking();
+
     }
 
     public void showPage(AnchorPane anchorPane) {
@@ -325,7 +325,6 @@ public class newDuelView implements Initializable {
     // }
 
     private void prepareArrayListsForWorking() {
-        battleFieldView = new BattleFieldView();
         allCards = new Group();
         nextPhaseButton = new NextPhaseButton();
         transition = new Transition();
@@ -368,7 +367,7 @@ public class newDuelView implements Initializable {
     }
 
     private void prepareObjectsForWorking() {
-
+        battleFieldView = new BattleFieldView();
         URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
         backgroundMusic = new MediaPlayer(new Media(resource.toString()));
         mediaView = new MediaView();
