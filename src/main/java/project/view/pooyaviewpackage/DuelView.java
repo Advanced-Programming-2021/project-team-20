@@ -123,6 +123,8 @@ public class DuelView extends Application {
     private static HealthBarAndHealthPoints opponentHealthStatus;
 
 
+    private static boolean areWePlayingWithAI;
+
     public static HealthBarAndHealthPoints getAllyHealthStatus() {
         return allyHealthStatus;
     }
