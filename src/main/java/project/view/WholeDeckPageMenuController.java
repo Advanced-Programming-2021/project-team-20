@@ -271,26 +271,15 @@ public class WholeDeckPageMenuController implements Initializable {
                     labelsToShowInformationOfDeck.get("spellsSize" + i + "" + j).setText("");
                     labelsToShowInformationOfDeck.get("trapsSize" + i + "" + j).setText("");
                 } else {
-                    fourRectangleToShowDecks.get(i * 2 + j).setOpacity(1);
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
-                    // System.out.println(fourRectangleToShowDecks.get(2 * i + j).getId() + " " + 2
-                    // * i + j);
                     HashMap<String, Integer> sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(
                             decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(),
                             LoginController.getOnlineUser().getName());
-                    if (fourRectangleToShowDecks.get(2 * i + j).getId().equals("JustMonster")) {
-                        System.out.println("mainDeck" + i + "" + j);
-                    }
                     labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
                             .setText(sizeOfEachPart.get("mainDeckSize") + "");
-                    if (sizeOfEachPart.get("mainDeckSize") < 40) {
-                        fourRectangleToShowDecks.get(i * 2 + j)
-                                .setFill(new ImagePattern(UIStorage.getDecksImage().get("invalidDeck")));
-                    } else {
-                        fourRectangleToShowDecks.get(i * 2 + j)
-                                .setFill(new ImagePattern(UIStorage.getDecksImage().get("validDeck")));
-                    }
+                    setImageOfDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getIsDeckActive(),
+                            sizeOfEachPart.get("mainDeckSize"), fourRectangleToShowDecks.get(2 * i + j));
                     labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j)
                             .setText(sizeOfEachPart.get("sideDeckSize") + "");
                     labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j)
@@ -303,6 +292,26 @@ public class WholeDeckPageMenuController implements Initializable {
             }
         }
         setEffectOfpreviousAndnextDecksbtn();
+    }
+
+    private void setImageOfDeck(boolean isDeckActive, int sizeOfMainDeck, Rectangle rectangle) {
+        if (isDeckActive) {
+            if (sizeOfMainDeck < 40) {
+                rectangle.setFill(new ImagePattern(UIStorage.getDecksImage().get("invalidActivateDeck")));
+                rectangle.setOpacity(0.95);
+            } else {
+                rectangle.setFill(new ImagePattern(UIStorage.getDecksImage().get("validActivateDeck")));
+                rectangle.setOpacity(1);
+            }
+        } else {
+            if (sizeOfMainDeck < 40) {
+                rectangle.setOpacity(0.8);
+                rectangle.setFill(new ImagePattern(UIStorage.getDecksImage().get("invalidDeck")));
+            } else {
+                rectangle.setOpacity(0.9);
+                rectangle.setFill(new ImagePattern(UIStorage.getDecksImage().get("validDeck")));
+            }
+        }
     }
 
     public void backToPreviousPage() {

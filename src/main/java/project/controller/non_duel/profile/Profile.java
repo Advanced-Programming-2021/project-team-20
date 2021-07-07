@@ -1,8 +1,6 @@
 package project.controller.non_duel.profile;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -65,6 +63,6 @@ public class Profile {
             e.printStackTrace();
         }
         LoginController.getOnlineUser().setImage(new Image(stream));
-        Storage.getNewImagesThatChanges().put(LoginController.getOnlineUser() , imagePath);
+        Storage.saveNewImageOfUsers(LoginController.getOnlineUser() ,imagePath);
     }
 }

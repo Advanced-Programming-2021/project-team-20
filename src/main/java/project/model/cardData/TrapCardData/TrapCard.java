@@ -15,9 +15,9 @@ public class TrapCard extends Card {
     private int numberOfTurnsForActivation;
     private int turnCardWasSet;
     private TrapCardValue trapCardValue;
-    private ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects;
+    private ArrayList<ContinuousTrapCardEffect> continuousTrapCardEffects;//
     private ArrayList<FlipSummonTrapCardEffect> flipSummonTrapCardEffects;
-    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;
+    private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;//
     private ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects;
     private ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects;
     private ArrayList<TributeSummonTrapCardEffect> tributeSummonTrapCardEffects;
