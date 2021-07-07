@@ -733,6 +733,14 @@ public class DuelView extends Application {
         }
     }
 
+    private void endOneRoundOfDuel() {
+       
+    }
+
+    private void endGame() {
+
+    }
+
     public static AnchorPane getAnchorPane() {
         return anchorPane;
     }
