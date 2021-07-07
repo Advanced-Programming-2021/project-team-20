@@ -3,16 +3,19 @@ package project.view.pooyaviewpackage;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -69,8 +72,9 @@ public class DuelView extends Application {
     private static MediaView mediaView;
     private static boolean isGameMute;
     private static boolean isGamePaused;
-    private static Button pause;
-    private static Button mute;
+    private static Rectangle pause;
+    private static Rectangle mute;
+    private static Rectangle surrender;
 
     public static boolean isIsGameMute() {
         return isGameMute;
@@ -189,6 +193,7 @@ public class DuelView extends Application {
     @Override
     public void start(Stage stage) {
         FakeMain.call();
+        areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
         prepareArrayListsForWorking();
         DuelView.stage = stage;
         stage.setTitle("Duel Page");
@@ -218,6 +223,8 @@ public class DuelView extends Application {
                                         System.out.println("cardLocationSelecting is " + cardLocationSelecting.getRowOfCardLocation() + " " + cardLocationSelecting.getIndex());
 
                                         if (cardLocationSelecting != null) {
+                                            System.out.println("this is what i am sending to server because you double clicked here:\n"+
+                                                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting)+" end");
                                             String output = GameManager.getDuelControllerByIndex(0).getInput("select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
                                             System.out.println("&@&@&@&@& " + output);
 
@@ -319,6 +326,11 @@ public class DuelView extends Application {
         //anchorPane.getChildren().add(opponentHealthStatus.getHelpfulHealthRectangle());
         anchorPane.getChildren().add(opponentHealthStatus.getBackGroundRectangle());
         anchorPane.getChildren().add(opponentHealthStatus.getContainer());
+
+
+        anchorPane.getChildren().add(mute);
+        anchorPane.getChildren().add(pause);
+        anchorPane.getChildren().add(surrender);
         controllerForView.giveCardsAtTheBeginningOfGame();
         System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
         System.out.println(stage.getWidth());
@@ -403,19 +415,34 @@ public class DuelView extends Application {
             }
         });
         // backgroundMusic.play();
+        surrender = new Rectangle(DuelView.getStageWidth() * 11 / 12, 0, DuelView.getStageWidth() / 12, DuelView.getStageHeight() / 8);
+        surrender.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/surrender.png").toExternalForm())));
+        surrender.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                String output = GameManager.getDuelControllerByIndex(0).getInput("surrender", true);
+                System.out.println("Surrender: " + output);
+            }
+        });
         isGameMute = false;
         isGamePaused = false;
-        pause = new Button("pause");
-        mute = new Button("mute");
+        mute = new Rectangle(DuelView.getStageWidth() * 11 / 12, DuelView.getStageHeight() / 8 +
+            (DuelView.getStageWidth() / 12 * 7), DuelView.getStageWidth() / 12,
+            (DuelView.getStageHeight() * 7 / 8 - 7 * DuelView.getStageWidth() / 12) / 2);
+        pause = new Rectangle(DuelView.getStageWidth() * 11 / 12, DuelView.getStageHeight() / 8 +
+            (DuelView.getStageWidth() / 12 * 7) + (DuelView.getStageHeight() * 7 / 8 - 7 * DuelView.getStageWidth() / 12) / 2,
+            DuelView.getStageWidth() / 12, (DuelView.getStageHeight() * 7 / 8 - 7 * DuelView.getStageWidth() / 12) / 2);
+        mute.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/furtherButtons/sound_on_button_transparent.png").toExternalForm())));
+        pause.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/furtherButtons/play_button_transparent.png").toExternalForm())));
         pause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (isGamePaused) {
                     isGamePaused = false;
-                    pause.setText("pause");
+                    pause.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/furtherButtons/play_button_transparent.png").toExternalForm())));
                 } else {
                     isGamePaused = true;
-                    pause.setText("resume");
+                    pause.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/furtherButtons/pause_button_transparent.png").toExternalForm())));
                 }
             }
         });
@@ -425,14 +452,18 @@ public class DuelView extends Application {
                 if (backgroundMusic.isMute()) {
                     backgroundMusic.setMute(false);
                     isGameMute = false;
-                    mute.setText("mute");
+                    mute.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/furtherButtons/sound_on_button_transparent.png").toExternalForm())));
                 } else {
                     backgroundMusic.setMute(true);
                     isGameMute = true;
-                    mute.setText("unmute");
+                    mute.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/furtherButtons/sound_off_button_transparent.png").toExternalForm())));
                 }
             }
         });
+//        mute.setStyle("-fx-color: crimson");
+//        mute.setStyle("-fx-text-fill: white");
+//        pause.setStyle("-fx-color: orange");
+//        pause.setStyle("-fx-text-fill: blue");
         drawPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_DRAW_PHASE);
         standByPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_STANDBY_PHASE);
         mainPhaseOneLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -449,20 +480,52 @@ public class DuelView extends Application {
         nextPhaseLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
-                System.out.println("&" + output + "&");
-                if (output.contains("phase: ")) {
-                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                if (!areWePlayingWithAI) {
+                    String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
+                    System.out.println("&" + output + "&");
+                    if (output.contains("phase: ")) {
+                        if (output.contains("phase: draw phase") && output.contains("new card added to hand") && output.contains("phase: standby phase")) {
+                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                            //DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                            PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.3)));
+                            pauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                                    PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.3)));
+                                    pauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent actionEvent) {
+                                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                                            PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.3)));
+                                            if (output.contains("pay") && output.contains("destroy")) {
+
+                                            } else if (output.contains("phase: main phase")) {
+                                                pauseTransition.play();
+                                                pauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                                                    @Override
+                                                    public void handle(ActionEvent actionEvent) {
+                                                        GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                                                    }
+                                                });
+
+                                            }
+                                        }
+                                    });
+                                    pauseTransition.play();
+                                }
+                            });
+                            pauseTransition.play();
+                        } else {
+                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                        }
+                    }
+                } else {
+                    System.out.println("we are playing with ai");
                 }
-                if (output.contains("phase: draw phase") && output.contains("new card added to hand")) {
-                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                    (new PauseTransition(Duration.seconds(0.3))).play();
-                }
-                if (output.contains("phase: standby phase")) {
-                    (new PauseTransition(Duration.seconds(0.3))).play();
-                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                }
+
+
 //                PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
 //                standByPhaseLabel.updateImage(phaseInGame);
 //                mainPhaseOneLabel.updateImage(phaseInGame);

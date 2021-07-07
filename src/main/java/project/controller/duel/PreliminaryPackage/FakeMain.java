@@ -68,7 +68,7 @@ public class FakeMain {
     public static void addCardsToFirstPlayer(ArrayList<Card> firstPlayerDeck) {
         //firstPlayerDeck.add(new MonsterCard(1000, 1000, 4, MonsterCardAttribute.DARK, MonsterCardFamily.AQUA, MonsterCardValue.NORMAL, "normalAQUA", "", null, 3, 0, null));
         firstPlayerDeck.add(new MonsterCard(2000, 0, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.CYBERSE, MonsterCardValue.NORMAL, "Leotron", "", null, 3, 0, null, null));
-        firstPlayerDeck.add(new MonsterCard(100, 100, 1, MonsterCardAttribute.DARK, MonsterCardFamily.CYBERSE, MonsterCardValue.EFFECT, "Texchanger", "", null, 3, 0, null, null));
+        //firstPlayerDeck.add(new MonsterCard(100, 100, 1, MonsterCardAttribute.DARK, MonsterCardFamily.CYBERSE, MonsterCardValue.EFFECT, "Texchanger", "", null, 3, 0, null, null));
         firstPlayerDeck.add(new SpellCard("Pot Of Greed", "", SpellCardValue.NORMAL, null, 3, 60, 0, null, null));
         firstPlayerDeck.add(new TrapCard("Call Of The Haunted", "", TrapCardValue.NORMAL, null, 3, 60, 0, null, null));
 

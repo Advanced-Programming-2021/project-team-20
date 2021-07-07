@@ -508,9 +508,9 @@ public class SendingRequestsToServer {
             }
         } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
             if (turn == 1) {
-                return "--field ";
+                return "--field";
             } else {
-                return "--opponent --field ";
+                return "--opponent --field";
             }
         } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)) {
             if (turn == 1) {
