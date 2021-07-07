@@ -37,24 +37,14 @@ public class ShopController implements Initializable {
     @FXML
     private Rectangle exportRectangle;
     @FXML
-    private Label importLabel;
-    @FXML
     private Label exportLabel;
-    // private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Rectangle>> allCardsInDifferentPages;
     private int whichPageIsShowing = 0;
-    private static int upToWhichCardAreShown;
+    private static int upToWhichCardAreShown = 0;
     private static String chosenCardName;
     private String[] names;
-    static {
-        upToWhichCardAreShown = 0;
-    }
     private static AnchorPane anchorPane;
     private Rectangle chosenRectangleForExport;
-    // private static ArrayList<String> allCardNamesFirstPage;
-    // private static ArrayList<String> allCardNamesSecondPage;
-    // private static ArrayList<String> allCardNamesThirdPage;
-    // static {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -118,20 +108,8 @@ public class ShopController implements Initializable {
                 Rectangle rectangle = new Rectangle(55, 65);
                 rectangle.setX(290 + 65 * j);
                 rectangle.setY(110 + 65 * k);
-                InputStream stream = null;
-                // System.out.println(allCards.get(cardNumber).getCardName());
-                // cardNumber++;
                 HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
                 HashMap<String, Card> allSpellTrapCards = Storage.getAllSpellAndTrapCards();
-                String id;
-                try {
-                    id = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown]))
-                            .getCardName();
-                } catch (Exception e) {
-                    id = allSpellTrapCards.get(Utility.giveCardNameRemovingRedundancy(names[upToWhichCardAreShown]))
-                            .getCardName();
-                }
-                // String id = names[upToWhichCardAreShown];
 
                 rectangle.setArcHeight(20);
                 rectangle.setArcWidth(20);
@@ -172,11 +150,6 @@ public class ShopController implements Initializable {
         for (int i = 0; i < allCardsInDifferentPages.get(whichPageIsShowing).size(); i++) {
             pane.getChildren().add(allCardsInDifferentPages.get(whichPageIsShowing).get(i));
             MainView.changeScene(pane);
-            // try {
-            // Thread.sleep(500);
-            // } catch (Exception e) {
-            // System.out.println("TODO: handle exception");
-            // }
         }
     }
 
