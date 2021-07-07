@@ -69,8 +69,9 @@ public class CardCreatorController implements Initializable {
     private VBox lastVboxTrap;
     private VBox previousVbox;
     private Button previousButton;
-    private String enumClassName = new String();
-    private String nextMethod;
+    private String enumClassName = "";
+    private String nextMethod = "";
+    private Method currentMethod;
     private ArrayList<Integer> flipSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterAttackingTrapCardEffectNumbers;
     private ArrayList<Integer> normalSummonTrapCardEffectNumbers;
@@ -1268,6 +1269,8 @@ public class CardCreatorController implements Initializable {
             numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, new HashMap<>(), cardImage);
         Storage.addCardToNewCardsCrated(trapCard);
         Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
+        Storage.addCardToNewCardsCrated(trapCard);
+        Storage.addNewImageForNewCards(cardName, cardImage);
         System.out.println("card was created");
         try {
             new MainView().changeView("/project/fxml/mainMenu.fxml");
@@ -1387,26 +1390,19 @@ public class CardCreatorController implements Initializable {
         previousButton.setLayoutX(400);
         Method method = null;
         try {
-<<<<<<< HEAD
-            method = this.getClass().getMethod(nextMethod, VBox.class, Button.class);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } 
-=======
             method = Class.forName("project.view.CardCreatorController").getDeclaredMethod(nextMethod);
-            System.out.println(method.getName());
+            System.out.println("method:" + method.getName());
         } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
->>>>>>> 01bf780bad99f9f46735bdfb9388a11494883af7
-        Method finalMethod = method;
-        System.out.println(finalMethod.getName());
+        currentMethod = method;
+        System.out.println(currentMethod.getName());
         previousButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    System.out.println(finalMethod.getName());
-                    finalMethod.invoke(null);
+                    System.out.println("a----" + currentMethod.getName());
+                    currentMethod.invoke(null);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
