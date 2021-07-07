@@ -1008,6 +1008,15 @@ public class CardCreatorController implements Initializable {
         //TODO -> calculate card price
 
         System.out.println("Card Created and added to storage successfully");
+        backToMainMenu();
+    }
+
+    private void backToMainMenu() {
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1199,6 +1208,11 @@ public class CardCreatorController implements Initializable {
         Storage.addCardToNewCardsCrated(trapCard);
         Storage.addNewImageForNewCards(cardName, cardImage);
         System.out.println("card was created");
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1821,6 +1835,11 @@ public class CardCreatorController implements Initializable {
         //Should I add all of them even if they are empty?
 
         System.out.println("Card created successfully");
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1832,6 +1851,10 @@ public class CardCreatorController implements Initializable {
 
 
     public void back(ActionEvent actionEvent) {
-        System.out.println("hi");
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
