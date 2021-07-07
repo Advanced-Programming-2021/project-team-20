@@ -1182,6 +1182,9 @@ public class CardCreatorController implements Initializable {
                 }
             });
         }
+        else {
+            lastStepOfCreatingMonsterCard();
+        }
     }
 
     private void lastStepOfCreatingMonsterCard() {
@@ -2380,6 +2383,9 @@ public class CardCreatorController implements Initializable {
 
                 }
             });
+        }
+        else {
+            lastStepOfCreatingSpellCard();
         }
     }
 
