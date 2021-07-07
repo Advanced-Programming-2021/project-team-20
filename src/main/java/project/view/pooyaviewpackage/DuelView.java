@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DuelView extends Application {
+public class DuelView {
     // launch the application
     private static Stage stage;
     private static double stageWidth;
@@ -156,7 +156,7 @@ public class DuelView extends Application {
     }
 
     public static void setIsClassWaitingForUserToChooseCardFromGraveyard(
-            boolean isClassWaitingForUserToChooseCardFromGraveyard) {
+        boolean isClassWaitingForUserToChooseCardFromGraveyard) {
         DuelView.isClassWaitingForUserToChooseCardFromGraveyard = isClassWaitingForUserToChooseCardFromGraveyard;
     }
 
@@ -207,40 +207,40 @@ public class DuelView extends Application {
             if (shouldDuelViewClickingAbilitiesWork) {
                 TwoDimensionalPoint finalTwoDimensionalPoint = new TwoDimensionalPoint(e.getSceneX(), e.getSceneY());
                 CardLocation cardLocation = controllerForView
-                        .giveCardLocationByCoordinateInView(finalTwoDimensionalPoint, null);
+                    .giveCardLocationByCoordinateInView(finalTwoDimensionalPoint, null);
                 System.out.println("is cardLocation null " + (cardLocation == null));
                 if (cardLocation != null) {
                     CardView cardView = controllerForView.getCardViewByCardLocation(cardLocation);
                     System.out.println("SHOW ME NO MORE cardLocation clicked is " + cardLocation.getRowOfCardLocation()
-                            + " " + cardLocation.getIndex());
+                        + " " + cardLocation.getIndex());
                     if (cardView == null) {
                         System.out.println("clicked on null SHOW ME NO MORE");
                     } else {
                         Bounds bounds = cardView.localToScene(cardView.getBoundsInLocal());
                         System.out.println("clicked on " + cardView.getCard().getCardName() + " " + bounds.getMinX()
-                                + " " + bounds.getMinY());
+                            + " " + bounds.getMinY());
                         if (e.getButton().equals(MouseButton.PRIMARY)) {
                             if (!dragFlag) {
                                 if (e.getClickCount() == 1) {
                                     scheduledFuture = executor.schedule(
-                                            () -> singleClickActionSpecial(finalTwoDimensionalPoint, cardView), 300,
-                                            TimeUnit.MILLISECONDS);
+                                        () -> singleClickActionSpecial(finalTwoDimensionalPoint, cardView), 300,
+                                        TimeUnit.MILLISECONDS);
                                 } else if (e.getClickCount() > 1) {
                                     if (scheduledFuture != null && !scheduledFuture.isCancelled()
-                                            && !scheduledFuture.isDone()) {
+                                        && !scheduledFuture.isDone()) {
                                         scheduledFuture.cancel(false);
                                         cardLocationSelecting = controllerForView
-                                                .giveCardLocationByCoordinateInView(finalTwoDimensionalPoint, cardView);
+                                            .giveCardLocationByCoordinateInView(finalTwoDimensionalPoint, cardView);
                                         System.out.println("cardLocationSelecting is "
-                                                + cardLocationSelecting.getRowOfCardLocation() + " "
-                                                + cardLocationSelecting.getIndex());
+                                            + cardLocationSelecting.getRowOfCardLocation() + " "
+                                            + cardLocationSelecting.getIndex());
 
                                         if (cardLocationSelecting != null) {
                                             String output = GameManager.getDuelControllerByIndex(0)
-                                                    .getInput("select " + SendingRequestsToServer
-                                                            .giveStringToGiveToServerByCardLocation(
-                                                                    cardLocationSelecting),
-                                                            true);
+                                                .getInput("select " + SendingRequestsToServer
+                                                        .giveStringToGiveToServerByCardLocation(
+                                                            cardLocationSelecting),
+                                                    true);
                                             System.out.println("&@&@&@&@& " + output);
 
                                             if (!output.contains("selected")) {
@@ -251,7 +251,7 @@ public class DuelView extends Application {
                                                 alert.showAndWait();
                                                 if (!output.contains("no card found")) {
                                                     DuelView.getAdvancedCardMovingController()
-                                                            .advanceForwardBattleField();
+                                                        .advanceForwardBattleField();
                                                 }
                                             }
                                         }
@@ -263,7 +263,7 @@ public class DuelView extends Application {
                             System.out.println("terente x = " + e.getSceneX() + " y = " + e.getSceneY());
                             cardView.updateContextMenu();
                             cardView.getContextMenu().show(cardView, e.getSceneX() + bounds.getMinX() / 2 + 30,
-                                    e.getSceneY() + 30);
+                                e.getSceneY() + 30);
                         }
                     }
                 }
@@ -282,12 +282,12 @@ public class DuelView extends Application {
                 TwoDimensionalPoint finalTwoDimensionalPoint = new TwoDimensionalPoint(e.getSceneX(), e.getSceneY());
                 System.out.println("BEING DROPPED BUUUUUURN!");
                 cardLocationDragDropped = controllerForView.giveCardLocationByCoordinateInView(finalTwoDimensionalPoint,
-                        null);
+                    null);
                 System.out.println("BEING DROPPED BUUUUUURN!");
                 System.out.println("cardLocationDragDropped is " + cardLocationDragDropped.getRowOfCardLocation() + " "
-                        + cardLocationDragDropped.getIndex());
+                    + cardLocationDragDropped.getIndex());
                 takeCareOfDraggingAction(cardLocationBeingDragged, cardLocationDragDropped, draggingObject,
-                        finalTwoDimensionalPoint);
+                    finalTwoDimensionalPoint);
                 System.out.println("wow");
                 draggingObject = null;
                 cardLocationBeingDragged = null;
@@ -358,10 +358,10 @@ public class DuelView extends Application {
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
         return anchorPane;
-       // MainView.changeScene(anchorPane);
+        // MainView.changeScene(anchorPane);
     }
 
-    public static void callStage(){
+    public static void callStage() {
         new DuelStage();
     }
 //    public static void main(String args[]) {
@@ -638,93 +638,93 @@ public class DuelView extends Application {
     public void doubleClickAction(MouseEvent mouseEvent) {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(mouseEvent, null);
         System.out.println("cardLocationSelecting is " + cardLocationSelecting.getRowOfCardLocation() + " "
-                + cardLocationSelecting.getIndex());
+            + cardLocationSelecting.getIndex());
 
         if (cardLocationSelecting != null) {
             String output = GameManager.getDuelControllerByIndex(0).getInput(
-                    "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
-                    true);
+                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
+                true);
             System.out.println("&" + output);
         }
     }
 
     private void takeCareOfDraggingAction(CardLocation initialCardLocation, CardLocation finalCardLocation,
-            project.model.modelsforview.CardView cardViewBeingDragged, TwoDimensionalPoint finalTwoDimensionalPoint) {
+                                          project.model.modelsforview.CardView cardViewBeingDragged, TwoDimensionalPoint finalTwoDimensionalPoint) {
         int turn = GameManager.getDuelControllerByIndex(0).getTurn();
         PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
         boolean allySummonSetActivateCardPhase = phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1)
-                || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2);
+            || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2);
         boolean opponentSummonSetActivateCardPhase = phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1)
-                || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2);
+            || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2);
         if (finalCardLocation != null) {
             if ((turn == 1 && allySummonSetActivateCardPhase
-                    && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)
-                    || (turn == 2 && opponentSummonSetActivateCardPhase
-                            && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)))
-                    && (cardViewBeingDragged.getCard().getCardType().equals(CardType.SPELL)
-                            || cardViewBeingDragged.getCard().getCardType().equals(CardType.TRAP))) {
+                && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)
+                || (turn == 2 && opponentSummonSetActivateCardPhase
+                && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)))
+                && (cardViewBeingDragged.getCard().getCardType().equals(CardType.SPELL)
+                || cardViewBeingDragged.getCard().getCardType().equals(CardType.TRAP))) {
                 if ((turn == 1 && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)
-                        || turn == 2 && finalCardLocation.getRowOfCardLocation()
-                                .equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))
-                        && cardViewBeingDragged.getCard().getCardType().equals(CardType.TRAP)) {
+                    || turn == 2 && finalCardLocation.getRowOfCardLocation()
+                    .equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))
+                    && cardViewBeingDragged.getCard().getCardType().equals(CardType.TRAP)) {
                     System.out.println("take care set trap");
                     showOptionsToUser.showSetAlertForTrapCard(cardViewBeingDragged, initialCardLocation);
                 } else if ((turn == 1
-                        && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)
-                        || turn == 2 && finalCardLocation.getRowOfCardLocation()
-                                .equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))
-                        && cardViewBeingDragged.getCard().getCardType().equals(CardType.SPELL)
-                        && !((SpellCard) cardViewBeingDragged.getCard()).getSpellCardValue()
-                                .equals(SpellCardValue.FIELD)) {
+                    && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)
+                    || turn == 2 && finalCardLocation.getRowOfCardLocation()
+                    .equals(RowOfCardLocation.OPPONENT_SPELL_ZONE))
+                    && cardViewBeingDragged.getCard().getCardType().equals(CardType.SPELL)
+                    && !((SpellCard) cardViewBeingDragged.getCard()).getSpellCardValue()
+                    .equals(SpellCardValue.FIELD)) {
                     System.out.println("take care set activate spell");
                     showOptionsToUser.showSetOrActivateForSpellCard(cardViewBeingDragged, initialCardLocation);
 
                 } else if ((turn == 1
-                        && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)
-                        || turn == 2 && finalCardLocation.getRowOfCardLocation()
-                                .equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))
-                        && cardViewBeingDragged.getCard().getCardType().equals(CardType.SPELL)
-                        && ((SpellCard) cardViewBeingDragged.getCard()).getSpellCardValue()
-                                .equals(SpellCardValue.FIELD)) {
+                    && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)
+                    || turn == 2 && finalCardLocation.getRowOfCardLocation()
+                    .equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))
+                    && cardViewBeingDragged.getCard().getCardType().equals(CardType.SPELL)
+                    && ((SpellCard) cardViewBeingDragged.getCard()).getSpellCardValue()
+                    .equals(SpellCardValue.FIELD)) {
                     System.out.println("take care set activate spell field card");
                     showOptionsToUser.showSetOrActivateForSpellCard(cardViewBeingDragged, initialCardLocation);
                 }
             } else if (turn == 1 && allySummonSetActivateCardPhase
-                    && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)
-                    && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
-                    || (turn == 2 && opponentSummonSetActivateCardPhase
-                            && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)
-                            && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE))
-                            && (cardViewBeingDragged.getCard().getCardType().equals(CardType.MONSTER))) {
+                && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)
+                && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                || (turn == 2 && opponentSummonSetActivateCardPhase
+                && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)
+                && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE))
+                && (cardViewBeingDragged.getCard().getCardType().equals(CardType.MONSTER))) {
                 System.out.println("take care show all summon options");
                 showOptionsToUser.showAllSummonOptionsAlertForMonsterCard(cardViewBeingDragged, initialCardLocation,
-                        this);
+                    this);
 
             } else if ((turn == 1 && phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE)
-                    && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
-                    && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
-                    || (turn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE))
-                            && initialCardLocation.getRowOfCardLocation()
-                                    .equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
-                            && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE))
-                    && (cardViewBeingDragged.getCard().getCardType().equals(CardType.MONSTER))) {
+                && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
+                || (turn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE))
+                && initialCardLocation.getRowOfCardLocation()
+                .equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
+                && finalCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE))
+                && (cardViewBeingDragged.getCard().getCardType().equals(CardType.MONSTER))) {
                 System.out.println("take care attack monster to monster");
                 showOptionsToUser.showAttackMonsterToMonsterAlert(initialCardLocation, finalCardLocation);
             }
         }
         if ((turn == 1 && phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE)
-                && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
-                && finalTwoDimensionalPoint.getY() <= battleFieldView.getUpperLeftY() + 90
-                && finalTwoDimensionalPoint.getX() >= battleFieldView.getUpperLeftX()
-                && finalTwoDimensionalPoint.getX() <= battleFieldView.getUpperLeftX() + battleFieldView.getWidth()
-                || (turn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE))
-                        && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
-                        && finalTwoDimensionalPoint.getY() >= battleFieldView.getUpperLeftY()
-                                + battleFieldView.getHeight() - 90
-                        && finalTwoDimensionalPoint.getX() >= battleFieldView.getUpperLeftX()
-                        && finalTwoDimensionalPoint.getX() <= battleFieldView.getUpperLeftX()
-                                + battleFieldView.getWidth())
-                && (cardViewBeingDragged.getCard().getCardType().equals(CardType.MONSTER))) {
+            && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+            && finalTwoDimensionalPoint.getY() <= battleFieldView.getUpperLeftY() + 90
+            && finalTwoDimensionalPoint.getX() >= battleFieldView.getUpperLeftX()
+            && finalTwoDimensionalPoint.getX() <= battleFieldView.getUpperLeftX() + battleFieldView.getWidth()
+            || (turn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE))
+            && initialCardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)
+            && finalTwoDimensionalPoint.getY() >= battleFieldView.getUpperLeftY()
+            + battleFieldView.getHeight() - 90
+            && finalTwoDimensionalPoint.getX() >= battleFieldView.getUpperLeftX()
+            && finalTwoDimensionalPoint.getX() <= battleFieldView.getUpperLeftX()
+            + battleFieldView.getWidth())
+            && (cardViewBeingDragged.getCard().getCardType().equals(CardType.MONSTER))) {
             System.out.println("take care attack direct");
             showOptionsToUser.showDirectAttackAlert(initialCardLocation);
         }
@@ -735,17 +735,17 @@ public class DuelView extends Application {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(previousMouseEvent, null);
         if (cardLocationSelecting != null) {
             String output = GameManager.getDuelControllerByIndex(0).getInput(
-                    "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
-                    true);
+                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
+                true);
             System.out.println("&" + output);
             Object card = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocationSelecting);
             if (card != null) {
                 CardType cardType = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocationSelecting)
-                        .getCardType();
+                    .getCardType();
                 if (cardType.equals(CardType.MONSTER)) {
                     if (GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_1)
-                            || GameManager.getPhaseControllerByIndex(0).getPhaseInGame()
-                                    .equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
+                        || GameManager.getPhaseControllerByIndex(0).getPhaseInGame()
+                        .equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
 
                     }
                 } else if (cardType.equals(CardType.SPELL) || cardType.equals(CardType.TRAP)) {
@@ -780,8 +780,8 @@ public class DuelView extends Application {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(twoDimensionalPoint, cardView);
         if (cardLocationSelecting != null) {
             String output = GameManager.getDuelControllerByIndex(0).getInput(
-                    "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
-                    true);
+                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
+                true);
             // String output = GameManager.getDuelControllerByIndex(0).getInput("card show
             // --selected", true);
             System.out.println("single click: " + output);
@@ -795,9 +795,9 @@ public class DuelView extends Application {
                 ourDescriptionString = matcher.group(1);
             }
             CardLocation cardLocation = controllerForView.giveCardLocationByCoordinateInView(twoDimensionalPoint,
-                    cardView);
+                cardView);
             System.out.println("cardLocation picking is " + cardLocation.getRowOfCardLocation() + " and "
-                    + cardLocation.getIndex());
+                + cardLocation.getIndex());
             moreCardInfoSection.updateCardMoreInfoSection(cardView, ourDescriptionString);
         }
     }
@@ -1007,7 +1007,7 @@ public class DuelView extends Application {
     }
 
     public static void setRowOfCardLocationOfInitialDraggedPoint(
-            RowOfCardLocation rowOfCardLocationOfInitialDraggedPoint) {
+        RowOfCardLocation rowOfCardLocationOfInitialDraggedPoint) {
         DuelView.rowOfCardLocationOfInitialDraggedPoint = rowOfCardLocationOfInitialDraggedPoint;
     }
 
@@ -1058,7 +1058,7 @@ public class DuelView extends Application {
     public static void setCardLocationBeingDragged(CardLocation cardLocationBeingDragged) {
         DuelView.cardLocationBeingDragged = cardLocationBeingDragged;
         System.out.println("cardLocationBeingDragged is " + cardLocationBeingDragged.getRowOfCardLocation() + " "
-                + cardLocationBeingDragged.getIndex());
+            + cardLocationBeingDragged.getIndex());
     }
 
     public static SendingRequestsToServer getSendingRequestsToServer() {
@@ -1073,42 +1073,42 @@ public class DuelView extends Application {
         System.out.println("ALLY CARDS IN DECK GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).size(); i++) {
             System.out.println(((project.model.modelsforview.CardView) controllerForView
-                    .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).get(i)).getCard().getCardName());
+                .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).get(i)).getCard().getCardName());
         }
 
         System.out.println("ALLY CARDS IN HAND GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).size(); i++) {
             System.out.println(((project.model.modelsforview.CardView) controllerForView
-                    .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).get(i)).getCard().getCardName());
+                .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).get(i)).getCard().getCardName());
         }
 
         System.out.println("ALLY CARDS IN GRAVEYARD GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)
-                .size(); i++) {
+            .size(); i++) {
             System.out.println(((project.model.modelsforview.CardView) controllerForView
-                    .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE).get(i)).getCard().getCardName());
+                .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE).get(i)).getCard().getCardName());
         }
 
         System.out.println("OPPONENT CARDS IN DECK GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE)
-                .size(); i++) {
+            .size(); i++) {
             System.out.println(((project.model.modelsforview.CardView) controllerForView
-                    .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE).get(i)).getCard().getCardName());
+                .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE).get(i)).getCard().getCardName());
         }
 
         System.out.println("OPPONENT CARDS IN HAND GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE)
-                .size(); i++) {
+            .size(); i++) {
             System.out.println(((project.model.modelsforview.CardView) controllerForView
-                    .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE).get(i)).getCard().getCardName());
+                .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE).get(i)).getCard().getCardName());
         }
 
         System.out.println("OPPONENT CARDS IN GRAVEYARD GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)
-                .size(); i++) {
+            .size(); i++) {
             System.out.println(((project.model.modelsforview.CardView) controllerForView
-                    .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE).get(i)).getCard()
-                            .getCardName());
+                .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE).get(i)).getCard()
+                .getCardName());
         }
     }
 
