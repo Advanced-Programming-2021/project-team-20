@@ -192,7 +192,7 @@ public class DuelView {
         executor.setRemoveOnCancelPolicy(true);
     }
 
-    public AnchorPane getAnchorpane(Stage stage) {
+    public AnchorPane getAnchorpaneAtBeginning(Stage stage) {
         cheatCodes.setLength(0);
         // FakeMain.call();
         areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
@@ -299,17 +299,17 @@ public class DuelView {
             e.consume();
         });
 
-        Scene scene = new Scene(anchorPane, 1200, 1000);
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                checkCheatCommands(keyEvent);
-            }
-        });
-        stage.setScene(scene);
-        stage.show();
-        stageWidth = scene.getWidth();
-        stageHeight = scene.getHeight();
+//        Scene scene = new Scene(anchorPane, 1200, 1000);
+//        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//            @Override
+//            public void handle(KeyEvent keyEvent) {
+//                checkCheatCommands(keyEvent);
+//            }
+//        });
+//        stage.setScene(scene);
+//        stage.show();
+        stageWidth = 1200;
+        stageHeight = 1000;
         prepareObjectsForWorking();
         anchorPane.getChildren().add(battleFieldView);
         anchorPane.getChildren().add(allCards);
@@ -800,14 +800,16 @@ public class DuelView {
             moreCardInfoSection.updateCardMoreInfoSection(cardView, ourDescriptionString);
         }
     }
-
-    private void endOneRoundOfDuel() {
-
+    private void endOneRoundOfDuel(String result) {
+        CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, true);
+        customDialog.openDialog();
     }
 
-    private void endGame() {
-
+    private void endGame(String result) {
+        CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, false);
+        customDialog.openDialog();
     }
+
 
     public static AnchorPane getAnchorPane() {
         return anchorPane;
