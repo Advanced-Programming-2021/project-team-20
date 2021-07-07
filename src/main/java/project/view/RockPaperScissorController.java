@@ -212,6 +212,7 @@ public class RockPaperScissorController implements Initializable {
     }
 
     public void startDuel(){
+        SongPlayer.getInstance().pauseMusic();
         new DuelView().start(MainView.getStage());
     }
 

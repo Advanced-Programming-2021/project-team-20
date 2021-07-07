@@ -108,16 +108,15 @@ public class Storage {
 
     public static void saveNewImagesOfCardsInFile(Card card, String imagePath) {
         BufferedImage bImage = null;
-        String cardName = Utility.giveCardNameRemovingRedundancy(card.getCardName());
         try {
             File file = new File(imagePath);
             bImage = ImageIO.read(file);
             if (card.getCardType().equals(CardType.MONSTER)) {
                 ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\cards\\monsters\\" + cardName + ".jpg"));
+                        new File("src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName() + ".jpg"));
             } else {
                 ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + cardName + ".jpg"));
+                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
             }
         } catch (Exception e) {
             e.printStackTrace();
