@@ -13,6 +13,7 @@ import java.util.Scanner;
 import com.google.gson.*;
 import com.opencsv.CSVReader;
 
+import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
@@ -70,10 +71,10 @@ public class ImportAndExport {
         }
         String cardname = csvFileInformation.get(1)[0];
         List<List<String>> validInfornationOfCard = new ArrayList<>();
-        if (allMonsterCards.containsKey(cardname)) {
-            validInfornationOfCard = toCSVFormatMonsterCard(allMonsterCards.get(cardname));
-        } else if (allSpellAndTrapCards.containsKey(cardname)) {
-            validInfornationOfCard = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(cardname));
+        if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
+            validInfornationOfCard = toCSVFormatMonsterCard(allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardname)));
+        } else if (allSpellAndTrapCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
+            validInfornationOfCard = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardname)));
         } else {
             return "false";
         }
@@ -122,10 +123,10 @@ public class ImportAndExport {
             return "false";
         }
 
-        if (fileInputs.toString().equals(toJsonFormatMonsterCard(allMonsterCards.get(nameOfCardInFile)))) {
+        if (fileInputs.toString().equals(toJsonFormatMonsterCard(allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(nameOfCardInFile))))) {
             return nameOfCardInFile;
         }
-        if (fileInputs.toString().equals(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(nameOfCardInFile)))) {
+        if (fileInputs.toString().equals(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(nameOfCardInFile))))) {
             return nameOfCardInFile;
         }
         return "false";
@@ -226,11 +227,11 @@ public class ImportAndExport {
     private boolean writeFileInCSVFormat(String cardname, File file) {
 
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allMonsterCards.containsKey(cardname)) {
+        if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
             FileWriter csvWriter;
             try {
                 csvWriter = new FileWriter(file.getAbsolutePath());
-                List<List<String>> wholeCSVFile = toCSVFormatMonsterCard(allMonsterCards.get(cardname));
+                List<List<String>> wholeCSVFile = toCSVFormatMonsterCard(allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardname)));
                 for (List<String> rowData : wholeCSVFile) {
                     for (int i = 0; i < rowData.size(); i++) {
                         csvWriter.append("\"" + rowData.get(i) + "\"");
@@ -249,11 +250,11 @@ public class ImportAndExport {
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(cardname)) {
+        if (allSpellAndTrapCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
             FileWriter csvWriter;
             try {
                 csvWriter = new FileWriter(file.getAbsolutePath());
-                List<List<String>> wholeCSVFile = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(cardname));
+                List<List<String>> wholeCSVFile = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardname)));
                 for (List<String> rowData : wholeCSVFile) {
                     for (int i = 0; i < rowData.size(); i++) {
                         csvWriter.append("\"" + rowData.get(i) + "\"");
@@ -287,11 +288,11 @@ public class ImportAndExport {
             }
         }
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(cardname)) {
+        if (allSpellAndTrapCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
             FileWriter fileWriter;
             try {
                 fileWriter = new FileWriter(file.getAbsolutePath());
-                fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(cardname)));
+                fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardname))));
                 fileWriter.close();
                 return true;
             } catch (Exception e) {
