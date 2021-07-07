@@ -602,7 +602,9 @@ public class DuelController {
                 maxLifePoint = playersScores.get(turn - 1);
             }
         } else if (currentRound == 3) {
-
+            if (playersScores.get(turn - 1) > maxLifePointOfPlayers.get(turn - 1)) {
+                maxLifePoint = playersScores.get(turn - 1);
+            }
         }
 
         winnerUser.setMoney(numberOfRounds * (1000 + maxLifePoint) + winnerUser.getMoney());
