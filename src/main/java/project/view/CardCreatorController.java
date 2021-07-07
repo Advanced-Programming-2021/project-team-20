@@ -1178,6 +1178,8 @@ public class CardCreatorController implements Initializable {
             numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, new HashMap<>(), cardImage);
         Storage.addCardToNewCardsCrated(trapCard);
         Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
+        Storage.addCardToNewCardsCrated(trapCard);
+        Storage.addNewImageForNewCards(cardName, cardImage);
         System.out.println("card was created");
     }
 
