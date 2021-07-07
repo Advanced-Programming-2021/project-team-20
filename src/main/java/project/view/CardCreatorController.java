@@ -115,7 +115,7 @@ public class CardCreatorController implements Initializable {
     TextField textFieldForGettingDefencePowerMonsterCard;
     Button buttonForGettingDefencePowerMonsterCard;
 
-    Label labelForGettingLevelMonsterCard;
+//    Label labelForGettingLevelMonsterCard;
     TextField textFieldForGettingLevelMonsterCard;
     Button buttonForGettingLevelMonsterCard;
 
@@ -207,7 +207,7 @@ public class CardCreatorController implements Initializable {
 
     }
 
- 
+
     private void trapCard() {
         cardType = "trap";
         removeThreeButtons();
@@ -379,13 +379,16 @@ public class CardCreatorController implements Initializable {
 //        anchorPane.getChildren().add(labelForGettingAttackPowerMonsterCard);
 
         textFieldForGettingAttackPowerMonsterCard = new TextField();
-        textFieldForGettingAttackPowerMonsterCard.setLayoutY(130);
-        textFieldForGettingAttackPowerMonsterCard.setLayoutX(440);
+        textFieldForGettingAttackPowerMonsterCard.setLayoutY(200);
+        textFieldForGettingAttackPowerMonsterCard.setLayoutX(370);
+        textFieldForGettingAttackPowerMonsterCard.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
+        textFieldForGettingAttackPowerMonsterCard.setPromptText("ATTACK POWER");
         anchorPane.getChildren().add(textFieldForGettingAttackPowerMonsterCard);
 
         buttonForGettingAttackPowerMonsterCard = new Button("OK");
-        buttonForGettingAttackPowerMonsterCard.setLayoutY(160);
-        buttonForGettingAttackPowerMonsterCard.setLayoutX(500);
+        buttonForGettingAttackPowerMonsterCard.setLayoutY(290);
+        buttonForGettingAttackPowerMonsterCard.setLayoutX(480);
+        buttonForGettingAttackPowerMonsterCard.setStyle("-fx-font-size: 25");
         buttonForGettingAttackPowerMonsterCard.setOnAction(actionEvent -> getDefencePowerMonsterCard());
         anchorPane.getChildren().add(buttonForGettingAttackPowerMonsterCard);
     }
@@ -403,13 +406,16 @@ public class CardCreatorController implements Initializable {
 //            anchorPane.getChildren().add(labelForGettingDefencePowerMonsterCard);
 
             textFieldForGettingDefencePowerMonsterCard = new TextField();
-            textFieldForGettingDefencePowerMonsterCard.setLayoutY(130);
-            textFieldForGettingDefencePowerMonsterCard.setLayoutX(440);
+            textFieldForGettingDefencePowerMonsterCard.setLayoutY(200);
+            textFieldForGettingDefencePowerMonsterCard.setLayoutX(370);
+            textFieldForGettingDefencePowerMonsterCard.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
+            textFieldForGettingDefencePowerMonsterCard.setPromptText("DEFENCE POWER");
             anchorPane.getChildren().add(textFieldForGettingDefencePowerMonsterCard);
 
             buttonForGettingDefencePowerMonsterCard = new Button("OK");
-            buttonForGettingDefencePowerMonsterCard.setLayoutY(160);
-            buttonForGettingDefencePowerMonsterCard.setLayoutX(500);
+            buttonForGettingDefencePowerMonsterCard.setLayoutY(290);
+            buttonForGettingDefencePowerMonsterCard.setLayoutX(480);
+            buttonForGettingDefencePowerMonsterCard.setStyle("-fx-font-size: 25");
             buttonForGettingDefencePowerMonsterCard.setOnAction(actionEvent -> getLevelMonsterCard());
             anchorPane.getChildren().add(buttonForGettingDefencePowerMonsterCard);
         }
@@ -423,19 +429,22 @@ public class CardCreatorController implements Initializable {
             defencePowerMonsterCard = Integer.parseInt(defencePower);
             removeThingsInGetDefencePowerMonsterCard();
 
-            labelForGettingLevelMonsterCard = new Label("Please enter the level for your monster card");
-            labelForGettingLevelMonsterCard.setLayoutY(100);
-            labelForGettingLevelMonsterCard.setLayoutX(360);
-            anchorPane.getChildren().add(labelForGettingLevelMonsterCard);
+//            labelForGettingLevelMonsterCard = new Label("Please enter the level for your monster card");
+//            labelForGettingLevelMonsterCard.setLayoutY(100);
+//            labelForGettingLevelMonsterCard.setLayoutX(360);
+//            anchorPane.getChildren().add(labelForGettingLevelMonsterCard);
 
             textFieldForGettingLevelMonsterCard = new TextField();
-            textFieldForGettingLevelMonsterCard.setLayoutY(130);
-            textFieldForGettingLevelMonsterCard.setLayoutX(440);
+            textFieldForGettingLevelMonsterCard.setLayoutY(200);
+            textFieldForGettingLevelMonsterCard.setLayoutX(370);
+            textFieldForGettingLevelMonsterCard.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
+            textFieldForGettingLevelMonsterCard.setPromptText("LEVEL");
             anchorPane.getChildren().add(textFieldForGettingLevelMonsterCard);
 
             buttonForGettingLevelMonsterCard = new Button("OK");
-            buttonForGettingLevelMonsterCard.setLayoutY(160);
-            buttonForGettingLevelMonsterCard.setLayoutX(500);
+            buttonForGettingLevelMonsterCard.setLayoutY(290);
+            buttonForGettingLevelMonsterCard.setLayoutX(480);
+            buttonForGettingLevelMonsterCard.setStyle("-fx-font-size: 25");
             buttonForGettingLevelMonsterCard.setOnAction(actionEvent -> monsterCardAttributeFunction());
             anchorPane.getChildren().add(buttonForGettingLevelMonsterCard);
         }
@@ -464,7 +473,12 @@ public class CardCreatorController implements Initializable {
 
             vboxForMonsterCardAttribute = new VBox();
             vboxForMonsterCardAttribute.setLayoutY(100);
-            vboxForMonsterCardAttribute.setLayoutX(480);
+            vboxForMonsterCardAttribute.setLayoutX(400);
+            vboxForMonsterCardAttribute.setMinHeight(300);
+            vboxForMonsterCardAttribute.setMinWidth(200);
+            vboxForMonsterCardAttribute.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+                " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+            vboxForMonsterCardAttribute.setSpacing(20);
             for (Button button : buttonsForMonsterCardAttribute) {
                 vboxForMonsterCardAttribute.getChildren().add(button);
             }
@@ -1039,7 +1053,7 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInGetLevelMonsterCard() {
-        anchorPane.getChildren().remove(labelForGettingLevelMonsterCard);
+//        anchorPane.getChildren().remove(labelForGettingLevelMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingLevelMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingLevelMonsterCard);
     }
