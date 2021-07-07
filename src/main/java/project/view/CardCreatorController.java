@@ -90,12 +90,12 @@ public class CardCreatorController implements Initializable {
     @FXML
     AnchorPane anchorPane;
 
-    Label labelForGettingCardNameFromUser;
+//    Label labelForGettingCardNameFromUser;
     TextField textFieldForGettingCardNameFromUser;
     Button buttonForGettingCardNameFromUser;
 
 
-    Label labelForGettingCardDescriptionFromUser;
+//    Label labelForGettingCardDescriptionFromUser;
     TextField textFieldForGettingCardDescriptionFromUser;
     Button buttonForGettingCardDescriptionFromUser;
 
@@ -103,11 +103,11 @@ public class CardCreatorController implements Initializable {
     Button buttonOneForNumberOfAllowedUsages;
     Button buttonThreeForNumberOfAllowedUsages;
 
-    Label labelForGettingAttackPowerMonsterCard;
+//    Label labelForGettingAttackPowerMonsterCard;
     TextField textFieldForGettingAttackPowerMonsterCard;
     Button buttonForGettingAttackPowerMonsterCard;
 
-    Label labelForGettingDefencePowerMonsterCard;
+//    Label labelForGettingDefencePowerMonsterCard;
     TextField textFieldForGettingDefencePowerMonsterCard;
     Button buttonForGettingDefencePowerMonsterCard;
 
@@ -226,20 +226,36 @@ public class CardCreatorController implements Initializable {
 
 
     private void getCardNameFromUser() {
-        labelForGettingCardNameFromUser = new Label("Please enter card name");
-        labelForGettingCardNameFromUser.setLayoutY(100);
-        labelForGettingCardNameFromUser.setLayoutX(450);
-        anchorPane.getChildren().add(labelForGettingCardNameFromUser);
+//        labelForGettingCardNameFromUser = new Label("Please enter card name");
+//        labelForGettingCardNameFromUser.setLayoutY(100);
+//        labelForGettingCardNameFromUser.setLayoutX(420);
+//        labelForGettingCardNameFromUser.setStyle("-fx-text-fill:#03d274;-fx-padding:4 0 8 0;" +
+//            "-fx-background-color: #031fd2;-fx-font-weight:bold; -fx-font-size: 20");
+//        anchorPane.getChildren().add(labelForGettingCardNameFromUser);
 
         textFieldForGettingCardNameFromUser = new TextField();
-        textFieldForGettingCardNameFromUser.setLayoutY(130);
-        textFieldForGettingCardNameFromUser.setLayoutX(450);
+        textFieldForGettingCardNameFromUser.setLayoutY(160);
+        textFieldForGettingCardNameFromUser.setLayoutX(370);
+        textFieldForGettingCardNameFromUser.promptTextProperty().setValue("Card Name");
+        textFieldForGettingCardNameFromUser.setStyle("-fx-alignment: CENTER; -fx-font-size: 25");
+
         anchorPane.getChildren().add(textFieldForGettingCardNameFromUser);
+
+        textFieldForGettingCardDescriptionFromUser = new TextField();
+        textFieldForGettingCardDescriptionFromUser.setLayoutX(370);
+        textFieldForGettingCardDescriptionFromUser.setLayoutY(250);
+        textFieldForGettingCardDescriptionFromUser.promptTextProperty().setValue("Card Description");
+        textFieldForGettingCardDescriptionFromUser.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-min-height: 200");
+        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
+
+
+
 
         buttonForGettingCardNameFromUser = new Button("OK");
         buttonForGettingCardNameFromUser.setOnAction(actionEvent -> setCardName());
-        buttonForGettingCardNameFromUser.setLayoutY(160);
-        buttonForGettingCardNameFromUser.setLayoutX(500);
+        buttonForGettingCardNameFromUser.setLayoutY(500);
+        buttonForGettingCardNameFromUser.setLayoutX(480);
+        buttonForGettingCardNameFromUser.setStyle("-fx-font-size: 25");
         anchorPane.getChildren().add(buttonForGettingCardNameFromUser);
     }
 
@@ -248,30 +264,32 @@ public class CardCreatorController implements Initializable {
         if (!textFieldForGettingCardNameFromUser.getText().isEmpty()) {
             cardName = textFieldForGettingCardNameFromUser.getText();
             removeThingsInTheGetCardNameScene();
-            getCardDescription();
+            getCardImage();
         }
     }
 
 
-    private void getCardDescription() {
-        labelForGettingCardDescriptionFromUser = new Label("Please enter the description for your card");
-        labelForGettingCardDescriptionFromUser.setLayoutX(100);
-        labelForGettingCardDescriptionFromUser.setLayoutX(400);
-
-        textFieldForGettingCardDescriptionFromUser = new TextField();
-        textFieldForGettingCardDescriptionFromUser.setLayoutX(450);
-        textFieldForGettingCardDescriptionFromUser.setLayoutY(200);
-
-        buttonForGettingCardDescriptionFromUser = new Button("OK");
-        buttonForGettingCardDescriptionFromUser.setLayoutY(400);
-        buttonForGettingCardDescriptionFromUser.setLayoutX(450);
-        buttonForGettingCardDescriptionFromUser.setOnAction(ActionEvent -> getCardImage());
-
-        anchorPane.getChildren().add(labelForGettingCardDescriptionFromUser);
-        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
-        anchorPane.getChildren().add(buttonForGettingCardDescriptionFromUser);
-
-    }
+//    private void getCardDescription() {
+////        labelForGettingCardDescriptionFromUser = new Label("Please enter the description for your card");
+////        labelForGettingCardDescriptionFromUser.setLayoutY(100);
+////        labelForGettingCardDescriptionFromUser.setLayoutX(400);
+////        labelForGettingCardDescriptionFromUser.setStyle("-fx-text-fill:#03d274;-fx-padding:4 0 8 0;" +
+////            "-fx-background-color: #031fd2;-fx-font-weight:bold; -fx-font-size: 20");
+//
+//        textFieldForGettingCardDescriptionFromUser = new TextField();
+//        textFieldForGettingCardDescriptionFromUser.setLayoutX(450);
+//        textFieldForGettingCardDescriptionFromUser.setLayoutY(200);
+//
+//        buttonForGettingCardDescriptionFromUser = new Button("OK");
+//        buttonForGettingCardDescriptionFromUser.setLayoutY(400);
+//        buttonForGettingCardDescriptionFromUser.setLayoutX(450);
+//        buttonForGettingCardDescriptionFromUser.setOnAction(ActionEvent -> getCardImage());
+//
+////        anchorPane.getChildren().add(labelForGettingCardDescriptionFromUser);
+//        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
+//        anchorPane.getChildren().add(buttonForGettingCardDescriptionFromUser);
+//
+//    }
 
 
     private void getCardImage() {
@@ -284,11 +302,8 @@ public class CardCreatorController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         if (file != null) {
             changeImage(file.getAbsolutePath());
-            imagePath = file.getAbsolutePath();
-        } else {
-            changeImage("src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg");
-            imagePath = "src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg"; 
         }
+        imagePath = file.getAbsolutePath();
         getNumberOfAllowedUsages();
 
     }
@@ -306,7 +321,7 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInTheGetCardNameScene() {
-        anchorPane.getChildren().remove(labelForGettingCardNameFromUser);
+        anchorPane.getChildren().remove(textFieldForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardNameFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardNameFromUser);
     }
@@ -335,7 +350,7 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInGettingCardDescription() {
-        anchorPane.getChildren().remove(labelForGettingCardDescriptionFromUser);
+//        anchorPane.getChildren().remove(labelForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardDescriptionFromUser);
     }
@@ -351,10 +366,10 @@ public class CardCreatorController implements Initializable {
 
 
     private void continueGettingMonsterInformation() {
-        labelForGettingAttackPowerMonsterCard = new Label("Please enter the card's attack power");
-        labelForGettingAttackPowerMonsterCard.setLayoutY(100);
-        labelForGettingAttackPowerMonsterCard.setLayoutX(420);
-        anchorPane.getChildren().add(labelForGettingAttackPowerMonsterCard);
+//        labelForGettingAttackPowerMonsterCard = new Label("Please enter the card's attack power");
+//        labelForGettingAttackPowerMonsterCard.setLayoutY(100);
+//        labelForGettingAttackPowerMonsterCard.setLayoutX(420);
+//        anchorPane.getChildren().add(labelForGettingAttackPowerMonsterCard);
 
         textFieldForGettingAttackPowerMonsterCard = new TextField();
         textFieldForGettingAttackPowerMonsterCard.setLayoutY(130);
@@ -375,10 +390,10 @@ public class CardCreatorController implements Initializable {
         if (!attackPower.isEmpty() && pattern.matcher(attackPower).matches()) {
             attackPowerMonsterCard = Integer.parseInt(attackPower);
             removeThingsInContinueGettingMonsterInformation();
-            labelForGettingDefencePowerMonsterCard = new Label("Please enter the card's defence power");
-            labelForGettingDefencePowerMonsterCard.setLayoutY(100);
-            labelForGettingDefencePowerMonsterCard.setLayoutX(420);
-            anchorPane.getChildren().add(labelForGettingDefencePowerMonsterCard);
+//            labelForGettingDefencePowerMonsterCard = new Label("Please enter the card's defence power");
+//            labelForGettingDefencePowerMonsterCard.setLayoutY(100);
+//            labelForGettingDefencePowerMonsterCard.setLayoutX(420);
+//            anchorPane.getChildren().add(labelForGettingDefencePowerMonsterCard);
 
             textFieldForGettingDefencePowerMonsterCard = new TextField();
             textFieldForGettingDefencePowerMonsterCard.setLayoutY(130);
@@ -1015,14 +1030,14 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInGetDefencePowerMonsterCard() {
-        anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
+//        anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingDefencePowerMonsterCard);
     }
 
 
     private void removeThingsInContinueGettingMonsterInformation() {
-        anchorPane.getChildren().remove(labelForGettingAttackPowerMonsterCard);
+//        anchorPane.getChildren().remove(labelForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingAttackPowerMonsterCard);
     }
@@ -1302,16 +1317,28 @@ public class CardCreatorController implements Initializable {
             e.printStackTrace();
         }
         Method finalMethod = method;
-        buttonForFinish.setOnAction(ActionEvent -> {
-            try {
-//                finalMethod.invoke(null, vBox, buttonForFinish);
-                finalMethod.invoke(vBox, buttonForFinish);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+        buttonForFinish.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    finalMethod.invoke(null, vBox, buttonForFinish);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
         });
+//        buttonForFinish.setOnAction(ActionEvent -> {
+//            try {
+////                finalMethod.invoke(null, vBox, buttonForFinish);
+//                finalMethod.invoke(vBox, buttonForFinish);
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//        });
 
         for (Button button : buttons) {
             vBox.getChildren().add(button);
@@ -1804,4 +1831,7 @@ public class CardCreatorController implements Initializable {
     }
 
 
+    public void back(ActionEvent actionEvent) {
+        System.out.println("hi");
+    }
 }
