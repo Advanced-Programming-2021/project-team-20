@@ -5,6 +5,7 @@ import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -28,9 +29,11 @@ import project.model.cardData.General.Card;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.modelsforview.*;
+import project.view.MainView;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -193,11 +196,10 @@ public class DuelView extends Application {
         executor = new ScheduledThreadPoolExecutor(1);
         executor.setRemoveOnCancelPolicy(true);
     }
-
     @Override
     public void start(Stage stage) {
         cheatCodes.setLength(0);
-        FakeMain.call();
+       // FakeMain.call();
         areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
         prepareArrayListsForWorking();
         DuelView.stage = stage;
@@ -297,7 +299,7 @@ public class DuelView extends Application {
             }
         });
         stage.setScene(scene);
-        stage.show();
+        //stage.show();
         stageWidth = scene.getWidth();
         stageHeight = scene.getHeight();
         prepareObjectsForWorking();
@@ -349,9 +351,9 @@ public class DuelView extends Application {
     }
 
 
-    public static void main(String args[]) {
-        launch(args);
-    }
+//    public static void main(String args[]) {
+//        launch(args);
+//    }
 
     public static Stage getStage() {
         return stage;
@@ -414,7 +416,7 @@ public class DuelView extends Application {
 
     public void checkCheatCommands(KeyEvent keyEvent) {
         Long currentTimeKeyPressed = System.currentTimeMillis();
-        if (currentTimeKeyPressed - lastTimeKeyPressed > 5000) {
+        if (currentTimeKeyPressed - lastTimeKeyPressed > 20000) {
             cheatCodes.setLength(0);
         }
         lastTimeKeyPressed = currentTimeKeyPressed;
@@ -1041,5 +1043,6 @@ public class DuelView extends Application {
             System.out.println(((project.model.modelsforview.CardView) controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE).get(i)).getCard().getCardName());
         }
     }
+
 
 }
