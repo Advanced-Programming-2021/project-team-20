@@ -4,16 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.scene.control.cell.ProgressBarTreeTableCell;
 import javafx.scene.image.Image;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.ContinuousSpellCardEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.LogicalActivationRequirement;
-import project.controller.duel.CardEffects.SpellEffectEnums.NormalSpellCardEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.QuickSpellEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.RitualSpellEffect;
-import project.controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
+import project.controller.duel.CardEffects.SpellEffectEnums.*;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
@@ -27,6 +21,8 @@ public class SpellCard extends Card {
     private ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects;
     private ArrayList<EquipSpellEffect> equipSpellEffects;
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
+    private ArrayList<FieldSpellExtendedEffect> fieldSpellExtendedEffects;
+    private ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffects;
     private ArrayList<LogicalActivationRequirement> logicalActivationRequirements;//
     private ArrayList<NormalSpellCardEffect> normalSpellCardEffects;
     private ArrayList<QuickSpellEffect> quickSpellEffects;
@@ -209,6 +205,14 @@ public class SpellCard extends Card {
 
     public ArrayList<LogicalActivationRequirement> getLogicalActivationRequirements() {
         return logicalActivationRequirements;
+    }
+
+    public ArrayList<FieldSpellExtendedEffect> getFieldSpellExtendedEffects() {
+        return fieldSpellExtendedEffects;
+    }
+
+    public ArrayList<EquipSpellExtendedEffect> getEquipSpellExtendedEffects() {
+        return equipSpellExtendedEffects;
     }
 
     public ArrayList<NormalSpellCardEffect> getNormalSpellCardEffects() {

@@ -23,7 +23,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.view.pooyaviewpackage.DuelView;
-import project.view.pooyaviewpackage.newDuelView;
 import project.view.transitions.RockPaperScissorTransition;
 import project.controller.duel.PreliminaryPackage.GameManager;
 
@@ -213,7 +212,14 @@ public class RockPaperScissorController implements Initializable {
     }
 
     public void startDuel(){
-        new DuelView().start(MainView.getStage());
+//        AnchorPane anchorPane = null;
+//        try {
+//            anchorPane = FXMLLoader.load(getClass().getResource("/project/fxml/duelPage.fxml"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        DuelView.callStage();
+        //DuelView.main(null);
     }
 
     private void backRectanglesToFirstPlace() {
@@ -226,6 +232,7 @@ public class RockPaperScissorController implements Initializable {
     private void showAlert(String message, String typeOfMessage, boolean didAnyOneWin) {
         CustomDialog customDialog = new CustomDialog(typeOfMessage, message, this);
         customDialog.openDialog();
+        //customDialog.setO
     }
 
     private void attackChosenRectangles() {
