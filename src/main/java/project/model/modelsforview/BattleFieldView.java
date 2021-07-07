@@ -34,4 +34,19 @@ public class BattleFieldView extends Rectangle {
         return upperLeftY;
     }
 
+    public void updateImageByThisName(String string){
+        if (string.isBlank()){
+            this.setFill(new ImagePattern(new Image(BattleFieldView.class.getResource("/project/battlefield/fie_normal.bmp").toExternalForm())));
+        } else {
+            if (string.equals("Umiiruka")){
+                this.setFill(new ImagePattern(new Image(BattleFieldView.class.getResource("/project/battlefield/fie_water.bmp").toExternalForm())));
+            } else if (string.equals("Forest")){
+                this.setFill(new ImagePattern(new Image(BattleFieldView.class.getResource("/project/battlefield/fie_mori.bmp").toExternalForm())));
+            } else if (string.equals("Closed Forest")){
+                this.setFill(new ImagePattern(new Image(BattleFieldView.class.getResource("/project/battlefield/fie_sougen.bmp").toExternalForm())));
+            } else if (string.equals("Yami")){
+                this.setFill(new ImagePattern(new Image(BattleFieldView.class.getResource("/project/battlefield/fie_yami.bmp").toExternalForm())));
+            }
+        }
+    }
 }

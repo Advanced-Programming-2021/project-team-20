@@ -2,6 +2,8 @@ package project.view.pooyaviewpackage;
 
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
@@ -504,7 +506,7 @@ public class ControllerForView {
         }
     }
 
-    public TranslateTransition sendCardToGraveyardZone(CardView cardView, int turn, double time) {
+    public TranslateTransition sendCardToGraveyardZone(CardView cardView, int turn, double time, boolean isSpecial) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(time), cardView);
         if (turn == 0 && GameManager.getDuelControllerByIndex(0).getTurn() == 1 || turn == 1) {
             translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7 - cardView.getUpperLeftX());
@@ -516,6 +518,14 @@ public class ControllerForView {
         }
         translateTransition.setCycleCount(1);
         translateTransition.setAutoReverse(true);
+        if (isSpecial){
+            translateTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    DuelView.getBattleFieldView().updateImageByThisName("");
+                }
+            });
+        }
         return translateTransition;
     }
 

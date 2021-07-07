@@ -14,6 +14,7 @@ import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEff
 import project.controller.duel.CardEffects.MonsterEffectEnums.SummoningRequirement;
 import project.controller.duel.CardEffects.MonsterEffectEnums.UponSummoningEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellExtendedEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
 import project.controller.duel.GamePackage.DuelBoard;
 import project.controller.duel.PreliminaryPackage.GameManager;
@@ -47,6 +48,7 @@ public class MonsterCard extends Card {
     private ArrayList<SentToGraveyardEffect> sentToGraveyardEffects;
     private ArrayList<EquipSpellEffect> equipSpellEffects;
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
+    private ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffects;
 
     public MonsterCard(int attackPower, int defensePower, int level, MonsterCardAttribute attribute,
             MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
@@ -282,6 +284,10 @@ public class MonsterCard extends Card {
 
     public ArrayList<EquipSpellEffect> getEquipSpellEffects() {
         return equipSpellEffects;
+    }
+
+    public ArrayList<EquipSpellExtendedEffect> getEquipSpellExtendedEffects() {
+        return equipSpellExtendedEffects;
     }
 
     public ArrayList<FieldSpellEffect> getFieldSpellEffects() {

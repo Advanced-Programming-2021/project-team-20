@@ -213,7 +213,7 @@ public class RockPaperScissorController implements Initializable {
 
     public void startDuel(){
         SongPlayer.getInstance().pauseMusic();
-        new DuelView().start(MainView.getStage());
+         DuelView.callStage();
     }
 
     private void backRectanglesToFirstPlace() {
@@ -226,6 +226,7 @@ public class RockPaperScissorController implements Initializable {
     private void showAlert(String message, String typeOfMessage, boolean didAnyOneWin) {
         CustomDialog customDialog = new CustomDialog(typeOfMessage, message, this);
         customDialog.openDialog();
+        //customDialog.setO
     }
 
     private void attackChosenRectangles() {

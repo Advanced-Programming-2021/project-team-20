@@ -74,6 +74,8 @@ public class CardCreatorController implements Initializable {
     private ArrayList<Integer> spellCardActivationTrapCardEffectNumbers;
     private ArrayList<Integer> trapCardActivationTrapCardEffectNumbers;
     private ArrayList<Integer> userReplyForActivationNumbers;
+    private ArrayList<Integer> monsterFamilyEffectsInTrapEquip;
+    private ArrayList<Integer> monsterFamilyEffectsInTrapField;
 
     @FXML
     Button spellButton;
@@ -1075,6 +1077,17 @@ public class CardCreatorController implements Initializable {
         }
     }
 
+    private void changeAdditionOfThisEffectInTheGivenPlace2(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
+        if (integersValues.contains(finalI)) {
+            integersValues.remove(Integer.valueOf(finalI));
+            buttons.get(finalI-12).setStyle("-fx-background-color: #e6e9ec");
+        } else {
+            integersValues.add(finalI);
+            buttons.get(finalI-12).setStyle("-fx-background-color: #0c7bea;");
+        }
+    }
+
+
     private void removeThingsInGetLevelMonsterCard() {
         // anchorPane.getChildren().remove(labelForGettingLevelMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingLevelMonsterCard);
@@ -1554,10 +1567,10 @@ public class CardCreatorController implements Initializable {
                         buttons.get(i).setOnAction(ActionEvent -> normalSpell(vbox));
                         break;
                     case 1:
-                        buttons.get(i).setOnAction(ActionEvent -> equipSpell(vbox));
+                        buttons.get(i).setOnAction(ActionEvent -> beforeEquipSpell(vbox));
                         break;
                     case 2:
-                        buttons.get(i).setOnAction(ActionEvent -> fieldSpell(vbox));
+                        buttons.get(i).setOnAction(ActionEvent -> beforeFieldSpell(vbox));
                         break;
                     case 3:
                         buttons.get(i).setOnAction(ActionEvent -> ritualSpell(vbox));
@@ -1577,6 +1590,170 @@ public class CardCreatorController implements Initializable {
 
         }
     }
+
+    private void beforeFieldSpell(VBox vbox) {
+        anchorPane.getChildren().remove(vbox);
+
+        ArrayList<Button> buttons = new ArrayList<>();
+        MonsterCardFamily[] values = MonsterCardFamily.values();
+        monsterFamilyEffectsInTrapField = new ArrayList<>();
+
+        for (int i = 0; i < values.length / 2; i++) {
+            String name = values[i].toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < values.length / 2; i++) {
+            int finalI1 = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI1, monsterFamilyEffectsInTrapField, buttons);
+                }
+            });
+        }
+
+        VBox vbox1 = new VBox();
+        vbox1.setLayoutY(60);
+        vbox1.setLayoutX(570);
+        vbox1.setMinHeight(600);
+        vbox1.setMinWidth(200);
+        vbox1.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vbox1.setSpacing(13);
+
+        for (Button button : buttons) {
+            vbox1.getChildren().add(button);
+        }
+        anchorPane.getChildren().add(vbox1);
+
+
+        ArrayList<Button> buttons2 = new ArrayList<>();
+        for (int i = values.length / 2; i < values.length; i++) {
+            String name = values[i].toString();
+            buttons2.add(new Button(name));
+        }
+
+        for (int i = 0; i < values.length / 2; i++) {
+            int finalI1 = i;
+            buttons2.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace2(finalI1 + 12, monsterFamilyEffectsInTrapField, buttons2);
+                }
+            });
+        }
+
+        VBox vBox2 = new VBox();
+        vBox2.setLayoutY(60);
+        vBox2.setLayoutX(230);
+        vBox2.setMinHeight(600);
+        vBox2.setMinWidth(200);
+        vBox2.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox2.setSpacing(13);
+
+        for (Button button : buttons2) {
+            vBox2.getChildren().add(button);
+        }
+
+        Button endButton = new Button("OK");
+        endButton.setLayoutY(500);
+        endButton.setLayoutX(500);
+        endButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                fieldSpell(vbox1, vBox2, endButton);
+            }
+        });
+
+        anchorPane.getChildren().add(endButton);
+
+        anchorPane.getChildren().add(vBox2);
+    }
+
+    private void beforeEquipSpell(VBox vbox) {
+
+        anchorPane.getChildren().remove(vbox);
+
+        ArrayList<Button> buttons = new ArrayList<>();
+        MonsterCardFamily[] values = MonsterCardFamily.values();
+        monsterFamilyEffectsInTrapEquip = new ArrayList<>();
+
+        for (int i = 0; i < values.length / 2; i++) {
+            String name = values[i].toString();
+            buttons.add(new Button(name));
+        }
+
+        for (int i = 0; i < values.length / 2; i++) {
+            int finalI1 = i;
+            buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace(finalI1, monsterFamilyEffectsInTrapEquip, buttons);
+                }
+            });
+        }
+
+        VBox vbox1 = new VBox();
+        vbox1.setLayoutY(60);
+        vbox1.setLayoutX(570);
+        vbox1.setMinHeight(600);
+        vbox1.setMinWidth(200);
+        vbox1.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vbox1.setSpacing(13);
+
+        for (Button button : buttons) {
+            vbox1.getChildren().add(button);
+        }
+        anchorPane.getChildren().add(vbox1);
+
+
+        ArrayList<Button> buttons2 = new ArrayList<>();
+        for (int i = values.length / 2; i < values.length; i++) {
+            String name = values[i].toString();
+            buttons2.add(new Button(name));
+        }
+
+        for (int i = 0; i < values.length / 2; i++) {
+            int finalI1 = i;
+            buttons2.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    changeAdditionOfThisEffectInTheGivenPlace2(finalI1 + 12, monsterFamilyEffectsInTrapEquip, buttons2);
+                }
+            });
+        }
+
+        VBox vBox2 = new VBox();
+        vBox2.setLayoutY(60);
+        vBox2.setLayoutX(230);
+        vBox2.setMinHeight(600);
+        vBox2.setMinWidth(200);
+        vBox2.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox2.setSpacing(13);
+
+        for (Button button : buttons2) {
+            vBox2.getChildren().add(button);
+        }
+
+        Button endButton = new Button("OK");
+        endButton.setLayoutY(500);
+        endButton.setLayoutX(500);
+        endButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                equipSpell(vbox1, vBox2, endButton);
+            }
+        });
+
+        anchorPane.getChildren().add(endButton);
+
+        anchorPane.getChildren().add(vBox2);
+    }
+
 
     private void continuousSpell(VBox vbox) {
         spellCardValue = SpellCardValue.CONTINUOUS.toString();
@@ -1695,9 +1872,12 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinish);
     }
 
-    private void fieldSpell(VBox vbox) {
+
+    private void fieldSpell(VBox vbox111, VBox vbox1111, Button endButton) {
         spellCardValue = SpellCardValue.FIELD.toString();
-        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(vbox1111);
+        anchorPane.getChildren().remove(vbox111);
+        anchorPane.getChildren().remove(endButton);
 
         FieldSpellEffect[] effects = FieldSpellEffect.values();
         ArrayList<Button> buttons = new ArrayList<>();
@@ -1734,9 +1914,12 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinish);
     }
 
-    private void equipSpell(VBox vbox) {
+
+    private void equipSpell(VBox vbox1, VBox vBox2, Button button11) {
         spellCardValue = SpellCardValue.EQUIP.toString();
-        anchorPane.getChildren().remove(vbox);
+        anchorPane.getChildren().remove(vbox1);
+        anchorPane.getChildren().remove(button11);
+        anchorPane.getChildren().remove(vBox2);
 
         EquipSpellEffect[] effects = EquipSpellEffect.values();
         ArrayList<Button> buttons = new ArrayList<>();
@@ -1860,21 +2043,31 @@ public class CardCreatorController implements Initializable {
 
         HashMap<String, List<String>> enumValues = new HashMap<>();
 
+        HashMap<String, List<String>> monsterFamilyTrap = new HashMap<>();
         EquipSpellEffect[] equipSpellEffects = EquipSpellEffect.values();
         FieldSpellEffect[] fieldSpellEffects = FieldSpellEffect.values();
         NormalSpellCardEffect[] normalSpellCardEffects = NormalSpellCardEffect.values();
         QuickSpellEffect[] quickSpellEffects = QuickSpellEffect.values();
         RitualSpellEffect[] ritualSpellEffects = RitualSpellEffect.values();
         ContinuousSpellCardEffect[] continuousSpellCardEffects = ContinuousSpellCardEffect.values();
+        MonsterCardFamily[] monsterCardFamilies = MonsterCardFamily.values();
 
-        ArrayList<String> strings = new ArrayList<>();
+
+        ArrayList<String> stringsNormal = new ArrayList<>();
+        ArrayList<String> stringsEquip = new ArrayList<>();
+        ArrayList<String> stringsField = new ArrayList<>();
+        ArrayList<String> stringsRitual = new ArrayList<>();
+        ArrayList<String> stringsQuick = new ArrayList<>();
+        ArrayList<String> stringsContinuous = new ArrayList<>();
         ArrayList<String> userReplyArrayList = new ArrayList<>();
+        ArrayList<String> monsterFamilyTrapEquip = new ArrayList<>();
+        ArrayList<String> monsterFamilyTrapField = new ArrayList<>();
         int counter = 0;
         switch (spellCardValue) {
             case "NORMAL":
                 for (NormalSpellCardEffect normalSpellCardEffect : normalSpellCardEffects) {
                     if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
-                        strings.add(String.valueOf(normalSpellCardEffect));
+                        stringsNormal.add(String.valueOf(normalSpellCardEffect));
                     counter++;
                 }
 
@@ -1882,23 +2075,34 @@ public class CardCreatorController implements Initializable {
             case "EQUIP":
                 for (EquipSpellEffect effect : equipSpellEffects) {
                     if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
-                        strings.add(String.valueOf(effect));
+                        stringsEquip.add(String.valueOf(effect));
                     counter++;
+                }
+                counter = 0;
+                for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
+                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(counter))){
+                        monsterFamilyTrapEquip.add(String.valueOf(monsterCardFamily));
+                    }
                 }
 
                 break;
             case "FIELD":
                 for (FieldSpellEffect effect : fieldSpellEffects) {
                     if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
-                        strings.add(String.valueOf(effect));
+                        stringsField.add(String.valueOf(effect));
                     counter++;
                 }
-
+                counter = 0;
+                for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
+                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(counter))){
+                        monsterFamilyTrapField.add(String.valueOf(monsterCardFamily));
+                    }
+                }
                 break;
             case "RITUAL":
                 for (RitualSpellEffect effect : ritualSpellEffects) {
                     if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
-                        strings.add(String.valueOf(effect));
+                        stringsRitual.add(String.valueOf(effect));
                     counter++;
                 }
 
@@ -1906,7 +2110,7 @@ public class CardCreatorController implements Initializable {
             case "QUICK_PLAY":
                 for (QuickSpellEffect effect : quickSpellEffects) {
                     if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
-                        strings.add(String.valueOf(effect));
+                        stringsQuick.add(String.valueOf(effect));
                     counter++;
                 }
 
@@ -1914,20 +2118,23 @@ public class CardCreatorController implements Initializable {
             case "CONTINUOUS":
                 for (ContinuousSpellCardEffect effect : continuousSpellCardEffects) {
                     if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
-                        strings.add(String.valueOf(effect));
+                        stringsContinuous.add(String.valueOf(effect));
                     counter++;
                 }
 
                 break;
         }
-        enumValues.put("NormalSpellCardEffect", strings);
-        enumValues.put("EquipSpellEffect", strings);
-        enumValues.put("FieldSpellEffect", strings);
-        enumValues.put("RitualSpellEffect", strings);
-        enumValues.put("QuickSpellEffect", strings);
-        enumValues.put("ContinuousSpellCardEffect", strings);
+        enumValues.put("NormalSpellCardEffect", stringsNormal);
+        enumValues.put("EquipSpellEffect", stringsEquip);
+        enumValues.put("FieldSpellEffect", stringsField);
+        enumValues.put("RitualSpellEffect", stringsRitual);
+        enumValues.put("QuickSpellEffect", stringsQuick);
+        enumValues.put("ContinuousSpellCardEffect", stringsContinuous);
         enumValues.put("LogicalActivationRequirement", new ArrayList<>());
         enumValues.put("SentToGraveyardEffect", new ArrayList<>());
+
+        monsterFamilyTrap.put("field", monsterFamilyTrapField);
+        monsterFamilyTrap.put("equip", monsterFamilyTrapEquip);
 
         UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
         counter = 0;
@@ -1938,14 +2145,13 @@ public class CardCreatorController implements Initializable {
         }
 
         enumValues.put("UserReplyForActivation", userReplyArrayList);
-        SpellCard spellCard = new SpellCard(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
-                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues,
-                cardImage);
+        SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues, cardImage, monsterFamilyTrap);
 
-        Storage.addCardToNewCardsCrated(spellCard);
-        Storage.saveNewImagesOfCardsInFile(spellCard, imagePath);
-        // TODO : calculate card price
-        // Should I add all of them even if they are empty?
+//        Storage.addCardToNewCardsCrated(spellCard);
+//        Storage.saveNewImagesOfCardsInFile(spellCard, imagePath);
+        //TODO : calculate card price
+        //Should I add all of them even if they are empty?
 
         System.out.println("Card created successfully");
         try {
