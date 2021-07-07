@@ -46,16 +46,16 @@ public class MainMenuController implements Initializable {
     }
 
     public void prepareBackgroundMusic() {
-        URL resource = getClass().getResource("/project/music/my-music.mp3");
-        backgroundMusic = new MediaPlayer(new Media(resource.toString()));
-        mediaView.setMediaPlayer(backgroundMusic);
-        backgroundMusic.setAutoPlay(true);
-        backgroundMusic.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                backgroundMusic.seek(Duration.ZERO);
-            }
-        });
-        backgroundMusic.play();
+        // URL resource = getClass().getResource("/project/music/my-music.mp3");
+        // backgroundMusic = new MediaPlayer(new Media(resource.toString()));
+        // mediaView.setMediaPlayer(backgroundMusic);
+        // backgroundMusic.setAutoPlay(true);
+        // backgroundMusic.setOnEndOfMedia(new Runnable() {
+        //     public void run() {
+        //         backgroundMusic.seek(Duration.ZERO);
+        //     }
+        // });
+        // backgroundMusic.play();
     }
 
     public void duelMenu() {
