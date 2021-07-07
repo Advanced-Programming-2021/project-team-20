@@ -88,12 +88,12 @@ public class CardCreatorController implements Initializable {
     @FXML
     AnchorPane anchorPane;
 
-//    Label labelForGettingCardNameFromUser;
+    //    Label labelForGettingCardNameFromUser;
     TextField textFieldForGettingCardNameFromUser;
     Button buttonForGettingCardNameFromUser;
 
 
-//    Label labelForGettingCardDescriptionFromUser;
+    //    Label labelForGettingCardDescriptionFromUser;
     TextField textFieldForGettingCardDescriptionFromUser;
     Button buttonForGettingCardDescriptionFromUser;
 
@@ -101,15 +101,15 @@ public class CardCreatorController implements Initializable {
     Button buttonOneForNumberOfAllowedUsages;
     Button buttonThreeForNumberOfAllowedUsages;
 
-//    Label labelForGettingAttackPowerMonsterCard;
+    //    Label labelForGettingAttackPowerMonsterCard;
     TextField textFieldForGettingAttackPowerMonsterCard;
     Button buttonForGettingAttackPowerMonsterCard;
 
-//    Label labelForGettingDefencePowerMonsterCard;
+    //    Label labelForGettingDefencePowerMonsterCard;
     TextField textFieldForGettingDefencePowerMonsterCard;
     Button buttonForGettingDefencePowerMonsterCard;
 
-//    Label labelForGettingLevelMonsterCard;
+    //    Label labelForGettingLevelMonsterCard;
     TextField textFieldForGettingLevelMonsterCard;
     Button buttonForGettingLevelMonsterCard;
 
@@ -245,8 +245,6 @@ public class CardCreatorController implements Initializable {
         textFieldForGettingCardDescriptionFromUser.promptTextProperty().setValue("Card Description");
         textFieldForGettingCardDescriptionFromUser.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-min-height: 200");
         anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
-
-
 
 
         buttonForGettingCardNameFromUser = new Button("OK");
@@ -795,7 +793,6 @@ public class CardCreatorController implements Initializable {
         vBoxForContinuousMonsterEffect = new VBox();
 
 
-
         vBoxForContinuousMonsterEffect.setLayoutY(180);
         vBoxForContinuousMonsterEffect.setLayoutX(190);
         vBoxForContinuousMonsterEffect.setMinHeight(200);
@@ -866,7 +863,6 @@ public class CardCreatorController implements Initializable {
         buttonForFinishFlipEffect.setStyle("-fx-font-size: 25");
 
 
-
         buttonForFinishFlipEffect.setOnAction(ActionEvent -> getOptionalMonsterEffectFromUser());
 
         for (Button button : buttonsForFlipEffect) {
@@ -923,8 +919,6 @@ public class CardCreatorController implements Initializable {
         buttonForFinishOptionalMonsterEffect.setStyle("-fx-font-size: 25");
 
 
-
-
         buttonForFinishOptionalMonsterEffect.setOnAction(ActionEvent -> getSentToGraveyardEffectFromUser());
 
         for (Button button : buttonsForOptionalMonsterEffect) {
@@ -977,7 +971,6 @@ public class CardCreatorController implements Initializable {
         buttonForFinishSentToGraveyardEffect.setLayoutX(475);
         buttonForFinishSentToGraveyardEffect.setLayoutY(430);
         buttonForFinishSentToGraveyardEffect.setStyle("-fx-font-size: 25");
-
 
 
         buttonForFinishSentToGraveyardEffect.setOnAction(ActionEvent -> finishMonsterCardCreator());
@@ -1327,8 +1320,6 @@ public class CardCreatorController implements Initializable {
         }
 
 
-
-
         previousVbox.setLayoutY(100);
         previousVbox.setLayoutX(400);
         previousButton.setLayoutY(400);
@@ -1558,33 +1549,34 @@ public class CardCreatorController implements Initializable {
 
 
     private void getNumberOfTurnsForActivation() {
-        Label label = new Label("Enter number of turns for activation");
-        label.setLayoutX(450);
-        label.setLayoutY(100);
 
         TextField textField = new TextField();
-        textField.setLayoutY(200);
-        textField.setLayoutX(450);
 
         Button button = new Button("OK");
-        button.setLayoutX(450);
-        button.setLayoutY(300);
-        button.setOnAction(ActionEvent -> getSpellCardValue(textField, label, button));
+        button.setOnAction(ActionEvent -> getSpellCardValue(textField, button));
+        textField.setLayoutY(200);
+        textField.setLayoutX(310);
+        textField.setMinWidth(400);
+        textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 20; -fx-background-color: #f5eeee");
+        textField.setPromptText("NUMBER OF TURNS FOR ACTIVATION");
 
-        anchorPane.getChildren().add(label);
+        button.setLayoutY(290);
+        button.setLayoutX(480);
+        button.setStyle("-fx-font-size: 25");
+
+
         anchorPane.getChildren().add(textField);
         anchorPane.getChildren().add(button);
 
     }
 
 
-    private void getSpellCardValue(TextField textField, Label label, Button button) {
+    private void getSpellCardValue(TextField textField, Button button) {
         Pattern pattern = Pattern.compile("^\\d+$");
         String numberOfTurns = textField.getText();
         if (!numberOfTurns.isEmpty() && pattern.matcher(numberOfTurns).matches()) {
             numberOfTurnsForActivationSpell = Integer.parseInt(numberOfTurns);
             anchorPane.getChildren().remove(textField);
-            anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
 
             Label newLabel = new Label("Please choose one of these");
@@ -1592,8 +1584,14 @@ public class CardCreatorController implements Initializable {
             newLabel.setLayoutX(450);
 
             VBox vbox = new VBox();
-            vbox.setLayoutY(150);
-            vbox.setLayoutX(450);
+
+
+            vbox.setLayoutY(200);
+            vbox.setLayoutX(430);
+            vbox.setMinHeight(200);
+            vbox.setMinWidth(100);
+            vbox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+            vbox.setSpacing(20);
 
             ArrayList<Button> buttons = new ArrayList<>();
             SpellCardValue[] spellCardValues = SpellCardValue.values();
@@ -1609,22 +1607,22 @@ public class CardCreatorController implements Initializable {
             for (int i = 0; i < buttons.size(); i++) {
                 switch (i) {
                     case 0:
-                        buttons.get(i).setOnAction(ActionEvent -> normalSpell(vbox, label));
+                        buttons.get(i).setOnAction(ActionEvent -> normalSpell(vbox));
                         break;
                     case 1:
-                        buttons.get(i).setOnAction(ActionEvent -> equipSpell(vbox, label));
+                        buttons.get(i).setOnAction(ActionEvent -> equipSpell(vbox));
                         break;
                     case 2:
-                        buttons.get(i).setOnAction(ActionEvent -> fieldSpell(vbox, label));
+                        buttons.get(i).setOnAction(ActionEvent -> fieldSpell(vbox));
                         break;
                     case 3:
-                        buttons.get(i).setOnAction(ActionEvent -> ritualSpell(vbox, label));
+                        buttons.get(i).setOnAction(ActionEvent -> ritualSpell(vbox));
                         break;
                     case 4:
-                        buttons.get(i).setOnAction(ActionEvent -> quickPlaySpell(vbox, label));
+                        buttons.get(i).setOnAction(ActionEvent -> quickPlaySpell(vbox));
                         break;
                     case 5:
-                        buttons.get(i).setOnAction(ActionEvent -> continuousSpell(vbox, label));
+                        buttons.get(i).setOnAction(ActionEvent -> continuousSpell(vbox));
                         break;
 
                 }
@@ -1632,16 +1630,14 @@ public class CardCreatorController implements Initializable {
 
             numberOfSelectedEnumSpell = new ArrayList<>();
             anchorPane.getChildren().add(vbox);
-            anchorPane.getChildren().add(label);
 
         }
     }
 
 
-    private void continuousSpell(VBox vbox, Label label) {
+    private void continuousSpell(VBox vbox) {
         spellCardValue = SpellCardValue.CONTINUOUS.toString();
         anchorPane.getChildren().remove(vbox);
-        anchorPane.getChildren().remove(label);
 
 
         ContinuousSpellCardEffect[] effects = ContinuousSpellCardEffect.values();
@@ -1680,10 +1676,9 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void quickPlaySpell(VBox vbox, Label label) {
+    private void quickPlaySpell(VBox vbox) {
         spellCardValue = SpellCardValue.QUICK_PLAY.toString();
         anchorPane.getChildren().remove(vbox);
-        anchorPane.getChildren().remove(label);
 
 
         QuickSpellEffect[] effects = QuickSpellEffect.values();
@@ -1722,10 +1717,9 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void ritualSpell(VBox vbox, Label label) {
+    private void ritualSpell(VBox vbox) {
         spellCardValue = SpellCardValue.RITUAL.toString();
         anchorPane.getChildren().remove(vbox);
-        anchorPane.getChildren().remove(label);
 
 
         RitualSpellEffect[] effects = RitualSpellEffect.values();
@@ -1764,10 +1758,9 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void fieldSpell(VBox vbox, Label label) {
+    private void fieldSpell(VBox vbox) {
         spellCardValue = SpellCardValue.FIELD.toString();
         anchorPane.getChildren().remove(vbox);
-        anchorPane.getChildren().remove(label);
 
         FieldSpellEffect[] effects = FieldSpellEffect.values();
         ArrayList<Button> buttons = new ArrayList<>();
@@ -1805,10 +1798,9 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void equipSpell(VBox vbox, Label label) {
+    private void equipSpell(VBox vbox) {
         spellCardValue = SpellCardValue.EQUIP.toString();
         anchorPane.getChildren().remove(vbox);
-        anchorPane.getChildren().remove(label);
 
         EquipSpellEffect[] effects = EquipSpellEffect.values();
         ArrayList<Button> buttons = new ArrayList<>();
@@ -1846,10 +1838,9 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void normalSpell(VBox vbox, Label label) {
+    private void normalSpell(VBox vbox) {
         spellCardValue = SpellCardValue.NORMAL.toString();
         anchorPane.getChildren().remove(vbox);
-        anchorPane.getChildren().remove(label);
 
         NormalSpellCardEffect[] normalSpellCardEffects = NormalSpellCardEffect.values();
         ArrayList<Button> buttons = new ArrayList<>();
