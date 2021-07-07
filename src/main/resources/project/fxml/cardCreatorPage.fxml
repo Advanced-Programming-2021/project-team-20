@@ -3,6 +3,11 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane fx:id="anchorPane" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.CardCreatorController">
+<?import java.lang.String?>
+<AnchorPane fx:id="anchorPane" stylesheets="@../css/abc.css" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.CardCreatorController">
 
+  <styleClass>
+    <String fx:value="background" />
+    <String fx:value="chart-plot-background" />
+  </styleClass>
 </AnchorPane>
