@@ -112,7 +112,7 @@ public class MonsterCard extends Card {
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
         }
-        if (cardName.equals("Terratiger, the empowered warrior")) {
+        if (cardName.equals("Terratiger, the Empowered Warrior")) {
             uponSummoningEffects.add(
                     UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
         }

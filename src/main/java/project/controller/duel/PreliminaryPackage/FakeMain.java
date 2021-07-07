@@ -55,7 +55,7 @@ public class FakeMain {
         ArrayList<Card> secondPlayerDeck = new ArrayList<>();
         addCardsToFirstPlayer(firstPlayerDeck);
         addCardsToSecondPlayer(secondPlayerDeck);
-        gameManager.addANewGame(null,firstPlayerDeck,  null,null,secondPlayerDeck, null, "zenos", "aii", 1);
+        gameManager.addANewGame(null,firstPlayerDeck,  null,null,secondPlayerDeck, null, "zenos", "AII", 1);
         DuelController duelController = GameManager.getDuelControllerByIndex(0);
         duelController.startDuel(0);
         //System.out.println(duelController.startDuel(0));
@@ -113,17 +113,19 @@ public class FakeMain {
 
     public static void addCardsToSecondPlayer(ArrayList<Card> secondPlayerDeck) {
         //secondPlayerDeck.add(new TrapCard("torrential tribute", "", null, null, 3, 60, 0, null));
-        secondPlayerDeck.add(new SpellCard("Twin Twisters", "", SpellCardValue.QUICK_PLAY, null, 3, 6, 0, null, null));
-        //secondPlayerDeck.add(new TrapCard("Call Of The Hunted", "", TrapCardValue.NORMAL, null, 3, 60, 0, null));
+       //secondPlayerDeck.add(new TrapCard("Call Of The Hunted", "", TrapCardValue.NORMAL, null, 3, 60, 0, null));
         //secondPlayerDeck.add(new SpellCard("Umiiruka", "", SpellCardValue.FIELD, null, 3, 60, 0, null, null));
         secondPlayerDeck.add(new SpellCard("Raigeki", "", SpellCardValue.NORMAL, null, 3, 60, 0, null, null));
 
+        secondPlayerDeck.add(new MonsterCard(2000, 0, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Leotron", "", null, 3, 0, null, null));
 
-        secondPlayerDeck.add(new MonsterCard(1800, 1200, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Leotron", "", null, 3, 0, null, null));
+        //secondPlayerDeck.add(new MonsterCard(1800, 1200, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Terratiger, the Empowered Warrior", "", null, 3, 0, null, null));
         //terratiger effect won't work because of invalid string name in controller
         secondPlayerDeck.add(new TrapCard("Mirror Force", "", TrapCardValue.NORMAL, null, 3, 60, 0, null, null));
         secondPlayerDeck.add(new MonsterCard(200, 1800, 2, MonsterCardAttribute.LIGHT, MonsterCardFamily.SPELLCASTER, MonsterCardValue.NORMAL, "Bitron", "", null, 3, 0, null, null));
-        secondPlayerDeck.add(new MonsterCard(1800, 1200, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Leotron", "", null, 3, 0, null, null));
+        secondPlayerDeck.add(new SpellCard("Twin Twisters", "", SpellCardValue.QUICK_PLAY, null, 3, 6, 0, null, null));
+
+        secondPlayerDeck.add(new MonsterCard(2000, 0, 4, MonsterCardAttribute.EARTH, MonsterCardFamily.WARRIOR, MonsterCardValue.EFFECT, "Leotron", "", null, 3, 0, null, null));
 
         secondPlayerDeck.add(new MonsterCard(300, 500, 3, MonsterCardAttribute.LIGHT, MonsterCardFamily.FAIRY, MonsterCardValue.EFFECT, "Marshmallon", "", null, 3, 0, null, null));
         secondPlayerDeck.add(new MonsterCard(2000, 0, 4, MonsterCardAttribute.LIGHT, MonsterCardFamily.SPELLCASTER, MonsterCardValue.NORMAL, "Alexandrite Dragon", "", null, 3, 0, null, null));

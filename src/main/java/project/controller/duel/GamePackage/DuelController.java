@@ -45,7 +45,7 @@ public class DuelController {
     public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
         changesInLifePointsToBeGivenToClient += string;
         changesInLifePointsToBeGivenToClient += "\n";
-        System.out.println("If you will allow me changesInLifePoints is adding\n"+string+"\nto wholeReport");
+        System.out.println("If you will allow me changesInLifePoints is adding\n" + string + "\nto wholeReport");
         wholeReportToClient += "&";
         wholeReportToClient += string;
         wholeReportToClient += "\n";
@@ -62,7 +62,7 @@ public class DuelController {
     public void addStringToSuperAlmightyString(String string) {
         superAlmightyChangesString += string;
         superAlmightyChangesString += "\n";
-        System.out.println("If you will allow me superAlmightyString is adding\n"+string+"\nto wholeReport");
+        System.out.println("If you will allow me superAlmightyString is adding\n" + string + "\nto wholeReport");
         wholeReportToClient += string;
         wholeReportToClient += "\n";
     }
@@ -77,6 +77,7 @@ public class DuelController {
 
     public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
         if (string != null) {
+            System.out.println("@@@@@@@@@@@@@@Available Card Location is "+string.getRowOfCardLocation()+" "+string.getIndex());
             availableCardLocationForUseForClient += string.getRowOfCardLocation();
             availableCardLocationForUseForClient += "\n";
             availableCardLocationForUseForClient += string.getIndex();
@@ -85,7 +86,15 @@ public class DuelController {
     }
 
     public void clearAvailableCardLocationForUseForClient() {
-        availableCardLocationForUseForClient = "";
+        int timesSeenNextLine = 0;
+        while (timesSeenNextLine < 2){
+            if (availableCardLocationForUseForClient.charAt(0) == '\n'){
+                timesSeenNextLine++;
+            }
+            availableCardLocationForUseForClient = availableCardLocationForUseForClient.substring(1);
+        }
+
+        //availableCardLocationForUseForClient = "";
     }
 
     private String whatUsersSay;
@@ -101,7 +110,7 @@ public class DuelController {
     public void addStringToWhatUsersSay(String string) {
         whatUsersSay += string;
         whatUsersSay += "\n";
-        System.out.println("If you will allow me whatUsersSay is adding\n"+string+"\nto wholeReport");
+        System.out.println("If you will allow me whatUsersSay is adding\n" + string + "\nto wholeReport");
         wholeReportToClient += string;
         wholeReportToClient += "\n";
     }
