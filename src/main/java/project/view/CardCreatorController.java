@@ -208,7 +208,7 @@ public class CardCreatorController implements Initializable {
 
     }
 
-
+ 
     private void trapCard() {
         cardType = "trap";
         removeThreeButtons();
