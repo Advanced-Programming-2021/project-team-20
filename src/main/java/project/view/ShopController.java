@@ -62,12 +62,8 @@ public class ShopController implements Initializable {
         allCards.putAll(Storage.getAllMonsterCards());
         allCards.putAll(Storage.getAllSpellAndTrapCards());
         System.out.println(allCards.size());
-        // ArrayList<String> names = new ArrayList<>();
         names = allCards.keySet().toArray(new String[0]);
-        // Collections.sort(names);
-        // for (int i = 0; i < allCards.size(); i++) {
-        // System.out.println(names[i].replaceAll(" ", ""));
-        // }
+
         int sizeOfWholeCards = allCards.size();
         if (allCardsInDifferentPages == null) {
             allCardsInDifferentPages = new ArrayList<>();
@@ -76,13 +72,14 @@ public class ShopController implements Initializable {
             }
         }
 
-        if (sizeOfWholeCards > allCardsInDifferentPages.size() * 64) {
-            allCardsInDifferentPages = new ArrayList<>();
-            for (int i = 0; i < Math.floorDiv(sizeOfWholeCards, 64) + 1; i++) {
-                allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards, (i + 1))));
-            }
-        }
-        setEffectOfpreviousAndnextCardsbtn();
+        // if (sizeOfWholeCards > allCardsInDifferentPages.size() * 64) {
+        // allCardsInDifferentPages = new ArrayList<>();
+        // for (int i = 0; i < Math.floorDiv(sizeOfWholeCards, 64) + 1; i++) {
+        // allCardsInDifferentPages.add(generateRectangleCardsInOnPage(generateOnePackOfCards(allCards,
+        // (i + 1))));
+        // }
+        // }
+        // setEffectOfpreviousAndnextCardsbtn();
     }
 
     private void setEffectOfpreviousAndnextCardsbtn() {
@@ -136,20 +133,6 @@ public class ShopController implements Initializable {
                 }
                 // String id = names[upToWhichCardAreShown];
 
-                try {
-                    stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\" + id + ".jpg");
-                    // stream = new FileInputStream("src\\main\\resources\\project\\images\\Cards\\"
-                    // + allCardsInOnePage.get(cardNumber).get + ".jpg");
-                } catch (Exception e) {
-                    System.out.println(id);
-                    // e.printStackTrace();
-                }
-                // System.out.println(allCards.size());
-                // cardNumber++;
-                // ?
-                assert stream != null;
-                Image image = new Image(stream);
-                rectangle.setFill(new ImagePattern(image));
                 rectangle.setArcHeight(20);
                 rectangle.setArcWidth(20);
 

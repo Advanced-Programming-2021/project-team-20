@@ -136,6 +136,8 @@ public class WholeDeckPageMenuController implements Initializable {
         }
         if (!decksInDifferentPages.contains(decksInOnePage) && decksInOnePage.size() > 0) {
             decksInDifferentPages.add(decksInOnePage);
+        } else if(decksInDifferentPages.size() == 0){
+            decksInDifferentPages.add(decksInOnePage);
         }
     }
 
@@ -260,6 +262,7 @@ public class WholeDeckPageMenuController implements Initializable {
         if (decksInDifferentPages == null) {
             createPacksOfDecksForEachPage(allDecksOfUser);
         }
+
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 if (2 * i + j >= decksInDifferentPages.get(currentPageToShowDecks).size()) {
