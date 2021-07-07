@@ -69,8 +69,9 @@ public class CardCreatorController implements Initializable {
     private VBox lastVboxTrap;
     private VBox previousVbox;
     private Button previousButton;
-    private String enumClassName = new String();
-    private String nextMethod;
+    private String enumClassName = "";
+    private String nextMethod = "";
+    private Method currentMethod;
     private ArrayList<Integer> flipSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterAttackingTrapCardEffectNumbers;
     private ArrayList<Integer> normalSummonTrapCardEffectNumbers;
@@ -1390,18 +1391,18 @@ public class CardCreatorController implements Initializable {
         Method method = null;
         try {
             method = Class.forName("project.view.CardCreatorController").getDeclaredMethod(nextMethod);
-            System.out.println(method.getName());
+            System.out.println("method:" + method.getName());
         } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        Method finalMethod = method;
-        System.out.println(finalMethod.getName());
+        currentMethod = method;
+        System.out.println(currentMethod.getName());
         previousButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    System.out.println(finalMethod.getName());
-                    finalMethod.invoke(null);
+                    System.out.println("a----" + currentMethod.getName());
+                    currentMethod.invoke(null);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
