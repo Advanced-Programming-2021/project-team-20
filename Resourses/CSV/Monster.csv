@@ -48,3 +48,6 @@ Command Knight,4,FIRE,Warrior,Effect,1200,1900,"All Warrior-Type monsters you co
 "1","1","LIGHT","DINOSAUR","RITUAL","1","1","1","0","#","#","#","#","#","#","#","#"
 "1","1","DIVINE","CYBERSE","EFFECT","1","1","1","0","#","#","#","#","#","#","#","#"
 "1","1","DIVINE","BEAST_WARRIOR","RITUAL","1","1","1","0","#","#IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE#SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN","#OPPONENT_CANNOT_ACTIVATE_TRAP_CARDS_WHILE_THIS_CARD_IS_FACE_UP","#","#","#","#TRIBUTE_SPECIFIC_MONSTERS","#IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION"
+"1","1","LIGHT","ROCK","NORMAL","1","1","","0","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#"
+"1","1","LIGHT","ROCK","NORMAL","1","1","","0","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#"
+"1","1","LIGHT","REPTILE","NORMAL","1","1","","0","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#"

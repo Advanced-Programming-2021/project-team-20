@@ -5,15 +5,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.ImagePattern;
 import javafx.stage.FileChooser;
-import javafx.stage.Popup;
 import project.controller.duel.CardEffects.MonsterEffectEnums.*;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.*;
@@ -29,15 +28,10 @@ import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.model.cardData.TrapCardData.TrapCardValue;
-import project.view.LoginController;
-import project.view.MainView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.temporal.ValueRange;
 import java.util.*;
@@ -506,8 +500,13 @@ public class CardCreatorController implements Initializable {
         }
 
         vboxForMonsterCardFamily = new VBox();
-        vboxForMonsterCardFamily.setLayoutY(100);
-        vboxForMonsterCardFamily.setLayoutX(400);
+        vboxForMonsterCardFamily.setLayoutY(60);
+        vboxForMonsterCardFamily.setLayoutX(570);
+        vboxForMonsterCardFamily.setMinHeight(600);
+        vboxForMonsterCardFamily.setMinWidth(200);
+        vboxForMonsterCardFamily.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vboxForMonsterCardFamily.setSpacing(13);
 
         for (Button button : buttonsForMonsterCardFamily) {
             vboxForMonsterCardFamily.getChildren().add(button);
@@ -527,8 +526,13 @@ public class CardCreatorController implements Initializable {
         }
 
         vboxForMonsterCardFamily2 = new VBox();
-        vboxForMonsterCardFamily2.setLayoutY(100);
-        vboxForMonsterCardFamily2.setLayoutX(600);
+        vboxForMonsterCardFamily2.setLayoutY(60);
+        vboxForMonsterCardFamily2.setLayoutX(230);
+        vboxForMonsterCardFamily2.setMinHeight(600);
+        vboxForMonsterCardFamily2.setMinWidth(200);
+        vboxForMonsterCardFamily2.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vboxForMonsterCardFamily2.setSpacing(13);
 
         for (Button button : buttonsForMonsterCardFamily2) {
             vboxForMonsterCardFamily2.getChildren().add(button);
@@ -558,8 +562,13 @@ public class CardCreatorController implements Initializable {
         }
 
         vboxForMonsterCardValues = new VBox();
-        vboxForMonsterCardValues.setLayoutY(100);
-        vboxForMonsterCardValues.setLayoutX(400);
+        vboxForMonsterCardValues.setLayoutY(200);
+        vboxForMonsterCardValues.setLayoutX(450);
+        vboxForMonsterCardValues.setMinHeight(200);
+        vboxForMonsterCardValues.setMinWidth(100);
+        vboxForMonsterCardValues.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vboxForMonsterCardValues.setSpacing(13);
 
         for (Button buttonsForMonsterCardValue : buttonsForMonsterCardValues) {
             vboxForMonsterCardValues.getChildren().add(buttonsForMonsterCardValue);
@@ -623,10 +632,17 @@ public class CardCreatorController implements Initializable {
         }
 
         vBoxForSummoningRequirement = new VBox();
-        vBoxForSummoningRequirement.setLayoutX(400);
-        vBoxForSummoningRequirement.setLayoutY(100);
-        finishButtonForSummoningRequirement.setLayoutX(400);
-        finishButtonForSummoningRequirement.setLayoutY(500);
+        vBoxForSummoningRequirement.setLayoutY(200);
+        vBoxForSummoningRequirement.setLayoutX(190);
+        vBoxForSummoningRequirement.setMinHeight(200);
+        vBoxForSummoningRequirement.setMinWidth(100);
+        vBoxForSummoningRequirement.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+//        vBoxForSummoningRequirement.setAlignment(Pos.CENTER);
+        vBoxForSummoningRequirement.setSpacing(20);
+        finishButtonForSummoningRequirement.setLayoutX(475);
+        finishButtonForSummoningRequirement.setLayoutY(450);
+        finishButtonForSummoningRequirement.setStyle("-fx-font-size: 25");
         finishButtonForSummoningRequirement.setOnAction(ActionEvent -> getUponSummoningEffectFromUser());
 
         for (int i = 0; i < buttonsForGettingSummoningRequirement.size(); i++) {
@@ -670,10 +686,17 @@ public class CardCreatorController implements Initializable {
         }
 
         vBoxForUponSummoningEffect = new VBox();
-        vBoxForUponSummoningEffect.setLayoutX(400);
-        vBoxForUponSummoningEffect.setLayoutY(100);
-        buttonForFinishUponSummoningEffect.setLayoutX(400);
-        buttonForFinishUponSummoningEffect.setLayoutY(500);
+        vBoxForUponSummoningEffect.setLayoutY(200);
+        vBoxForUponSummoningEffect.setLayoutX(90);
+        vBoxForUponSummoningEffect.setMinHeight(200);
+        vBoxForUponSummoningEffect.setMinWidth(100);
+        vBoxForUponSummoningEffect.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+//        vBoxForSummoningRequirement.setAlignment(Pos.CENTER);
+        vBoxForUponSummoningEffect.setSpacing(20);
+        buttonForFinishUponSummoningEffect.setLayoutX(475);
+        buttonForFinishUponSummoningEffect.setLayoutY(450);
+        buttonForFinishUponSummoningEffect.setStyle("-fx-font-size: 25");
         buttonForFinishUponSummoningEffect.setOnAction(ActionEvent -> getBeingAttackedEffectFromUser());
 
 
@@ -716,10 +739,18 @@ public class CardCreatorController implements Initializable {
         }
 
         vBoxForBeingAttackedEffect = new VBox();
-        vBoxForBeingAttackedEffect.setLayoutY(100);
-        vBoxForBeingAttackedEffect.setLayoutX(400);
-        buttonForFinishBeingAttackedEffect.setLayoutY(500);
-        buttonForFinishBeingAttackedEffect.setLayoutX(500);
+
+
+        vBoxForBeingAttackedEffect.setLayoutY(110);
+        vBoxForBeingAttackedEffect.setLayoutX(190);
+        vBoxForBeingAttackedEffect.setMinHeight(200);
+        vBoxForBeingAttackedEffect.setMinWidth(100);
+        vBoxForBeingAttackedEffect.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBoxForBeingAttackedEffect.setSpacing(20);
+        buttonForFinishBeingAttackedEffect.setLayoutX(475);
+        buttonForFinishBeingAttackedEffect.setLayoutY(520);
+        buttonForFinishBeingAttackedEffect.setStyle("-fx-font-size: 25");
 
         buttonForFinishBeingAttackedEffect.setOnAction(ActionEvent -> getContinuousMonsterEffectFromUser());
 
@@ -762,10 +793,21 @@ public class CardCreatorController implements Initializable {
         }
 
         vBoxForContinuousMonsterEffect = new VBox();
-        vBoxForContinuousMonsterEffect.setLayoutX(400);
-        vBoxForContinuousMonsterEffect.setLayoutY(100);
-        buttonForFinishContinuousMonsterEffect.setLayoutX(400);
-        buttonForFinishContinuousMonsterEffect.setLayoutY(400);
+
+
+
+        vBoxForContinuousMonsterEffect.setLayoutY(180);
+        vBoxForContinuousMonsterEffect.setLayoutX(190);
+        vBoxForContinuousMonsterEffect.setMinHeight(200);
+        vBoxForContinuousMonsterEffect.setMinWidth(100);
+        vBoxForContinuousMonsterEffect.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBoxForContinuousMonsterEffect.setSpacing(20);
+        buttonForFinishContinuousMonsterEffect.setLayoutX(475);
+        buttonForFinishContinuousMonsterEffect.setLayoutY(480);
+        buttonForFinishContinuousMonsterEffect.setStyle("-fx-font-size: 25");
+
+
         buttonForFinishContinuousMonsterEffect.setOnAction(ActionEvent -> getFlipEffectFromUser());
 
         for (Button button : buttonsForContinuousMonsterEffect) {
@@ -810,10 +852,21 @@ public class CardCreatorController implements Initializable {
 
 
         vBoxForFlipEffect = new VBox();
-        vBoxForFlipEffect.setLayoutY(100);
-        vBoxForFlipEffect.setLayoutX(400);
-        buttonForFinishFlipEffect.setLayoutY(400);
-        buttonForFinishFlipEffect.setLayoutX(400);
+
+
+        vBoxForFlipEffect.setLayoutY(310);
+        vBoxForFlipEffect.setLayoutX(370);
+        vBoxForFlipEffect.setMinHeight(100);
+        vBoxForFlipEffect.setMinWidth(90);
+        vBoxForFlipEffect.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBoxForFlipEffect.setSpacing(20);
+        buttonForFinishFlipEffect.setLayoutX(475);
+        buttonForFinishFlipEffect.setLayoutY(420);
+        buttonForFinishFlipEffect.setStyle("-fx-font-size: 25");
+
+
+
         buttonForFinishFlipEffect.setOnAction(ActionEvent -> getOptionalMonsterEffectFromUser());
 
         for (Button button : buttonsForFlipEffect) {
@@ -856,10 +909,22 @@ public class CardCreatorController implements Initializable {
 
 
         vBoxForOptionalMonsterEffect = new VBox();
-        vBoxForOptionalMonsterEffect.setLayoutY(100);
-        vBoxForOptionalMonsterEffect.setLayoutX(400);
-        buttonForFinishOptionalMonsterEffect.setLayoutY(400);
-        buttonForFinishOptionalMonsterEffect.setLayoutX(400);
+
+
+        vBoxForOptionalMonsterEffect.setLayoutY(200);
+        vBoxForOptionalMonsterEffect.setLayoutX(20);
+        vBoxForOptionalMonsterEffect.setMinHeight(100);
+        vBoxForOptionalMonsterEffect.setMinWidth(90);
+        vBoxForOptionalMonsterEffect.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBoxForOptionalMonsterEffect.setSpacing(20);
+        buttonForFinishOptionalMonsterEffect.setLayoutX(475);
+        buttonForFinishOptionalMonsterEffect.setLayoutY(420);
+        buttonForFinishOptionalMonsterEffect.setStyle("-fx-font-size: 25");
+
+
+
+
         buttonForFinishOptionalMonsterEffect.setOnAction(ActionEvent -> getSentToGraveyardEffectFromUser());
 
         for (Button button : buttonsForOptionalMonsterEffect) {
@@ -902,10 +967,19 @@ public class CardCreatorController implements Initializable {
 
 
         vBoxForSentToGraveyardEffect = new VBox();
-        vBoxForSentToGraveyardEffect.setLayoutY(100);
-        vBoxForSentToGraveyardEffect.setLayoutX(400);
-        buttonForFinishSentToGraveyardEffect.setLayoutY(400);
-        buttonForFinishSentToGraveyardEffect.setLayoutX(400);
+
+        vBoxForSentToGraveyardEffect.setLayoutY(300);
+        vBoxForSentToGraveyardEffect.setLayoutX(380);
+        vBoxForSentToGraveyardEffect.setMinHeight(100);
+        vBoxForSentToGraveyardEffect.setMinWidth(90);
+        vBoxForSentToGraveyardEffect.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBoxForSentToGraveyardEffect.setSpacing(20);
+        buttonForFinishSentToGraveyardEffect.setLayoutX(475);
+        buttonForFinishSentToGraveyardEffect.setLayoutY(430);
+        buttonForFinishSentToGraveyardEffect.setStyle("-fx-font-size: 25");
+
+
+
         buttonForFinishSentToGraveyardEffect.setOnAction(ActionEvent -> finishMonsterCardCreator());
 
         for (Button button : buttonsForSentToGraveyardEffect) {
