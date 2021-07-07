@@ -91,7 +91,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         }
         changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
         equalDeckNameLabel.setText(deckname);
-        equalShowPlayerNameLabel.setText("PLAYERS TURN: " + playerName);
+        equalShowPlayerNameLabel.setText("PLAYER TURN: " + playerName);
         getRectanglesFromUIUtilityForPanes();
         createMainDeck();
         createSideDeck();
@@ -128,7 +128,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Deck activeDeck = new DuelStarter().getActiveDeck(Storage.getUserByName(currentPlayerWhoChangesDeck));
+            Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck();
             new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
                     activeDeck.getDeckname());
         }
