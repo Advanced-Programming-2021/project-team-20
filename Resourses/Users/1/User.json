@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"name":"1","nickname":"1","password":"1","imagePath":"src\\main\\resources\\project\\images\\Characters\\radomCharacters\\Chara007_4.dds13.png","score":0,"money":100000}
+=======
+{"name":"1","nickname":"1","password":"1","imagePath":"src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image1.png","score":0,"money":100000}
+>>>>>>> origin/continuingPhaseTwo

@@ -458,7 +458,7 @@ public class ControllerForView {
 
     public TranslateTransition sendCardToMonsterZone(CardView cardView, int turn) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(500), cardView);
-        if (turn == 0 && GameManager.getDuelControllerByIndex(0).getTurn() == 1 || turn == 1) {
+        if (turn == 1) {
             if (DuelView.getCardLocationToSendCardTo() == null) {
                 DuelView.setCardLocationToSendCardTo(GameManager.getDuelBoardByIndex(0).giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true));
                 System.out.println("YOU ARE EXCLUSIVELY DOOMED CAUSE CARD LOCATION TO SEND CARD TO IS NULL");
@@ -521,7 +521,7 @@ public class ControllerForView {
 
     public TranslateTransition sendCardToSpellZone(CardView cardView, int turn) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(500), cardView);
-        if (turn == 0 && GameManager.getDuelControllerByIndex(0).getTurn() == 1 || turn == 1) {
+        if (turn == 1) {
             String cardLocation = GameManager.getDuelControllerByIndex(0).getAvailableCardLocationForUseForClient();
             double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
             double yTranslation = 510 + CardView.getCardHeight() - cardView.getUpperLeftY();

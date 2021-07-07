@@ -24,14 +24,14 @@ public class SendingRequestsToServer {
         System.out.println("&" + output);
         DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("normal summon", true);
-        System.out.println("*" + output);
+        System.out.println("***Normal Summoning Message from server received is : " + output);
         if (output.contains("successfully")) {
 
 
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
 
-            if (output.contains("do you")){
-                String doYouWantToActivate = "(do you want (.+)?)";
+            if (output.contains("do you")) {
+                String doYouWantToActivate = "(o you want to activate your monster card's effect?)";
                 Pattern doYouWantToActivatePattern = Pattern.compile(doYouWantToActivate);
                 Matcher matcherForDoYouWantToActivate = doYouWantToActivatePattern.matcher(output);
                 String nowItWillBeString = "now it will be (\\S+)'s turn";
@@ -39,19 +39,23 @@ public class SendingRequestsToServer {
                 Matcher match = nowItWillBePattern.matcher(output);
                 String nowItWillBeTurn = "";
                 System.out.println("WHOUUUUUUU");
+                boolean isTrue = false;
                 if (match.find()) {
                     nowItWillBeTurn = output.substring(match.start(), match.end());
-                    DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn+"\nDo you want to activate your trap or spell?");
-
+                    DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn + "\nDo you want to activate your trap or spell?");
+                    isTrue = true;
                     // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
                 }
-                if (matcherForDoYouWantToActivate.find()){
+                if (!match.find() && isTrue) {
+                    System.out.println("&*&*&*&*&* YOU MUST SCATTER IF YOU SEE THIS MESSAGE");
+                }
+                if (matcherForDoYouWantToActivate.find() && !match.find()) {
                     String stringShownToUser = matcherForDoYouWantToActivate.group(1);
-                    DuelView.getShowOptionsToUser().doYouWantToAlert(stringShownToUser);
+                    DuelView.getShowOptionsToUser().doYouWantToAlert("D" + stringShownToUser);
 
                 }
-                System.out.println(nowItWillBeTurn+"p");
-           }
+                System.out.println(nowItWillBeTurn + "p");
+            }
             //System.out.println("Am i really summoning");
             //    DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView).play();
             //alone
@@ -259,7 +263,7 @@ public class SendingRequestsToServer {
         CardView attackerCardView = DuelView.getControllerForView().getCardViewByCardLocation(cardLocationSelecting);
         output = GameManager.getDuelControllerByIndex(0).getInput("attack " + yugiohOpponentMonsterIndex, true);
         System.out.println("*" + output);
-        if (output.contains("now it will") && output.contains("do you")){
+        if (output.contains("now it will") && output.contains("do you")) {
             String wordToFind = "now it will be (\\S+)'s turn";
             Pattern word = Pattern.compile(wordToFind);
             Matcher match = word.matcher(output);
@@ -269,8 +273,8 @@ public class SendingRequestsToServer {
                 nowItWillBeTurn = output.substring(match.start(), match.end());
                 // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
             }
-            System.out.println(nowItWillBeTurn+"p");
-            DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn+"\nDo you want to activate your trap or spell?");
+            System.out.println(nowItWillBeTurn + "p");
+            DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn + "\nDo you want to activate your trap or spell?");
         } else {
 
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -377,7 +381,7 @@ public class SendingRequestsToServer {
         //controllerForView.getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = GameManager.getDuelControllerByIndex(0).getInput("attack direct", true);
         System.out.println("*" + output);
-        if (output.contains("now it will") && output.contains("do you")){
+        if (output.contains("now it will") && output.contains("do you")) {
             String wordToFind = "now it will be (\\S+)'s turn";
             Pattern word = Pattern.compile(wordToFind);
             Matcher match = word.matcher(output);
@@ -387,8 +391,8 @@ public class SendingRequestsToServer {
                 nowItWillBeTurn = output.substring(match.start(), match.end());
                 // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
             }
-            System.out.println(nowItWillBeTurn+"p");
-            DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn+"\nDo you want to activate your trap or spell?");
+            System.out.println(nowItWillBeTurn + "p");
+            DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn + "\nDo you want to activate your trap or spell?");
         } else {
 
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -420,7 +424,7 @@ public class SendingRequestsToServer {
         if (!output.equals("")) {
             if (output.contains("successfully")) {
                 DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-       //         DuelView.getTransition().applyTransitionForFlipSummoning(cardView);
+                //         DuelView.getTransition().applyTransitionForFlipSummoning(cardView);
             } else {
                 DuelView.setCardLocationToSendCardTo(null);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -447,11 +451,7 @@ public class SendingRequestsToServer {
         System.out.println("*" + output);
         if (!output.equals("")) {
             if (output.contains("successfully")) {
-                if (finallyAttackPosition) {
-                    DuelView.getTransition().applyTransitionForChangingMonsterPositionToFaceUpAttackPosition(cardView);
-                } else {
-                    DuelView.getTransition().applyTransitionForChangingMonsterPositionToFaceUpDefensePosition(cardView);
-                }
+                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
             } else {
                 DuelView.setCardLocationToSendCardTo(null);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

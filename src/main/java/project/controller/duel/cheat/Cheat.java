@@ -76,7 +76,7 @@ public class Cheat {
             if (cardsInGraveYard.get(i).getCardName().equals(cardname)) {
                 GameManager.getDuelBoardByIndex(index).addCardToHand(cardsInGraveYard.get(i), turn);
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " +
-                    (turn==1?"ALLY_GRAVEYARD_ZONE":"OPPONENT_GRAVEYARD_ZONE")
+                    (turn == 1 ? "ALLY_GRAVEYARD_ZONE" : "OPPONENT_GRAVEYARD_ZONE")
                     + " " + i + " is being added to hand zone " + turn + " and should finally be NO_CHANGE");
 
                 cardsInGraveYard.remove(i);
@@ -133,7 +133,7 @@ public class Cheat {
             MonsterCard monster = (MonsterCard) allMonsterCards.get(cardName);
             GameManager.getDuelBoardByIndex(index).addCardToHand((MonsterCard) monster.clone(), turn);
             GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
-                + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE "+"cardName is "+cardname);
+                + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
 
             return cardname + " added to hand successfully!";
         }
@@ -144,12 +144,12 @@ public class Cheat {
                 SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(index).addCardToHand((SpellCard) spellCard.clone(), turn);
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
-                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE "+"cardName is "+cardname);
+                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
             } else {
                 TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(index).addCardToHand((TrapCard) trapCard.clone(), turn);
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
-                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE "+"cardName is "+cardname);
+                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
             }
             return cardname + " added to hand successfully!";
         }
@@ -181,7 +181,7 @@ public class Cheat {
 
     private String increaseLifePoints(int amount, int index) {
         GameManager.getDuelControllerByIndex(index).increaseLifePoints(amount,
-                GameManager.getDuelControllerByIndex(index).getTurn());
+            GameManager.getDuelControllerByIndex(index).getTurn());
         return "lifePoint increased " + amount + " successfully!";
     }
 }
