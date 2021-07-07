@@ -750,6 +750,14 @@ public class DuelView {
         }
     }
 
+    private void endOneRoundOfDuel() {
+       
+    }
+
+    private void endGame() {
+
+    }
+
     public static AnchorPane getAnchorPane() {
         return anchorPane;
     }
