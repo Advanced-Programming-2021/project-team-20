@@ -66,6 +66,11 @@ public class CardCreatorController implements Initializable {
 
     private int numberOfTurnsForActivationForTrapCard;
     private int trapCardValueNumber;
+    private VBox lastVboxTrap;
+    private VBox previousVbox;
+    private Button previousButton;
+    private String enumClassName = new String();
+    private String nextMethod;
     private ArrayList<Integer> flipSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterAttackingTrapCardEffectNumbers;
     private ArrayList<Integer> normalSummonTrapCardEffectNumbers;
@@ -90,12 +95,12 @@ public class CardCreatorController implements Initializable {
     @FXML
     AnchorPane anchorPane;
 
-    Label labelForGettingCardNameFromUser;
+//    Label labelForGettingCardNameFromUser;
     TextField textFieldForGettingCardNameFromUser;
     Button buttonForGettingCardNameFromUser;
 
 
-    Label labelForGettingCardDescriptionFromUser;
+//    Label labelForGettingCardDescriptionFromUser;
     TextField textFieldForGettingCardDescriptionFromUser;
     Button buttonForGettingCardDescriptionFromUser;
 
@@ -103,11 +108,11 @@ public class CardCreatorController implements Initializable {
     Button buttonOneForNumberOfAllowedUsages;
     Button buttonThreeForNumberOfAllowedUsages;
 
-    Label labelForGettingAttackPowerMonsterCard;
+//    Label labelForGettingAttackPowerMonsterCard;
     TextField textFieldForGettingAttackPowerMonsterCard;
     Button buttonForGettingAttackPowerMonsterCard;
 
-    Label labelForGettingDefencePowerMonsterCard;
+//    Label labelForGettingDefencePowerMonsterCard;
     TextField textFieldForGettingDefencePowerMonsterCard;
     Button buttonForGettingDefencePowerMonsterCard;
 
@@ -226,20 +231,36 @@ public class CardCreatorController implements Initializable {
 
 
     private void getCardNameFromUser() {
-        labelForGettingCardNameFromUser = new Label("Please enter card name");
-        labelForGettingCardNameFromUser.setLayoutY(100);
-        labelForGettingCardNameFromUser.setLayoutX(450);
-        anchorPane.getChildren().add(labelForGettingCardNameFromUser);
+//        labelForGettingCardNameFromUser = new Label("Please enter card name");
+//        labelForGettingCardNameFromUser.setLayoutY(100);
+//        labelForGettingCardNameFromUser.setLayoutX(420);
+//        labelForGettingCardNameFromUser.setStyle("-fx-text-fill:#03d274;-fx-padding:4 0 8 0;" +
+//            "-fx-background-color: #031fd2;-fx-font-weight:bold; -fx-font-size: 20");
+//        anchorPane.getChildren().add(labelForGettingCardNameFromUser);
 
         textFieldForGettingCardNameFromUser = new TextField();
-        textFieldForGettingCardNameFromUser.setLayoutY(130);
-        textFieldForGettingCardNameFromUser.setLayoutX(450);
+        textFieldForGettingCardNameFromUser.setLayoutY(160);
+        textFieldForGettingCardNameFromUser.setLayoutX(370);
+        textFieldForGettingCardNameFromUser.promptTextProperty().setValue("Card Name");
+        textFieldForGettingCardNameFromUser.setStyle("-fx-alignment: CENTER; -fx-font-size: 25");
+
         anchorPane.getChildren().add(textFieldForGettingCardNameFromUser);
+
+        textFieldForGettingCardDescriptionFromUser = new TextField();
+        textFieldForGettingCardDescriptionFromUser.setLayoutX(370);
+        textFieldForGettingCardDescriptionFromUser.setLayoutY(250);
+        textFieldForGettingCardDescriptionFromUser.promptTextProperty().setValue("Card Description");
+        textFieldForGettingCardDescriptionFromUser.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-min-height: 200");
+        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
+
+
+
 
         buttonForGettingCardNameFromUser = new Button("OK");
         buttonForGettingCardNameFromUser.setOnAction(actionEvent -> setCardName());
-        buttonForGettingCardNameFromUser.setLayoutY(160);
-        buttonForGettingCardNameFromUser.setLayoutX(500);
+        buttonForGettingCardNameFromUser.setLayoutY(500);
+        buttonForGettingCardNameFromUser.setLayoutX(480);
+        buttonForGettingCardNameFromUser.setStyle("-fx-font-size: 25");
         anchorPane.getChildren().add(buttonForGettingCardNameFromUser);
     }
 
@@ -248,30 +269,32 @@ public class CardCreatorController implements Initializable {
         if (!textFieldForGettingCardNameFromUser.getText().isEmpty()) {
             cardName = textFieldForGettingCardNameFromUser.getText();
             removeThingsInTheGetCardNameScene();
-            getCardDescription();
+            getCardImage();
         }
     }
 
 
-    private void getCardDescription() {
-        labelForGettingCardDescriptionFromUser = new Label("Please enter the description for your card");
-        labelForGettingCardDescriptionFromUser.setLayoutX(100);
-        labelForGettingCardDescriptionFromUser.setLayoutX(400);
-
-        textFieldForGettingCardDescriptionFromUser = new TextField();
-        textFieldForGettingCardDescriptionFromUser.setLayoutX(450);
-        textFieldForGettingCardDescriptionFromUser.setLayoutY(200);
-
-        buttonForGettingCardDescriptionFromUser = new Button("OK");
-        buttonForGettingCardDescriptionFromUser.setLayoutY(400);
-        buttonForGettingCardDescriptionFromUser.setLayoutX(450);
-        buttonForGettingCardDescriptionFromUser.setOnAction(ActionEvent -> getCardImage());
-
-        anchorPane.getChildren().add(labelForGettingCardDescriptionFromUser);
-        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
-        anchorPane.getChildren().add(buttonForGettingCardDescriptionFromUser);
-
-    }
+//    private void getCardDescription() {
+////        labelForGettingCardDescriptionFromUser = new Label("Please enter the description for your card");
+////        labelForGettingCardDescriptionFromUser.setLayoutY(100);
+////        labelForGettingCardDescriptionFromUser.setLayoutX(400);
+////        labelForGettingCardDescriptionFromUser.setStyle("-fx-text-fill:#03d274;-fx-padding:4 0 8 0;" +
+////            "-fx-background-color: #031fd2;-fx-font-weight:bold; -fx-font-size: 20");
+//
+//        textFieldForGettingCardDescriptionFromUser = new TextField();
+//        textFieldForGettingCardDescriptionFromUser.setLayoutX(450);
+//        textFieldForGettingCardDescriptionFromUser.setLayoutY(200);
+//
+//        buttonForGettingCardDescriptionFromUser = new Button("OK");
+//        buttonForGettingCardDescriptionFromUser.setLayoutY(400);
+//        buttonForGettingCardDescriptionFromUser.setLayoutX(450);
+//        buttonForGettingCardDescriptionFromUser.setOnAction(ActionEvent -> getCardImage());
+//
+////        anchorPane.getChildren().add(labelForGettingCardDescriptionFromUser);
+//        anchorPane.getChildren().add(textFieldForGettingCardDescriptionFromUser);
+//        anchorPane.getChildren().add(buttonForGettingCardDescriptionFromUser);
+//
+//    }
 
 
     private void getCardImage() {
@@ -284,11 +307,8 @@ public class CardCreatorController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         if (file != null) {
             changeImage(file.getAbsolutePath());
-            imagePath = file.getAbsolutePath();
-        } else {
-            changeImage("src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg");
-            imagePath = "src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg"; 
         }
+        imagePath = file.getAbsolutePath();
         getNumberOfAllowedUsages();
 
     }
@@ -306,7 +326,7 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInTheGetCardNameScene() {
-        anchorPane.getChildren().remove(labelForGettingCardNameFromUser);
+        anchorPane.getChildren().remove(textFieldForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardNameFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardNameFromUser);
     }
@@ -335,7 +355,7 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInGettingCardDescription() {
-        anchorPane.getChildren().remove(labelForGettingCardDescriptionFromUser);
+//        anchorPane.getChildren().remove(labelForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(textFieldForGettingCardDescriptionFromUser);
         anchorPane.getChildren().remove(buttonForGettingCardDescriptionFromUser);
     }
@@ -351,10 +371,10 @@ public class CardCreatorController implements Initializable {
 
 
     private void continueGettingMonsterInformation() {
-        labelForGettingAttackPowerMonsterCard = new Label("Please enter the card's attack power");
-        labelForGettingAttackPowerMonsterCard.setLayoutY(100);
-        labelForGettingAttackPowerMonsterCard.setLayoutX(420);
-        anchorPane.getChildren().add(labelForGettingAttackPowerMonsterCard);
+//        labelForGettingAttackPowerMonsterCard = new Label("Please enter the card's attack power");
+//        labelForGettingAttackPowerMonsterCard.setLayoutY(100);
+//        labelForGettingAttackPowerMonsterCard.setLayoutX(420);
+//        anchorPane.getChildren().add(labelForGettingAttackPowerMonsterCard);
 
         textFieldForGettingAttackPowerMonsterCard = new TextField();
         textFieldForGettingAttackPowerMonsterCard.setLayoutY(130);
@@ -375,10 +395,10 @@ public class CardCreatorController implements Initializable {
         if (!attackPower.isEmpty() && pattern.matcher(attackPower).matches()) {
             attackPowerMonsterCard = Integer.parseInt(attackPower);
             removeThingsInContinueGettingMonsterInformation();
-            labelForGettingDefencePowerMonsterCard = new Label("Please enter the card's defence power");
-            labelForGettingDefencePowerMonsterCard.setLayoutY(100);
-            labelForGettingDefencePowerMonsterCard.setLayoutX(420);
-            anchorPane.getChildren().add(labelForGettingDefencePowerMonsterCard);
+//            labelForGettingDefencePowerMonsterCard = new Label("Please enter the card's defence power");
+//            labelForGettingDefencePowerMonsterCard.setLayoutY(100);
+//            labelForGettingDefencePowerMonsterCard.setLayoutX(420);
+//            anchorPane.getChildren().add(labelForGettingDefencePowerMonsterCard);
 
             textFieldForGettingDefencePowerMonsterCard = new TextField();
             textFieldForGettingDefencePowerMonsterCard.setLayoutY(130);
@@ -993,6 +1013,15 @@ public class CardCreatorController implements Initializable {
         //TODO -> calculate card price
 
         System.out.println("Card Created and added to storage successfully");
+        backToMainMenu();
+    }
+
+    private void backToMainMenu() {
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1015,14 +1044,14 @@ public class CardCreatorController implements Initializable {
 
 
     private void removeThingsInGetDefencePowerMonsterCard() {
-        anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
+//        anchorPane.getChildren().remove(labelForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingDefencePowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingDefencePowerMonsterCard);
     }
 
 
     private void removeThingsInContinueGettingMonsterInformation() {
-        anchorPane.getChildren().remove(labelForGettingAttackPowerMonsterCard);
+//        anchorPane.getChildren().remove(labelForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(textFieldForGettingAttackPowerMonsterCard);
         anchorPane.getChildren().remove(buttonForGettingAttackPowerMonsterCard);
     }
@@ -1069,69 +1098,127 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().remove(textField);
             anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
-            //TODO -> get TrapValue
 
-            getFlipSummonTrapCardEffect(textField, label, button);
+            ArrayList<Button> buttons = new ArrayList<>();
+            SpellCardValue[] spellCardValues = SpellCardValue.values();
+            previousVbox = new VBox();
+            for (SpellCardValue cardValue : spellCardValues) {
+                buttons.add(new Button(cardValue.toString()));
+            }
+
+            for (int i = 0; i < buttons.size(); i++) {
+                int finalI = i;
+                buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        getFlipSummonTrapCardEffect(finalI);
+                    }
+                });
+            }
+
+            for (Button button1 : buttons) {
+                previousVbox.getChildren().add(button1);
+            }
+            previousVbox.setLayoutY(100);
+            previousVbox.setLayoutX(400);
+            anchorPane.getChildren().add(previousVbox);
+
 
         }
     }
 
-    public void getFlipSummonTrapCardEffect(TextField textField, Label label, Button button) {
-        anchorPane.getChildren().remove(textField);
-        anchorPane.getChildren().remove(label);
-        anchorPane.getChildren().remove(button);
+    public void getFlipSummonTrapCardEffect(int finalI1) {
+        trapCardValueNumber = finalI1;
+        System.out.println(trapCardValueNumber);
+        anchorPane.getChildren().remove(previousVbox);
 
-        VBox vbox = new VBox();
-        Button button1 = new Button();
-        anchorPane.getChildren().add(vbox);
-        anchorPane.getChildren().add(button1);
-        gotoTrapFunctionEffect(vbox, button1, "FlipSummonTrapCardEffect", "getMonsterAttackingTrapCardEffect");
+        enumClassName = "FlipSummonTrapCardEffect";
+        nextMethod = "getMonsterAttackingTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getMonsterAttackingTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "MonsterAttackingTrapCardEffect", "getNormalSummonTrapCardEffect");
+    public void getMonsterAttackingTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "MonsterAttackingTrapCardEffect";
+        nextMethod = "getNormalSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
 
-    public void getNormalSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "NormalSummonTrapCardEffect", "getTributeSummonTrapCardEffect");
+    public void getNormalSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "NormalSummonTrapCardEffect";
+        nextMethod = "getTributeSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getTributeSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "TributeSummonTrapCardEffect", "getNormalTrapCardEffect");
+    public void getTributeSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "TributeSummonTrapCardEffect";
+        nextMethod = "getNormalTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getNormalTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "NormalTrapCardEffect", "getRitualSummonTrapCardEffect");
+    public void getNormalTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "NormalTrapCardEffect";
+        nextMethod = "getRitualSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getRitualSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "RitualSummonTrapCardEffect", "getSpecialSummonTrapCardEffect");
+    public void getRitualSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "RitualSummonTrapCardEffect";
+        nextMethod = "getSpecialSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getSpecialSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "SpecialSummonTrapCardEffect", "getMonsterEffectActivationTrapCardEffect");
+    public void getSpecialSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "SpecialSummonTrapCardEffect";
+        nextMethod = "getMonsterEffectActivationTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getMonsterEffectActivationTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "MonsterEffectActivationTrapCardEffect", "getSpellCardActivationTrapCardEffect");
+    public void getMonsterEffectActivationTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "MonsterEffectActivationTrapCardEffect";
+        nextMethod = "getSpellCardActivationTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getSpellCardActivationTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "SpellCardActivationTrapCardEffect", "getTrapCardActivationTrapCardEffect");
+    public void getSpellCardActivationTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "SpellCardActivationTrapCardEffect";
+        nextMethod = "getTrapCardActivationTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getTrapCardActivationTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "TrapCardActivationTrapCardEffect", "getUserReplyForActivation");
+    public void getTrapCardActivationTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "TrapCardActivationTrapCardEffect";
+        nextMethod = "getUserReplyForActivation";
+        gotoTrapFunctionEffect();
     }
 
-    public void getUserReplyForActivation(VBox vBox, Button button) {
-        anchorPane.getChildren().remove(vBox);
-        anchorPane.getChildren().remove(button);
+    public void getUserReplyForActivation() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
 
-        VBox newVbox = new VBox();
+        previousVbox = null;
+        previousVbox = new VBox();
+        previousButton = null;
+        previousButton = new Button("OK");
         ArrayList<Button> buttons = new ArrayList<>();
-        Button finishButton = new Button("OK");
         ArrayList<Integer> selected = selectedUserReplySpell;
         UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
         for (UserReplyForActivation userReplyForActivation : userReplyForActivations) {
@@ -1153,18 +1240,18 @@ public class CardCreatorController implements Initializable {
 
 
 
-        newVbox.setLayoutY(100);
-        newVbox.setLayoutX(400);
-        finishButton.setLayoutY(400);
-        finishButton.setLayoutX(400);
-        finishButton.setOnAction(ActionEvent -> finishTrapCard());
+        previousVbox.setLayoutY(100);
+        previousVbox.setLayoutX(400);
+        previousButton.setLayoutY(400);
+        previousButton.setLayoutX(400);
+        previousButton.setOnAction(ActionEvent -> finishTrapCard());
 
         for (Button button1 : buttons) {
-            vBox.getChildren().add(button1);
+            previousVbox.getChildren().add(button1);
         }
 
-        anchorPane.getChildren().add(newVbox);
-        anchorPane.getChildren().add(finishButton);
+        anchorPane.getChildren().add(previousButton);
+        anchorPane.getChildren().add(previousVbox);
     }
 
     private void finishTrapCard() {
@@ -1182,16 +1269,24 @@ public class CardCreatorController implements Initializable {
         Storage.addCardToNewCardsCrated(trapCard);
         Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
         System.out.println("card was created");
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
-    private void gotoTrapFunctionEffect(VBox previousVbox, Button previousButton, String enumClassName, String nextMethod) {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
+    private void gotoTrapFunctionEffect() {
 
+        System.out.println("we are in:" + enumClassName);
 
+        previousVbox = null;
+        previousVbox = new VBox();
+
+        previousButton = null;
+        previousButton = new Button("OK");
         ArrayList<Button> buttons = new ArrayList<>();
-        Button buttonForFinish = new Button("OK");
         ArrayList<Integer> selectedEffects = null;
 
         if (enumClassName.equals("FlipSummonTrapCardEffect")) {
@@ -1286,35 +1381,54 @@ public class CardCreatorController implements Initializable {
         }
 
 
-        VBox vBox = new VBox();
-        vBox.setLayoutY(100);
-        vBox.setLayoutX(400);
-        buttonForFinish.setLayoutY(400);
-        buttonForFinish.setLayoutX(400);
+        previousVbox.setLayoutY(100);
+        previousVbox.setLayoutX(400);
+        previousButton.setLayoutY(400);
+        previousButton.setLayoutX(400);
         Method method = null;
         try {
+<<<<<<< HEAD
             method = this.getClass().getMethod(nextMethod, VBox.class, Button.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } 
+=======
+            method = Class.forName("project.view.CardCreatorController").getDeclaredMethod(nextMethod);
+            System.out.println(method.getName());
+        } catch (NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+>>>>>>> 01bf780bad99f9f46735bdfb9388a11494883af7
         Method finalMethod = method;
-        buttonForFinish.setOnAction(ActionEvent -> {
-            try {
-//                finalMethod.invoke(null, vBox, buttonForFinish);
-                finalMethod.invoke(vBox, buttonForFinish);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+        System.out.println(finalMethod.getName());
+        previousButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    System.out.println(finalMethod.getName());
+                    finalMethod.invoke(null);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
         });
+//        buttonForFinish.setOnAction(ActionEvent -> {
+//            try {
+////                finalMethod.invoke(null, vBox, buttonForFinish);
+//                finalMethod.invoke(vBox, buttonForFinish);
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//        });
 
         for (Button button : buttons) {
-            vBox.getChildren().add(button);
+            previousVbox.getChildren().add(button);
         }
 
-        anchorPane.getChildren().add(vBox);
-        anchorPane.getChildren().add(buttonForFinish);
+        anchorPane.getChildren().add(previousVbox);
+        anchorPane.getChildren().add(previousButton);
     }
 
 
@@ -1790,6 +1904,11 @@ public class CardCreatorController implements Initializable {
         //Should I add all of them even if they are empty?
 
         System.out.println("Card created successfully");
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1800,4 +1919,11 @@ public class CardCreatorController implements Initializable {
     }
 
 
+    public void back(ActionEvent actionEvent) {
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

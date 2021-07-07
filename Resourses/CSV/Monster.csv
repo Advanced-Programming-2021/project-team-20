@@ -45,3 +45,5 @@ Command Knight,4,FIRE,Warrior,Effect,1200,1900,"All Warrior-Type monsters you co
 "1","1","LIGHT","CYBERSE","EFFECT","1","1","1","0","#","#NEGATE_ATTACK_ONCE_PER_TURN","#","#","#","#","#","#"
 "12","21","LIGHT","DRAGON","RITUAL","21","12","12","0","#","#","#","#","#","#","#","#"
 "22222","12","LIGHT","CYBERSE","RITUAL","21","21","222","0","#","#","#","#","#","#","#","#"
+"1","1","LIGHT","DINOSAUR","RITUAL","1","1","1","0","#","#","#","#","#","#","#","#"
+"1","1","DIVINE","CYBERSE","EFFECT","1","1","1","0","#","#","#","#","#","#","#","#"

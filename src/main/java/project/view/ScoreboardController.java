@@ -27,6 +27,7 @@ public class ScoreboardController {
     private TableColumn<Person, Integer> scoreColumn;
 
     public void fillLabel() {
+        System.out.println("fill");
         String allPeople = new Scoreboard().findCommands("scoreboard show");
         String[] allPeopleSplited = allPeople.split(",");
         Person[] person = new Person[allPeopleSplited.length / 3];
