@@ -1,6 +1,5 @@
 package project.view.pooyaviewpackage;
 
-import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
