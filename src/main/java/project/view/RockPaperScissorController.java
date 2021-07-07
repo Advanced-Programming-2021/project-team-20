@@ -212,14 +212,8 @@ public class RockPaperScissorController implements Initializable {
     }
 
     public void startDuel(){
-//        AnchorPane anchorPane = null;
-//        try {
-//            anchorPane = FXMLLoader.load(getClass().getResource("/project/fxml/duelPage.fxml"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        DuelView.callStage();
-        //DuelView.main(null);
+        SongPlayer.getInstance().pauseMusic();
+         DuelView.callStage();
     }
 
     private void backRectanglesToFirstPlace() {

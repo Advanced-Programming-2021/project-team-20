@@ -74,6 +74,16 @@
    -fx-background-size: 100%  100%;
 }
 
+.chart-plot-background14{
+   -fx-background-image: url("mainMenuBackGround.jpg");
+   -fx-background-size: 100%  100%;
+}
+
+.chart-plot-background15{
+   -fx-background-image: url("startDuelPage.jpg");
+   -fx-background-size: 100%  100%;
+}
+
 .table-view {
    -fx-base: #1d1d1d;
    -fx-control-inner-background: #1d1d1d;
