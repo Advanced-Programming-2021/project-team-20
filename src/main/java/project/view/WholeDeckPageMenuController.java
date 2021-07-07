@@ -21,6 +21,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import project.controller.non_duel.deckCommands.DeckCommands;
 import project.model.Deck;
+import javafx.application.Platform;
 
 public class WholeDeckPageMenuController implements Initializable {
 
@@ -40,6 +41,7 @@ public class WholeDeckPageMenuController implements Initializable {
     private TextField createdDeckNameField;
     @FXML
     private Label deckNameLabel;
+
     private static List<Rectangle> fourRectangleToShowDecks;
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
     private static List<List<Deck>> decksInDifferentPages;
@@ -52,6 +54,8 @@ public class WholeDeckPageMenuController implements Initializable {
     private static Button equalToDeleteDeckbtn;
     private static Button equalToEditDeckbtn;
     private static Label equalDeckNameLabel;
+    private Thread thread;
+    private MyThread[] myThread = new MyThread[4];
     private boolean isEnteredMouse = false;
     private Long firstTimeMouseEnteredRectangle = 0l;
 
@@ -72,6 +76,19 @@ public class WholeDeckPageMenuController implements Initializable {
         addRectangleOfDecksToPage();
         addInformationLabelOfDeckToPane();
         createNewPage();
+        thread = new Thread(() -> {
+            while (true) {
+                if (System.currentTimeMillis() - firstTimeMouseEnteredRectangle > 5000) {
+                    showCardsInDeck();
+                    break;
+                }
+                try {
+                    thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         setEffectsOfEditAndDeleteButtons();
         setEffectOfpreviousAndnextDecksbtn();
         MainView.changeScene(pane);
@@ -88,13 +105,14 @@ public class WholeDeckPageMenuController implements Initializable {
 
     private void addEffectsToFourRectangleToShowDeck() {
         fourRectangleToShowDecks = UIStorage.getFourRectangleToShowDecks();
-        // showCardsInDeck();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
+        //    myThread[i] = new MyThread(fourRectangleToShowDecks.get(index).getId() + "dadasd");
             fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent arg0) {
                     firstTimeMouseEnteredRectangle = System.currentTimeMillis();
+               //     myThread[index].start();
                 }
             });
 
@@ -107,6 +125,7 @@ public class WholeDeckPageMenuController implements Initializable {
                 }
             });
             fourRectangleToShowDecks.get(i).setOnMouseExited(MouseEvent -> {
+            //    myThread[index].stop(); // stopping thread t1
             });
         }
     }
@@ -136,7 +155,7 @@ public class WholeDeckPageMenuController implements Initializable {
         }
         if (!decksInDifferentPages.contains(decksInOnePage) && decksInOnePage.size() > 0) {
             decksInDifferentPages.add(decksInOnePage);
-        } else if(decksInDifferentPages.size() == 0){
+        } else if (decksInDifferentPages.size() == 0) {
             decksInDifferentPages.add(decksInOnePage);
         }
     }

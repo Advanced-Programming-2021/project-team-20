@@ -1181,8 +1181,6 @@ public class CardCreatorController implements Initializable {
             numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, new HashMap<>(), cardImage);
         Storage.addCardToNewCardsCrated(trapCard);
         Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
-        Storage.addCardToNewCardsCrated(trapCard);
-        Storage.addNewImageForNewCards(cardName, cardImage);
         System.out.println("card was created");
     }
 
@@ -1295,12 +1293,10 @@ public class CardCreatorController implements Initializable {
         buttonForFinish.setLayoutX(400);
         Method method = null;
         try {
-            method = Class.forName("project.view.CardCreatorController").getMethod(nextMethod, VBox.class, Button.class);
+            method = this.getClass().getMethod(nextMethod, VBox.class, Button.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        } 
         Method finalMethod = method;
         buttonForFinish.setOnAction(ActionEvent -> {
             try {
