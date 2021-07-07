@@ -66,6 +66,11 @@ public class CardCreatorController implements Initializable {
 
     private int numberOfTurnsForActivationForTrapCard;
     private int trapCardValueNumber;
+    private VBox lastVboxTrap;
+    private VBox previousVbox;
+    private Button previousButton;
+    private String enumClassName = new String();
+    private String nextMethod;
     private ArrayList<Integer> flipSummonTrapCardEffectNumbers;
     private ArrayList<Integer> monsterAttackingTrapCardEffectNumbers;
     private ArrayList<Integer> normalSummonTrapCardEffectNumbers;
@@ -1093,69 +1098,127 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().remove(textField);
             anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
-            //TODO -> get TrapValue
 
-            getFlipSummonTrapCardEffect(textField, label, button);
+            ArrayList<Button> buttons = new ArrayList<>();
+            SpellCardValue[] spellCardValues = SpellCardValue.values();
+            previousVbox = new VBox();
+            for (SpellCardValue cardValue : spellCardValues) {
+                buttons.add(new Button(cardValue.toString()));
+            }
+
+            for (int i = 0; i < buttons.size(); i++) {
+                int finalI = i;
+                buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        getFlipSummonTrapCardEffect(finalI);
+                    }
+                });
+            }
+
+            for (Button button1 : buttons) {
+                previousVbox.getChildren().add(button1);
+            }
+            previousVbox.setLayoutY(100);
+            previousVbox.setLayoutX(400);
+            anchorPane.getChildren().add(previousVbox);
+
 
         }
     }
 
-    public void getFlipSummonTrapCardEffect(TextField textField, Label label, Button button) {
-        anchorPane.getChildren().remove(textField);
-        anchorPane.getChildren().remove(label);
-        anchorPane.getChildren().remove(button);
+    public void getFlipSummonTrapCardEffect(int finalI1) {
+        trapCardValueNumber = finalI1;
+        System.out.println(trapCardValueNumber);
+        anchorPane.getChildren().remove(previousVbox);
 
-        VBox vbox = new VBox();
-        Button button1 = new Button();
-        anchorPane.getChildren().add(vbox);
-        anchorPane.getChildren().add(button1);
-        gotoTrapFunctionEffect(vbox, button1, "FlipSummonTrapCardEffect", "getMonsterAttackingTrapCardEffect");
+        enumClassName = "FlipSummonTrapCardEffect";
+        nextMethod = "getMonsterAttackingTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getMonsterAttackingTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "MonsterAttackingTrapCardEffect", "getNormalSummonTrapCardEffect");
+    public void getMonsterAttackingTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "MonsterAttackingTrapCardEffect";
+        nextMethod = "getNormalSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
 
-    public void getNormalSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "NormalSummonTrapCardEffect", "getTributeSummonTrapCardEffect");
+    public void getNormalSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "NormalSummonTrapCardEffect";
+        nextMethod = "getTributeSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getTributeSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "TributeSummonTrapCardEffect", "getNormalTrapCardEffect");
+    public void getTributeSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "TributeSummonTrapCardEffect";
+        nextMethod = "getNormalTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getNormalTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "NormalTrapCardEffect", "getRitualSummonTrapCardEffect");
+    public void getNormalTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "NormalTrapCardEffect";
+        nextMethod = "getRitualSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getRitualSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "RitualSummonTrapCardEffect", "getSpecialSummonTrapCardEffect");
+    public void getRitualSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "RitualSummonTrapCardEffect";
+        nextMethod = "getSpecialSummonTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getSpecialSummonTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "SpecialSummonTrapCardEffect", "getMonsterEffectActivationTrapCardEffect");
+    public void getSpecialSummonTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "SpecialSummonTrapCardEffect";
+        nextMethod = "getMonsterEffectActivationTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getMonsterEffectActivationTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "MonsterEffectActivationTrapCardEffect", "getSpellCardActivationTrapCardEffect");
+    public void getMonsterEffectActivationTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "MonsterEffectActivationTrapCardEffect";
+        nextMethod = "getSpellCardActivationTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getSpellCardActivationTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "SpellCardActivationTrapCardEffect", "getTrapCardActivationTrapCardEffect");
+    public void getSpellCardActivationTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "SpellCardActivationTrapCardEffect";
+        nextMethod = "getTrapCardActivationTrapCardEffect";
+        gotoTrapFunctionEffect();
     }
 
-    public void getTrapCardActivationTrapCardEffect(VBox vBox, Button button) {
-        gotoTrapFunctionEffect(vBox, button, "TrapCardActivationTrapCardEffect", "getUserReplyForActivation");
+    public void getTrapCardActivationTrapCardEffect() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
+        enumClassName = "TrapCardActivationTrapCardEffect";
+        nextMethod = "getUserReplyForActivation";
+        gotoTrapFunctionEffect();
     }
 
-    public void getUserReplyForActivation(VBox vBox, Button button) {
-        anchorPane.getChildren().remove(vBox);
-        anchorPane.getChildren().remove(button);
+    public void getUserReplyForActivation() {
+        anchorPane.getChildren().remove(previousButton);
+        anchorPane.getChildren().remove(previousVbox);
 
-        VBox newVbox = new VBox();
+        previousVbox = null;
+        previousVbox = new VBox();
+        previousButton = null;
+        previousButton = new Button("OK");
         ArrayList<Button> buttons = new ArrayList<>();
-        Button finishButton = new Button("OK");
         ArrayList<Integer> selected = selectedUserReplySpell;
         UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
         for (UserReplyForActivation userReplyForActivation : userReplyForActivations) {
@@ -1177,18 +1240,18 @@ public class CardCreatorController implements Initializable {
 
 
 
-        newVbox.setLayoutY(100);
-        newVbox.setLayoutX(400);
-        finishButton.setLayoutY(400);
-        finishButton.setLayoutX(400);
-        finishButton.setOnAction(ActionEvent -> finishTrapCard());
+        previousVbox.setLayoutY(100);
+        previousVbox.setLayoutX(400);
+        previousButton.setLayoutY(400);
+        previousButton.setLayoutX(400);
+        previousButton.setOnAction(ActionEvent -> finishTrapCard());
 
         for (Button button1 : buttons) {
-            vBox.getChildren().add(button1);
+            previousVbox.getChildren().add(button1);
         }
 
-        anchorPane.getChildren().add(newVbox);
-        anchorPane.getChildren().add(finishButton);
+        anchorPane.getChildren().add(previousButton);
+        anchorPane.getChildren().add(previousVbox);
     }
 
     private void finishTrapCard() {
@@ -1216,13 +1279,16 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void gotoTrapFunctionEffect(VBox previousVbox, Button previousButton, String enumClassName, String nextMethod) {
-        anchorPane.getChildren().remove(previousButton);
-        anchorPane.getChildren().remove(previousVbox);
+    private void gotoTrapFunctionEffect() {
 
+        System.out.println("we are in:" + enumClassName);
 
+        previousVbox = null;
+        previousVbox = new VBox();
+
+        previousButton = null;
+        previousButton = new Button("OK");
         ArrayList<Button> buttons = new ArrayList<>();
-        Button buttonForFinish = new Button("OK");
         ArrayList<Integer> selectedEffects = null;
 
         if (enumClassName.equals("FlipSummonTrapCardEffect")) {
@@ -1317,28 +1383,26 @@ public class CardCreatorController implements Initializable {
         }
 
 
-        VBox vBox = new VBox();
-        vBox.setLayoutY(100);
-        vBox.setLayoutX(400);
-        buttonForFinish.setLayoutY(400);
-        buttonForFinish.setLayoutX(400);
+        previousVbox.setLayoutY(100);
+        previousVbox.setLayoutX(400);
+        previousButton.setLayoutY(400);
+        previousButton.setLayoutX(400);
         Method method = null;
         try {
-            method = Class.forName("project.view.CardCreatorController").getMethod(nextMethod, VBox.class, Button.class);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            method = Class.forName("project.view.CardCreatorController").getDeclaredMethod(nextMethod);
+            System.out.println(method.getName());
+        } catch (NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         Method finalMethod = method;
-        buttonForFinish.setOnAction(new EventHandler<ActionEvent>() {
+        System.out.println(finalMethod.getName());
+        previousButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    finalMethod.invoke(null, vBox, buttonForFinish);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                    System.out.println(finalMethod.getName());
+                    finalMethod.invoke(null);
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }
@@ -1355,11 +1419,11 @@ public class CardCreatorController implements Initializable {
 //        });
 
         for (Button button : buttons) {
-            vBox.getChildren().add(button);
+            previousVbox.getChildren().add(button);
         }
 
-        anchorPane.getChildren().add(vBox);
-        anchorPane.getChildren().add(buttonForFinish);
+        anchorPane.getChildren().add(previousVbox);
+        anchorPane.getChildren().add(previousButton);
     }
 
 
