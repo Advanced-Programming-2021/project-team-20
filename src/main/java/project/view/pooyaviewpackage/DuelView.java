@@ -1,6 +1,7 @@
 package project.view.pooyaviewpackage;
 
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -399,7 +400,7 @@ public class DuelView extends Application {
                 backgroundMusic.seek(Duration.ZERO);
             }
         });
-       // backgroundMusic.play();
+        // backgroundMusic.play();
         isGameMute = false;
         isGamePaused = false;
         pause = new Button("pause");
@@ -448,15 +449,27 @@ public class DuelView extends Application {
             public void handle(MouseEvent mouseEvent) {
                 String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
                 System.out.println("&" + output + "&");
-                PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-                standByPhaseLabel.updateImage(phaseInGame);
-                mainPhaseOneLabel.updateImage(phaseInGame);
-                battlePhaseLabel.updateImage(phaseInGame);
-                mainPhaseTwoLabel.updateImage(phaseInGame);
-                endPhaseLabel.updateImage(phaseInGame);
-                if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
-                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                if (output.contains("phase: ")) {
+                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
                 }
+                if (output.contains("phase: draw phase") && output.contains("new card added to hand")) {
+                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                    (new PauseTransition(Duration.seconds(0.3))).play();
+                }
+                if (output.contains("phase: standby phase")) {
+                    (new PauseTransition(Duration.seconds(0.3))).play();
+                    GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                }
+//                PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+//                standByPhaseLabel.updateImage(phaseInGame);
+//                mainPhaseOneLabel.updateImage(phaseInGame);
+//                battlePhaseLabel.updateImage(phaseInGame);
+//                mainPhaseTwoLabel.updateImage(phaseInGame);
+//                endPhaseLabel.updateImage(phaseInGame);
+//                if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
+//                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+//                }
 
             }
         });

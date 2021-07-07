@@ -1,9 +1,9 @@
 package project.view.pooyaviewpackage;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -53,12 +53,22 @@ public class RectangleWidthAnimation extends Application {
         Rectangle statusBar = new Rectangle(0, 200);
         Button animationButton = new Button("Animate width increase by 25");
         animationButton.setOnAction(event -> {
-            System.out.println("Animation start: width = " + statusBar.getWidth());
-            KeyValue widthValue = new KeyValue(statusBar.widthProperty(), statusBar.getWidth() + 25);
-            KeyFrame frame = new KeyFrame(Duration.seconds(0.4), widthValue);
-            Timeline timeline = new Timeline(frame);
-            timeline.play();
-            timeline.setOnFinished(finishedEvent -> System.out.println("Animation end: width = " + statusBar.getWidth()));
+            ParallelTransition parallelTransition = new ParallelTransition();
+            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.001));
+            parallelTransition.getChildren().add(pauseTransition);
+            parallelTransition.play();
+            parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    System.out.println("Animation start: width = " + statusBar.getWidth());
+                    KeyValue widthValue = new KeyValue(statusBar.widthProperty(), statusBar.getWidth() + 25);
+                    KeyFrame frame = new KeyFrame(Duration.seconds(0.4), widthValue);
+                    Timeline timeline = new Timeline(frame);
+                    timeline.play();
+                    timeline.setOnFinished(finishedEvent -> System.out.println("Animation end: width = " + statusBar.getWidth()));
+                }
+            });
+
         });
         VBox container = new VBox(statusBar);
         //container.setLayoutX(100);

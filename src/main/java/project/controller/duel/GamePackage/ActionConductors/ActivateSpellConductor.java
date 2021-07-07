@@ -63,7 +63,7 @@ public class ActivateSpellConductor {
             GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + mainSpellCardLocation.getRowOfCardLocation()
                 + " " + mainSpellCardLocation.getIndex() + " is being stayed at spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION");
         }
-       // GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
+        // GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
         //if none of the above two ifs occur, then the card was set and we dont need to change location of spell card
         mainSpellCard.setCardPosition(CardPosition.FACE_UP_ACTIVATED_POSITION);
         return "spell card ready for activation";
@@ -91,6 +91,14 @@ public class ActivateSpellConductor {
             ArrayList<CardLocation> cardsToBeRitualSummoned = uninterruptedAction.getCardsToBeRitualSummoned();
             int indexOfRitualMonsterToBeSummoned = cardsToBeRitualSummoned.get(cardsToBeRitualSummoned.size() - 1).getIndex();
             uninterruptedAction.setSecondCardInHandAfterFirstCardInHand(indexOfRitualMonsterToBeSummoned > mainSpellCardLocation.getIndex());
+        }
+        if (spellCard.getSpellCardValue().equals(SpellCardValue.QUICK_PLAY)) {
+            ArrayList<QuickSpellEffect> quickSpellEffects = spellCard.getQuickSpellEffects();
+            if (quickSpellEffects.contains(QuickSpellEffect.DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY)) {
+                ArrayList<CardLocation> cardLocationsToBeDiscarded = uninterruptedAction.getCardsToBeDiscarded();
+                int indexOfCardToBeDiscarded = cardLocationsToBeDiscarded.get(cardLocationsToBeDiscarded.size() - 1).getIndex();
+                uninterruptedAction.setSecondCardInHandAfterFirstCardInHand(indexOfCardToBeDiscarded > mainSpellCardLocation.getIndex());
+            }
         }
     }
 
@@ -127,7 +135,12 @@ public class ActivateSpellConductor {
                 SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(targetingCards.get(i), index);
             }
             ArrayList<CardLocation> cardsToBeDiscarded = uninterruptedAction.getCardsToBeDiscarded();
-            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1), index);
+            CardLocation cardLocation = cardsToBeDiscarded.get(cardsToBeDiscarded.size()-1);
+            if (uninterruptedAction.isSecondCardInHandAfterFirstCardInHand()){
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(cardLocation.getRowOfCardLocation(), cardLocation.getIndex()-1), index);
+            } else {
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, index);
+            }
         }
         if (quickSpellEffects.contains(QuickSpellEffect.TRAP_CARD_INFLICTING_DAMAGE_IS_ACTIVATED_SET_DAMAGE_OF_TRAP_CARD_TO_0)) {
             Action previousAction = GameManager.getUninterruptedActionsByIndex(index).get(numberInListOfActions - 1);
@@ -220,7 +233,7 @@ public class ActivateSpellConductor {
                 duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false).getIndex() + 1);
             takenControlledOfCardLocation = superFinalCardLocation;
         }
-       // GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
+        // GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
         duelBoard.addCardToMonsterZone(card, turn);
         GameManager.getDuelControllerByIndex(index).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
             + " " + cardLocation.getIndex() + " is being added to monster zone " + turn + " and should finally be "

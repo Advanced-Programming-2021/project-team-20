@@ -77,6 +77,7 @@ public class DuelController {
 
     public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
         if (string != null) {
+            System.out.println("@@@@@@@@@@@@@@Available Card Location is "+string.getRowOfCardLocation()+" "+string.getIndex());
             availableCardLocationForUseForClient += string.getRowOfCardLocation();
             availableCardLocationForUseForClient += "\n";
             availableCardLocationForUseForClient += string.getIndex();
@@ -85,7 +86,15 @@ public class DuelController {
     }
 
     public void clearAvailableCardLocationForUseForClient() {
-        availableCardLocationForUseForClient = "";
+        int timesSeenNextLine = 0;
+        while (timesSeenNextLine < 2){
+            if (availableCardLocationForUseForClient.charAt(0) == '\n'){
+                timesSeenNextLine++;
+            }
+            availableCardLocationForUseForClient = availableCardLocationForUseForClient.substring(1);
+        }
+
+        //availableCardLocationForUseForClient = "";
     }
 
     private String whatUsersSay;
