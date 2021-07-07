@@ -63,23 +63,6 @@ public class Storage {
         savaUsersInFile();
     }
 
-    public static void saveNewImageOfUsers(User user, String imagePath) {
-        // for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
-        BufferedImage bImage = null;
-        try {
-            File initialImage = new File(imagePath);
-            bImage = ImageIO.read(initialImage);
-            ImageIO.write(bImage, "png",
-                    new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
-                            + user.getName() + ".png"));
-            user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
-                    + user.getName() + ".png");
-        } catch (Exception e) {
-            System.out.println("Exception occured :" + e.getMessage());
-        }
-        // }
-    }
-
     private void saveNewCardsInFile() throws IOException {
         CSVWriter csvWriter = null;
         for (Map.Entry<String, Card> entry : newCardsCreated.entrySet()) {
@@ -106,16 +89,35 @@ public class Storage {
         }
     }
 
+    public static void saveNewImageOfUsers(User user, String imagePath) {
+        // for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
+        BufferedImage bImage = null;
+        try {
+            File initialImage = new File(imagePath);
+            bImage = ImageIO.read(initialImage);
+            ImageIO.write(bImage, "png",
+                    new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                            + user.getName() + ".png"));
+            user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                    + user.getName() + ".png");
+        } catch (Exception e) {
+            System.out.println("Exception occured :" + e.getMessage());
+        }
+        // }
+    }
+
     public static void saveNewImagesOfCardsInFile(Card card, String imagePath) {
+        BufferedImage bImage = null;
+        String cardName = Utility.giveCardNameRemovingRedundancy(card.getCardName());
         try {
             File file = new File(imagePath);
-            BufferedImage bImage = ImageIO.read(file);
+            bImage = ImageIO.read(file);
             if (card.getCardType().equals(CardType.MONSTER)) {
-                ImageIO.write(bImage, "jpg",
-                        new File("src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName()+ ".jpg"));
+                ImageIO.write(bImage, "png",
+                        new File("src\\main\\resources\\project\\cards\\monsters\\" + cardName + ".jpg"));
             } else {
-                ImageIO.write(bImage, "jpg",
-                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
+                ImageIO.write(bImage, "png",
+                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + cardName + ".jpg"));
             }
         } catch (Exception e) {
             e.printStackTrace();

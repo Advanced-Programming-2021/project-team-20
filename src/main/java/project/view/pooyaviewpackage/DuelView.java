@@ -22,6 +22,7 @@ import javafx.util.Duration;
 import project.controller.duel.GamePackage.PhaseInGame;
 import project.controller.duel.PreliminaryPackage.FakeMain;
 import project.controller.duel.PreliminaryPackage.GameManager;
+import project.controller.duel.cheat.Cheat;
 import project.model.cardData.General.*;
 import project.model.cardData.General.Card;
 import project.model.cardData.SpellCardData.SpellCard;
@@ -125,7 +126,9 @@ public class DuelView extends Application {
     private static boolean isClassWaitingForUserToChooseCardFromDeck = false;
     private static HealthBarAndHealthPoints allyHealthStatus;
     private static HealthBarAndHealthPoints opponentHealthStatus;
-
+    private static Long lastTimeKeyPressed = 0l;
+    private static Cheat cheat = new Cheat();
+    private static StringBuilder cheatCodes = new StringBuilder();
 
     private static boolean areWePlayingWithAI;
 
@@ -153,7 +156,8 @@ public class DuelView extends Application {
         return isClassWaitingForUserToChooseCardFromDeck;
     }
 
-    public static void setIsClassWaitingForUserToChooseCardFromGraveyard(boolean isClassWaitingForUserToChooseCardFromGraveyard) {
+    public static void setIsClassWaitingForUserToChooseCardFromGraveyard(
+            boolean isClassWaitingForUserToChooseCardFromGraveyard) {
         DuelView.isClassWaitingForUserToChooseCardFromGraveyard = isClassWaitingForUserToChooseCardFromGraveyard;
     }
 
@@ -192,6 +196,7 @@ public class DuelView extends Application {
 
     @Override
     public void start(Stage stage) {
+        cheatCodes.setLength(0);
         FakeMain.call();
         areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
         prepareArrayListsForWorking();
@@ -285,6 +290,12 @@ public class DuelView extends Application {
         });
 
         Scene scene = new Scene(anchorPane, 1200, 1000);
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                checkCheatCommands(keyEvent);
+            }
+        });
         stage.setScene(scene);
         stage.show();
         stageWidth = scene.getWidth();
@@ -401,6 +412,25 @@ public class DuelView extends Application {
 
     }
 
+    public void checkCheatCommands(KeyEvent keyEvent) {
+        Long currentTimeKeyPressed = System.currentTimeMillis();
+        if (currentTimeKeyPressed - lastTimeKeyPressed > 5000) {
+            cheatCodes.setLength(0);
+        }
+        lastTimeKeyPressed = currentTimeKeyPressed;
+        if (keyEvent.getCode().getName().equals("Space")) {
+            cheatCodes.append(" ");
+        } else if (keyEvent.getCode().getName().equals("Enter")) {
+            System.out.println(cheatCodes);
+            cheat.findCheatCommand(cheatCodes.toString(), 0);
+            cheatCodes.setLength(0);
+        } else if (keyEvent.getCode().getName().startsWith("Numpad")) {
+            cheatCodes.append(keyEvent.getCode().getName().charAt(keyEvent.getCode().getName().length() - 1));
+        } else {
+            cheatCodes.append(keyEvent.getCode().getName().toLowerCase());
+        }
+    }
+
     private void prepareObjectsForWorking() {
         battleFieldView = new BattleFieldView();
         URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
@@ -460,10 +490,6 @@ public class DuelView extends Application {
                 }
             }
         });
-//        mute.setStyle("-fx-color: crimson");
-//        mute.setStyle("-fx-text-fill: white");
-//        pause.setStyle("-fx-color: orange");
-//        pause.setStyle("-fx-text-fill: blue");
         drawPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_DRAW_PHASE);
         standByPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_STANDBY_PHASE);
         mainPhaseOneLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -535,6 +561,17 @@ public class DuelView extends Application {
 //                if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
 //                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
 //                }
+                // PhaseInGame phaseInGame =
+                // GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+                // standByPhaseLabel.updateImage(phaseInGame);
+                // mainPhaseOneLabel.updateImage(phaseInGame);
+                // battlePhaseLabel.updateImage(phaseInGame);
+                // mainPhaseTwoLabel.updateImage(phaseInGame);
+                // endPhaseLabel.updateImage(phaseInGame);
+                // if (output.contains("phase: draw phase") && output.contains("new card added
+                // to hand:")) {
+                // DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                // }
 
             }
         });
