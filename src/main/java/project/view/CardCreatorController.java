@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,24 +19,32 @@ import project.controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivati
 import project.controller.duel.CardEffects.TrapEffectEnums.*;
 import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.CardPosition;
-import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.MonsterCardData.MonsterCardValue;
-import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.model.cardData.TrapCardData.TrapCardValue;
+import project.view.newClassesForCardCreator.MonsterCard1;
+import project.view.newClassesForCardCreator.SpellCard1;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.time.temporal.ValueRange;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CardCreatorController implements Initializable {
+    ///
+    private ArrayList<String> allSelectedEffectsAsStrings;
+    private ArrayList<String> allSelectedEffectsThatHaveNumbers;
+
+    private HashMap<String, List<String>> hashMapEffects;
+    private HashMap<String,Integer> numbersOfEffectsToSend;
+    private HashMap<String, List<String>> monsterFamilySelectedInSpell;
+    ///
     private String imagePath;
     private String cardType;
     private String cardName;
@@ -50,6 +57,9 @@ public class CardCreatorController implements Initializable {
     private int monsterAttributeNumber;
     private int monsterFamilyNumber;
     private int monsterValuesNumber;
+    private MonsterCardValue valueMonster;
+    private MonsterCardFamily familyMonster;
+    private MonsterCardAttribute attributeMonster;
 
 
     private int numberOfTurnsForActivationSpell;
@@ -171,6 +181,11 @@ public class CardCreatorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        allSelectedEffectsAsStrings = new ArrayList<>();
+        allSelectedEffectsThatHaveNumbers = new ArrayList<>();
+        hashMapEffects = new HashMap<>();
+        numbersOfEffectsToSend = new HashMap<>();
+        monsterFamilySelectedInSpell = new HashMap<>();
         spellButton = new Button();
         trapButton = new Button();
         monsterButton = new Button();
@@ -987,12 +1002,17 @@ public class CardCreatorController implements Initializable {
 
 
     private void finishMonsterCardCreator() {
+        anchorPane.getChildren().remove(vBoxForSentToGraveyardEffect);
+        anchorPane.getChildren().remove(buttonForFinishSentToGraveyardEffect);
         //Attribute
         MonsterCardAttribute[] allValues = MonsterCardAttribute.values();
         MonsterCardAttribute attribute = null;
         int counter = 0;
         for (MonsterCardAttribute allValue : allValues) {
-            if (counter == monsterAttributeNumber) attribute = allValue;
+            if (counter == monsterAttributeNumber) {
+                attributeMonster = allValue;
+//                allSelectedEffectsAsStrings.add(String.valueOf(allValue));
+            }
             counter++;
         }
         //Family
@@ -1000,7 +1020,10 @@ public class CardCreatorController implements Initializable {
         MonsterCardFamily family = null;
         counter = 0;
         for (MonsterCardFamily monsterCardFamily : allValuesFamily) {
-            if (counter == monsterFamilyNumber) family = monsterCardFamily;
+            if (counter == monsterFamilyNumber) {
+                familyMonster = monsterCardFamily;
+//                allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
+            }
             counter++;
         }
         //Value
@@ -1008,7 +1031,10 @@ public class CardCreatorController implements Initializable {
         MonsterCardValue value = null;
         counter = 0;
         for (MonsterCardValue monsterCardValue : allValuesValue) {
-            if (counter == monsterValuesNumber) value = monsterCardValue;
+            if (counter == monsterValuesNumber) {
+                valueMonster = monsterCardValue;
+//                allSelectedEffectsAsStrings.add(String.valueOf(monsterCardValue));
+            }
             counter++;
         }
         //Start Enums
@@ -1018,8 +1044,11 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedArrayList = new ArrayList<>();
         counter = 0;
         for (SummoningRequirement summoningRequirement : summoningRequirements) {
-            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter)))
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))){
                 selectedArrayList.add(String.valueOf(summoningRequirement));
+                allSelectedEffectsAsStrings.add(String.valueOf(summoningRequirement));
+            }
+
             counter++;
         }
         monsterHashMap.put("SummoningRequirement", selectedArrayList);
@@ -1028,8 +1057,10 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedUponSummoning = new ArrayList<>();
         counter = 0;
         for (UponSummoningEffect uponSummoningEffect : uponSummoningEffects) {
-            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter)))
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) {
                 selectedUponSummoning.add(String.valueOf(uponSummoningEffect));
+                allSelectedEffectsAsStrings.add(String.valueOf(uponSummoningEffect));
+            }
             counter++;
         }
         monsterHashMap.put("UponSummoningEffect", selectedUponSummoning);
@@ -1039,8 +1070,10 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedBeingAttacked = new ArrayList<>();
         counter = 0;
         for (BeingAttackedEffect beingAttackedEffect : beingAttackedEffects) {
-            if (selectedBeingAttackedEffect.contains(Integer.valueOf(counter)))
+            if (selectedBeingAttackedEffect.contains(Integer.valueOf(counter))) {
                 selectedBeingAttacked.add(String.valueOf(beingAttackedEffect));
+                allSelectedEffectsAsStrings.add(String.valueOf(beingAttackedEffect));
+            }
             counter++;
         }
         monsterHashMap.put("BeingAttackedEffect", selectedBeingAttacked);
@@ -1050,8 +1083,10 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedContinuousMonster = new ArrayList<>();
         counter = 0;
         for (ContinuousMonsterEffect continuousMonsterEffect : continuousMonsterEffects) {
-            if (selectedContinuousMonsterEffect.contains(Integer.valueOf(counter)))
+            if (selectedContinuousMonsterEffect.contains(Integer.valueOf(counter))) {
                 selectedContinuousMonster.add(String.valueOf(continuousMonsterEffect));
+                allSelectedEffectsAsStrings.add(String.valueOf(continuousMonsterEffect));
+            }
             counter++;
         }
         monsterHashMap.put("ContinuousMonsterEffect", selectedContinuousMonster);
@@ -1061,7 +1096,10 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedFlip = new ArrayList<>();
         counter = 0;
         for (FlipEffect flipEffect : flipEffects) {
-            if (selectedFlipEffect.contains(Integer.valueOf(counter))) selectedFlip.add(String.valueOf(flipEffect));
+            if (selectedFlipEffect.contains(Integer.valueOf(counter))) {
+                selectedFlip.add(String.valueOf(flipEffect));
+                allSelectedEffectsAsStrings.add(String.valueOf(flipEffect));
+            }
             counter++;
         }
         monsterHashMap.put("FlipEffect", selectedFlip);
@@ -1071,8 +1109,10 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedOptionalMonster = new ArrayList<>();
         counter = 0;
         for (OptionalMonsterEffect optionalMonsterEffect : optionalMonsterEffects) {
-            if (selectedOptionalMonsterEffect.contains(Integer.valueOf(counter)))
+            if (selectedOptionalMonsterEffect.contains(Integer.valueOf(counter))) {
                 selectedOptionalMonster.add(String.valueOf(optionalMonsterEffect));
+                allSelectedEffectsAsStrings.add(String.valueOf(optionalMonsterEffect));
+            }
             counter++;
         }
         monsterHashMap.put("OptionalMonsterEffect", selectedOptionalMonster);
@@ -1082,23 +1122,86 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedSent = new ArrayList<>();
         counter = 0;
         for (SentToGraveyardEffect sentToGraveyardEffect : sentToGraveyardEffects) {
-            if (selectedSentToGraveyardEffect.contains(Integer.valueOf(counter)))
+            if (selectedSentToGraveyardEffect.contains(Integer.valueOf(counter))) {
                 selectedSent.add(String.valueOf(sentToGraveyardEffect));
+                allSelectedEffectsAsStrings.add(String.valueOf(sentToGraveyardEffect));
+            }
             counter++;
         }
         monsterHashMap.put("SentToGraveyardEffect", selectedSent);
 
-
-        MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attribute,
-            family, value, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, cardImage);
-        Storage.addCardToNewCardsCrated(monsterCard);
-        Storage.saveNewImagesOfCardsInFile(monsterCard, imagePath);
+        hashMapEffects = monsterHashMap;
+        allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
+        getNumberOfUserMonsterCard();
+//        MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attribute,
+//            family, value, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, cardImage);
+//        Storage.addCardToNewCardsCrated(monsterCard);
+//        Storage.saveNewImagesOfCardsInFile(monsterCard, imagePath);
 
 
         //TODO -> calculate card price
 
-        System.out.println("Card Created and added to storage successfully");
+//        System.out.println("Card Created and added to storage successfully");
+//        backToMainMenu();
+    }
+
+    private void getNumberOfUserMonsterCard() {
+        System.out.println("start");
+        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+            System.out.println("hi");
+            CustomDialog customDialog = new CustomDialog("ERROR", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+            customDialog.openDialog();
+            TextField textField = new TextField();
+            textField.setLayoutX(450);
+            textField.setLayoutY(200);
+            anchorPane.getChildren().add(textField);
+
+            Button endButton = new Button("OK");
+            endButton.setLayoutX(450);
+            endButton.setLayoutY(250);
+            anchorPane.getChildren().add(endButton);
+            endButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    Pattern pattern = Pattern.compile("^\\d+$");
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()){
+                        numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
+                        allSelectedEffectsThatHaveNumbers.remove(0);
+                        anchorPane.getChildren().remove(endButton);
+                        anchorPane.getChildren().remove(textField);
+                        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+                            getNumberOfUserMonsterCard();
+                        }
+                        else {
+                            lastStepOfCreatingMonsterCard();
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    private void lastStepOfCreatingMonsterCard() {
+                MonsterCard1 monsterCard1 = new MonsterCard1(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
+            familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, hashMapEffects, cardImage, numbersOfEffectsToSend);
+                //TODO: calculate price
+
+        System.out.println("Created");
         backToMainMenu();
+
+     }
+
+    private ArrayList<String> getEnumsWithNumbers() {
+        ArrayList<String> answer = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\d{2,3}");
+        for (String allSelectedEffectsAsString : allSelectedEffectsAsStrings) {
+            Matcher matcher = pattern.matcher(allSelectedEffectsAsString);
+            if (matcher.find()) {
+                answer.add(allSelectedEffectsAsString);
+            }
+        }
+        return answer;
     }
 
     private void backToMainMenu() {

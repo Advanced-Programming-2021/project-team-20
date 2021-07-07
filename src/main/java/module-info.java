@@ -13,4 +13,6 @@ module PhaseOneProject {
     exports project.view.pooyaviewpackage;
     opens project.view.internet to javafx.fxml;
     exports project.view.internet;
+    exports project.view.newClassesForCardCreator;
+    opens project.view.newClassesForCardCreator to javafx.fxml;
 }

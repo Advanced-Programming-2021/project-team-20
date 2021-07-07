@@ -1,4 +1,4 @@
-package project.view;
+package project.view.newClassesForCardCreator;
 
 import javafx.scene.image.Image;
 import project.model.cardData.General.CardPosition;
