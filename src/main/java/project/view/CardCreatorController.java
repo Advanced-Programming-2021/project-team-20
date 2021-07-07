@@ -186,6 +186,8 @@ public class CardCreatorController implements Initializable {
         hashMapEffects = new HashMap<>();
         numbersOfEffectsToSend = new HashMap<>();
         monsterFamilySelectedInSpell = new HashMap<>();
+
+
         spellButton = new Button();
         trapButton = new Button();
         monsterButton = new Button();
@@ -2188,7 +2190,7 @@ public class CardCreatorController implements Initializable {
             });
         }
 
-        buttonForFinish.setOnAction(ActionEvent -> createSpellCard());
+        buttonForFinish.setOnAction(ActionEvent -> createSpellCard(vBox, buttonForFinish));
         for (Button button : buttons) {
             vBox.getChildren().add(button);
         }
@@ -2204,7 +2206,10 @@ public class CardCreatorController implements Initializable {
     }
 
 
-    private void createSpellCard() {
+    private void createSpellCard(VBox vBox, Button buttonForFinish) {
+        anchorPane.getChildren().remove(vBox);
+        anchorPane.getChildren().remove(buttonForFinish);
+
         System.out.println(selectedUserReplySpell);
 
         HashMap<String, List<String>> enumValues = new HashMap<>();
@@ -2232,59 +2237,74 @@ public class CardCreatorController implements Initializable {
         switch (spellCardValue) {
             case "NORMAL":
                 for (NormalSpellCardEffect normalSpellCardEffect : normalSpellCardEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) {
                         stringsNormal.add(String.valueOf(normalSpellCardEffect));
+                        allSelectedEffectsAsStrings.add(String.valueOf(normalSpellCardEffect));
+                    }
                     counter++;
                 }
 
                 break;
             case "EQUIP":
                 for (EquipSpellEffect effect : equipSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) {
                         stringsEquip.add(String.valueOf(effect));
+                        allSelectedEffectsAsStrings.add(String.valueOf(effect));
+                    }
                     counter++;
                 }
                 counter = 0;
                 for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
                     if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(counter))){
                         monsterFamilyTrapEquip.add(String.valueOf(monsterCardFamily));
+                        allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
                     }
                 }
 
                 break;
             case "FIELD":
                 for (FieldSpellEffect effect : fieldSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) {
                         stringsField.add(String.valueOf(effect));
+                        allSelectedEffectsAsStrings.add(String.valueOf(effect));
+                    }
                     counter++;
                 }
                 counter = 0;
                 for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
                     if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(counter))){
                         monsterFamilyTrapField.add(String.valueOf(monsterCardFamily));
+                        allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
                     }
                 }
                 break;
             case "RITUAL":
                 for (RitualSpellEffect effect : ritualSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) {
                         stringsRitual.add(String.valueOf(effect));
+                        allSelectedEffectsAsStrings.add(String.valueOf(effect));
+                    }
                     counter++;
                 }
 
                 break;
             case "QUICK_PLAY":
                 for (QuickSpellEffect effect : quickSpellEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) {
                         stringsQuick.add(String.valueOf(effect));
+                        allSelectedEffectsAsStrings.add(String.valueOf(effect));
+                    }
                     counter++;
                 }
 
                 break;
             case "CONTINUOUS":
                 for (ContinuousSpellCardEffect effect : continuousSpellCardEffects) {
-                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter)))
+                    if (numberOfSelectedEnumSpell.contains(Integer.valueOf(counter))) {
                         stringsContinuous.add(String.valueOf(effect));
+                        allSelectedEffectsAsStrings.add(String.valueOf(effect));
+                    }
+
                     counter++;
                 }
 
@@ -2305,26 +2325,72 @@ public class CardCreatorController implements Initializable {
         UserReplyForActivation[] userReplyForActivations = UserReplyForActivation.values();
         counter = 0;
         for (UserReplyForActivation userReplyForActivation : userReplyForActivations) {
-            if (selectedUserReplySpell.contains(Integer.valueOf(counter)))
+            if (selectedUserReplySpell.contains(Integer.valueOf(counter))) {
                 userReplyArrayList.add(String.valueOf(userReplyForActivation));
+                allSelectedEffectsAsStrings.add(String.valueOf(userReplyForActivation));
+            }
             counter++;
         }
-
         enumValues.put("UserReplyForActivation", userReplyArrayList);
-        SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
-            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues, cardImage, monsterFamilyTrap);
+
+        allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
+        monsterFamilySelectedInSpell = monsterFamilyTrap;
+        getNumberOfUserSpellCard();
+//        SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+//            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues, cardImage, monsterFamilyTrap);
 
 //        Storage.addCardToNewCardsCrated(spellCard);
 //        Storage.saveNewImagesOfCardsInFile(spellCard, imagePath);
         //TODO : calculate card price
         //Should I add all of them even if they are empty?
 
-        System.out.println("Card created successfully");
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
+    }
+
+    private void getNumberOfUserSpellCard() {
+        System.out.println("start");
+        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+            System.out.println("hi");
+            CustomDialog customDialog = new CustomDialog("ERROR", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+            customDialog.openDialog();
+            TextField textField = new TextField();
+            textField.setLayoutX(450);
+            textField.setLayoutY(200);
+            anchorPane.getChildren().add(textField);
+
+            Button endButton = new Button("OK");
+            endButton.setLayoutX(450);
+            endButton.setLayoutY(250);
+            anchorPane.getChildren().add(endButton);
+            endButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    Pattern pattern = Pattern.compile("^\\d+$");
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()){
+                        numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
+                        allSelectedEffectsThatHaveNumbers.remove(0);
+                        anchorPane.getChildren().remove(endButton);
+                        anchorPane.getChildren().remove(textField);
+                        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+                            getNumberOfUserSpellCard();
+                        }
+                        else {
+                            lastStepOfCreatingSpellCard();
+                        }
+                    }
+
+                }
+            });
         }
+    }
+
+    private void lastStepOfCreatingSpellCard() {
+        SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
+            0, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
+
+        System.out.println("finished");
+        backToMainMenu();
+
     }
 
 
