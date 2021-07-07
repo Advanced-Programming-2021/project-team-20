@@ -1,12 +1,10 @@
 package project.view.pooyaviewpackage;
 
 import javafx.animation.PauseTransition;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
@@ -16,12 +14,13 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.controller.duel.GamePackage.PhaseInGame;
-import project.controller.duel.PreliminaryPackage.FakeMain;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.controller.duel.cheat.Cheat;
+import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.*;
 import project.model.cardData.General.Card;
 import project.model.cardData.SpellCardData.SpellCard;
@@ -129,6 +128,13 @@ public class DuelView {
     private static StringBuilder cheatCodes = new StringBuilder();
 
     private static boolean areWePlayingWithAI;
+
+    private static Label firstPlayerUsernameLabel;
+    private static Label secondPlayerUsernameLabel;
+    private static Label firstPlayerNicknameLabel;
+    private static Label secondPlayerNicknameLabel;
+    private static Rectangle firstPlayerAvatar;
+    private static Rectangle secondPlayerAvatar;
 
     public static HealthBarAndHealthPoints getAllyHealthStatus() {
         return allyHealthStatus;
@@ -352,6 +358,15 @@ public class DuelView {
         anchorPane.getChildren().add(mute);
         anchorPane.getChildren().add(pause);
         anchorPane.getChildren().add(surrender);
+
+        anchorPane.getChildren().add(firstPlayerUsernameLabel);
+        anchorPane.getChildren().add(firstPlayerNicknameLabel);
+        anchorPane.getChildren().add(firstPlayerAvatar);
+        anchorPane.getChildren().add(secondPlayerUsernameLabel);
+        anchorPane.getChildren().add(secondPlayerNicknameLabel);
+        anchorPane.getChildren().add(secondPlayerAvatar);
+
+
         controllerForView.giveCardsAtTheBeginningOfGame();
         System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
         System.out.println(stage.getWidth());
@@ -610,6 +625,46 @@ public class DuelView {
             allCards.getChildren().add(cardView);
         }
 
+
+        String firstUsername = GameManager.getDuelControllerByIndex(0).getPlayingUsernameByTurn(1);
+        String secondUsername = GameManager.getDuelControllerByIndex(0).getPlayingUsernameByTurn(2);
+        String firstNickname = Storage.getUserByName(firstUsername).getNickname();
+        String secondNickname = Storage.getUserByName(secondUsername).getNickname();
+        Image firstPlayerImage = Storage.getUserByName(firstUsername).getImage();
+        Image secondPlayerImage = Storage.getUserByName(secondUsername).getImage();
+
+
+        firstPlayerUsernameLabel = new Label("Username: " + firstUsername);
+        secondPlayerUsernameLabel = new Label("Username: " + secondUsername);
+        firstPlayerNicknameLabel = new Label("Nickname: " + firstNickname);
+        secondPlayerNicknameLabel = new Label("Nickname: " + secondNickname);
+
+        firstPlayerUsernameLabel.setLayoutX(DuelView.getBattleFieldView().getUpperLeftX() + 10);
+        firstPlayerUsernameLabel.setLayoutY(DuelView.getBattleFieldView().getUpperLeftY() * 7 + 10);
+        firstPlayerUsernameLabel.setFont(new Font(30));
+        firstPlayerNicknameLabel.setLayoutX(DuelView.getBattleFieldView().getUpperLeftX() + 10);
+        firstPlayerNicknameLabel.setLayoutY(DuelView.getBattleFieldView().getUpperLeftY() * 7 + 10 + DuelView.getStageHeight()/16 - 10);
+        firstPlayerNicknameLabel.setFont(new Font(30));
+
+
+        secondPlayerUsernameLabel.setLayoutX(DuelView.getBattleFieldView().getUpperLeftX() + 10);
+        secondPlayerUsernameLabel.setLayoutY(10);
+        secondPlayerUsernameLabel.setFont(new Font(30));
+        secondPlayerNicknameLabel.setLayoutX(DuelView.getBattleFieldView().getUpperLeftX() + 10);
+        secondPlayerNicknameLabel.setLayoutY(10 + DuelView.getStageHeight()/16 -10);
+        secondPlayerNicknameLabel.setFont(new Font(30));
+
+        firstPlayerAvatar = new Rectangle(DuelView.getStageWidth() * 3 / 4, DuelView.getStageHeight() * 7 / 8, DuelView.getStageWidth() / 6, DuelView.getStageHeight() / 8);
+        firstPlayerAvatar.setFill(new ImagePattern(firstPlayerImage));
+        if (secondUsername.equals("AI")){
+            secondPlayerAvatar = new Rectangle(DuelView.getStageWidth() * 7 / 12, 0, DuelView.getStageWidth() / 3, DuelView.getStageHeight() / 8);
+            secondPlayerAvatar.setFill(new ImagePattern(secondPlayerImage));
+        } else {
+            secondPlayerAvatar = new Rectangle(DuelView.getStageWidth() * 3 / 4, 0, DuelView.getStageWidth() / 6, DuelView.getStageHeight() / 8);
+            secondPlayerAvatar.setFill(new ImagePattern(secondPlayerImage));
+        }
+
+
         ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(0).getOpponentCardsInHand();
         ArrayList<Card> opponentCardsInDeck = GameManager.getDuelBoardByIndex(0).getOpponentCardsInDeck();
         for (int i = 0; i < opponentCardsInDeck.size() + opponentCardsInHand.size(); i++) {
@@ -800,6 +855,7 @@ public class DuelView {
             moreCardInfoSection.updateCardMoreInfoSection(cardView, ourDescriptionString);
         }
     }
+
     private void endOneRoundOfDuel(String result) {
         CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, true);
         customDialog.openDialog();
