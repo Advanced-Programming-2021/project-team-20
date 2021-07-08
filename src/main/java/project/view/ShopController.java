@@ -55,6 +55,11 @@ public class ShopController implements Initializable {
     private static List<Rectangle> rectanglesToShowCards;
     private static AnchorPane anchorPane;
     private static Rectangle equalShowCardRectangle;
+    private static Label equalSelectedCardNameLabel;
+    private static Label equalNumbserOfShoppingCardsLabel;
+    private static Label equalNumberOfUselessCardsLabel;
+    private static Label equalUserMoneyLabel;
+    private static Button equalBuybtn;
     private Shop shop = new Shop();
 
     @Override
@@ -79,15 +84,24 @@ public class ShopController implements Initializable {
         if (sizeOfCardsInDifferentPages != UIStorage.getAllTypeOfCards().get("allCards").size()) {
             createPacksOfCardsForEachPage();
         }
-        userMoneyLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        userMoneyLabel.setTextFill(Color.BLUE);
-        userMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-        selectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        numberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        numberOfUselessCardsLabel.setTextFill(Color.BLUE);
-        numbserOfShoppingCardsLabel.setTextFill(Color.BLUE);
-        numbserOfShoppingCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalBuybtn = buybtn;
+        setEffectsOfLabels();
         setEffectsOfButtons();
+    }
+
+    private void setEffectsOfLabels() {
+        equalUserMoneyLabel = userMoneyLabel;
+        equalUserMoneyLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalUserMoneyLabel.setTextFill(Color.BLUE);
+        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        equalSelectedCardNameLabel = selectedCardNameLabel;
+        equalSelectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumbserOfShoppingCardsLabel = numbserOfShoppingCardsLabel;
+        equalNumbserOfShoppingCardsLabel.setTextFill(Color.BLUE);
+        equalNumbserOfShoppingCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumberOfUselessCardsLabel = numberOfUselessCardsLabel;
+        equalNumberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumberOfUselessCardsLabel.setTextFill(Color.BLUE);
     }
 
     private void setEffectsOfButtons() {
@@ -104,9 +118,9 @@ public class ShopController implements Initializable {
         }
 
         if (cardNameForBuy.equals("")) {
-            buybtn.setDisable(true);
+            equalBuybtn.setDisable(true);
         } else {
-            buybtn.setDisable(false);
+            equalBuybtn.setDisable(false);
         }
     }
 
@@ -138,21 +152,23 @@ public class ShopController implements Initializable {
 
     private void showNumberOfBoughtCards(String cardName) {
         HashMap<String, Integer> numberOfCards = shop.getNumberOfCards(cardName);
-        numberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
-        numbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
+        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
+        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
     }
 
     private void setEffectsOfBuyButtonAndShowLabel() {
         Card card = Storage.getCardByName(cardNameForBuy);
         int cardPrice = card.getCardPrice();
         if (cardPrice > LoginController.getOnlineUser().getMoney()) {
-            selectedCardNameLabel.setTextFill(Color.RED);
-            selectedCardNameLabel.setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
-            buybtn.setDisable(true);
+            equalSelectedCardNameLabel.setTextFill(Color.RED);
+            equalSelectedCardNameLabel
+                    .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
+            equalBuybtn.setDisable(true);
         } else {
-            buybtn.setDisable(false);
-            selectedCardNameLabel.setTextFill(Color.BLUE);
-            selectedCardNameLabel.setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
+            equalBuybtn.setDisable(false);
+            equalSelectedCardNameLabel.setTextFill(Color.BLUE);
+            equalSelectedCardNameLabel
+                    .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
         }
     }
 
@@ -269,12 +285,9 @@ public class ShopController implements Initializable {
     }
 
     public void buyCard() {
-        if (cardNameForBuy == null) {
-            System.out.println("Please choose a card first!");
-        } else {
-            String answerOfShop = shop.findCommand("shop buy " + cardNameForBuy);
-            userMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-        }
+        SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3"); 
+         String answerOfShop = shop.findCommand("shop buy " + cardNameForBuy);
+        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
 
     }
 

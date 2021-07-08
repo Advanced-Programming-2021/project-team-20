@@ -139,7 +139,7 @@ public class DeckMenuController implements Initializable {
 
         mainDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, mainDeckPane, true);
-            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
+             SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
         });
 
@@ -152,7 +152,7 @@ public class DeckMenuController implements Initializable {
 
         sideDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, sideDeckPane, false);
-            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
+             SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
         });
 
@@ -166,7 +166,7 @@ public class DeckMenuController implements Initializable {
 
         scrollPane.setOnDragDropped(e -> {
             transferCardToScrollBar(e);
-            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
+            SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
         });
     }

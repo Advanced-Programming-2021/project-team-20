@@ -45,14 +45,8 @@ public class SongPlayer {
         URL resource = getClass().getResource(url);
         shortMusic = new MediaPlayer(new Media(resource.toString()));
         shortMediaView = new MediaView();
-        shortMediaView.setMediaPlayer(backgroundMusic);
-        shortMusic.setAutoPlay(true);
-        shortMusic.setVolume(0.4);
-        shortMusic.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                shortMusic.seek(Duration.ZERO);
-            }
-        });
+        shortMediaView.setMediaPlayer(shortMusic);
+        shortMusic.setVolume(1);
         shortMusic.play();
     }
 
