@@ -2045,8 +2045,7 @@ public class CardCreatorController implements Initializable {
                 public void handle(ActionEvent actionEvent) {
                     if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(finalI1))) {
                         currentPrice += 2500;
-                    }
-                    else {
+                    } else {
                         currentPrice -= 2500;
                     }
                     changeAdditionOfThisEffectInTheGivenPlace(finalI1, monsterFamilyEffectsInTrapField, buttons);
@@ -2082,8 +2081,7 @@ public class CardCreatorController implements Initializable {
                 public void handle(ActionEvent actionEvent) {
                     if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(finalI1 + 12))) {
                         currentPrice += 2500;
-                    }
-                    else {
+                    } else {
                         currentPrice -= 2500;
                     }
                     changeAdditionOfThisEffectInTheGivenPlace2(finalI1 + 12, monsterFamilyEffectsInTrapField, buttons2);
@@ -2140,8 +2138,7 @@ public class CardCreatorController implements Initializable {
                 public void handle(ActionEvent actionEvent) {
                     if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(finalI1))) {
                         currentPrice += 2500;
-                    }
-                    else {
+                    } else {
                         currentPrice -= 2500;
                     }
                     changeAdditionOfThisEffectInTheGivenPlace(finalI1, monsterFamilyEffectsInTrapEquip, buttons);
@@ -2177,8 +2174,7 @@ public class CardCreatorController implements Initializable {
                 public void handle(ActionEvent actionEvent) {
                     if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(finalI1 + 12))) {
                         currentPrice += 2500;
-                    }
-                    else {
+                    } else {
                         currentPrice -= 2500;
                     }
                     changeAdditionOfThisEffectInTheGivenPlace2(finalI1 + 12, monsterFamilyEffectsInTrapEquip, buttons2);
