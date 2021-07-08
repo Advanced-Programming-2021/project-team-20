@@ -1,7 +1,6 @@
 package project.model.modelsforview;
 
 import project.model.cardData.General.RowOfCardLocation;
-import project.view.View;
 
 public class ViewLittleInformation {
     private RowOfCardLocation rowOfCardLocation;

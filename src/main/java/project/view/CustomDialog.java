@@ -77,6 +77,29 @@ public class CustomDialog extends Stage {
         setScene(new Scene(root, null));
     }
 
+    public CustomDialog(String header, String content, String toWhichClass) {
+        Pane root = new Pane();
+        setScale1(root);
+        setScale2(root);
+
+        initStyle(StageStyle.TRANSPARENT);
+        initModality(Modality.APPLICATION_MODAL);
+        Rectangle bg = createRectanle(content);
+        VBox box = createVBox(header, content);
+        Button btn = createButtonWhenUserLogined(bg);
+        root.getChildren().addAll(bg, box, btn);
+        setScene(new Scene(root, null));
+    }
+
+    private Button createButtonWhenUserLogined(Rectangle bg){
+        Button btn = new Button("OK");
+        btn.setTranslateX(bg.getWidth() - 75);
+        btn.setTranslateY(bg.getHeight() - 50);
+        btn.setOnAction(e-> callMainMenu());
+        btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        return btn;
+    }
+
     public CustomDialog(String header, String content, boolean isOneRoundOfDuelEnded) {
         Pane root = new Pane();
         setScale1(root);
@@ -105,6 +128,7 @@ public class CustomDialog extends Stage {
     }
 
     private void callMainMenu() {
+        closeDialog();
         try {
             new MainView().changeView("/project/fxml/mainMenu.fxml");
         } catch (IOException e) {
@@ -113,6 +137,7 @@ public class CustomDialog extends Stage {
     }
 
     private void callChangeCardsBetweenTwoRounds() {
+        closeDialog();
         AnchorPane pane = null;
         try {
             pane = FXMLLoader.load(getClass().getResource("/project/fxml/changeCardsBetweenTwoRoundsPage.fxml"));
