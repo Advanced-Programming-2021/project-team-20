@@ -81,6 +81,11 @@ public class LoginController implements Initializable {
         } else {
             showAlert("USER CREATED SUCCESSFULLY!", "SUCCESSFUL");
             createUser();
+            try {
+                new MainView().changeView("/project/fxml/mainMenu.fxml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         usernameFieldForRegister.setText("");
         passwordFieldfORegister.setText("");

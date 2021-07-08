@@ -12,7 +12,7 @@
       <Button fx:id="shopbtn" layoutX="403.0" layoutY="446.0" mnemonicParsing="false" onAction="#shopMenu" prefHeight="25.0" prefWidth="195.0" text="shop" />
       <Button fx:id="profilebtn" layoutX="403.0" layoutY="494.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="25.0" prefWidth="195.0" text="profile" />
       <Button fx:id="importAndExportbtn" layoutX="403.0" layoutY="542.0" mnemonicParsing="false" onAction="#goToImportAndExportMenu" prefHeight="25.0" prefWidth="195.0" text="import export" />
-      <Button fx:id="backToLoginPagebtn" layoutX="403.0" layoutY="591.0" mnemonicParsing="false" onAction="#backToLoginPage" prefHeight="25.0" prefWidth="195.0" text="back" />
+      <Button fx:id="backToLoginPagebtn" layoutX="403.0" layoutY="591.0" mnemonicParsing="false" onAction="#backToLoginPage" prefHeight="25.0" prefWidth="195.0" text="logout" />
       <Button fx:id="scoreboardBtn" layoutX="403.0" layoutY="356.0" mnemonicParsing="false" onAction="#scoreBoardPage" prefHeight="25.0" prefWidth="195.0" text="scoreboard" />
       <Button fx:id="example" layoutX="14.0" layoutY="571.0" mnemonicParsing="false" onAction="#example" prefHeight="25.0" prefWidth="195.0" text="example" />
    </children>
