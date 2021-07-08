@@ -1153,19 +1153,21 @@ public class CardCreatorController implements Initializable {
     }
 
     private void getNumberOfUserMonsterCard() {
-        System.out.println("start");
+
         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
-            System.out.println("hi");
-            CustomDialog customDialog = new CustomDialog("ERROR", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+
+            CustomDialog customDialog = new CustomDialog("INPUT", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -1196,6 +1198,8 @@ public class CardCreatorController implements Initializable {
         //TODO: calculate price
 
         System.out.println("Created");
+        CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+        customDialog.openDialog();
         backToMainMenu();
 
     }
@@ -1475,7 +1479,7 @@ public class CardCreatorController implements Initializable {
         TributeSummonTrapCardEffect[] tributeSummonTrapCardEffects1 = TributeSummonTrapCardEffect.values();
         NormalTrapCardEffect[] normalTrapCardEffects1 = NormalTrapCardEffect.values();
         RitualSummonTrapCardEffect[] ritualSummonTrapCardEffects1 = RitualSummonTrapCardEffect.values();
-        SpecialSummonTrapCardEffect[] specialSummonTrapCardEffects1= SpecialSummonTrapCardEffect.values();
+        SpecialSummonTrapCardEffect[] specialSummonTrapCardEffects1 = SpecialSummonTrapCardEffect.values();
         MonsterEffectActivationTrapCardEffect[] monsterEffectActivationTrapCardEffects1 = MonsterEffectActivationTrapCardEffect.values();
         SpellCardActivationTrapCardEffect[] spellCardActivationTrapCardEffects1 = SpellCardActivationTrapCardEffect.values();
         TrapCardActivationTrapCardEffect[] trapCardActivationTrapCardEffects1 = TrapCardActivationTrapCardEffect.values();
@@ -1564,7 +1568,6 @@ public class CardCreatorController implements Initializable {
             }
             counter++;
         }
-
 
 
         counter = 0;
@@ -1656,13 +1659,15 @@ public class CardCreatorController implements Initializable {
             CustomDialog customDialog = new CustomDialog("Input", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -1691,6 +1696,8 @@ public class CardCreatorController implements Initializable {
         TrapCard1 trapCard = new TrapCard1(cardName, cardDescription, trapCardValue, CardPosition.NOT_APPLICABLE,
             numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, hashMapEffects, cardImage, numbersOfEffectsToSend);
         System.out.println("Card Created");
+        CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+        customDialog.openDialog();
         backToMainMenu();
     }
 
@@ -2572,13 +2579,15 @@ public class CardCreatorController implements Initializable {
             CustomDialog customDialog = new CustomDialog("ERROR", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -2609,6 +2618,8 @@ public class CardCreatorController implements Initializable {
             0, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
 
         System.out.println("finished");
+        CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+        customDialog.openDialog();
         backToMainMenu();
 
     }
@@ -2622,10 +2633,6 @@ public class CardCreatorController implements Initializable {
 
 
     public void back(ActionEvent actionEvent) {
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        backToMainMenu();
     }
 }
