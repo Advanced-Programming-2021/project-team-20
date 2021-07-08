@@ -355,6 +355,7 @@ public class DeckMenuController implements Initializable {
                 rectangle.setOnDragDetected(null);
                 label.setText(0 + "");
             } else {
+                rectangle.setOpacity(1);
                 int numberOfCardsInUselessCards = countNumberOfCardsInUselessCards(rectangle.getId());
                 label.setText("" + numberOfCardsInUselessCards);
             }
@@ -392,6 +393,7 @@ public class DeckMenuController implements Initializable {
     }
 
     private boolean doesCardExistInUseLessCards(String cardname) {
+        
         return LoginController.getOnlineUser().getAllUselessCards().contains(cardname);
     }
 

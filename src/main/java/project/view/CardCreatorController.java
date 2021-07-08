@@ -1106,20 +1106,21 @@ public class CardCreatorController implements Initializable {
     }
 
     private void getNumberOfUserMonsterCard() {
-        System.out.println("start");
+
         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
-            System.out.println("hi");
-            CustomDialog customDialog = new CustomDialog("ERROR",
-                    "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+
+            CustomDialog customDialog = new CustomDialog("INPUT", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -1153,6 +1154,8 @@ public class CardCreatorController implements Initializable {
         // TODO: calculate price
 
         System.out.println("Created");
+        CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+        customDialog.openDialog();
         backToMainMenu();
 
     }
@@ -1226,21 +1229,24 @@ public class CardCreatorController implements Initializable {
         label.setLayoutX(450);
         label.setLayoutY(100);
 
+        Button button = new Button("OK");
         TextField textField = new TextField();
         textField.setLayoutY(200);
-        textField.setLayoutX(450);
+        textField.setLayoutX(310);
+        textField.setMinWidth(400);
+        textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 20; -fx-background-color: #f5eeee");
+        textField.setPromptText("NUMBER OF TURNS FOR ACTIVATION");
 
-        Button button = new Button("OK");
-        button.setLayoutX(450);
-        button.setLayoutY(300);
-        button.setOnAction(ActionEvent -> getTrapCardValue(textField, label, button));
+        button.setLayoutY(290);
+        button.setLayoutX(480);
+        button.setStyle("-fx-font-size: 25");
+        button.setOnAction(ActionEvent -> getTrapCardValue(textField, button));
 
-        anchorPane.getChildren().add(label);
         anchorPane.getChildren().add(textField);
         anchorPane.getChildren().add(button);
     }
 
-    private void getTrapCardValue(TextField textField, Label label, Button button) {
+    private void getTrapCardValue(TextField textField, Button button) {
         Pattern pattern = Pattern.compile("^\\d+$");
         if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
             numberOfTurnsForActivationForTrapCard = Integer.parseInt(textField.getText());
@@ -1256,7 +1262,6 @@ public class CardCreatorController implements Initializable {
             trapCardActivationTrapCardEffectNumbers = new ArrayList<>();
             userReplyForActivationNumbers = new ArrayList<>();
             anchorPane.getChildren().remove(textField);
-            anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
 
             ArrayList<Button> buttons = new ArrayList<>();
@@ -1427,12 +1432,9 @@ public class CardCreatorController implements Initializable {
         NormalTrapCardEffect[] normalTrapCardEffects1 = NormalTrapCardEffect.values();
         RitualSummonTrapCardEffect[] ritualSummonTrapCardEffects1 = RitualSummonTrapCardEffect.values();
         SpecialSummonTrapCardEffect[] specialSummonTrapCardEffects1 = SpecialSummonTrapCardEffect.values();
-        MonsterEffectActivationTrapCardEffect[] monsterEffectActivationTrapCardEffects1 = MonsterEffectActivationTrapCardEffect
-                .values();
-        SpellCardActivationTrapCardEffect[] spellCardActivationTrapCardEffects1 = SpellCardActivationTrapCardEffect
-                .values();
-        TrapCardActivationTrapCardEffect[] trapCardActivationTrapCardEffects1 = TrapCardActivationTrapCardEffect
-                .values();
+        MonsterEffectActivationTrapCardEffect[] monsterEffectActivationTrapCardEffects1 = MonsterEffectActivationTrapCardEffect.values();
+        SpellCardActivationTrapCardEffect[] spellCardActivationTrapCardEffects1 = SpellCardActivationTrapCardEffect.values();
+        TrapCardActivationTrapCardEffect[] trapCardActivationTrapCardEffects1 = TrapCardActivationTrapCardEffect.values();
         UserReplyForActivation[] userReplyForActivations1 = UserReplyForActivation.values();
 
         ArrayList<String> flip = new ArrayList<>();
@@ -1600,13 +1602,15 @@ public class CardCreatorController implements Initializable {
                     "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -1637,6 +1641,8 @@ public class CardCreatorController implements Initializable {
                 numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, hashMapEffects, cardImage,
                 numbersOfEffectsToSend);
         System.out.println("Card Created");
+        CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+        customDialog.openDialog();
         backToMainMenu();
     }
 
@@ -1864,8 +1870,9 @@ public class CardCreatorController implements Initializable {
             vbox.setLayoutX(430);
             vbox.setMinHeight(200);
             vbox.setMinWidth(100);
-            vbox.setStyle(
-                    "-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+
+
+            vbox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
             vbox.setSpacing(20);
 
             ArrayList<Button> buttons = new ArrayList<>();
@@ -2099,11 +2106,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(170);
+        vBox.setLayoutX(220);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(510);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2138,11 +2150,17 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(230);
+        vBox.setLayoutX(202);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(420);
+        buttonForFinish.setStyle("-fx-font-size: 25");
+
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2177,11 +2195,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(230);
+        vBox.setLayoutX(120);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(420);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2218,11 +2241,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(80);
+        vBox.setLayoutX(220);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(465);
+        buttonForFinish.setLayoutY(580);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2259,11 +2287,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(150);
+        vBox.setLayoutX(170);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
         buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutY(470);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2298,11 +2331,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
         vBox.setLayoutY(100);
+        vBox.setLayoutX(250);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(430);
+        buttonForFinish.setLayoutY(590);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2341,11 +2379,15 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(50);
+        vBox.setLayoutX(110);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(10);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(600);
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2501,13 +2543,15 @@ public class CardCreatorController implements Initializable {
                     "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -2539,6 +2583,8 @@ public class CardCreatorController implements Initializable {
                 cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
 
         System.out.println("finished");
+        CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+        customDialog.openDialog();
         backToMainMenu();
 
     }
@@ -2550,10 +2596,6 @@ public class CardCreatorController implements Initializable {
     }
 
     public void back(ActionEvent actionEvent) {
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        backToMainMenu();
     }
 }
