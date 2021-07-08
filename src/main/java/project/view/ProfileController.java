@@ -29,7 +29,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import project.controller.non_duel.profile.Profile;
 
 public class ProfileController implements Initializable {
-    private static final AlertType CONFIRMATION = null;
     @FXML
     private Rectangle rectangleImage;
     @FXML
