@@ -1227,7 +1227,7 @@ public class CardCreatorController implements Initializable {
                 familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend);
 
             System.out.println("Created");
-            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
             customDialog.openDialog();
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
@@ -1740,7 +1740,7 @@ public class CardCreatorController implements Initializable {
             TrapCard1 trapCard = new TrapCard1(cardName, cardDescription, trapCardValue, CardPosition.NOT_APPLICABLE,
                 numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend);
             System.out.println("Card Created");
-            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
             customDialog.openDialog();
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
@@ -2733,10 +2733,11 @@ public class CardCreatorController implements Initializable {
                 currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
 
             System.out.println("finished");
-            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully");
+            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
             customDialog.openDialog();
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
+
 
         backToMainMenu();
 
