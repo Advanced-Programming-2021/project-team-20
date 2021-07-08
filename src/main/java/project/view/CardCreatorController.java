@@ -1161,7 +1161,7 @@ public class CardCreatorController implements Initializable {
             TextField textField = new TextField();
             textField.setLayoutX(340);
             textField.setLayoutY(200);
-            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
+
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
@@ -1276,21 +1276,24 @@ public class CardCreatorController implements Initializable {
         label.setLayoutX(450);
         label.setLayoutY(100);
 
+        Button button = new Button("OK");
         TextField textField = new TextField();
         textField.setLayoutY(200);
-        textField.setLayoutX(450);
+        textField.setLayoutX(310);
+        textField.setMinWidth(400);
+        textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 20; -fx-background-color: #f5eeee");
+        textField.setPromptText("NUMBER OF TURNS FOR ACTIVATION");
 
-        Button button = new Button("OK");
-        button.setLayoutX(450);
-        button.setLayoutY(300);
-        button.setOnAction(ActionEvent -> getTrapCardValue(textField, label, button));
+        button.setLayoutY(290);
+        button.setLayoutX(480);
+        button.setStyle("-fx-font-size: 25");
+        button.setOnAction(ActionEvent -> getTrapCardValue(textField, button));
 
-        anchorPane.getChildren().add(label);
         anchorPane.getChildren().add(textField);
         anchorPane.getChildren().add(button);
     }
 
-    private void getTrapCardValue(TextField textField, Label label, Button button) {
+    private void getTrapCardValue(TextField textField, Button button) {
         Pattern pattern = Pattern.compile("^\\d+$");
         if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
             numberOfTurnsForActivationForTrapCard = Integer.parseInt(textField.getText());
@@ -1306,7 +1309,6 @@ public class CardCreatorController implements Initializable {
             trapCardActivationTrapCardEffectNumbers = new ArrayList<>();
             userReplyForActivationNumbers = new ArrayList<>();
             anchorPane.getChildren().remove(textField);
-            anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
 
             ArrayList<Button> buttons = new ArrayList<>();
@@ -1933,6 +1935,8 @@ public class CardCreatorController implements Initializable {
             vbox.setLayoutX(430);
             vbox.setMinHeight(200);
             vbox.setMinWidth(100);
+
+
             vbox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
             vbox.setSpacing(20);
 
@@ -2171,11 +2175,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(170);
+        vBox.setLayoutX(220);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(510);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2212,11 +2221,17 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(230);
+        vBox.setLayoutX(202);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(420);
+        buttonForFinish.setStyle("-fx-font-size: 25");
+
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2253,11 +2268,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(230);
+        vBox.setLayoutX(120);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(420);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2295,11 +2315,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(80);
+        vBox.setLayoutX(220);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(465);
+        buttonForFinish.setLayoutY(580);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2337,11 +2362,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(150);
+        vBox.setLayoutX(170);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
         buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutY(470);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2377,11 +2407,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
         vBox.setLayoutY(100);
+        vBox.setLayoutX(250);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(430);
+        buttonForFinish.setLayoutY(590);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2421,11 +2456,15 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(50);
+        vBox.setLayoutX(110);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(10);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(600);
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
