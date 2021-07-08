@@ -17,7 +17,9 @@ import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEff
 import project.controller.duel.CardEffects.SpellEffectEnums.*;
 import project.controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import project.controller.duel.CardEffects.TrapEffectEnums.*;
+import project.controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement;
 import project.controller.non_duel.storage.Storage;
+import project.model.User;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
@@ -27,6 +29,7 @@ import project.model.cardData.TrapCardData.TrapCard;
 import project.model.cardData.TrapCardData.TrapCardValue;
 import project.view.newClassesForCardCreator.MonsterCard1;
 import project.view.newClassesForCardCreator.SpellCard1;
+import project.view.newClassesForCardCreator.TrapCard1;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +45,7 @@ public class CardCreatorController implements Initializable {
     private ArrayList<String> allSelectedEffectsThatHaveNumbers;
 
     private HashMap<String, List<String>> hashMapEffects;
-    private HashMap<String,Integer> numbersOfEffectsToSend;
+    private HashMap<String, Integer> numbersOfEffectsToSend;
     private HashMap<String, List<String>> monsterFamilySelectedInSpell;
     ///
     private String imagePath;
@@ -70,6 +73,7 @@ public class CardCreatorController implements Initializable {
 
     private int numberOfTurnsForActivationForTrapCard;
     private int trapCardValueNumber;
+    private TrapCardValue trapCardValue;
     private VBox lastVboxTrap;
     private VBox previousVbox;
     private Button previousButton;
@@ -86,6 +90,7 @@ public class CardCreatorController implements Initializable {
 
     private ArrayList<Integer> spellCardActivationTrapCardEffectNumbers;
     private ArrayList<Integer> trapCardActivationTrapCardEffectNumbers;
+
     private ArrayList<Integer> userReplyForActivationNumbers;
     private ArrayList<Integer> monsterFamilyEffectsInTrapEquip;
     private ArrayList<Integer> monsterFamilyEffectsInTrapField;
@@ -1046,7 +1051,7 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedArrayList = new ArrayList<>();
         counter = 0;
         for (SummoningRequirement summoningRequirement : summoningRequirements) {
-            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))){
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) {
                 selectedArrayList.add(String.valueOf(summoningRequirement));
                 allSelectedEffectsAsStrings.add(String.valueOf(summoningRequirement));
             }
@@ -1166,36 +1171,34 @@ public class CardCreatorController implements Initializable {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     Pattern pattern = Pattern.compile("^\\d+$");
-                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()){
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
                         numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
                         allSelectedEffectsThatHaveNumbers.remove(0);
                         anchorPane.getChildren().remove(endButton);
                         anchorPane.getChildren().remove(textField);
                         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
                             getNumberOfUserMonsterCard();
-                        }
-                        else {
+                        } else {
                             lastStepOfCreatingMonsterCard();
                         }
                     }
 
                 }
             });
-        }
-        else {
+        } else {
             lastStepOfCreatingMonsterCard();
         }
     }
 
     private void lastStepOfCreatingMonsterCard() {
-                MonsterCard1 monsterCard1 = new MonsterCard1(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
+        MonsterCard1 monsterCard1 = new MonsterCard1(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
             familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, hashMapEffects, cardImage, numbersOfEffectsToSend);
-                //TODO: calculate price
+        //TODO: calculate price
 
         System.out.println("Created");
         backToMainMenu();
 
-     }
+    }
 
     private ArrayList<String> getEnumsWithNumbers() {
         ArrayList<String> answer = new ArrayList<>();
@@ -1231,10 +1234,10 @@ public class CardCreatorController implements Initializable {
     private void changeAdditionOfThisEffectInTheGivenPlace2(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
         if (integersValues.contains(finalI)) {
             integersValues.remove(Integer.valueOf(finalI));
-            buttons.get(finalI-12).setStyle("-fx-background-color: #e6e9ec");
+            buttons.get(finalI - 12).setStyle("-fx-background-color: #e6e9ec");
         } else {
             integersValues.add(finalI);
-            buttons.get(finalI-12).setStyle("-fx-background-color: #0c7bea;");
+            buttons.get(finalI - 12).setStyle("-fx-background-color: #0c7bea;");
         }
     }
 
@@ -1457,25 +1460,238 @@ public class CardCreatorController implements Initializable {
     private void finishTrapCard() {
         System.out.println("Trying to create");
         int counter = 0;
-        TrapCardValue trapValue = null;
         TrapCardValue[] trapCardValues = TrapCardValue.values();
-        for (TrapCardValue trapCardValue : trapCardValues) {
-            if (trapCardValueNumber == counter) trapValue = trapCardValue;
+        for (TrapCardValue trapCardValue1 : trapCardValues) {
+            if (trapCardValueNumber == counter) trapCardValue = trapCardValue1;
             counter++;
         }
 
-        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapValue, CardPosition.NOT_APPLICABLE,
-            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, new HashMap<>(), cardImage);
-        Storage.addCardToNewCardsCrated(trapCard);
-        Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
-        Storage.addCardToNewCardsCrated(trapCard);
-        Storage.addNewImageForNewCards(cardName, cardImage);
-        System.out.println("card was created");
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        ContinuousTrapCardEffect[] continuousTrapCardEffects1 = ContinuousTrapCardEffect.values();//empty
+        FlipSummonTrapCardEffect[] flipSummonTrapCardEffects1 = FlipSummonTrapCardEffect.values();
+        LogicalActivationRequirement[] logicalActivationRequirements1 = LogicalActivationRequirement.values();//empty
+        MonsterAttackingTrapCardEffect[] monsterAttackingTrapCardEffects1 = MonsterAttackingTrapCardEffect.values();
+        NormalSummonTrapCardEffect[] normalSummonTrapCardEffects1 = NormalSummonTrapCardEffect.values();
+        TributeSummonTrapCardEffect[] tributeSummonTrapCardEffects1 = TributeSummonTrapCardEffect.values();
+        NormalTrapCardEffect[] normalTrapCardEffects1 = NormalTrapCardEffect.values();
+        RitualSummonTrapCardEffect[] ritualSummonTrapCardEffects1 = RitualSummonTrapCardEffect.values();
+        SpecialSummonTrapCardEffect[] specialSummonTrapCardEffects1= SpecialSummonTrapCardEffect.values();
+        MonsterEffectActivationTrapCardEffect[] monsterEffectActivationTrapCardEffects1 = MonsterEffectActivationTrapCardEffect.values();
+        SpellCardActivationTrapCardEffect[] spellCardActivationTrapCardEffects1 = SpellCardActivationTrapCardEffect.values();
+        TrapCardActivationTrapCardEffect[] trapCardActivationTrapCardEffects1 = TrapCardActivationTrapCardEffect.values();
+        UserReplyForActivation[] userReplyForActivations1 = UserReplyForActivation.values();
+
+
+        ArrayList<String> flip = new ArrayList<>();
+        ArrayList<String> monsterAttack = new ArrayList<>();
+        ArrayList<String> normalSummon = new ArrayList<>();
+        ArrayList<String> tribute = new ArrayList<>();
+        ArrayList<String> normalTrap = new ArrayList<>();
+        ArrayList<String> ritual = new ArrayList<>();
+        ArrayList<String> special = new ArrayList<>();
+        ArrayList<String> monsterActivation = new ArrayList<>();
+        ArrayList<String> spell = new ArrayList<>();
+        ArrayList<String> trap = new ArrayList<>();
+        ArrayList<String> user = new ArrayList<>();
+
+
+        counter = 0;
+
+        for (FlipSummonTrapCardEffect effect : flipSummonTrapCardEffects1) {
+            if (flipSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                flip.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
         }
+
+
+        counter = 0;
+        for (MonsterAttackingTrapCardEffect effect : monsterAttackingTrapCardEffects1) {
+            if (monsterAttackingTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                monsterAttack.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (NormalSummonTrapCardEffect effect : normalSummonTrapCardEffects1) {
+            if (normalSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                normalSummon.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (TributeSummonTrapCardEffect effect : tributeSummonTrapCardEffects1) {
+            if (tributeSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                tribute.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (NormalTrapCardEffect effect : normalTrapCardEffects1) {
+            if (normalTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                normalTrap.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (RitualSummonTrapCardEffect effect : ritualSummonTrapCardEffects1) {
+            if (ritualSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                ritual.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (SpecialSummonTrapCardEffect effect : specialSummonTrapCardEffects1) {
+            if (specialSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                special.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+
+        counter = 0;
+        for (MonsterEffectActivationTrapCardEffect effect : monsterEffectActivationTrapCardEffects1) {
+            if (monsterEffectActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                monsterActivation.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (SpellCardActivationTrapCardEffect effect : spellCardActivationTrapCardEffects1) {
+            if (spellCardActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                spell.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+        counter = 0;
+        for (SpellCardActivationTrapCardEffect effect : spellCardActivationTrapCardEffects1) {
+            if (spellCardActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                spell.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (TrapCardActivationTrapCardEffect effect : trapCardActivationTrapCardEffects1) {
+            if (trapCardActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                trap.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (UserReplyForActivation effect : userReplyForActivations1) {
+            if (userReplyForActivationNumbers.contains(Integer.valueOf(counter))) {
+                user.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+        HashMap<String, List<String>> enums = new HashMap<>();
+
+        enums.put("ContinuousTrapCardEffects", new ArrayList<>());
+        enums.put("LogicalActivationRequirements", new ArrayList<>());
+        enums.put("FlipSummonTrapCardEffect", flip);
+        enums.put("MonsterAttackingTrapCardEffect", monsterAttack);
+        enums.put("NormalSummonTrapCardEffect", normalSummon);
+        enums.put("TributeSummonTrapCardEffect", tribute);
+        enums.put("NormalTrapCardEffect", normalTrap);
+        enums.put("RitualSummonTrapCardEffect", ritual);
+        enums.put("SpecialSummonTrapCardEffect", special);
+        enums.put("MonsterEffectActivationTrapCardEffect", monsterActivation);
+        enums.put("SpellCardActivationTrapCardEffect", spell);
+        enums.put("TrapCardActivationTrapCardEffect", trap);
+        enums.put("UserReplyForActivation", user);
+
+        hashMapEffects = enums;
+        allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
+
+        getNumberOfUserTrapCard();
+//        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapValue, CardPosition.NOT_APPLICABLE,
+//            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, enums, cardImage);
+//        Storage.addCardToNewCardsCrated(trapCard);
+//        Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
+//        Storage.addCardToNewCardsCrated(trapCard);
+//        Storage.addNewImageForNewCards(cardName, cardImage);
+//        System.out.println("card was created");
+//        try {
+//            new MainView().changeView("/project/fxml/mainMenu.fxml");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void getNumberOfUserTrapCard() {
+        System.out.println("start");
+        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+            System.out.println("hi");
+            CustomDialog customDialog = new CustomDialog("Input", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+            customDialog.openDialog();
+            TextField textField = new TextField();
+            textField.setLayoutX(450);
+            textField.setLayoutY(200);
+            anchorPane.getChildren().add(textField);
+
+            Button endButton = new Button("OK");
+            endButton.setLayoutX(450);
+            endButton.setLayoutY(250);
+            anchorPane.getChildren().add(endButton);
+            endButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    Pattern pattern = Pattern.compile("^\\d+$");
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
+                        numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
+                        allSelectedEffectsThatHaveNumbers.remove(0);
+                        anchorPane.getChildren().remove(endButton);
+                        anchorPane.getChildren().remove(textField);
+                        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+                            getNumberOfUserTrapCard();
+                        } else {
+                            lastStepOfCreatingTrapCard();
+                        }
+                    }
+
+                }
+            });
+        } else {
+            lastStepOfCreatingTrapCard();
+        }
+    }
+
+    private void lastStepOfCreatingTrapCard() {
+        TrapCard1 trapCard = new TrapCard1(cardName, cardDescription, trapCardValue, CardPosition.NOT_APPLICABLE,
+            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, hashMapEffects, cardImage, numbersOfEffectsToSend);
+        System.out.println("Card Created");
+        backToMainMenu();
     }
 
 
@@ -2258,7 +2474,7 @@ public class CardCreatorController implements Initializable {
                 }
                 counter = 0;
                 for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
-                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(counter))){
+                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(counter))) {
                         monsterFamilyTrapEquip.add(String.valueOf(monsterCardFamily));
                         allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
                     }
@@ -2275,7 +2491,7 @@ public class CardCreatorController implements Initializable {
                 }
                 counter = 0;
                 for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
-                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(counter))){
+                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(counter))) {
                         monsterFamilyTrapField.add(String.valueOf(monsterCardFamily));
                         allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
                     }
@@ -2368,23 +2584,21 @@ public class CardCreatorController implements Initializable {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     Pattern pattern = Pattern.compile("^\\d+$");
-                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()){
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
                         numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
                         allSelectedEffectsThatHaveNumbers.remove(0);
                         anchorPane.getChildren().remove(endButton);
                         anchorPane.getChildren().remove(textField);
                         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
                             getNumberOfUserSpellCard();
-                        }
-                        else {
+                        } else {
                             lastStepOfCreatingSpellCard();
                         }
                     }
 
                 }
             });
-        }
-        else {
+        } else {
             lastStepOfCreatingSpellCard();
         }
     }
