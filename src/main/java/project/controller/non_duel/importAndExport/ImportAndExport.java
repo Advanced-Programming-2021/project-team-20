@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +17,8 @@ import project.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 import project.model.cardData.MonsterCardData.MonsterCard;
-import project.model.cardData.MonsterCardData.MonsterCardAttribute;
-import project.model.cardData.MonsterCardData.MonsterCardFamily;
-import project.model.cardData.MonsterCardData.MonsterCardValue;
 import project.model.cardData.SpellCardData.SpellCard;
-import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.cardData.TrapCardData.TrapCard;
-import project.model.cardData.TrapCardData.TrapCardValue;
 
 public class ImportAndExport {
 
@@ -227,16 +221,16 @@ public class ImportAndExport {
     private boolean writeFileInCSVFormat(String cardname, File file) {
 
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
+        String cardName = Utility.giveCardNameRemovingRedundancy(cardname);
+        if (allMonsterCards.containsKey(cardName)) {
             FileWriter csvWriter;
             try {
                 csvWriter = new FileWriter(file.getAbsolutePath());
-                List<List<String>> wholeCSVFile = toCSVFormatMonsterCard(allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardname)));
+                List<List<String>> wholeCSVFile = toCSVFormatMonsterCard(allMonsterCards.get(cardName));
                 for (List<String> rowData : wholeCSVFile) {
                     for (int i = 0; i < rowData.size(); i++) {
                         csvWriter.append("\"" + rowData.get(i) + "\"");
                         csvWriter.append(",");
-
                     }
                     csvWriter.append("\n");
                 }
@@ -250,11 +244,11 @@ public class ImportAndExport {
         }
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
+        if (allSpellAndTrapCards.containsKey(cardName)) {
             FileWriter csvWriter;
             try {
                 csvWriter = new FileWriter(file.getAbsolutePath());
-                List<List<String>> wholeCSVFile = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardname)));
+                List<List<String>> wholeCSVFile = toCSVFormatSpellTrapCard(allSpellAndTrapCards.get(cardName));
                 for (List<String> rowData : wholeCSVFile) {
                     for (int i = 0; i < rowData.size(); i++) {
                         csvWriter.append("\"" + rowData.get(i) + "\"");
@@ -275,11 +269,12 @@ public class ImportAndExport {
 
     private boolean writeFileInJsonFormat(String cardname, File file) {
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        if (allMonsterCards.containsKey(cardname)) {
+        String cardName = Utility.giveCardNameRemovingRedundancy(cardname);
+        if (allMonsterCards.containsKey(cardName)) {
             FileWriter fileWriter;
             try {
                 fileWriter = new FileWriter(file.getAbsolutePath());
-                fileWriter.write(toJsonFormatMonsterCard(allMonsterCards.get(cardname)));
+                fileWriter.write(toJsonFormatMonsterCard(allMonsterCards.get(cardName)));
                 fileWriter.close();
                 return true;
             } catch (Exception e) {
@@ -288,11 +283,11 @@ public class ImportAndExport {
             }
         }
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
-        if (allSpellAndTrapCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
+        if (allSpellAndTrapCards.containsKey(cardName)) {
             FileWriter fileWriter;
             try {
                 fileWriter = new FileWriter(file.getAbsolutePath());
-                fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardname))));
+                fileWriter.write(toJsonFormatSpellAndTrapCard(allSpellAndTrapCards.get((cardName))));
                 fileWriter.close();
                 return true;
             } catch (Exception e) {

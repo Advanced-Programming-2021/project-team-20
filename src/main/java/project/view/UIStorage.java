@@ -299,7 +299,7 @@ public class UIStorage {
             allCardDiscriptionLabels1.add(label);
             label = new Label();
             label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14));
-            allCardDiscriptionLabels2.add(new Label());
+            allCardDiscriptionLabels2.add(label);
         }
     }
 
