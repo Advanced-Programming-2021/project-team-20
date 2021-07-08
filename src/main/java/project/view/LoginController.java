@@ -79,13 +79,9 @@ public class LoginController implements Initializable {
         } else if (doesUserWithThisNicknameAlreadyExists()) {
             showAlert("NICKNAME IS REPEATED", "ERROR");
         } else {
-            showAlert("USER CREATED SUCCESSFULLY!", "SUCCESSFUL");
             createUser();
-            try {
-                new MainView().changeView("/project/fxml/mainMenu.fxml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            CustomDialog customDialog = new CustomDialog("USER CREATED SUCCESSFULLY!", "SUCCESSFUL", "mainMenu");
+            customDialog.openDialog();
         }
         usernameFieldForRegister.setText("");
         passwordFieldfORegister.setText("");
