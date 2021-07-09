@@ -114,8 +114,7 @@ public class TrapCard extends Card {
             normalTrapCardEffects.add(
                     NormalTrapCardEffect.OPPONENT_DISCARDS_ALL_CARDS_WITH_A_GIVEN_NAME_OTHERWISE_OWNER_LOSES_ONE_RANDOM_CARD);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
-            logicalActivationRequirements
-                    .add(LogicalActivationRequirement.OPPONENT_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OPPONENT_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
             userReplyForActivations.add(UserReplyForActivation.ENTER_NAME_OF_A_CARD);
         }
         if (enumValues != null) {

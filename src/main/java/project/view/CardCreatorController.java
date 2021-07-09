@@ -2539,6 +2539,8 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinish);
     }
 
+    ArrayList<String> monsterFamilyTrapEquip;
+    ArrayList<String> monsterFamilyTrapField;
 
     private void createSpellCard(VBox vBox, Button buttonForFinish) {
         anchorPane.getChildren().remove(vBox);
@@ -2565,8 +2567,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> stringsQuick = new ArrayList<>();
         ArrayList<String> stringsContinuous = new ArrayList<>();
         ArrayList<String> userReplyArrayList = new ArrayList<>();
-        ArrayList<String> monsterFamilyTrapEquip = new ArrayList<>();
-        ArrayList<String> monsterFamilyTrapField = new ArrayList<>();
+        monsterFamilyTrapEquip = new ArrayList<>();
+        monsterFamilyTrapField = new ArrayList<>();
         int counter = 0;
         switch (spellCardValue) {
             case "NORMAL":
@@ -2728,7 +2730,7 @@ public class CardCreatorController implements Initializable {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
             SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
                 CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
-                currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
+                currentPrice, hashMapEffects, cardImage, monsterFamilyTrapEquip, monsterFamilyTrapField, numbersOfEffectsToSend);
 
             System.out.println("finished");
             CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");

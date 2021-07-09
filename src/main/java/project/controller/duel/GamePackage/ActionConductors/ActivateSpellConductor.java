@@ -120,8 +120,8 @@ public class ActivateSpellConductor {
         }
         ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
         ArrayList<QuickSpellEffect> quickSpellEffects = spellCard.getQuickSpellEffects();
-        ArrayList<FieldSpellEffect> fieldSpellEffects = spellCard.getFieldSpellEffects();
-        ArrayList<EquipSpellEffect> equipSpellEffects = spellCard.getEquipSpellEffects();
+        ArrayList<FieldSpellExtendedEffect> fieldSpellExtendedEffects = spellCard.getFieldSpellExtendedEffects();
+        ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffects = spellCard.getEquipSpellExtendedEffects();
         ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
         ArrayList<RitualSpellEffect> ritualSpellEffects = spellCard.getRitualSpellEffects();
         if (quickSpellEffects.contains(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY)) {
@@ -175,9 +175,9 @@ public class ActivateSpellConductor {
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD)) {
             destroyAllMonsterCardsInTheField(index);
         }
-        if (equipSpellEffects.size() > 0) {
+        if (equipSpellExtendedEffects.size() > 0) {
             ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo = uninterruptedAction.getCardsToBeChosenToApplyEquipSpellTo();
-            equipSpellEffect(index, cardsToBeChosenToApplyEquipSpellTo, equipSpellEffects, uninterruptedAction);
+            equipSpellEffect(index, cardsToBeChosenToApplyEquipSpellTo, equipSpellExtendedEffects, uninterruptedAction);
         }
         if (ritualSpellEffects.contains(RitualSpellEffect.SEND_NORMAL_MONSTERS_WITH_SUM_OF_LEVELS_EQUAL_TO_MONSTERS_LEVEL_FROM_DECK_TO_GRAVEYARD)) {
             ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard = uninterruptedAction.getCardsToBeChosenFromDeckAndSentToGraveyard();
@@ -188,7 +188,7 @@ public class ActivateSpellConductor {
         }
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         String output = give500LifePointsToPlayerOwningACardOfThisEffect(index, finalMainCardLocation);
-        if (fieldSpellEffects.size() == 0 && equipSpellEffects.size() == 0 && continuousSpellCardEffects.size() == 0) {
+        if (fieldSpellExtendedEffects.size() == 0 && equipSpellExtendedEffects.size() == 0 && continuousSpellCardEffects.size() == 0) {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
         }
         if (!output.equals("")) {
@@ -398,15 +398,15 @@ public class ActivateSpellConductor {
         sendAllCardsInThisArrayListToGraveyard(targetingCards, index);
     }
 
-    public static void equipSpellEffect(int index, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo, ArrayList<EquipSpellEffect> equipSpellEffects, Action uninterruptedAction) {
+    public static void equipSpellEffect(int index, ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo, ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffect, Action uninterruptedAction) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         ArrayList<MonsterCard> monsterCards = new ArrayList<>();
         for (int i = 0; i < cardsToBeChosenToApplyEquipSpellTo.size(); i++) {
             monsterCards.add((MonsterCard) duelBoard.getCardByCardLocation(cardsToBeChosenToApplyEquipSpellTo.get(i)));
         }
         for (int i = 0; i < monsterCards.size(); i++) {
-            for (int j = 0; j < equipSpellEffects.size(); j++) {
-                monsterCards.get(i).addEquipSpellEffectToList(equipSpellEffects.get(j));
+            for (int j = 0; j < equipSpellExtendedEffect.size(); j++) {
+                monsterCards.get(i).addEquipSpellExtendedEffects(equipSpellExtendedEffect.get(j));
             }
         }
         CardLocation mainSpellCardLocation = uninterruptedAction.getFinalMainCardLocation();
@@ -416,21 +416,21 @@ public class ActivateSpellConductor {
         }
     }
 
-    public static void checkSpellFieldEffectInTheField(int index, FieldSpellEffect fieldSpellEffect) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        ArrayList<Card> allyMonsterCards = duelBoard.getAllyMonsterCards();
-        ArrayList<Card> opponentMonsterCards = duelBoard.getOpponentMonsterCards();
-        for (int i = 0; i < allyMonsterCards.size(); i++) {
-            if (allyMonsterCards.get(i) != null) {
-                ((MonsterCard) allyMonsterCards.get(i)).addSpellFieldEffectToList(fieldSpellEffect);
-            }
-        }
-        for (int i = 0; i < opponentMonsterCards.size(); i++) {
-            if (opponentMonsterCards.get(i) != null) {
-                ((MonsterCard) opponentMonsterCards.get(i)).addSpellFieldEffectToList(fieldSpellEffect);
-            }
-        }
-    }
+//    public static void checkSpellFieldEffectInTheField(int index, FieldSpellEffect fieldSpellEffect) {
+//        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+//        ArrayList<Card> allyMonsterCards = duelBoard.getAllyMonsterCards();
+//        ArrayList<Card> opponentMonsterCards = duelBoard.getOpponentMonsterCards();
+//        for (int i = 0; i < allyMonsterCards.size(); i++) {
+//            if (allyMonsterCards.get(i) != null) {
+//                ((MonsterCard) allyMonsterCards.get(i)).addSpellFieldEffectToList(fieldSpellEffect);
+//            }
+//        }
+//        for (int i = 0; i < opponentMonsterCards.size(); i++) {
+//            if (opponentMonsterCards.get(i) != null) {
+//                ((MonsterCard) opponentMonsterCards.get(i)).addSpellFieldEffectToList(fieldSpellEffect);
+//            }
+//        }
+//    }
 
 
 }

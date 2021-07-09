@@ -1,7 +1,6 @@
 package project.view.pooyaviewpackage;
 
 import javafx.animation.PauseTransition;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -229,7 +228,7 @@ public class DuelView {
         DuelView.stage = stage;
         DuelView.stage.setTitle("Duel Page");
 
-        DuelView.anchorPane = new AnchorPane();
+        AnchorPane anchorPane = new AnchorPane();
         System.out.println(battleFieldView == null);
         anchorPane.setOnMouseClicked(e -> {
             if (shouldDuelViewClickingAbilitiesWork) {
@@ -456,9 +455,9 @@ public class DuelView {
 
 
         controllerForView.giveCardsAtTheBeginningOfGame();
-        System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
-        System.out.println(stage.getWidth());
-        System.out.println(stage.getHeight());
+//        System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
+//        System.out.println(stage.getWidth());
+//        System.out.println(stage.getHeight());
         return anchorPane;
         // MainView.changeScene(anchorPane);
     }
@@ -467,8 +466,8 @@ public class DuelView {
         new DuelStage();
     }
 
-   // public static void main(String args[]) {
-      //  launch(args);
+    // public static void main(String args[]) {
+    //  launch(args);
 //        Stage stage = new Stage();
 //        DuelView duelView = new DuelView();
 //        AnchorPane anchorPane = duelView.getAnchorpaneAtBeginning(stage);
@@ -482,7 +481,7 @@ public class DuelView {
 //        stage.setScene(scene);
 //        stage.show();
 //        //callStage();
-   // }
+    // }
 
     public void callPayOrDestroy(String output) {
         String something = "do you want to pay 100 lifepoints or do you want to destroy your spell card?";
@@ -621,13 +620,13 @@ public class DuelView {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 boolean oneRound = true;
-                if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds()==3){
+                if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
                     oneRound = false;
                 }
                 String output = GameManager.getDuelControllerByIndex(0).getInput("surrender", true);
                 System.out.println("Surrender: " + output);
                 stage.close();
-                if (oneRound){
+                if (oneRound) {
                     endOneRoundOfDuel(output);
                 } else {
                     endGame(output);
@@ -721,14 +720,15 @@ public class DuelView {
                                                         GamePhaseButton.updateAllGamePhaseButtonsOnce();
                                                     }
                                                 });
-
+                                                newerPauseTransition.play();
                                             }
-                                        }
-                                    });
-                                    pauseTransition.play();
-                                }
-                            });
-                            pauseTransition.play();
+                                        });
+                                        newPauseTransition.play();
+                                    }
+
+                                });
+                                pauseTransition.play();
+                            }
                         } else {
                             GamePhaseButton.updateAllGamePhaseButtonsOnce();
                         }
@@ -748,17 +748,17 @@ public class DuelView {
 //                if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
 //                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
 //                }
-                // PhaseInGame phaseInGame =
-                // GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-                // standByPhaseLabel.updateImage(phaseInGame);
-                // mainPhaseOneLabel.updateImage(phaseInGame);
-                // battlePhaseLabel.updateImage(phaseInGame);
-                // mainPhaseTwoLabel.updateImage(phaseInGame);
-                // endPhaseLabel.updateImage(phaseInGame);
-                // if (output.contains("phase: draw phase") && output.contains("new card added
-                // to hand:")) {
-                // DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                // }
+            // PhaseInGame phaseInGame =
+            // GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+            // standByPhaseLabel.updateImage(phaseInGame);
+            // mainPhaseOneLabel.updateImage(phaseInGame);
+            // battlePhaseLabel.updateImage(phaseInGame);
+            // mainPhaseTwoLabel.updateImage(phaseInGame);
+            // endPhaseLabel.updateImage(phaseInGame);
+            // if (output.contains("phase: draw phase") && output.contains("new card added
+            // to hand:")) {
+            // DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+            // }
 
         });
 
@@ -817,7 +817,7 @@ public class DuelView {
         secondPlayerUsernameLabel.setLayoutY(10);
         secondPlayerUsernameLabel.setFont(new Font(30));
         secondPlayerNicknameLabel.setLayoutX(DuelView.getBattleFieldView().getUpperLeftX() + 10);
-        secondPlayerNicknameLabel.setLayoutY(10 + DuelView.getStageHeight()/16 -10);
+        secondPlayerNicknameLabel.setLayoutY(10 + DuelView.getStageHeight() / 16 - 10);
         secondPlayerNicknameLabel.setFont(new Font(30));
 
         firstPlayerAvatar = new Rectangle(DuelView.getStageWidth() * 3 / 4, DuelView.getStageHeight() * 7 / 8, DuelView.getStageWidth() / 6, DuelView.getStageHeight() / 8);

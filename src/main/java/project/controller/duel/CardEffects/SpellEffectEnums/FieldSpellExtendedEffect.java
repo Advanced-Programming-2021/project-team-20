@@ -13,6 +13,8 @@ import project.view.pooyaviewpackage.DuelView;
 
 import java.util.ArrayList;
 
+import static project.model.cardData.MonsterCardData.MonsterCardFamily.*;
+
 public class FieldSpellExtendedEffect {
     private ArrayList<MonsterCardFamily> firstMonsterCardFamilies;
     private ArrayList<MonsterCardFamily> secondMonsterCardFamilies;
@@ -21,18 +23,76 @@ public class FieldSpellExtendedEffect {
     private int secondAttack;
     private int secondDefense;
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
-    public FieldSpellExtendedEffect(ArrayList<MonsterCardFamily> firstMonsterCardFamilies, ArrayList<MonsterCardFamily> secondMonsterCardFamilies
-        , int firstAttack, int firstDefense, int secondAttack, int secondDefense, ArrayList<FieldSpellEffect> fieldSpellEffects) {
-        this.firstAttack = firstAttack;
-        this.firstDefense = firstDefense;
-        this.secondAttack = secondAttack;
-        this.secondDefense = secondDefense;
+    private String spellName;
+
+    public FieldSpellExtendedEffect(ArrayList<FieldSpellEffect> fieldSpellEffects
+        , ArrayList<MonsterCardFamily> firstMonsterCardFamilies, ArrayList<Integer> integers, String spellName) {
+        if (integers.size() >= 1) {
+            this.firstAttack = integers.get(0);
+            this.firstDefense = integers.get(0);
+            this.secondAttack = integers.get(0);
+            this.secondDefense = integers.get(0);
+
+        } else {
+            this.firstAttack = 0;
+            this.firstDefense = 0;
+            this.secondAttack = 0;
+            this.secondDefense = 0;
+        }
         this.firstMonsterCardFamilies = new ArrayList<>();
         this.firstMonsterCardFamilies.addAll(firstMonsterCardFamilies);
         this.secondMonsterCardFamilies = new ArrayList<>();
-        this.secondMonsterCardFamilies.addAll(secondMonsterCardFamilies);
+        this.secondMonsterCardFamilies.addAll(firstMonsterCardFamilies);
         this.fieldSpellEffects = new ArrayList<>();
+        this.spellName = spellName;
         this.fieldSpellEffects.addAll(fieldSpellEffects);
+        tend();
+    }
+
+    public String getSpellName() {
+        return spellName;
+    }
+
+    private void tend() {
+        if (spellName.startsWith("Umi")) {
+            firstAttack = 500;
+            firstDefense = -400;
+            secondAttack = 0;
+            secondDefense = 0;
+            firstMonsterCardFamilies.clear();
+            firstMonsterCardFamilies.add(AQUA);
+            secondMonsterCardFamilies.clear();
+        }
+        if (spellName.startsWith("Closed Fo")) {
+            firstAttack = 0;
+            firstDefense = 0;
+            secondAttack = 0;
+            secondDefense = 0;
+            firstMonsterCardFamilies.clear();
+            secondMonsterCardFamilies.clear();
+        }
+        if (spellName.startsWith("Fores")) {
+            firstAttack = 200;
+            firstDefense = 200;
+            secondAttack = 0;
+            secondDefense = 0;
+            firstMonsterCardFamilies.clear();
+            firstMonsterCardFamilies.add(INSECT);
+            firstMonsterCardFamilies.add(BEAST);
+            firstMonsterCardFamilies.add(BEAST_WARRIOR);
+            secondMonsterCardFamilies.clear();
+        }
+        if (spellName.startsWith("Yami")) {
+            firstAttack = 200;
+            firstDefense = 200;
+            secondAttack = 0;
+            secondDefense = 0;
+            firstMonsterCardFamilies.clear();
+            firstMonsterCardFamilies.add(FIEND);
+            firstMonsterCardFamilies.add(SPELLCASTER);
+            secondMonsterCardFamilies.clear();
+            secondMonsterCardFamilies.add(FAIRY);
+        }
     }
 
     public ArrayList<MonsterCardFamily> getFirstMonsterCardFamilies() {
@@ -63,7 +123,7 @@ public class FieldSpellExtendedEffect {
         return fieldSpellEffects;
     }
 
-    private static int giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(CardLocation monsterCardLocation
+    public static int giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(CardLocation monsterCardLocation
         , CardLocation spellFieldCardLocation, int index, String attackOrDefense) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardLocation);
@@ -71,15 +131,15 @@ public class FieldSpellExtendedEffect {
         SpellCard spellFieldCard = (SpellCard) duelBoard.getCardByCardLocation(spellFieldCardLocation);
         int finalAttackPower = 0;
         int finalDefensePower = 0;
-        if (spellFieldCard.getCardPosition().equals(CardPosition.FACE_DOWN_SPELL_SET_POSITION)){
+        if (spellFieldCard.getCardPosition().equals(CardPosition.FACE_DOWN_SPELL_SET_POSITION)) {
             return 0;
         }
         ArrayList<FieldSpellExtendedEffect> fieldSpellExtendedEffects = spellFieldCard.getFieldSpellExtendedEffects();
-        if (fieldSpellExtendedEffects.get(0).getFirstMonsterCardFamilies().contains(monsterCardFamily)){
+        if (fieldSpellExtendedEffects.get(0).getFirstMonsterCardFamilies().contains(monsterCardFamily)) {
             finalAttackPower += fieldSpellExtendedEffects.get(0).getFirstAttack();
             finalDefensePower += fieldSpellExtendedEffects.get(0).getFirstDefense();
         }
-        if (fieldSpellExtendedEffects.get(1).getFirstMonsterCardFamilies().contains(monsterCardFamily)){
+        if (fieldSpellExtendedEffects.get(1).getFirstMonsterCardFamilies().contains(monsterCardFamily)) {
             finalAttackPower += fieldSpellExtendedEffects.get(1).getFirstAttack();
             finalDefensePower += fieldSpellExtendedEffects.get(1).getFirstDefense();
         }
@@ -111,8 +171,8 @@ public class FieldSpellExtendedEffect {
         }
         return finalDefensePower;
     }
-    private static boolean isSpellFieldCardOnOurSide(CardLocation monsterCardLocation,
-                                                     CardLocation spellFieldCardLocation) {
+
+    private static boolean isSpellFieldCardOnOurSide(CardLocation monsterCardLocation, CardLocation spellFieldCardLocation) {
         RowOfCardLocation monsterRowOfCardLocation = monsterCardLocation.getRowOfCardLocation();
         RowOfCardLocation spellFieldCardRowOfCardLocation = spellFieldCardLocation.getRowOfCardLocation();
         if (monsterRowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE)

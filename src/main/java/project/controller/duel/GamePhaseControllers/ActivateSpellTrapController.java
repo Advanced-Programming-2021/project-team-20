@@ -2,6 +2,7 @@ package project.controller.duel.GamePhaseControllers;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import project.controller.duel.CardEffects.EffectImplementations.Effect;
 import project.controller.duel.CardEffects.EffectImplementations.MessagesFromEffectToControllers;
@@ -265,7 +266,7 @@ public class ActivateSpellTrapController extends ChainController {
         String canChainingOccur = "";
         String output = "";
         String message = messagesSentToUser.get(messagesSentToUser.size() - 1);
-        if (message.startsWith("please choose one fiend") || message.startsWith("please choose one monster") || message.startsWith("please choose one warrior")) {
+        if (message.startsWith("please choose one ")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
@@ -273,10 +274,16 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (!Card.isCardAMonster(card)) {
                 return "invalid selection\nplease try again";
             } else {
-                if ((message.startsWith("please choose one fiend") && !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.FIEND)) &&
-                    !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.SPELLCASTER)) {
-                    return "invalid selection\nplease try again";
-                } else if (message.startsWith("please choose one warrior") && !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.WARRIOR)) {
+                String regexString = "(.+)/";
+                Pattern pattern = Pattern.compile(regexString);
+                Matcher matcher = pattern.matcher(message);
+                boolean ok = false;
+                while (matcher.find()){
+                    if (matcher.group(1).equals(((MonsterCard) card).getMonsterCardFamily().toString().toLowerCase())){
+                        ok = true;
+                    }
+                }
+                if (!ok){
                     return "invalid selection\nplease try again";
                 } else {
                     cardsToBeChosenToApplyEquipSpellTo.add(cardLocation);

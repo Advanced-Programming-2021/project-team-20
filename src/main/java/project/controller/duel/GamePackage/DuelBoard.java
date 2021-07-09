@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellExtendedEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
 import project.controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import project.controller.duel.GamePhaseControllers.SelectCardController;
@@ -313,39 +314,39 @@ public class DuelBoard {
         return card;
     }
 
-    public void removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(CardLocation spellCardLocation) {
-        SpellCard spellCard = (SpellCard) getCardByCardLocation(spellCardLocation);
-        ArrayList<FieldSpellEffect> fieldSpellEffects = spellCard.getFieldSpellEffects();
-        Card card;
-        for (int i = 0; i < 5; i++) {
-            card = getAllyMonsterCards().get(i);
-            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
-            card = getOpponentMonsterCards().get(i);
-            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
-        }
-    }
-
-    private void removeFieldSpellEffectFromCard(ArrayList<FieldSpellEffect> fieldSpellEffects, Card card) {
-        if (Card.isCardAMonster(card)) {
-            MonsterCard monsterCard = (MonsterCard) card;
-            for (int j = 0; j < fieldSpellEffects.size(); j++) {
-                monsterCard.removeSpellFieldEffectFromList(fieldSpellEffects.get(j));
-            }
-        }
-    }
+//    public void removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(CardLocation spellCardLocation) {
+//        SpellCard spellCard = (SpellCard) getCardByCardLocation(spellCardLocation);
+//        ArrayList<FieldSpellExtendedEffect> fieldSpellEffects = spellCard.getFieldSpellExtendedEffects();
+//        Card card;
+//        for (int i = 0; i < 5; i++) {
+//            card = getAllyMonsterCards().get(i);
+//            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
+//            card = getOpponentMonsterCards().get(i);
+//            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
+//        }
+//    }
+//
+//    private void removeFieldSpellEffectFromCard(ArrayList<FieldSpellEffect> fieldSpellEffects, Card card) {
+//        if (Card.isCardAMonster(card)) {
+//            MonsterCard monsterCard = (MonsterCard) card;
+//            for (int j = 0; j < fieldSpellEffects.size(); j++) {
+//                monsterCard.removeSpellFieldEffectFromList(fieldSpellEffects.get(j));
+//            }
+//        }
+//    }
 
     public void removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(CardLocation spellCardLocation) {
         SpellCard spellCard = (SpellCard) getCardByCardLocation(spellCardLocation);
         ArrayList<CardLocation> cardsToWhichEquipSpellEffectIsApplied = spellCard
             .getCardLocationsToWhichEquipSpellIsApplied();
-        ArrayList<EquipSpellEffect> equipSpellEffects = spellCard.getEquipSpellEffects();
+        ArrayList<EquipSpellExtendedEffect> equipSpellEffects = spellCard.getEquipSpellExtendedEffects();
         if (cardsToWhichEquipSpellEffectIsApplied != null) {
             for (int i = 0; i < cardsToWhichEquipSpellEffectIsApplied.size(); i++) {
                 Card card = getCardByCardLocation(cardsToWhichEquipSpellEffectIsApplied.get(i));
                 if (Card.isCardAMonster(card)) {
                     MonsterCard monsterCard = (MonsterCard) card;
                     for (int j = 0; j < equipSpellEffects.size(); j++) {
-                        monsterCard.removeEquipSpellEffectFromList(equipSpellEffects.get(j));
+                        monsterCard.removeEquipSpellExtendedEffect(equipSpellEffects.get(j));
                     }
                 }
             }
