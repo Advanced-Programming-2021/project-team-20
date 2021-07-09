@@ -343,8 +343,11 @@ public class CardCreatorController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         if (file != null) {
             changeImage(file.getAbsolutePath());
+            imagePath = file.getAbsolutePath();
+        } else {
+            imagePath = "src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg";
+            changeImage(imagePath);
         }
-        imagePath = file.getAbsolutePath();
         getNumberOfAllowedUsages();
 
     }
