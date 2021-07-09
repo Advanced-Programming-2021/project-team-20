@@ -219,12 +219,13 @@ public class Storage {
                         numberOfTurnsOfActivation = 6;
                     }
                     String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
- //                   allSpellAndTrapCards.put(correctCardName,
-//                            new SpellCard(nextRecord[0], nextRecord[3],
-//                                    SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
-//                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
-//                                    Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
-//                                    createImageOfCards(nextRecord[0])));
+                    allSpellAndTrapCards.put(correctCardName,
+                            new SpellCard(nextRecord[0], nextRecord[3],
+                                    SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
+                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
+                                    Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
+                                    createImageOfCards(nextRecord[0]), addMonsterCardFamilyToSpellCards(nextRecord[16]),
+                                    addArrayListOfIntegerToSpellCard(nextRecord[15])));
                 }
             }
             csvReader.close();
@@ -232,6 +233,22 @@ public class Storage {
             e.printStackTrace();
             System.exit(0);
         }
+    }
+
+    private ArrayList<MonsterCardFamily> addMonsterCardFamilyToSpellCards(String columnValues) {
+        ArrayList<MonsterCardFamily> monsterCardFamilies = new ArrayList<>();
+        String[] values = new String[columnValues.split("#").length];
+        values = columnValues.split("#");
+        for (int i = 1; i < values.length; i++) {
+            monsterCardFamilies.add(MonsterCardFamily.valueOf(values[i]));
+        }
+        return monsterCardFamilies;
+    }
+
+    private ArrayList<Integer> addArrayListOfIntegerToSpellCard(String columnValues) {
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(Integer.parseInt(columnValues));
+        return integers;
     }
 
     private HashMap<String, List<String>> addEffectsSpellCards(String[] cardValues) {

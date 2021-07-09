@@ -203,7 +203,7 @@ public class RockPaperScissorController implements Initializable {
             didAnyOneWin = true;
             showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
-            GameManager.getDuelControllerByIndex(0).setTurn(1);
+            GameManager.getDuelControllerByIndex(0).setTurn(2 );
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
             didAnyOneWin = true;
