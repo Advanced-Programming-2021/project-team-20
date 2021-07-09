@@ -65,6 +65,7 @@ public class Transition {
             @Override
             public void handle(ActionEvent actionEvent) {
                 int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
+                System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
                 if (turn == currentTurn){
                     cardView.setCanBeSeen(true);
                 } else {
