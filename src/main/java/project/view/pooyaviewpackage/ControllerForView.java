@@ -24,22 +24,22 @@ import java.util.ArrayList;
 
 public class ControllerForView {
 
-    public void getFinalCardLocationOfCurrentCardBeforeServer(CardView cardView) {
-        CardLocation initialCardLocation = giveCardLocationByCoordinateInView(null, cardView);
-        if (initialCardLocation != null) {
-            ViewLittleInformation viewLittleInformation;
-            if (cardView.getCard().getCardType().equals(CardType.MONSTER)) {
-                viewLittleInformation = provideInformationForOutpacingServerInSendingMonsterFromHandDeckOrGraveyardToMonsterZone(cardView);
-            } else {
-                viewLittleInformation = provideInformationForOutpacingServerInSendingSpellTrapFromHandDeckOrGraveyardToSpellZone(cardView);
-            }
-            RowOfCardLocation rowOfCardLocation = viewLittleInformation.getRowOfCardLocation();
-            boolean isFirstPlayerChoosing = viewLittleInformation.isFirstPlayerChoosing();
-            System.out.println("this is the input im receiving " + rowOfCardLocation + " pp " + isFirstPlayerChoosing);
-            DuelView.setCardLocationToSendCardTo(GameManager.getDuelBoardByIndex(0).giveAvailableCardLocationForUse(rowOfCardLocation, isFirstPlayerChoosing));
-            System.out.println("final card location given is " + DuelView.getCardLocationToSendCardTo().getRowOfCardLocation() + " and has index " + DuelView.getCardLocationToSendCardTo().getIndex());
-        }
-    }
+//    public void getFinalCardLocationOfCurrentCardBeforeServer(CardView cardView) {
+//        CardLocation initialCardLocation = giveCardLocationByCoordinateInView(null, cardView);
+//        if (initialCardLocation != null) {
+//            ViewLittleInformation viewLittleInformation;
+//            if (cardView.getCard().getCardType().equals(CardType.MONSTER)) {
+//                viewLittleInformation = provideInformationForOutpacingServerInSendingMonsterFromHandDeckOrGraveyardToMonsterZone(cardView);
+//            } else {
+//                viewLittleInformation = provideInformationForOutpacingServerInSendingSpellTrapFromHandDeckOrGraveyardToSpellZone(cardView);
+//            }
+//            RowOfCardLocation rowOfCardLocation = viewLittleInformation.getRowOfCardLocation();
+//            boolean isFirstPlayerChoosing = viewLittleInformation.isFirstPlayerChoosing();
+//            System.out.println("this is the input im receiving " + rowOfCardLocation + " pp " + isFirstPlayerChoosing);
+//            DuelView.setCardLocationToSendCardTo(GameManager.getDuelBoardByIndex(0).giveAvailableCardLocationForUse(rowOfCardLocation, isFirstPlayerChoosing));
+//            System.out.println("final card location given is " + DuelView.getCardLocationToSendCardTo().getRowOfCardLocation() + " and has index " + DuelView.getCardLocationToSendCardTo().getIndex());
+//        }
+//    }
 
 
     public CardLocation giveCardLocationByCoordinateInView(Object mouseOrDragEvent, CardView cardView) {
@@ -179,12 +179,6 @@ public class ControllerForView {
             System.out.println("\n\ngiving out opponent graveyard 1");
             return new CardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, 1);
         }
-//        double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
-//        double yTranslation = 510 + CardView.getCardHeight() - cardView.getUpperLeftY();
-//
-//        translateTransition.setToX(xTranslation - CardView.getCardWidth() - 20);
-//        translateTransition.setToY(yTranslation - CardView.getCardHeight());
-//
         if (x - DuelView.getBattleFieldView().getUpperLeftX() - (0) * (CardView.getCardWidth() + 20.5) - 147.6 + CardView.getCardWidth() + 20 >= 0 &&
             x - DuelView.getBattleFieldView().getUpperLeftX() - (0) * (CardView.getCardWidth() + 20.5) - 147.6 + CardView.getCardWidth() + 20 <= CardView.getCardWidth() &&
             y - 510 - CardView.getCardHeight() + CardView.getCardHeight() >= 0 && y - 510 - CardView.getCardHeight() + CardView.getCardHeight() <= CardView.getCardHeight()) {
@@ -277,8 +271,6 @@ public class ControllerForView {
             CardLocation thisCardLocation = giveCardLocationByCoordinateInView(null, cardViews.get(i));
           //  System.out.println("\nTHIS IS AN wonderful REPORT " + thisCardLocation.getRowOfCardLocation() + " " + thisCardLocation.getIndex() + " is null");
             if (thisCardLocation != null && thisCardLocation.getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && thisCardLocation.getIndex() == cardLocation.getIndex()) {
-
-
                 return cardViews.get(i);
             }
         }
@@ -325,7 +317,7 @@ public class ControllerForView {
             ArrayList<CardView> cardViews = giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE);
             CardView cardView = cardViews.get(0);
             cardView.setLabel(RowOfCardLocation.ALLY_HAND_ZONE);
-            cardView.setCanBeSeen(GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1);
+            cardView.setCanBeSeen(true);
             TranslateTransition translate = new TranslateTransition(Duration.millis(500), cardView);
             translate.setToX(10 + (DuelView.getBattleFieldView().getUpperLeftX()
                 + (DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() * 5) / 2
@@ -342,7 +334,7 @@ public class ControllerForView {
             ArrayList<CardView> cardViews = giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE);
             CardView cardView = (CardView) cardViews.get(0);
             cardView.setLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
-            cardView.setCanBeSeen(true);
+            cardView.setCanBeSeen(false);
             //cardView.setCanBeSeen(GameManager.getDuelControllerByIndex(0).getFakeTurn() == 2);
             TranslateTransition translate = new TranslateTransition(Duration.millis(500), cardView);
             translate.setToX(10 + (DuelView.getBattleFieldView().getUpperLeftX()

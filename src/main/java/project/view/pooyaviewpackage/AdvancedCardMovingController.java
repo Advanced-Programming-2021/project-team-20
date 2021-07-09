@@ -23,46 +23,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class AdvancedCardMovingController {
-    private ArrayList<Card> allyCardsInHand = new ArrayList<>();
-    private ArrayList<Card> allySpellCards = new ArrayList<>();
-    private ArrayList<Card> allySpellFieldCard = new ArrayList<>();
-    private ArrayList<Card> allyMonsterCards = new ArrayList<>();
-    private ArrayList<Card> allyCardsInDeck = new ArrayList<>();
-    private ArrayList<Card> allyCardsInGraveyard = new ArrayList<>();
-    private ArrayList<Card> opponentCardsInHand = new ArrayList<>();
-    private ArrayList<Card> opponentSpellCards = new ArrayList<>();
-    private ArrayList<Card> opponentSpellFieldCard = new ArrayList<>();
-    private ArrayList<Card> opponentMonsterCards = new ArrayList<>();
-    private ArrayList<Card> opponentCardsInDeck = new ArrayList<>();
-    private ArrayList<Card> opponentCardsInGraveyard = new ArrayList<>();
-    private ArrayList<Card> allyCardsInHandNew = new ArrayList<>();
-    private ArrayList<Card> allySpellCardsNew = new ArrayList<>();
-    private ArrayList<Card> allySpellFieldCardNew = new ArrayList<>();
-    private ArrayList<Card> allyMonsterCardsNew = new ArrayList<>();
-    private ArrayList<Card> allyCardsInDeckNew = new ArrayList<>();
-    private ArrayList<Card> allyCardsInGraveyardNew = new ArrayList<>();
-    private ArrayList<Card> opponentCardsInHandNew = new ArrayList<>();
-    private ArrayList<Card> opponentSpellCardsNew = new ArrayList<>();
-    private ArrayList<Card> opponentSpellFieldCardNew = new ArrayList<>();
-    private ArrayList<Card> opponentMonsterCardsNew = new ArrayList<>();
-    private ArrayList<Card> opponentCardsInDeckNew = new ArrayList<>();
-    private ArrayList<Card> opponentCardsInGraveyardNew = new ArrayList<>();
-    private ArrayList<CardLocation> allyCardsInHandDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> allySpellCardsDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> allySpellFieldCardDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> allyMonsterCardsDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> allyCardsInDeckDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> allyCardsInGraveyardDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> opponentCardsInHandDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> opponentSpellCardsDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> opponentSpellFieldCardDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> opponentMonsterCardsDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> opponentCardsInDeckDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> opponentCardsInGraveyardDeletions = new ArrayList<>();
-    private ArrayList<CardLocation> pureDeletionArraylist = new ArrayList<>();
-    private boolean firstTime = true;
-    private boolean secondTime = false;
-
     ArrayList<ChangeConductor> allChangeConductorsObjects;
 
     public ArrayList<ChangeConductor> getAllChangeConductorsObjects() {
@@ -152,12 +112,15 @@ public class AdvancedCardMovingController {
             ParallelTransition parallelTransition = new ParallelTransition();
             parallelTransition.getChildren().add(DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition());
             parallelTransition.getChildren().add(DuelView.getOpponentHealthStatus().getUpdateHealthPointsTransition());
-            //parallelTransition.getChildren().add();
             parallelTransition.getChildren().add(DuelView.getTransition().applyTransitionForHealthBar(true, realIncreaseInHealthForAlly,
                 DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
             parallelTransition.getChildren().add(DuelView.getTransition().applyTransitionForHealthBar(false, realIncreaseInHealthForOpponent,
                 DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
-            return new ObjectOfChange(parallelTransition, action.HP_LOSS);
+            if (realIncreaseInHealthForAlly != 0 || realIncreaseInHealthForOpponent != 0) {
+                return new ObjectOfChange(parallelTransition, action.HP_LOSS);
+            } else {
+                return new ObjectOfChange(parallelTransition, action.NOT_APPLICABLE);
+            }
         } else {
             System.out.println("Look dude my string is " + change);
             String[] subCommands = change.split(" ");

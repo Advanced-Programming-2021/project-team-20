@@ -61,6 +61,17 @@ public class Transition {
             translate.setAutoReverse(true);
             parallelTransition.getChildren().add(translate);
         }
+        parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
+                if (turn == currentTurn){
+                    cardView.setCanBeSeen(true);
+                } else {
+                    cardView.setCanBeSeen(false);
+                }
+            }
+        });
         ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardIncreasingInHand(turn);
         for (int i = 0; i < translateTransitions.size(); i++) {
             parallelTransition.getChildren().add(translateTransitions.get(i));
@@ -439,33 +450,24 @@ public class Transition {
 
     public Timeline applyTransitionForHealthBar(boolean isForAlly, int increaseInHealth, int previousHealth) {
         HealthBarAndHealthPoints healthBarAndHealthPoints;
-        //double upperLeftY;
         if (isForAlly) {
             healthBarAndHealthPoints = DuelView.getAllyHealthStatus();
         } else {
             healthBarAndHealthPoints = DuelView.getOpponentHealthStatus();
         }
-        // upperLeftY = healthBarAndHealthPoints.getUpperLeftYOfHelpfulHealthBar();
-        //    Rectangle statusBar = new Rectangle(100, //100, 300, 100);
-        // Button animationButton = new Button("Animate width decrease by 25");
-        // animationButton.setOnAction(event -> {
-        //  System.out.println("Animation start: width = " + statusBar.getWidth())
         Rectangle helpfulRectangle = healthBarAndHealthPoints.getHelpfulHealthRectangle();
         double realFinalWidth = helpfulRectangle.getWidth() - healthBarAndHealthPoints.getHealthBar().getWidth() * increaseInHealth / previousHealth;
         System.out.println("realFinalWidth is " + realFinalWidth);
         if (realFinalWidth < 0) {
             realFinalWidth = 0;
         }
-        if (realFinalWidth > 200) {
-            realFinalWidth = 200;
+        if (realFinalWidth > 290) {
+            realFinalWidth = 290;
         }
         System.out.println("realFinalWidth is " + realFinalWidth + " after adjustments");
 
         KeyValue widthValue = new KeyValue(helpfulRectangle.widthProperty(), realFinalWidth);
         KeyFrame frame = new KeyFrame(Duration.seconds(0.4), widthValue);
-        //  VBox container = healthBarAndHealthPoints.getContainer();
-        //  System.out.println("container coordinates are\nlayout x = "+container.getLayoutX()+" layout y = "+container.getLayoutY());
-
         return new Timeline(frame);
     }
 }

@@ -150,7 +150,9 @@ public class ActivateSpellTrapController extends ChainController {
             if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) &&
                 !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE) &&
                 !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) &&
-                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE) &&
+                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) &&
+                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
                 return "you can't activate spell card that is neither set on the field nor is in your hand";
             }
         } else if (Card.isCardATrap(card)) {
@@ -159,7 +161,7 @@ public class ActivateSpellTrapController extends ChainController {
             if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {
                 return "you can't activate trap card that is not set on the field";
             }
-            if (trapCard.getTurnCardWasSet() >= GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow()){
+            if (trapCard.getTurnCardWasSet() >= GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow()) {
                 return "you can't activate trap card on the same turn you set it";
             }
         }
@@ -358,8 +360,7 @@ public class ActivateSpellTrapController extends ChainController {
                 }
                 //used to give fakeTurn as input
             }
-        }
-        else if (message.startsWith("please choose one card from your hand to discard")) {
+        } else if (message.startsWith("please choose one card from your hand to discard")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
@@ -616,7 +617,7 @@ public class ActivateSpellTrapController extends ChainController {
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, index);
     }
 
-    public void clearAllVariablesOfThisClass(){
+    public void clearAllVariablesOfThisClass() {
         areWeLookingForFurtherInputToActivateSpellTrap = false;
         areWeLookingForACardNameToBeInserted = false;
         messageSentToUser = "";
@@ -634,6 +635,6 @@ public class ActivateSpellTrapController extends ChainController {
         cardsToBeChosenFromDeckAndSentToGraveyard.clear();
         cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition.clear();
         sumOfLevelsOfChosenMonsters.clear();
-        optionalCardNameInput="";
+        optionalCardNameInput = "";
     }
 }

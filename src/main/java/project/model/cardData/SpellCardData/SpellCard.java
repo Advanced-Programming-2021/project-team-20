@@ -159,6 +159,7 @@ public class SpellCard extends Card {
                 spellCard.getNumberOfAllowedUsages(), spellCard.getCardPrice(), spellCard.getImage());
         this.highestNumberOfTurnsOfActivation = spellCard.getHighestNumberOfTurnsOfActivation();
         this.numberOfTurnsForActivation = spellCard.getNumberOfTurnsForActivation();
+        this.oncePerTurnCardEffectUsed = false;
         this.spellCardValue = spellCard.getSpellCardValue();
         this.continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
         this.equipSpellEffects = spellCard.getEquipSpellEffects();
@@ -169,6 +170,7 @@ public class SpellCard extends Card {
         this.ritualSpellEffects = spellCard.getRitualSpellEffects();
         this.sentToGraveyardEffects = spellCard.getSentToGraveyardEffects();
         this.userReplyForActivations = spellCard.getUserReplyForActivations();
+        this.cardLocationsToWhichEquipSpellIsApplied =spellCard.getCardLocationsToWhichEquipSpellIsApplied();
     }
 
     public int getHighestNumberOfTurnsOfActivation() {

@@ -101,7 +101,7 @@ public class TrapCard extends Card {
                     .add(SpellCardActivationTrapCardEffect.DISCARD_1_CARD_NEGATE_DESTROY_CARD);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
             userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);
-        } else if (cardName.equals("Call Of The Hunted")) {
+        } else if (cardName.equals("Call Of The Haunted")) {
             monsterAttackingTrapCardEffects.add(
                     MonsterAttackingTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
             normalTrapCardEffects

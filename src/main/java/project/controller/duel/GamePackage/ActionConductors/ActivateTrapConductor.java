@@ -327,7 +327,7 @@ public class ActivateTrapConductor {
         Card card = SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1), index);
         duelBoard.addCardToMonsterZone(card, actionTurn);
         GameManager.getDuelControllerByIndex(index).addStringToSuperAlmightyString("mainCardLocation " + cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1).getRowOfCardLocation()
-            + " " + cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1).getIndex() + " is being added to monster zone " + actionTurn + "and should finally be "
+            + " " + cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1).getIndex() + " is being added to monster zone " + actionTurn + " and should finally be "
             + cardPosition);
         card.setCardPosition(cardPosition);
     }

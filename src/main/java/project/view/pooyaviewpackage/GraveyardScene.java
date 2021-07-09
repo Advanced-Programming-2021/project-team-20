@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -15,6 +17,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.modelsforview.CardView;
 
 import java.util.ArrayList;
@@ -25,8 +28,17 @@ import java.util.regex.Pattern;
 
 import static javafx.scene.paint.Color.WHITE;
 
-public class GraveyardScene extends Application{
-    private static int indexOfChosenCardInGraveyard = 0;
+public class GraveyardScene extends Application {
+    private int indexOfChosenCardInGraveyard = 0;
+    private boolean isClassWaitingForUserToChooseCardFromGraveyard;
+
+    public boolean isClassWaitingForUserToChooseCardFromGraveyard() {
+        return isClassWaitingForUserToChooseCardFromGraveyard;
+    }
+
+    public void setClassWaitingForUserToChooseCardFromGraveyard(boolean classWaitingForUserToChooseCardFromGraveyard) {
+        isClassWaitingForUserToChooseCardFromGraveyard = classWaitingForUserToChooseCardFromGraveyard;
+    }
 
     @Override
     public void start(Stage stage) {
@@ -34,37 +46,35 @@ public class GraveyardScene extends Application{
         VBox vBox = new VBox();
         String wholeGraveyardString = DuelView.getGraveyardString();
         boolean isAllySeeing = DuelView.isIsAllySeeingGraveyard();
-        String graveyardUselessString = "first player graveyard:\n(.+)\nsecond player graveyard:\n(.+)";
+        String graveyardUselessString = "first player graveyard:\n((.+\n)+)second player graveyard:((\n.+)+)";
         Pattern graveyardPattern = Pattern.compile(graveyardUselessString);
         Matcher graveyardMatch = graveyardPattern.matcher(wholeGraveyardString);
         ArrayList<String> cardNames = new ArrayList<>();
         ArrayList<Label> hBoxes = new ArrayList<>();
         if (graveyardMatch.find()) {
-            System.out.println(graveyardMatch.group(1) + "\n.\n" + graveyardMatch.group(2));
+            System.out.println(graveyardMatch.group(1) + "\n.\n" + graveyardMatch.group(3));
             int index = 1;
             boolean hope = true;
             while (hope) {
                 String indexString = index + ". (.+):(.+)";
                 Pattern indexPattern = Pattern.compile(indexString);
-                Matcher indexMatch = indexPattern.matcher(graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)));
+                System.out.println("graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)) " + graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)));
+                Matcher indexMatch = indexPattern.matcher(graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 3)));
                 if (indexMatch.find()) {
                     cardNames.add(indexMatch.group(1));
                     System.out.println(indexMatch.group(1) + " is in graveyard and second is " + indexMatch.group(2));
                 } else {
-                    hope = false;
-                }
+                hope = false;}
                 index++;
             }
             ScrollPane scrollPaneForInformation = new ScrollPane();
             scrollPaneForInformation.setPannable(true);
             scrollPaneForInformation.setFitToHeight(true);
             scrollPaneForInformation.setFitToWidth(true);
-            // scrollPaneForInformation.setLayoutY(300);
-            scrollPaneForInformation.setMinHeight(CardView.getCardHeight()*3);
-            scrollPaneForInformation.setMaxHeight(CardView.getCardHeight()*3);
-            // scrollPaneForInformation.setLayoutX(300);
-            scrollPaneForInformation.setMinWidth(CardView.getCardWidth()*5);
-            scrollPaneForInformation.setMaxWidth(CardView.getCardWidth()*5);
+            scrollPaneForInformation.setMinHeight(CardView.getCardHeight() * 3);
+            scrollPaneForInformation.setMaxHeight(CardView.getCardHeight() * 3);
+            scrollPaneForInformation.setMinWidth(CardView.getCardWidth() * 5);
+            scrollPaneForInformation.setMaxWidth(CardView.getCardWidth() * 5);
             Group group = new Group();
             scrollPaneForInformation.setContent(group);
 
@@ -82,11 +92,59 @@ public class GraveyardScene extends Application{
                 rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        for (int i = 0; i < group.getChildren().size(); i++){
-                            if (group.getChildren().get(i).equals(rectangle)){
+                        for (int i = 0; i < group.getChildren().size(); i++) {
+                            if (group.getChildren().get(i).equals(rectangle)) {
                                 indexOfChosenCardInGraveyard = i;
-                                if (DuelView.isIsClassWaitingForUserToChooseCardFromGraveyard()){
-                                    stage.close();
+                                if (isClassWaitingForUserToChooseCardFromGraveyard) {
+                                    String miniString = (DuelView.isIsAllySeeingGraveyard() ? "" : "--opponent ");
+                                    String output = GameManager.getDuelControllerByIndex(0).getInput("select " + miniString + "--graveyard " + (indexOfChosenCardInGraveyard + 1), true);
+                                    System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
+                                    if (output.contains("this card cannot be") || output.contains("this is not a")
+                                        || output.contains("this monster is not") || output.contains("please try")) {
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setTitle("Information Dialog");
+                                        alert.setHeaderText("Selecting Card Message");
+                                        alert.setContentText(output);
+                                        alert.showAndWait();
+                                    } else if (output.contains("choose if you want")) {
+                                        ButtonType attackingButton = new ButtonType("Attacking");
+                                        ButtonType defensiveButton = new ButtonType("Defensive");
+                                        Alert alert = new Alert(Alert.AlertType.NONE, "Please choose attacking or defensive.", attackingButton, defensiveButton);
+                                        alert.setTitle("Information Dialog");
+                                        alert.setHeaderText("Choose Attacking Or Defensive Message");
+                                        alert.setContentText(output);
+                                        ButtonType result = alert.showAndWait().orElse(attackingButton);
+                                        if (result.equals(attackingButton)) {
+                                            output = GameManager.getDuelControllerByIndex(0).getInput("attacking", true);
+                                            Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
+                                            newAlert.setTitle("Information Dialog");
+                                            newAlert.setHeaderText("Result Message");
+                                            newAlert.setContentText(output);
+                                            newAlert.showAndWait();
+                                            isClassWaitingForUserToChooseCardFromGraveyard = false;
+                                            stage.close();
+                                            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                                        } else if (result.equals(defensiveButton)) {
+                                            output = GameManager.getDuelControllerByIndex(0).getInput("defensive", true);
+                                            Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
+                                            newAlert.setTitle("Information Dialog");
+                                            newAlert.setHeaderText("Result Message");
+                                            newAlert.setContentText(output);
+                                            newAlert.showAndWait();
+                                            isClassWaitingForUserToChooseCardFromGraveyard = false;
+                                            stage.close();
+                                            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                                        }
+                                    } else {
+                                        Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
+                                        newAlert.setTitle("Information Dialog");
+                                        newAlert.setHeaderText("Result Message");
+                                        newAlert.setContentText(output);
+                                        newAlert.showAndWait();
+                                        isClassWaitingForUserToChooseCardFromGraveyard = false;
+                                        stage.close();
+                                        DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                                    }
                                 }
                             }
                         }
@@ -94,9 +152,9 @@ public class GraveyardScene extends Application{
                 });
                 group.getChildren().add(rectangle);
             }
-            if (cardNames.size() < 15){
-                for (int i = 0; i < 15 - cardNames.size(); i++){
-                    Rectangle rectangle = new Rectangle(90 * ((i+cardNames.size()) % 5), 131 * (Math.floor((i+cardNames.size()) / 5)), 90, 131);
+            if (cardNames.size() < 15) {
+                for (int i = 0; i < 15 - cardNames.size(); i++) {
+                    Rectangle rectangle = new Rectangle(90 * ((i + cardNames.size()) % 5), 131 * (Math.floor((i + cardNames.size()) / 5)), 90, 131);
                     rectangle.setFill(WHITE);
                     group.getChildren().add(rectangle);
                 }
@@ -104,61 +162,6 @@ public class GraveyardScene extends Application{
 
 
         }
-
-//        String nowItWillBeTurn = "";
-//        System.out.println("WHOUUUUUUU");
-//        if (firstPlayerMatch.find()) {
-//            nowItWillBeTurn = .substring(firstPlayerMatch.start(), firstPlayerMatch.end());
-//            // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
-//        }
-//        //    String wholeDescription = "\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\n\n\n\n\n\n\n\n";
-//        String wholeDescription = "dfkjsdfjskdfsd fsdjfksdjfs dfskjdf sjd fn sdfsjdfnksdfs dfkjsdfnjskdf sdfjjsd kfsdjf" +
-//            "sdklfnsdfjk sdfkjsdflwefd qwfpqwiofjndfnsd vsdv jsdmv skdjvsldjkfs dfjskdfjsbf sdjfskdf sdfsjdfkenfjksbdf sf";
-//        List<String> shortDescription = new ArrayList<>();
-//        shortDescription = Arrays.asList(wholeDescription.split(" "));
-//        StringBuilder sentencesForEachLabel = new StringBuilder();
-//        int numberOFLabelUsed = 0;
-//        Label label;
-//        for (int i = 0; i < shortDescription.size(); i++) {
-//            label = new Label();
-//            label.setFont(new Font(22));
-//            if (sentencesForEachLabel.length() <= 23 - shortDescription.get(i).length()) {
-//                sentencesForEachLabel.append(shortDescription.get(i) + " ");
-//                label.setLayoutY(20 * (numberOFLabelUsed + 1));
-//                numberOFLabelUsed++;
-//            } else {
-//                while (sentencesForEachLabel.length() <= 22) {
-//                    sentencesForEachLabel.append(" ");
-//                }
-//                label.setText(sentencesForEachLabel.toString());
-//                label.setLayoutY(20 * (numberOFLabelUsed + 1));
-//                vBox.getChildren().add(label);
-//                sentencesForEachLabel.setLength(0);
-//                numberOFLabelUsed++;
-//            }
-//        }
-//        while (sentencesForEachLabel.length() <= 30) {
-//            sentencesForEachLabel.append(" ");
-//        }
-//        label = new Label();
-//        label.setFont(new Font(22));
-//        label.setText(sentencesForEachLabel.toString());
-//        ScrollPane scrollPaneForInformation = new ScrollPane();
-//        scrollPaneForInformation.setPannable(true);
-//        scrollPaneForInformation.setFitToHeight(true);
-//        scrollPaneForInformation.setFitToWidth(true);
-//        // scrollPaneForInformation.setLayoutY(300);
-//        scrollPaneForInformation.setMinHeight(100);
-//        scrollPaneForInformation.setMaxHeight(100);
-//        // scrollPaneForInformation.setLayoutX(300);
-//        scrollPaneForInformation.setMinWidth(250);
-//        scrollPaneForInformation.setMaxWidth(250);
-//        scrollPaneForInformation.setContent(vBox);
-//
-//        anchorPane.getChildren().add(scrollPaneForInformation);
-//        Scene scene = new Scene(anchorPane, 250, 100);
-//        stage.setScene(scene);
-//        stage.show();
 
     }
 }

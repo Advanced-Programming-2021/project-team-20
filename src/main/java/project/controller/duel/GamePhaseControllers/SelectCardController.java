@@ -50,7 +50,8 @@ public class SelectCardController {
                 } else {
                     return "invalid selection";
                 }
-            } else if (matcher.group(6) != null || matcher.group(6) == null && rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)) {
+            } else if (matcher.group(6) != null || matcher.group(6) == null &&
+                (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE)||rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))) {
                 CardLocation cardLocation = new CardLocation(rowOfCardLocation, 1);
                 DuelBoard duelBoard = GameManager.getDuelBoardByIndex(indexOfWholeGame);
                 Card card = duelBoard.getCardByCardLocation(cardLocation);

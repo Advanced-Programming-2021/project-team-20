@@ -142,7 +142,7 @@ public class MonsterCard extends Card {
             beingAttackedEffects.add(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN);
             beingAttackedEffects
                     .add(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN);
-        } else if (cardName.equals("Man-Eater bug")) {
+        } else if (cardName.equals("Man-Eater Bug")) {
             flipEffects.add(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD);
         } else if (cardName.equals("Suijin")) {
             beingAttackedEffects.add(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN);

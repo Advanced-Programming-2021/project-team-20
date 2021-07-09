@@ -26,12 +26,16 @@ public class AICardFinder {
         ArrayList<Card> aiSpellTrapCards = ai.getAiBoardUnderstander().getAiSpellTrapCards();
         ArrayList<Card> aiCardsInHand = ai.getAiBoardUnderstander().getAiCardsInHand();
         for (int i = 0; i < 5; i++) {
-            SpellCard spellCard = (SpellCard) aiSpellTrapCards.get(i);
-            ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
-            if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD)) {
-                ai.setShouldRedirectAIMind(true);
-                ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+            if (Card.isCardASpell(aiSpellTrapCards.get(i))) {
+                SpellCard spellCard = (SpellCard) aiSpellTrapCards.get(i);
+                if (spellCard != null) {
+                    ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
+                    if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD)) {
+                        ai.setShouldRedirectAIMind(true);
+                        ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
+                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    }
+                }
             }
         }
         for (int i = 0; i < aiCardsInHand.size(); i++) {
@@ -46,12 +50,16 @@ public class AICardFinder {
             }
         }
         for (int i = 0; i < 5; i++) {
-            SpellCard spellCard = (SpellCard) aiSpellTrapCards.get(i);
-            ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
-            if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS)) {
-                ai.setShouldRedirectAIMind(true);
-                ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+            if (Card.isCardASpell(aiSpellTrapCards.get(i))) {
+                SpellCard spellCard = (SpellCard) aiSpellTrapCards.get(i);
+                if (spellCard != null) {
+                    ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
+                    if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS)) {
+                        ai.setShouldRedirectAIMind(true);
+                        ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
+                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    }
+                }
             }
         }
         for (int i = 0; i < aiCardsInHand.size(); i++) {
@@ -128,22 +136,26 @@ public class AICardFinder {
         for (int i = 0; i < 5; i++) {
             if (Card.isCardASpell(aiSpellTrapCards.get(i))) {
                 SpellCard spellCard = (SpellCard) aiSpellTrapCards.get(i);
-                ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
-                if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS)) {
-                    ai.setShouldRedirectAIMind(true);
-                    ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                if (spellCard != null) {
+                    ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
+                    if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS)) {
+                        ai.setShouldRedirectAIMind(true);
+                        ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
+                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    }
                 }
             }
         }
-        for (int i = 0; i < aiSpellTrapCards.size(); i++) {
+        for (int i = 0; i < aiCardsInHand.size(); i++) {
             if (Card.isCardASpell(aiCardsInHand.get(i))) {
                 SpellCard spellCard = (SpellCard) aiCardsInHand.get(i);
-                ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
-                if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS)) {
-                    ai.setShouldRedirectAIMind(true);
-                    ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                    return "select --hand " + (i + 1);
+                if (spellCard != null) {
+                    ArrayList<NormalSpellCardEffect> normalSpellCardEffects = spellCard.getNormalSpellCardEffects();
+                    if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS)) {
+                        ai.setShouldRedirectAIMind(true);
+                        ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
+                        return "select --hand " + (i + 1);
+                    }
                 }
             }
         }

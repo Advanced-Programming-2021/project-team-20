@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.model.modelsforview.CardView;
@@ -231,10 +232,9 @@ public class AlertAndMenuItems {
         ButtonType normalSummonButton = new ButtonType("Normal Summon");
         ButtonType tributeSummonButton = new ButtonType("Tribute Summon");
         ButtonType specialSummonButton = new ButtonType("Special Summon");
-        ButtonType ritualSummonButton = new ButtonType("Ritual Summon");
         ButtonType setButton = new ButtonType("Set");
         ButtonType cancel = new ButtonType("Cancel");
-        Alert alert = new Alert(Alert.AlertType.NONE, "Please choose what to do with your card.", normalSummonButton, tributeSummonButton, specialSummonButton, ritualSummonButton, setButton, cancel);
+        Alert alert = new Alert(Alert.AlertType.NONE, "Please choose what to do with your card.", normalSummonButton, tributeSummonButton, specialSummonButton, setButton, cancel);
         alert.setTitle("Information Dialog");
         alert.setHeaderText("Summoning Or Setting Message");
         //alert.setContentText(output);
@@ -245,8 +245,6 @@ public class AlertAndMenuItems {
             DuelView.getSendingRequestsToServer().sendTributeSummoningRequestToServer(cardViewBeingDragged, initialCardLocation, duelView);
         } else if (result.equals(specialSummonButton)) {
             DuelView.getSendingRequestsToServer().sendSpecialSummoningRequestToServer(cardViewBeingDragged, initialCardLocation, duelView);
-        } else if (result.equals(ritualSummonButton)) {
-            DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardViewBeingDragged, initialCardLocation, duelView);
         } else if (result.equals(setButton)) {
             DuelView.getSendingRequestsToServer().sendSettingRequestToServer(cardViewBeingDragged, initialCardLocation);
         }
@@ -276,8 +274,30 @@ public class AlertAndMenuItems {
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");
+           // alert.setContentText(output);
+           // alert.showAndWait();
+            output = output.replaceAll("there is no need to enter activate command after that","");
+            output = output.replaceAll("Simply enter select command", "");
+            output = output.replaceAll("simply enter select command", "");
+            boolean showDeckAndGraveyardHand = false;
+            if (output.contains("show hand, graveyard, deck.\nselect one cyberse normal monster to special summon")) {
+                showDeckAndGraveyardHand = true;
+                output = "select one cyberse normal monster to special summon either from your deck, graveyard, hand.";
+            }
+            boolean shouldChooseACardFromGraveyard = false;
+            if (output.contains("please choose one monster from your graveyard")){
+                shouldChooseACardFromGraveyard = true;
+            }
+            if (shouldChooseACardFromGraveyard){
+                DuelView.getGraveyardScene().setClassWaitingForUserToChooseCardFromGraveyard(true);
+            }
             alert.setContentText(output);
             alert.showAndWait();
+            if (showDeckAndGraveyardHand){
+                DuelView.getDeckScene().setClassWaitingForUserToChooseCardFromDeck(true);
+                DuelView.getGraveyardScene().setClassWaitingForUserToChooseCardFromGraveyard(true);
+                DuelView.getDeckScene().start(new Stage());
+            }
         } else if (result.equals(ButtonType.NO)){
             String output = GameManager.getDuelControllerByIndex(0).getInput("no", true);
             alert = new Alert(Alert.AlertType.INFORMATION);
