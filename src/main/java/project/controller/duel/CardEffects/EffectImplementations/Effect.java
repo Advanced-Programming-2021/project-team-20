@@ -332,6 +332,7 @@ public class Effect {
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
             ArrayList<LogicalActivationRequirement> logicalActivationRequirements = spellCard.getLogicalActivationRequirements();
+            ArrayList<MonsterCardFamily> monsterCardFamilies = spellCard.getEquipSpellExtendedEffects().get(0).getFirstMonsterCardFamilies();
             if (logicalActivationRequirements.contains(LogicalActivationRequirement.MUST_EXIST_AT_LEAST_1_MONSTER_IN_EITHER_GY)) {
                 if (!logicalActivationRequirementSpellMustExistAtLeastOneMonsterInEitherGraveyard(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
@@ -342,22 +343,24 @@ public class Effect {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
                 }
             }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_WARRIOR_MONSTER)) {
-                if (!logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, MonsterCardFamily.WARRIOR, null)) {
+            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_WARRIOR_MONSTER) ||
+                logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER) ||
+                logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER)) {
+                if (!logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, monsterCardFamilies, null)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
                 }
             }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER)) {
-                if (!logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, MonsterCardFamily.FIEND, null)
-                    && !logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, MonsterCardFamily.SPELLCASTER, null)) {
-                    return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
-                }
-            }
-            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER)) {
-                if (!logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, null, null)) {
-                    return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
-                }
-            }
+//            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_FIEND_OR_SPELLCASTER_MONSTER)) {
+//                if (!logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, MonsterCardFamily.FIEND, null)
+//                    && !logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, MonsterCardFamily.SPELLCASTER, null)) {
+//                    return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
+//                }
+//            }
+//            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_CONTROL_AT_LEAST_1_MONSTER)) {
+//                if (!logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(duelBoard, fakeTurn, null, null)) {
+//                    return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
+//                }
+//            }
             if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_ONE_SPELL_FIELD_CARD_IN_DECK)) {
                 if (!logicalActivationRequirementSpellOwnerMustHaveAtLeast1SpellFieldCardInDeck(duelBoard, fakeTurn)) {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
@@ -464,7 +467,7 @@ public class Effect {
         return true;
     }
 
-    public static boolean logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(DuelBoard duelBoard, int fakeTurn, MonsterCardFamily monsterCardFamily, MonsterCardAttribute monsterCardAttribute) {
+    public static boolean logicalActivationRequirementSpellOwnerMustControlSpecificMonsterFamily(DuelBoard duelBoard, int fakeTurn, ArrayList<MonsterCardFamily> monsterCardFamily, MonsterCardAttribute monsterCardAttribute) {
         ArrayList<Card> cardsInOwnerMonsterField = null;
         if (fakeTurn == 1) {
             cardsInOwnerMonsterField = duelBoard.getAllyMonsterCards();
@@ -477,7 +480,7 @@ public class Effect {
                 if (monsterCardAttribute == null && monsterCardFamily == null) {
                     return true;
                 }
-                if (monsterCardAttribute == null && monsterCard.getMonsterCardFamily().equals(monsterCardFamily)) {
+                if (monsterCardAttribute == null && monsterCardFamily.contains(monsterCard.getMonsterCardFamily())) {
                     return true;
                 }
                 if (monsterCardFamily == null && monsterCard.getMonsterCardAttribute().equals(monsterCardAttribute)) {
@@ -650,7 +653,7 @@ public class Effect {
         ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
-        if (Card.isCardAMonster(duelBoard.getCardByCardLocation(finalMainCardLocation))){
+        if (Card.isCardAMonster(duelBoard.getCardByCardLocation(finalMainCardLocation))) {
             MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(finalMainCardLocation);
             return monsterCard.getAttackPower() >= 1000;
         }
@@ -702,14 +705,17 @@ public class Effect {
         if (Card.isCardASpell(card)) {
             SpellCard spellCard = (SpellCard) card;
             ArrayList<UserReplyForActivation> userReplyForActivations = spellCard.getUserReplyForActivations();
-            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_FIEND_OR_SPELLCASTER_MONSTER_OWNER_CONTROLS)) {
-                output.add("please choose one fiend or spellcaster monster you control for assigning your equip spell card to it.\nSimply enter select command");
-            }
-            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_WARRIOR_MONSTER_OWNER_CONTROLS)) {
-                output.add("please choose one warrior monster you control for assigning your equip spell card to it.\nSimply enter select command");
-            }
-            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS)) {
-                output.add("please choose one monster you control for assigning your equip spell card to it.\nSimply enter select command");
+            ArrayList<MonsterCardFamily> monsterCardFamilies = spellCard.getEquipSpellExtendedEffects().get(0).getFirstMonsterCardFamilies();
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_FIEND_OR_SPELLCASTER_MONSTER_OWNER_CONTROLS) ||
+                userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_WARRIOR_MONSTER_OWNER_CONTROLS) ||
+                userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_MONSTER_OWNER_CONTROLS)) {
+                String string = "";
+                for (int i = 0; i < monsterCardFamilies.size(); i++) {
+                    string += monsterCardFamilies.get(i).toString().toLowerCase();
+                    string += "/";
+                }
+                string += " ";
+                output.add("please choose one " + string + "monster you control for assigning your equip spell card to it.\nSimply enter select command");
             }
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_OF_OPPONENTS_MONSTERS)) {
                 output.add("please choose one of your opponent's monsters\nSimply enter select command");

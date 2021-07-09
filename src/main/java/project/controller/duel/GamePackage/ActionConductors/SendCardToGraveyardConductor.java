@@ -40,7 +40,7 @@ public class SendCardToGraveyardConductor {
                 checkIfPlayerShouldDrawACard(graveyardToSendCardTo, index);
             }
             if (Card.isCardASpell(card)) {
-                duelBoard.removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(targetingCardLocation);
+                //duelBoard.removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(targetingCardLocation);
                 duelBoard.removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(targetingCardLocation);
             }
             Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, index);

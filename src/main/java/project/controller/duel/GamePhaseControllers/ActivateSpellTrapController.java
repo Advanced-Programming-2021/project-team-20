@@ -2,6 +2,7 @@ package project.controller.duel.GamePhaseControllers;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import project.controller.duel.CardEffects.EffectImplementations.Effect;
 import project.controller.duel.CardEffects.EffectImplementations.MessagesFromEffectToControllers;
@@ -150,7 +151,9 @@ public class ActivateSpellTrapController extends ChainController {
             if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) &&
                 !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE) &&
                 !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE) &&
-                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE) &&
+                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) &&
+                !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE)) {
                 return "you can't activate spell card that is neither set on the field nor is in your hand";
             }
         } else if (Card.isCardATrap(card)) {
@@ -159,7 +162,7 @@ public class ActivateSpellTrapController extends ChainController {
             if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE) && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {
                 return "you can't activate trap card that is not set on the field";
             }
-            if (trapCard.getTurnCardWasSet() >= GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow()){
+            if (trapCard.getTurnCardWasSet() >= GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow()) {
                 return "you can't activate trap card on the same turn you set it";
             }
         }
@@ -263,7 +266,7 @@ public class ActivateSpellTrapController extends ChainController {
         String canChainingOccur = "";
         String output = "";
         String message = messagesSentToUser.get(messagesSentToUser.size() - 1);
-        if (message.startsWith("please choose one fiend") || message.startsWith("please choose one monster") || message.startsWith("please choose one warrior")) {
+        if (message.startsWith("please choose one ")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
@@ -271,10 +274,16 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (!Card.isCardAMonster(card)) {
                 return "invalid selection\nplease try again";
             } else {
-                if ((message.startsWith("please choose one fiend") && !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.FIEND)) &&
-                    !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.SPELLCASTER)) {
-                    return "invalid selection\nplease try again";
-                } else if (message.startsWith("please choose one warrior") && !((MonsterCard) card).getMonsterCardFamily().equals(MonsterCardFamily.WARRIOR)) {
+                String regexString = "(.+)/";
+                Pattern pattern = Pattern.compile(regexString);
+                Matcher matcher = pattern.matcher(message);
+                boolean ok = false;
+                while (matcher.find()){
+                    if (matcher.group(1).equals(((MonsterCard) card).getMonsterCardFamily().toString().toLowerCase())){
+                        ok = true;
+                    }
+                }
+                if (!ok){
                     return "invalid selection\nplease try again";
                 } else {
                     cardsToBeChosenToApplyEquipSpellTo.add(cardLocation);
@@ -358,8 +367,7 @@ public class ActivateSpellTrapController extends ChainController {
                 }
                 //used to give fakeTurn as input
             }
-        }
-        else if (message.startsWith("please choose one card from your hand to discard")) {
+        } else if (message.startsWith("please choose one card from your hand to discard")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
@@ -616,7 +624,7 @@ public class ActivateSpellTrapController extends ChainController {
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, index);
     }
 
-    public void clearAllVariablesOfThisClass(){
+    public void clearAllVariablesOfThisClass() {
         areWeLookingForFurtherInputToActivateSpellTrap = false;
         areWeLookingForACardNameToBeInserted = false;
         messageSentToUser = "";
@@ -634,6 +642,6 @@ public class ActivateSpellTrapController extends ChainController {
         cardsToBeChosenFromDeckAndSentToGraveyard.clear();
         cardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition.clear();
         sumOfLevelsOfChosenMonsters.clear();
-        optionalCardNameInput="";
+        optionalCardNameInput = "";
     }
 }

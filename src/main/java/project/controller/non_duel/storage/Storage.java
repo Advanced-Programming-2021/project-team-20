@@ -219,12 +219,12 @@ public class Storage {
                         numberOfTurnsOfActivation = 6;
                     }
                     String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
-                    allSpellAndTrapCards.put(correctCardName,
-                            new SpellCard(nextRecord[0], nextRecord[3],
-                                    SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
-                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
-                                    Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
-                                    createImageOfCards(nextRecord[0])));
+ //                   allSpellAndTrapCards.put(correctCardName,
+//                            new SpellCard(nextRecord[0], nextRecord[3],
+//                                    SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
+//                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
+//                                    Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
+//                                    createImageOfCards(nextRecord[0])));
                 }
             }
             csvReader.close();

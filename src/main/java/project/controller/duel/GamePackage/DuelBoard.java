@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellEffect;
+import project.controller.duel.CardEffects.SpellEffectEnums.EquipSpellExtendedEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.FieldSpellEffect;
 import project.controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import project.controller.duel.GamePhaseControllers.SelectCardController;
@@ -313,39 +314,39 @@ public class DuelBoard {
         return card;
     }
 
-    public void removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(CardLocation spellCardLocation) {
-        SpellCard spellCard = (SpellCard) getCardByCardLocation(spellCardLocation);
-        ArrayList<FieldSpellEffect> fieldSpellEffects = spellCard.getFieldSpellEffects();
-        Card card;
-        for (int i = 0; i < 5; i++) {
-            card = getAllyMonsterCards().get(i);
-            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
-            card = getOpponentMonsterCards().get(i);
-            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
-        }
-    }
-
-    private void removeFieldSpellEffectFromCard(ArrayList<FieldSpellEffect> fieldSpellEffects, Card card) {
-        if (Card.isCardAMonster(card)) {
-            MonsterCard monsterCard = (MonsterCard) card;
-            for (int j = 0; j < fieldSpellEffects.size(); j++) {
-                monsterCard.removeSpellFieldEffectFromList(fieldSpellEffects.get(j));
-            }
-        }
-    }
+//    public void removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(CardLocation spellCardLocation) {
+//        SpellCard spellCard = (SpellCard) getCardByCardLocation(spellCardLocation);
+//        ArrayList<FieldSpellExtendedEffect> fieldSpellEffects = spellCard.getFieldSpellExtendedEffects();
+//        Card card;
+//        for (int i = 0; i < 5; i++) {
+//            card = getAllyMonsterCards().get(i);
+//            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
+//            card = getOpponentMonsterCards().get(i);
+//            removeFieldSpellEffectFromCard(fieldSpellEffects, card);
+//        }
+//    }
+//
+//    private void removeFieldSpellEffectFromCard(ArrayList<FieldSpellEffect> fieldSpellEffects, Card card) {
+//        if (Card.isCardAMonster(card)) {
+//            MonsterCard monsterCard = (MonsterCard) card;
+//            for (int j = 0; j < fieldSpellEffects.size(); j++) {
+//                monsterCard.removeSpellFieldEffectFromList(fieldSpellEffects.get(j));
+//            }
+//        }
+//    }
 
     public void removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(CardLocation spellCardLocation) {
         SpellCard spellCard = (SpellCard) getCardByCardLocation(spellCardLocation);
         ArrayList<CardLocation> cardsToWhichEquipSpellEffectIsApplied = spellCard
             .getCardLocationsToWhichEquipSpellIsApplied();
-        ArrayList<EquipSpellEffect> equipSpellEffects = spellCard.getEquipSpellEffects();
+        ArrayList<EquipSpellExtendedEffect> equipSpellEffects = spellCard.getEquipSpellExtendedEffects();
         if (cardsToWhichEquipSpellEffectIsApplied != null) {
             for (int i = 0; i < cardsToWhichEquipSpellEffectIsApplied.size(); i++) {
                 Card card = getCardByCardLocation(cardsToWhichEquipSpellEffectIsApplied.get(i));
                 if (Card.isCardAMonster(card)) {
                     MonsterCard monsterCard = (MonsterCard) card;
                     for (int j = 0; j < equipSpellEffects.size(); j++) {
-                        monsterCard.removeEquipSpellEffectFromList(equipSpellEffects.get(j));
+                        monsterCard.removeEquipSpellExtendedEffect(equipSpellEffects.get(j));
                     }
                 }
             }
@@ -355,26 +356,37 @@ public class DuelBoard {
     public void destroyEquipSpellsRelatedToThisCard(CardLocation targetingCardLocation, int graveyardToSendCardTo) {
         // if change of heart is used and changes card locations, the corresponding
         // arraylist in spell card should be updated too
-        destroyEquipSpellsRelatedToThisCardInThisArrayList(allySpellCards, targetingCardLocation);
-        destroyEquipSpellsRelatedToThisCardInThisArrayList(opponentSpellCards, targetingCardLocation);
+        destroyEquipSpellsRelatedToThisCardInThisArrayList(allySpellCards, targetingCardLocation, true);
+        destroyEquipSpellsRelatedToThisCardInThisArrayList(opponentSpellCards, targetingCardLocation, false);
     }
 
-    private void destroyEquipSpellsRelatedToThisCardInThisArrayList(ArrayList<Card> spellCards, CardLocation targetingCardLocation) {
+    private void destroyEquipSpellsRelatedToThisCardInThisArrayList(ArrayList<Card> spellCards, CardLocation targetingCardLocation, boolean bool) {
         for (int i = 0; i < spellCards.size(); i++) {
             if (Card.isCardASpell(spellCards.get(i))) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
-                ArrayList<CardLocation> equipSpellCardLocations = spellCard
-                    .getCardLocationsToWhichEquipSpellIsApplied();
-                if (equipSpellCardLocations != null) {
-                    for (int j = 0; j < equipSpellCardLocations.size(); j++) {
-                        if (targetingCardLocation.getRowOfCardLocation()
-                            .equals(equipSpellCardLocations.get(j).getRowOfCardLocation())
-                            && targetingCardLocation.getIndex() == equipSpellCardLocations.get(j).getIndex()) {
-                            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(equipSpellCardLocations.get(j),
-                                0);
-                        }
+                ArrayList<CardLocation> equipSpellCardLocations = spellCard.getCardLocationsToWhichEquipSpellIsApplied();
+                for (int j = 0; j < equipSpellCardLocations.size(); j++) {
+                    if (targetingCardLocation.getRowOfCardLocation().equals(equipSpellCardLocations.get(j).getRowOfCardLocation()) && targetingCardLocation.getIndex() == equipSpellCardLocations.get(j).getIndex()) {
+                        SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation((bool ? RowOfCardLocation.ALLY_SPELL_ZONE : RowOfCardLocation.OPPONENT_SPELL_ZONE), i + 1), 0);
                     }
                 }
+//                boolean hope = true;
+//                int j = 0;
+//                if (equipSpellCardLocations != null) {
+//                    while (hope && j < equipSpellCardLocations.size()) {
+//                        if (targetingCardLocation.getRowOfCardLocation().equals(equipSpellCardLocations.get(j).getRowOfCardLocation())
+//                            && targetingCardLocation.getIndex() == equipSpellCardLocations.get(j).getIndex()) {
+//                            int graveyardToSendCardTo = (equipSpellCardLocations.get(j).getRowOfCardLocation().toString().startsWith("ALLY") ? 1 : 2);
+//                            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + equipSpellCardLocations.get(j).getRowOfCardLocation()
+//                                + " " + equipSpellCardLocations.get(j).getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+//                            Card removedCard = SendCardToGraveyardConductor.removeCardAndGetRemovedCard(equipSpellCardLocations.get(j), 0);
+//                            GameManager.getDuelBoardByIndex(0).addCardToGraveyard(removedCard, graveyardToSendCardTo);
+//                            GameManager.getDuelBoardByIndex(0).refreshCharacteristicsOfACardSentToGraveyard(removedCard);
+//                            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(equipSpellCardLocations.get(j), 0);
+//                            hope = false;
+//                        }
+//                    }
+//                }
             }
         }
     }
@@ -432,12 +444,12 @@ public class DuelBoard {
                 || rowOfCardLocation.equals(RowOfCardLocation.ALLY_DECK_ZONE)) {
                 allyCardsInGraveyard.add(cards.get(i));
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + cardLocations.get(i).getRowOfCardLocation()
-                    + " " + cardLocations.get(i).getIndex() + " is being added to graveyard zone " + 1 + "and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+                    + " " + cardLocations.get(i).getIndex() + " is being added to graveyard zone " + 1 + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
 
             } else {
                 opponentCardsInGraveyard.add(cards.get(i));
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + cardLocations.get(i).getRowOfCardLocation()
-                    + " " + cardLocations.get(i).getIndex() + " is being added to graveyard zone " + 2 + "and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+                    + " " + cardLocations.get(i).getIndex() + " is being added to graveyard zone " + 2 + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
 
             }
         }
@@ -575,8 +587,8 @@ public class DuelBoard {
     }
 
     public void shuffleMainDecks() {
-      //  Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck());
-      //  Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getMainDeck());
+        //  Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck());
+        //  Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getMainDeck());
     }
 
     public void resetCards(int player1Or2) {
@@ -943,7 +955,7 @@ public class DuelBoard {
             deckCards = opponentCardsInDeck;
         }
         for (int i = 0; i < deckCards.size(); i++) {
-            output.append(i + 1 + ": " + deckCards.get(i).getCardName() + "\n");
+            output.append((i + 1) + ": " + deckCards.get(i).getCardName() + "\n");
         }
         return output.toString();
     }

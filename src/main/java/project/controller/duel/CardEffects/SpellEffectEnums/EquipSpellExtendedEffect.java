@@ -12,20 +12,88 @@ import project.model.cardData.MonsterCardData.MonsterCardFamily;
 
 import java.util.ArrayList;
 
+import static project.model.cardData.MonsterCardData.MonsterCardFamily.*;
+
 public class EquipSpellExtendedEffect {
     private ArrayList<MonsterCardFamily> firstMonsterCardFamilies;
     private int firstAttack;
     private int firstDefense;
     private ArrayList<EquipSpellEffect> equipSpellEffects;
+    private String spellName;
 
-    public EquipSpellExtendedEffect(ArrayList<MonsterCardFamily> firstMonsterCardFamilies, int firstAttack, int firstDefense) {
-        this.firstAttack = firstAttack;
-        this.firstDefense = firstDefense;
+    public EquipSpellExtendedEffect(ArrayList<EquipSpellEffect> equipSpellEffects
+        , ArrayList<MonsterCardFamily> firstMonsterCardFamilies, ArrayList<Integer> integers, String spellName) {
+        if (integers.size() >= 1) {
+            this.firstAttack = integers.get(0);
+            this.firstDefense = integers.get(0);
+        } else {
+            this.firstAttack = 0;
+            this.firstDefense = 0;
+        }
+        this.equipSpellEffects = equipSpellEffects;
         this.firstMonsterCardFamilies = firstMonsterCardFamilies;
+        this.spellName = spellName;
+        tend();
     }
 
+    private void tend() {
+        if (spellName.startsWith("Swords Of Dark")) {
+            this.firstAttack = 400;
+            this.firstDefense = 200;
+            this.firstMonsterCardFamilies = new ArrayList<>();
+            this.firstMonsterCardFamilies.add(MonsterCardFamily.FIEND);
+            this.firstMonsterCardFamilies.add(MonsterCardFamily.SPELLCASTER);
+        }
+        if (spellName.startsWith("Black Pen")) {
+            this.firstAttack = 500;
+            this.firstDefense = 0;
+          addAllMonsterFamilies();
+        }
+        if (spellName.startsWith("United We")) {
+            this.firstAttack = 800;
+            this.firstDefense = 0;
+            addAllMonsterFamilies();
+        }
+        if (spellName.startsWith("Magnum S")) {
+            this.firstAttack = 0;
+            this.firstDefense = 0;
+            this.firstMonsterCardFamilies = new ArrayList<>();
+            this.firstMonsterCardFamilies.add(WARRIOR);
+        }
+    }
+    private void addAllMonsterFamilies(){
+        this.firstMonsterCardFamilies = new ArrayList<>();
+        this.firstMonsterCardFamilies.add(AQUA);
+        this.firstMonsterCardFamilies.add(BEAST);
+        this.firstMonsterCardFamilies.add(BEAST_WARRIOR);
+        this.firstMonsterCardFamilies.add(CYBERSE);
+        this.firstMonsterCardFamilies.add(DINOSAUR);
+        this.firstMonsterCardFamilies.add(DIVINE_BEAST);
+        this.firstMonsterCardFamilies.add(DRAGON);
+        this.firstMonsterCardFamilies.add(FAIRY);
+        this.firstMonsterCardFamilies.add(FIEND);
+        this.firstMonsterCardFamilies.add(FISH);
+        this.firstMonsterCardFamilies.add(INSECT);
+        this.firstMonsterCardFamilies.add(MACHINE);
+        this.firstMonsterCardFamilies.add(PLANT);
+        this.firstMonsterCardFamilies.add(PSYCHIC);
+        this.firstMonsterCardFamilies.add(PYRO);
+        this.firstMonsterCardFamilies.add(REPTILE);
+        this.firstMonsterCardFamilies.add(ROCK);
+        this.firstMonsterCardFamilies.add(SEA_SERPENT);
+        this.firstMonsterCardFamilies.add(SPELLCASTER);
+        this.firstMonsterCardFamilies.add(THUNDER);
+        this.firstMonsterCardFamilies.add(WARRIOR);
+        this.firstMonsterCardFamilies.add(WINGED_BEAST);
+        this.firstMonsterCardFamilies.add(WYRM);
+        this.firstMonsterCardFamilies.add(ZOMBIE);
+    }
     public ArrayList<MonsterCardFamily> getFirstMonsterCardFamilies() {
         return firstMonsterCardFamilies;
+    }
+
+    public String getSpellName() {
+        return spellName;
     }
 
     public int getFirstAttack() {
@@ -40,7 +108,7 @@ public class EquipSpellExtendedEffect {
         return equipSpellEffects;
     }
 
-    private static int giveChangesOnATKDEFConsideringEquipSpellEffects(CardLocation monsterCardLocation, int index, String attackOrDefense) {
+    public static int giveChangesOnATKDEFConsideringEquipSpellEffects(CardLocation monsterCardLocation, int index, String attackOrDefense) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardLocation);
         MonsterCardFamily monsterCardFamily = monsterCard.getMonsterCardFamily();

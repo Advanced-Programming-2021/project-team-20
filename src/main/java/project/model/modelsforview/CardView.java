@@ -213,57 +213,58 @@ public class CardView extends Rectangle {
                 item8.setVisible(false);
                 item9.setVisible(false);
                 item10.setVisible(false);
-                int turn = GameManager.getDuelControllerByIndex(0).getTurn();
-                PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-                int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
-                int belongingTurn = 2;
-                double meanY = (bounds.getMinY() + bounds.getMaxY()) / 2;
-                System.out.println("PREPARE FOR THE ALMIGHTY JIGEN with meanY = " + meanY);
-                if (meanY >= 500) {
-                    belongingTurn = 1;
-                }
-                boolean mainPhases = phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)
-                    || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2);
-                boolean battlePhases = phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE) || phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE);
+                if (DuelView.isShouldDuelViewClickingAbilitiesWork()) {
+                    int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+                    PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+                    int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
+                    int belongingTurn = 2;
+                    double meanY = (bounds.getMinY() + bounds.getMaxY()) / 2;
+                    System.out.println("PREPARE FOR THE ALMIGHTY JIGEN with meanY = " + meanY);
+                    if (meanY >= 500) {
+                        belongingTurn = 1;
+                    }
+                    boolean mainPhases = phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)
+                        || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2);
+                    boolean battlePhases = phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE) || phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE);
 
-                System.out.println("belongingTurn = " + belongingTurn + " turn = " + turn + " boundsx = " + bounds.getMinX() + " boundsy = " + meanY + " name = " + name);
-                CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
-                if (cardLocation.getRowOfCardLocation().toString().contains("GRAVEYARD")) {
-                    item4.setVisible(true);
-                } else {
-                    if (belongingTurn == turn) {
-                        System.out.println("correct turn name = " + name);
-                        if (card.getCardType().equals(CardType.MONSTER)) {
-                            if (mainPhases) {
-                                System.out.println("mainphase name = " + name);
-                                if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-                                    System.out.println("inside monster zone name = " + name);
-                                    item6.setVisible(true);
-                                    item7.setVisible(true);
-                                    item8.setVisible(true);
-                                } else if (label.equals(RowOfCardLocation.ALLY_HAND_ZONE) || label.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
-                                    System.out.println("outside monster zone name = " + name);
-                                    item1.setVisible(true);
-                                    item2.setVisible(true);
-                                    item3.setVisible(true);
+                    System.out.println("belongingTurn = " + belongingTurn + " turn = " + turn + " boundsx = " + bounds.getMinX() + " boundsy = " + meanY + " name = " + name);
+                    CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
+                    if (cardLocation.getRowOfCardLocation().toString().contains("GRAVEYARD")) {
+                        item4.setVisible(true);
+                    } else {
+                        if (belongingTurn == turn) {
+                            System.out.println("correct turn name = " + name);
+                            if (card.getCardType().equals(CardType.MONSTER)) {
+                                if (mainPhases) {
+                                    System.out.println("mainphase name = " + name);
+                                    if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+                                        System.out.println("inside monster zone name = " + name);
+                                        item6.setVisible(true);
+                                        item7.setVisible(true);
+                                        item8.setVisible(true);
+                                    } else if (label.equals(RowOfCardLocation.ALLY_HAND_ZONE) || label.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+                                        System.out.println("outside monster zone name = " + name);
+                                        item1.setVisible(true);
+                                        item2.setVisible(true);
+                                        item3.setVisible(true);
+                                        item5.setVisible(true);
+                                    }
+                                } else if (battlePhases) {
+                                    if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+                                        System.out.println("battle phase monster zone name = " + name);
+                                        item9.setVisible(true);
+                                        item10.setVisible(true);
+                                    }
+                                }
+                            } else {
+                                if (mainPhases) {
                                     item5.setVisible(true);
+                                    item6.setVisible(true);
                                 }
-                            } else if (battlePhases) {
-                                if (label.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || label.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-                                    System.out.println("battle phase monster zone name = " + name);
-                                    item9.setVisible(true);
-                                    item10.setVisible(true);
-                                }
-                            }
-                        } else {
-                            if (mainPhases) {
-                                item5.setVisible(true);
-                                item6.setVisible(true);
                             }
                         }
                     }
                 }
-
             }
         });
 
