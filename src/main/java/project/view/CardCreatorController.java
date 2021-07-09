@@ -1349,9 +1349,9 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().remove(button);
 
             ArrayList<Button> buttons = new ArrayList<>();
-            SpellCardValue[] spellCardValues = SpellCardValue.values();
+            TrapCardValue[] trapCardValues = TrapCardValue.values();
             previousVbox = new VBox();
-            for (SpellCardValue cardValue : spellCardValues) {
+            for (TrapCardValue cardValue : trapCardValues) {
                 buttons.add(new Button(cardValue.toString()));
             }
 
