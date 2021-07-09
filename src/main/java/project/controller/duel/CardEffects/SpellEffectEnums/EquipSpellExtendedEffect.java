@@ -7,7 +7,6 @@ import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.cardData.MonsterCardData.MonsterCard;
-import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 
 import java.util.ArrayList;

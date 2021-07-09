@@ -9,7 +9,6 @@ import project.model.cardData.General.RowOfCardLocation;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
 import project.model.cardData.SpellCardData.SpellCard;
-import project.view.pooyaviewpackage.DuelView;
 
 import java.util.ArrayList;
 

@@ -39,7 +39,6 @@ public class startDuelController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
         SongPlayer.getInstance().pauseMusic();
         SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/startDuel.mp3");
-      
     }
 
     public void singleDuelWithComputer() {
@@ -88,7 +87,7 @@ public class startDuelController implements Initializable {
 
     private boolean checkConditionsOfPlayers(String secondPlayer) {
         int numberOfRounds = isMatchGame ? 3 : 1;
-        String result = duelStarter.createGame(LoginController.getOnlineUser().getName(), secondPlayer, numberOfRounds);
+        String result = duelStarter.checkConditionsOfPlayers(LoginController.getOnlineUser().getName(), secondPlayer, numberOfRounds);
         if (!result.equals("game started")) {
             showAlert(result.toUpperCase(), "ERROR");
             return false;

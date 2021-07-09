@@ -310,15 +310,50 @@ public class SpellCard extends Card {
         csvArray.add(numberOfAllowedUsages == 3 ? "Unlimited" : "Limited");
         csvArray.add(cardPrice + "");
         csvArray.add(toCSVformatEffectsOfCards(continuousSpellCardEffects));
-        csvArray.add(toCSVformatEffectsOfCards(equipSpellExtendedEffects));
-        csvArray.add(toCSVformatEffectsOfCards(fieldSpellExtendedEffects));
+        if (equipSpellExtendedEffects != null) {
+            if (equipSpellExtendedEffects.get(0) != null) {
+                csvArray.add(toCSVformatEffectsOfCards(equipSpellExtendedEffects.get(0).getEquipSpellEffects()));
+            } else {
+                csvArray.add("#");
+            }
+            csvArray.add("#");
+        } else {
+            csvArray.add("#");
+            if (fieldSpellExtendedEffects.get(0) != null) {
+                csvArray.add(toCSVformatEffectsOfCards(fieldSpellExtendedEffects.get(0).getFieldSpellEffects()));
+            } else {
+                csvArray.add("#");
+            }
+        }
         csvArray.add(toCSVformatEffectsOfCards(logicalActivationRequirements));
         csvArray.add(toCSVformatEffectsOfCards(normalSpellCardEffects));
         csvArray.add(toCSVformatEffectsOfCards(sentToGraveyardEffects));
         csvArray.add(toCSVformatEffectsOfCards(quickSpellEffects));
         csvArray.add(toCSVformatEffectsOfCards(ritualSpellEffects));
         csvArray.add(toCSVformatEffectsOfCards(userReplyForActivations));
-        
+        if (equipSpellExtendedEffects != null) {
+            if (equipSpellExtendedEffects.get(0) != null) {
+                csvArray.add(equipSpellExtendedEffects.get(0).getFirstAttack() + "");
+            }
+        } else if (fieldSpellExtendedEffects != null) {
+            if (fieldSpellExtendedEffects.get(0) != null) {
+                csvArray.add(fieldSpellExtendedEffects.get(0).getFirstAttack() + "");
+            }
+        } else {
+            csvArray.add(0 + "");
+        }
+
+        if (equipSpellExtendedEffects != null) {
+            if (equipSpellExtendedEffects.get(0) != null) {
+                csvArray.add(toCSVformatEffectsOfCards(equipSpellExtendedEffects.get(0).getFirstMonsterCardFamilies()));
+            }
+        } else if (fieldSpellExtendedEffects != null) {
+            if (fieldSpellExtendedEffects.get(0) != null) {
+                csvArray.add(toCSVformatEffectsOfCards(fieldSpellExtendedEffects.get(0).getFirstMonsterCardFamilies()));
+            }
+        } else {
+            csvArray.add("#");
+        }
         String[] res = new String[csvArray.size()];
         res = csvArray.toArray(res);
         return res;
@@ -327,6 +362,9 @@ public class SpellCard extends Card {
     private String toCSVformatEffectsOfCards(ArrayList effects) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("#");
+        if (effects == null) {
+            return stringBuilder.toString();
+        }
         for (int i = 0; i < effects.size(); i++) {
             stringBuilder.append(effects.get(i));
             if (i + 1 < effects.size()) {

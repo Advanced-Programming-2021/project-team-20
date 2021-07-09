@@ -9,7 +9,6 @@ import java.util.Map;
 
 import project.view.LoginController;
 import project.controller.duel.Utility.Utility;
-import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.User;
@@ -21,7 +20,9 @@ import project.model.cardData.TrapCardData.TrapCard;
 public class DuelStarter {
 
     private boolean isDuelStarted = false;
-
+    private static int numberOfRounds;
+    private static String firstPlayer;
+    private static String secondPlayer;
     public String findCommand(String command) {
 
         if (isDuelStarted) {
@@ -47,10 +48,10 @@ public class DuelStarter {
             return secondUser.getName() + " has no active deck";
         }
         // if (!isThisDeckValid(firstUser)) {
-        //     return firstUser.getName() + "’s deck is invalid";
+        // return firstUser.getName() + "’s deck is invalid";
         // }
         // if (!isThisDeckValid(secondUser)) {
-        //     return secondUser.getName() + "’s deck is invalid";
+        // return secondUser.getName() + "’s deck is invalid";
         // }
         if (!isItsRoundNumberCorrect(numberOfRounds)) {
             return "number of rounds is not supported";
@@ -60,7 +61,7 @@ public class DuelStarter {
         return "duel successfully started!\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
     }
 
-    public String createGame(String firstUserName, String secondUserName, int numberOfRounds) {
+    public String checkConditionsOfPlayers(String firstUserName, String secondUserName, int numberOfRounds) {
         if (!doesThisUserNameExist(firstUserName)) {
             return "user " + firstUserName + " not found";
         }
@@ -87,10 +88,19 @@ public class DuelStarter {
 
         if (!isThisDeckValid(secondUserActiveDeck)) {
             return secondUserName + " has not valid deck";
-        }
-        
-        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
+        } 
+       DuelStarter.numberOfRounds = numberOfRounds;
+       DuelStarter.firstPlayer = firstUserName;
+       DuelStarter.secondPlayer = secondUserName;
         return "game started";
+    }
+
+    public void createNewGame(String firstUserName, String secondUserName) {
+        User firstUser = Storage.getUserByName(firstUserName);
+        User secondUser = Storage.getUserByName(secondUserName);
+        Deck firstUserActiveDeck = getActiveDeck(firstUser);
+        Deck secondUserActiveDeck = getActiveDeck(secondUser);
+        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
     }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber, Deck firstUserActiveDeck,
@@ -107,7 +117,6 @@ public class DuelStarter {
                 secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
         GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
         GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
-
     }
 
     private ArrayList<Card> getMainOrSideDeckCards(Deck activeDeck, boolean isCardsInMainDeck) {
@@ -166,5 +175,13 @@ public class DuelStarter {
         if (number == 1 || number == 3)
             return true;
         return false;
+    }
+
+    public static String getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public static String getSecondPlayer() {
+        return secondPlayer;
     }
 }

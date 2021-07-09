@@ -24,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.view.pooyaviewpackage.DuelView;
 import project.view.transitions.RockPaperScissorTransition;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
 
 public class RockPaperScissorController implements Initializable {
@@ -82,8 +83,8 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void determineUsers() {
-        allyPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
-        opponentPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
+        allyPlayerName = DuelStarter.getFirstPlayer();
+        opponentPlayerName = DuelStarter.getSecondPlayer();
     }
 
     private void determineInitialCoordinates(Rectangle rect) {
@@ -138,7 +139,12 @@ public class RockPaperScissorController implements Initializable {
             canSecondPlayerSelect = true;
             if (opponentPlayerName.equals("AI")) {
                 handleAIPlayerSelection();
+            } else {
+                CustomDialog customDialog = new CustomDialog("CONFIRMATION", "Now " + opponentPlayerName + " Must choose");
+                customDialog.openDialog();
+                backRectanglesToFirstPlace();
             }
+
         } else {
             player2Selection = selection;
             didPlayer2Select = true;
@@ -197,13 +203,13 @@ public class RockPaperScissorController implements Initializable {
             didAnyOneWin = false;
         } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
                 || (player1Selection == 3 && player2Selection == 2)) {
-            GameManager.getDuelControllerByIndex(0).setTurn(1);
+            new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer());
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
             didAnyOneWin = true;
             showAlert("PLAYER " + allyPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
-            GameManager.getDuelControllerByIndex(0).setTurn(2 );
+            new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
             didAnyOneWin = true;
@@ -211,9 +217,9 @@ public class RockPaperScissorController implements Initializable {
         }
     }
 
-    public void startDuel(){
+    public void startDuel() {
         SongPlayer.getInstance().pauseMusic();
-         DuelView.callStage();
+        DuelView.callStage();
     }
 
     private void backRectanglesToFirstPlace() {
@@ -226,7 +232,6 @@ public class RockPaperScissorController implements Initializable {
     private void showAlert(String message, String typeOfMessage, boolean didAnyOneWin) {
         CustomDialog customDialog = new CustomDialog(typeOfMessage, message, this);
         customDialog.openDialog();
-        //customDialog.setO
     }
 
     private void attackChosenRectangles() {
@@ -331,7 +336,7 @@ public class RockPaperScissorController implements Initializable {
         }
     }
 
-    public boolean didAnyOneWin(){
+    public boolean didAnyOneWin() {
         return didAnyOneWin;
     }
 }

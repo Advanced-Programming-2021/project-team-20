@@ -155,7 +155,7 @@ public class CustomDialog extends Stage {
         btn.setTranslateX(bg.getWidth() - 75);
         btn.setTranslateY(bg.getHeight() - 50);
         if (isRockPaperScissorController) {
-            btn.setOnAction(e -> closeDialogInRockPaperScissorControllerClass());
+            btn.setOnAction(e -> callMethodesInRockPaperScissor());
         } else {
             btn.setOnAction(e -> closeDialog());
         }
@@ -215,15 +215,15 @@ public class CustomDialog extends Stage {
         anim.playFrom(Duration.seconds(0.66));
     }
 
-    private void closeDialogInRockPaperScissorControllerClass() {
-        anim.setOnFinished(e -> close());
-        anim.setAutoReverse(true);
-        anim.setCycleCount(2);
-        anim.playFrom(Duration.seconds(0.66));
-        anim.setOnFinished(e -> doActionsAfterClose());
-    }
+    // private void closeDialogInRockPaperScissorControllerClass() {
+    //     anim.setAutoReverse(true);
+    //     anim.setCycleCount(2);
+    //     anim.playFrom(Duration.seconds(0.66));
+    //     anim.setOnFinished(e -> callMethodesInRockPaperScissor());
+    // }
 
-    private void doActionsAfterClose() {
+    private void callMethodesInRockPaperScissor() {
+        closeDialog();
         if (rockPaperScissorController.didAnyOneWin()) {
             rockPaperScissorController.startDuel();
         } else {
