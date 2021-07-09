@@ -299,8 +299,23 @@ public class UIStorage {
             allCardDiscriptionLabels1.add(label);
             label = new Label();
             label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 14));
-            allCardDiscriptionLabels2.add(new Label());
+            allCardDiscriptionLabels2.add(label);
         }
+    }
+
+    public static void addNodesForViewWhenNewCardCreated() {
+        Rectangle rectangle = new Rectangle(45, 55);
+        allScrollBarRectangle.add(rectangle);
+        rectangle = new Rectangle(50, 60);
+        rectangle.setStroke(Color.RED);
+        rectangle.setStrokeWidth(5);
+        rectangle.setFill(Color.CORAL);
+        allScrollBarBackGroundRectangles.add(rectangle);
+        Label label = new Label();
+        label.setTextFill(Color.BLACK);
+        label.setFont(new Font(14));
+        label.setStyle("-fx-font-weight: bold");
+        allScrollBarLabels.add(label);
     }
 
     public static List<Rectangle> getAllShopRectangles() {

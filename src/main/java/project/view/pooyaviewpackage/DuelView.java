@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DuelView{
+public class DuelView {
     // launch the application
     private static Stage stage;
     private static double stageWidth;
@@ -223,6 +223,7 @@ public class DuelView{
 
     public AnchorPane getAnchorpaneAtBeginning(Stage stage) {
         cheatCodes.setLength(0);
+        // FakeMain.call();
         areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
         prepareArrayListsForWorking();
         DuelView.stage = stage;
@@ -458,7 +459,7 @@ public class DuelView{
         System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
-           return anchorPane;
+        return anchorPane;
         // MainView.changeScene(anchorPane);
     }
 
@@ -718,41 +719,22 @@ public class DuelView{
                                                     @Override
                                                     public void handle(ActionEvent actionEvent) {
                                                         GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                                        PauseTransition newestPauseTransition = new PauseTransition(Duration.seconds(0.3));
-                                                        newestPauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                                                            @Override
-                                                            public void handle(ActionEvent actionEvent) {
-                                                                int turn = GameManager.getDuelControllerByIndex(0).getTurn();
-                                                                int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
-                                                                if (turn == 2 && fakeTurn == 1) {
-                                                                    advancedCardMovingController.advanceForwardBattleField();
-                                                                    String string = "now it will be (.+)";
-                                                                    Pattern pattern = Pattern.compile(string);
-                                                                    Matcher matcher = pattern.matcher(output);
-                                                                    if (matcher.find()) {
-                                                                        showOptionsToUser.doYouWantToAlert(matcher.group(0));
-                                                                    }
-                                                                } else {
-                                                                    conductPhaseChanging(output, true);
-                                                                    advancedCardMovingController.advanceForwardBattleField();
-                                                                }
-                                                            }
-                                                        });
-                                                        newestPauseTransition.play();
                                                     }
                                                 });
-                                                newerPauseTransition.play();
+
                                             }
-                                        });
-                                        newPauseTransition.play();
-                                    }
-                                });
-                                pauseTransition.play();
-                            } else {
-                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                            }
+                                        }
+                                    });
+                                    pauseTransition.play();
+                                }
+                            });
+                            pauseTransition.play();
+                        } else {
+                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
                         }
                     }
+                } else {
+                    System.out.println("we are playing with ai");
                 }
             }
 
@@ -766,17 +748,17 @@ public class DuelView{
 //                if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
 //                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
 //                }
-            // PhaseInGame phaseInGame =
-            // GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-            // standByPhaseLabel.updateImage(phaseInGame);
-            // mainPhaseOneLabel.updateImage(phaseInGame);
-            // battlePhaseLabel.updateImage(phaseInGame);
-            // mainPhaseTwoLabel.updateImage(phaseInGame);
-            // endPhaseLabel.updateImage(phaseInGame);
-            // if (output.contains("phase: draw phase") && output.contains("new card added
-            // to hand:")) {
-            // DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-            // }
+                // PhaseInGame phaseInGame =
+                // GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+                // standByPhaseLabel.updateImage(phaseInGame);
+                // mainPhaseOneLabel.updateImage(phaseInGame);
+                // battlePhaseLabel.updateImage(phaseInGame);
+                // mainPhaseTwoLabel.updateImage(phaseInGame);
+                // endPhaseLabel.updateImage(phaseInGame);
+                // if (output.contains("phase: draw phase") && output.contains("new card added
+                // to hand:")) {
+                // DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                // }
 
         });
 
@@ -835,7 +817,7 @@ public class DuelView{
         secondPlayerUsernameLabel.setLayoutY(10);
         secondPlayerUsernameLabel.setFont(new Font(30));
         secondPlayerNicknameLabel.setLayoutX(DuelView.getBattleFieldView().getUpperLeftX() + 10);
-        secondPlayerNicknameLabel.setLayoutY(10 + DuelView.getStageHeight() / 16 - 10);
+        secondPlayerNicknameLabel.setLayoutY(10 + DuelView.getStageHeight()/16 -10);
         secondPlayerNicknameLabel.setFont(new Font(30));
 
         firstPlayerAvatar = new Rectangle(DuelView.getStageWidth() * 3 / 4, DuelView.getStageHeight() * 7 / 8, DuelView.getStageWidth() / 6, DuelView.getStageHeight() / 8);
@@ -859,7 +841,7 @@ public class DuelView{
             }
             xHelperForCardViewConstructor = battleFieldView.getUpperLeftX() + 40;
             yHelperForCardViewConstructor = battleFieldView.getUpperLeftY() + 108;
-            CardView cardView = new CardView(currentCardForView, false, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
+            CardView cardView = new CardView(currentCardForView, true, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
             cardView.applyClickingAbilitiesToCardView(this);
             cardView.applyDragDetectingAbilityToCardView();
             System.out.println("preparing " + cardView.getCard().getCardName());
@@ -1317,6 +1299,10 @@ public class DuelView{
         this.dragFlag = dragFlag;
     }
 
+    public static void setShouldDuelViewClickingAbilitiesWork(boolean shouldDuelViewClickingAbilitiesWork) {
+        DuelView.shouldDuelViewClickingAbilitiesWork = shouldDuelViewClickingAbilitiesWork;
+    }
+
     public void setClickCounter(int clickCounter) {
         this.clickCounter = clickCounter;
     }
@@ -1409,4 +1395,5 @@ public class DuelView{
                 .getCardName());
         }
     }
+
 }

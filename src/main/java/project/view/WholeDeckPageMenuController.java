@@ -55,7 +55,6 @@ public class WholeDeckPageMenuController implements Initializable {
     private static Button equalToEditDeckbtn;
     private static Label equalDeckNameLabel;
     private Thread thread;
-    private MyThread[] myThread = new MyThread[4];
     private boolean isEnteredMouse = false;
     private Long firstTimeMouseEnteredRectangle = 0l;
 

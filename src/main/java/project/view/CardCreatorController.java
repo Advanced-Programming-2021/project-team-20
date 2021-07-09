@@ -11,13 +11,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import project.controller.duel.CardEffects.MonsterEffectEnums.*;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.*;
 import project.controller.duel.CardEffects.SpellEffectEnums.UserReplyForActivation;
 import project.controller.duel.CardEffects.TrapEffectEnums.*;
+import project.controller.duel.CardEffects.TrapEffectEnums.LogicalActivationRequirement;
 import project.controller.non_duel.storage.Storage;
+import project.model.User;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;
@@ -27,6 +30,7 @@ import project.model.cardData.TrapCardData.TrapCard;
 import project.model.cardData.TrapCardData.TrapCardValue;
 import project.view.newClassesForCardCreator.MonsterCard1;
 import project.view.newClassesForCardCreator.SpellCard1;
+import project.view.newClassesForCardCreator.TrapCard1;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,12 +41,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CardCreatorController implements Initializable {
+    private int currentMoneyOfUser;
     ///
     private ArrayList<String> allSelectedEffectsAsStrings;
     private ArrayList<String> allSelectedEffectsThatHaveNumbers;
 
     private HashMap<String, List<String>> hashMapEffects;
-    private HashMap<String,Integer> numbersOfEffectsToSend;
+    private HashMap<String, Integer> numbersOfEffectsToSend;
     private HashMap<String, List<String>> monsterFamilySelectedInSpell;
     ///
     private String imagePath;
@@ -70,6 +75,7 @@ public class CardCreatorController implements Initializable {
 
     private int numberOfTurnsForActivationForTrapCard;
     private int trapCardValueNumber;
+    private TrapCardValue trapCardValue;
     private VBox lastVboxTrap;
     private VBox previousVbox;
     private Button previousButton;
@@ -86,6 +92,7 @@ public class CardCreatorController implements Initializable {
 
     private ArrayList<Integer> spellCardActivationTrapCardEffectNumbers;
     private ArrayList<Integer> trapCardActivationTrapCardEffectNumbers;
+
     private ArrayList<Integer> userReplyForActivationNumbers;
     private ArrayList<Integer> monsterFamilyEffectsInTrapEquip;
     private ArrayList<Integer> monsterFamilyEffectsInTrapField;
@@ -177,15 +184,27 @@ public class CardCreatorController implements Initializable {
     VBox vBoxForSentToGraveyardEffect;
     Button buttonForFinishSentToGraveyardEffect;
 
+    Label labelForShowingPrice;
+    private int currentPrice;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        currentMoneyOfUser = LoginController.getOnlineUser().getMoney();
         allSelectedEffectsAsStrings = new ArrayList<>();
         allSelectedEffectsThatHaveNumbers = new ArrayList<>();
         hashMapEffects = new HashMap<>();
         numbersOfEffectsToSend = new HashMap<>();
         monsterFamilySelectedInSpell = new HashMap<>();
+        currentPrice = 0;
+        labelForShowingPrice = new Label();
+        labelForShowingPrice.setLayoutX(800);
+        labelForShowingPrice.setLayoutY(620);
+        labelForShowingPrice.setMinWidth(100);
+        labelForShowingPrice.setStyle("-fx-font-size: 20; -fx-alignment: CENTER; -fx-background-color: BLACK; -fx-min-height: 50" +
+            "; -fx-min-width: 160; -fx-border-color: WHITE; -fx-border-width: 2");
+        labelForShowingPrice.setTextFill(Color.web("#FFFFFFFF"));
 
 
         spellButton = new Button();
@@ -250,6 +269,9 @@ public class CardCreatorController implements Initializable {
 //            "-fx-background-color: #031fd2;-fx-font-weight:bold; -fx-font-size: 20");
 //        anchorPane.getChildren().add(labelForGettingCardNameFromUser);
 
+        anchorPane.getChildren().add(labelForShowingPrice);
+        showPriceWithLabel();
+
         textFieldForGettingCardNameFromUser = new TextField();
         textFieldForGettingCardNameFromUser.setLayoutY(160);
         textFieldForGettingCardNameFromUser.setLayoutX(370);
@@ -272,6 +294,10 @@ public class CardCreatorController implements Initializable {
         buttonForGettingCardNameFromUser.setLayoutX(480);
         buttonForGettingCardNameFromUser.setStyle("-fx-font-size: 25");
         anchorPane.getChildren().add(buttonForGettingCardNameFromUser);
+    }
+
+    private void showPriceWithLabel() {
+        labelForShowingPrice.setText("PRICE  :   " + currentPrice);
     }
 
 
@@ -412,6 +438,8 @@ public class CardCreatorController implements Initializable {
         Pattern pattern = Pattern.compile("^\\d+$");
         if (!attackPower.isEmpty() && pattern.matcher(attackPower).matches()) {
             attackPowerMonsterCard = Integer.parseInt(attackPower);
+            currentPrice += attackPowerMonsterCard * 2;
+            showPriceWithLabel();
             removeThingsInContinueGettingMonsterInformation();
 //            labelForGettingDefencePowerMonsterCard = new Label("Please enter the card's defence power");
 //            labelForGettingDefencePowerMonsterCard.setLayoutY(100);
@@ -440,6 +468,8 @@ public class CardCreatorController implements Initializable {
         Pattern pattern = Pattern.compile("^\\d+$");
         if (!defencePower.isEmpty() && pattern.matcher(defencePower).matches()) {
             defencePowerMonsterCard = Integer.parseInt(defencePower);
+            currentPrice += defencePowerMonsterCard * 1.5;
+            showPriceWithLabel();
             removeThingsInGetDefencePowerMonsterCard();
 
 //            labelForGettingLevelMonsterCard = new Label("Please enter the level for your monster card");
@@ -1048,7 +1078,7 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> selectedArrayList = new ArrayList<>();
         counter = 0;
         for (SummoningRequirement summoningRequirement : summoningRequirements) {
-            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))){
+            if (selectedUponSummoningEffect.contains(Integer.valueOf(counter))) {
                 selectedArrayList.add(String.valueOf(summoningRequirement));
                 allSelectedEffectsAsStrings.add(String.valueOf(summoningRequirement));
             }
@@ -1150,54 +1180,61 @@ public class CardCreatorController implements Initializable {
     }
 
     private void getNumberOfUserMonsterCard() {
-        System.out.println("start");
+
         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
-            System.out.println("hi");
-            CustomDialog customDialog = new CustomDialog("ERROR", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+
+            CustomDialog customDialog = new CustomDialog("INPUT", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     Pattern pattern = Pattern.compile("^\\d+$");
-                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()){
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
                         numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
                         allSelectedEffectsThatHaveNumbers.remove(0);
                         anchorPane.getChildren().remove(endButton);
                         anchorPane.getChildren().remove(textField);
                         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
                             getNumberOfUserMonsterCard();
-                        }
-                        else {
+                        } else {
                             lastStepOfCreatingMonsterCard();
                         }
                     }
 
                 }
             });
-        }
-        else {
+        } else {
             lastStepOfCreatingMonsterCard();
         }
     }
 
     private void lastStepOfCreatingMonsterCard() {
-                MonsterCard1 monsterCard1 = new MonsterCard1(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
-            familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, hashMapEffects, cardImage, numbersOfEffectsToSend);
-                //TODO: calculate price
+        if (currentMoneyOfUser < currentPrice * 0.1) {
+            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+            customDialog.openDialog();
+        } else {
+            LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
+            MonsterCard1 monsterCard1 = new MonsterCard1(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
+                familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend);
 
-        System.out.println("Created");
+            System.out.println("Created");
+            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
+            customDialog.openDialog();
+            UIStorage.addNodesForViewWhenNewCardCreated();
+        }
         backToMainMenu();
-
-     }
+    }
 
     private ArrayList<String> getEnumsWithNumbers() {
         ArrayList<String> answer = new ArrayList<>();
@@ -1222,21 +1259,28 @@ public class CardCreatorController implements Initializable {
 
     private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
         if (integersValues.contains(finalI)) {
+            currentPrice -= 2500;
             integersValues.remove(Integer.valueOf(finalI));
-            buttons.get(finalI).setStyle("-fx-background-color: #e6e9ec");
+            buttons.get(finalI).setStyle("-fx-background-color: #000000");
         } else {
+            currentPrice += 2500;
             integersValues.add(finalI);
             buttons.get(finalI).setStyle("-fx-background-color: #0c7bea;");
         }
+        showPriceWithLabel();
     }
 
     private void changeAdditionOfThisEffectInTheGivenPlace2(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
         if (integersValues.contains(finalI)) {
+            currentPrice -= 2500;
             integersValues.remove(Integer.valueOf(finalI));
-            buttons.get(finalI-12).setStyle("-fx-background-color: #e6e9ec");
+            buttons.get(finalI - 12).setStyle("-fx-background-color: #000000FF");
+            showPriceWithLabel();
         } else {
+            currentPrice += 2500;
             integersValues.add(finalI);
-            buttons.get(finalI-12).setStyle("-fx-background-color: #0c7bea;");
+            buttons.get(finalI - 12).setStyle("-fx-background-color: #0c7bea;");
+            showPriceWithLabel();
         }
     }
 
@@ -1271,21 +1315,24 @@ public class CardCreatorController implements Initializable {
         label.setLayoutX(450);
         label.setLayoutY(100);
 
+        Button button = new Button("OK");
         TextField textField = new TextField();
         textField.setLayoutY(200);
-        textField.setLayoutX(450);
+        textField.setLayoutX(310);
+        textField.setMinWidth(400);
+        textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 20; -fx-background-color: #f5eeee");
+        textField.setPromptText("NUMBER OF TURNS FOR ACTIVATION");
 
-        Button button = new Button("OK");
-        button.setLayoutX(450);
-        button.setLayoutY(300);
-        button.setOnAction(ActionEvent -> getTrapCardValue(textField, label, button));
+        button.setLayoutY(290);
+        button.setLayoutX(480);
+        button.setStyle("-fx-font-size: 25");
+        button.setOnAction(ActionEvent -> getTrapCardValue(textField, button));
 
-        anchorPane.getChildren().add(label);
         anchorPane.getChildren().add(textField);
         anchorPane.getChildren().add(button);
     }
 
-    private void getTrapCardValue(TextField textField, Label label, Button button) {
+    private void getTrapCardValue(TextField textField, Button button) {
         Pattern pattern = Pattern.compile("^\\d+$");
         if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
             numberOfTurnsForActivationForTrapCard = Integer.parseInt(textField.getText());
@@ -1301,7 +1348,6 @@ public class CardCreatorController implements Initializable {
             trapCardActivationTrapCardEffectNumbers = new ArrayList<>();
             userReplyForActivationNumbers = new ArrayList<>();
             anchorPane.getChildren().remove(textField);
-            anchorPane.getChildren().remove(label);
             anchorPane.getChildren().remove(button);
 
             ArrayList<Button> buttons = new ArrayList<>();
@@ -1459,25 +1505,249 @@ public class CardCreatorController implements Initializable {
     private void finishTrapCard() {
         System.out.println("Trying to create");
         int counter = 0;
-        TrapCardValue trapValue = null;
         TrapCardValue[] trapCardValues = TrapCardValue.values();
-        for (TrapCardValue trapCardValue : trapCardValues) {
-            if (trapCardValueNumber == counter) trapValue = trapCardValue;
+        for (TrapCardValue trapCardValue1 : trapCardValues) {
+            if (trapCardValueNumber == counter) trapCardValue = trapCardValue1;
             counter++;
         }
 
-        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapValue, CardPosition.NOT_APPLICABLE,
-            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, new HashMap<>(), cardImage);
-        Storage.addCardToNewCardsCrated(trapCard);
-        Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
-        Storage.addCardToNewCardsCrated(trapCard);
-        Storage.addNewImageForNewCards(cardName, cardImage);
-        System.out.println("card was created");
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        ContinuousTrapCardEffect[] continuousTrapCardEffects1 = ContinuousTrapCardEffect.values();//empty
+        FlipSummonTrapCardEffect[] flipSummonTrapCardEffects1 = FlipSummonTrapCardEffect.values();
+        LogicalActivationRequirement[] logicalActivationRequirements1 = LogicalActivationRequirement.values();//empty
+        MonsterAttackingTrapCardEffect[] monsterAttackingTrapCardEffects1 = MonsterAttackingTrapCardEffect.values();
+        NormalSummonTrapCardEffect[] normalSummonTrapCardEffects1 = NormalSummonTrapCardEffect.values();
+        TributeSummonTrapCardEffect[] tributeSummonTrapCardEffects1 = TributeSummonTrapCardEffect.values();
+        NormalTrapCardEffect[] normalTrapCardEffects1 = NormalTrapCardEffect.values();
+        RitualSummonTrapCardEffect[] ritualSummonTrapCardEffects1 = RitualSummonTrapCardEffect.values();
+        SpecialSummonTrapCardEffect[] specialSummonTrapCardEffects1 = SpecialSummonTrapCardEffect.values();
+        MonsterEffectActivationTrapCardEffect[] monsterEffectActivationTrapCardEffects1 = MonsterEffectActivationTrapCardEffect.values();
+        SpellCardActivationTrapCardEffect[] spellCardActivationTrapCardEffects1 = SpellCardActivationTrapCardEffect.values();
+        TrapCardActivationTrapCardEffect[] trapCardActivationTrapCardEffects1 = TrapCardActivationTrapCardEffect.values();
+        UserReplyForActivation[] userReplyForActivations1 = UserReplyForActivation.values();
+
+
+        ArrayList<String> flip = new ArrayList<>();
+        ArrayList<String> monsterAttack = new ArrayList<>();
+        ArrayList<String> normalSummon = new ArrayList<>();
+        ArrayList<String> tribute = new ArrayList<>();
+        ArrayList<String> normalTrap = new ArrayList<>();
+        ArrayList<String> ritual = new ArrayList<>();
+        ArrayList<String> special = new ArrayList<>();
+        ArrayList<String> monsterActivation = new ArrayList<>();
+        ArrayList<String> spell = new ArrayList<>();
+        ArrayList<String> trap = new ArrayList<>();
+        ArrayList<String> user = new ArrayList<>();
+
+
+        counter = 0;
+
+        for (FlipSummonTrapCardEffect effect : flipSummonTrapCardEffects1) {
+            if (flipSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                flip.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
         }
+
+
+        counter = 0;
+        for (MonsterAttackingTrapCardEffect effect : monsterAttackingTrapCardEffects1) {
+            if (monsterAttackingTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                monsterAttack.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (NormalSummonTrapCardEffect effect : normalSummonTrapCardEffects1) {
+            if (normalSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                normalSummon.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (TributeSummonTrapCardEffect effect : tributeSummonTrapCardEffects1) {
+            if (tributeSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                tribute.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (NormalTrapCardEffect effect : normalTrapCardEffects1) {
+            if (normalTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                normalTrap.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (RitualSummonTrapCardEffect effect : ritualSummonTrapCardEffects1) {
+            if (ritualSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                ritual.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (SpecialSummonTrapCardEffect effect : specialSummonTrapCardEffects1) {
+            if (specialSummonTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                special.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (MonsterEffectActivationTrapCardEffect effect : monsterEffectActivationTrapCardEffects1) {
+            if (monsterEffectActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                monsterActivation.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (SpellCardActivationTrapCardEffect effect : spellCardActivationTrapCardEffects1) {
+            if (spellCardActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                spell.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+        counter = 0;
+        for (SpellCardActivationTrapCardEffect effect : spellCardActivationTrapCardEffects1) {
+            if (spellCardActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                spell.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (TrapCardActivationTrapCardEffect effect : trapCardActivationTrapCardEffects1) {
+            if (trapCardActivationTrapCardEffectNumbers.contains(Integer.valueOf(counter))) {
+                trap.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+
+        counter = 0;
+        for (UserReplyForActivation effect : userReplyForActivations1) {
+            if (userReplyForActivationNumbers.contains(Integer.valueOf(counter))) {
+                user.add(String.valueOf(effect));
+                allSelectedEffectsAsStrings.add(String.valueOf(effect));
+            }
+            counter++;
+        }
+
+        HashMap<String, List<String>> enums = new HashMap<>();
+
+        enums.put("ContinuousTrapCardEffects", new ArrayList<>());
+        enums.put("LogicalActivationRequirements", new ArrayList<>());
+        enums.put("FlipSummonTrapCardEffect", flip);
+        enums.put("MonsterAttackingTrapCardEffect", monsterAttack);
+        enums.put("NormalSummonTrapCardEffect", normalSummon);
+        enums.put("TributeSummonTrapCardEffect", tribute);
+        enums.put("NormalTrapCardEffect", normalTrap);
+        enums.put("RitualSummonTrapCardEffect", ritual);
+        enums.put("SpecialSummonTrapCardEffect", special);
+        enums.put("MonsterEffectActivationTrapCardEffect", monsterActivation);
+        enums.put("SpellCardActivationTrapCardEffect", spell);
+        enums.put("TrapCardActivationTrapCardEffect", trap);
+        enums.put("UserReplyForActivation", user);
+
+        hashMapEffects = enums;
+        allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
+
+        getNumberOfUserTrapCard();
+//        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapValue, CardPosition.NOT_APPLICABLE,
+//            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, enums, cardImage);
+//        Storage.addCardToNewCardsCrated(trapCard);
+//        Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
+//        Storage.addCardToNewCardsCrated(trapCard);
+//        Storage.addNewImageForNewCards(cardName, cardImage);
+//        System.out.println("card was created");
+//        try {
+//            new MainView().changeView("/project/fxml/mainMenu.fxml");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void getNumberOfUserTrapCard() {
+        System.out.println("start");
+        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+            System.out.println("hi");
+            CustomDialog customDialog = new CustomDialog("Input", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
+            customDialog.openDialog();
+            TextField textField = new TextField();
+            textField.setLayoutX(340);
+            textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
+            anchorPane.getChildren().add(textField);
+
+            Button endButton = new Button("OK");
+            endButton.setLayoutX(450);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
+            anchorPane.getChildren().add(endButton);
+            endButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    Pattern pattern = Pattern.compile("^\\d+$");
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
+                        numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
+                        allSelectedEffectsThatHaveNumbers.remove(0);
+                        anchorPane.getChildren().remove(endButton);
+                        anchorPane.getChildren().remove(textField);
+                        if (allSelectedEffectsThatHaveNumbers.size() != 0) {
+                            getNumberOfUserTrapCard();
+                        } else {
+                            lastStepOfCreatingTrapCard();
+                        }
+                    }
+
+                }
+            });
+        } else {
+            lastStepOfCreatingTrapCard();
+        }
+    }
+
+    private void lastStepOfCreatingTrapCard() {
+        if (currentMoneyOfUser < currentPrice * 0.1) {
+            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+            customDialog.openDialog();
+        } else {
+            LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
+            TrapCard1 trapCard = new TrapCard1(cardName, cardDescription, trapCardValue, CardPosition.NOT_APPLICABLE,
+                numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend);
+            System.out.println("Card Created");
+            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
+            customDialog.openDialog();
+            UIStorage.addNodesForViewWhenNewCardCreated();
+        }
+
+        backToMainMenu();
     }
 
 
@@ -1712,6 +1982,8 @@ public class CardCreatorController implements Initializable {
             vbox.setLayoutX(430);
             vbox.setMinHeight(200);
             vbox.setMinWidth(100);
+
+
             vbox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
             vbox.setSpacing(20);
 
@@ -1773,6 +2045,11 @@ public class CardCreatorController implements Initializable {
             buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(finalI1))) {
+                        currentPrice += 2500;
+                    } else {
+                        currentPrice -= 2500;
+                    }
                     changeAdditionOfThisEffectInTheGivenPlace(finalI1, monsterFamilyEffectsInTrapField, buttons);
                 }
             });
@@ -1804,6 +2081,11 @@ public class CardCreatorController implements Initializable {
             buttons2.get(i).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(finalI1 + 12))) {
+                        currentPrice += 2500;
+                    } else {
+                        currentPrice -= 2500;
+                    }
                     changeAdditionOfThisEffectInTheGivenPlace2(finalI1 + 12, monsterFamilyEffectsInTrapField, buttons2);
                 }
             });
@@ -1823,8 +2105,9 @@ public class CardCreatorController implements Initializable {
         }
 
         Button endButton = new Button("OK");
-        endButton.setLayoutY(500);
-        endButton.setLayoutX(500);
+        endButton.setLayoutY(330);
+        endButton.setLayoutX(465);
+        endButton.setStyle("-fx-font-size: 25");
         endButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -1855,6 +2138,11 @@ public class CardCreatorController implements Initializable {
             buttons.get(i).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(finalI1))) {
+                        currentPrice += 2500;
+                    } else {
+                        currentPrice -= 2500;
+                    }
                     changeAdditionOfThisEffectInTheGivenPlace(finalI1, monsterFamilyEffectsInTrapEquip, buttons);
                 }
             });
@@ -1886,6 +2174,11 @@ public class CardCreatorController implements Initializable {
             buttons2.get(i).setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(finalI1 + 12))) {
+                        currentPrice += 2500;
+                    } else {
+                        currentPrice -= 2500;
+                    }
                     changeAdditionOfThisEffectInTheGivenPlace2(finalI1 + 12, monsterFamilyEffectsInTrapEquip, buttons2);
                 }
             });
@@ -1905,8 +2198,9 @@ public class CardCreatorController implements Initializable {
         }
 
         Button endButton = new Button("OK");
-        endButton.setLayoutY(500);
-        endButton.setLayoutX(500);
+        endButton.setLayoutY(330);
+        endButton.setLayoutX(465);
+        endButton.setStyle("-fx-font-size: 25");
         endButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -1950,11 +2244,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(170);
+        vBox.setLayoutX(220);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(510);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -1991,11 +2290,17 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(230);
+        vBox.setLayoutX(202);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(420);
+        buttonForFinish.setStyle("-fx-font-size: 25");
+
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2032,11 +2337,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(230);
+        vBox.setLayoutX(120);
+        vBox.setMinHeight(150);
+        vBox.setMinWidth(150);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(420);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2074,11 +2384,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(80);
+        vBox.setLayoutX(220);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(465);
+        buttonForFinish.setLayoutY(580);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2116,11 +2431,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(150);
+        vBox.setLayoutX(170);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
         buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutY(470);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2156,11 +2476,16 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
         vBox.setLayoutY(100);
+        vBox.setLayoutX(250);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(20);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(430);
+        buttonForFinish.setLayoutY(590);
+        buttonForFinish.setStyle("-fx-font-size: 25");
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2200,11 +2525,15 @@ public class CardCreatorController implements Initializable {
             vBox.getChildren().add(button);
         }
 
-        vBox.setLayoutX(450);
-        vBox.setLayoutY(100);
+        vBox.setLayoutY(50);
+        vBox.setLayoutX(110);
+        vBox.setMinHeight(300);
+        vBox.setMinWidth(200);
+        vBox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0; -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        vBox.setSpacing(10);
 
-        buttonForFinish.setLayoutX(450);
-        buttonForFinish.setLayoutY(500);
+        buttonForFinish.setLayoutX(460);
+        buttonForFinish.setLayoutY(600);
 
         anchorPane.getChildren().add(vBox);
         anchorPane.getChildren().add(buttonForFinish);
@@ -2260,7 +2589,7 @@ public class CardCreatorController implements Initializable {
                 }
                 counter = 0;
                 for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
-                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(counter))){
+                    if (monsterFamilyEffectsInTrapEquip.contains(Integer.valueOf(counter))) {
                         monsterFamilyTrapEquip.add(String.valueOf(monsterCardFamily));
                         allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
                     }
@@ -2277,7 +2606,7 @@ public class CardCreatorController implements Initializable {
                 }
                 counter = 0;
                 for (MonsterCardFamily monsterCardFamily : monsterCardFamilies) {
-                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(counter))){
+                    if (monsterFamilyEffectsInTrapField.contains(Integer.valueOf(counter))) {
                         monsterFamilyTrapField.add(String.valueOf(monsterCardFamily));
                         allSelectedEffectsAsStrings.add(String.valueOf(monsterCardFamily));
                     }
@@ -2358,45 +2687,56 @@ public class CardCreatorController implements Initializable {
             CustomDialog customDialog = new CustomDialog("ERROR", "Enter a number for:\n" + allSelectedEffectsThatHaveNumbers.get(0));
             customDialog.openDialog();
             TextField textField = new TextField();
-            textField.setLayoutX(450);
+            textField.setLayoutX(340);
             textField.setLayoutY(200);
+            textField.setStyle("-fx-alignment: CENTER; -fx-font-size: 25; -fx-background-color: #f5eeee");
             anchorPane.getChildren().add(textField);
 
             Button endButton = new Button("OK");
             endButton.setLayoutX(450);
-            endButton.setLayoutY(250);
+            endButton.setLayoutY(270);
+            endButton.setStyle("-fx-font-size: 25;");
             anchorPane.getChildren().add(endButton);
             endButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     Pattern pattern = Pattern.compile("^\\d+$");
-                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()){
+                    if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
                         numbersOfEffectsToSend.put(allSelectedEffectsThatHaveNumbers.get(0), Integer.valueOf(textField.getText()));
                         allSelectedEffectsThatHaveNumbers.remove(0);
                         anchorPane.getChildren().remove(endButton);
                         anchorPane.getChildren().remove(textField);
                         if (allSelectedEffectsThatHaveNumbers.size() != 0) {
                             getNumberOfUserSpellCard();
-                        }
-                        else {
+                        } else {
                             lastStepOfCreatingSpellCard();
                         }
                     }
 
                 }
             });
-        }
-        else {
+        } else {
             lastStepOfCreatingSpellCard();
         }
     }
 
     private void lastStepOfCreatingSpellCard() {
-        SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
-            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
-            0, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
+        if (currentMoneyOfUser < currentPrice * 0.1) {
+            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+            customDialog.openDialog();
+        } else {
+            LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
+            SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
+                currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
 
-        System.out.println("finished");
+            System.out.println("finished");
+            CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
+            customDialog.openDialog();
+            UIStorage.addNodesForViewWhenNewCardCreated();
+        }
+
+
         backToMainMenu();
 
     }
@@ -2410,11 +2750,7 @@ public class CardCreatorController implements Initializable {
 
 
     public void back(ActionEvent actionEvent) {
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        backToMainMenu();
     }
 
 }

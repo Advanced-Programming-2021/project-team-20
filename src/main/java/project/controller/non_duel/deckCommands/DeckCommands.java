@@ -201,7 +201,7 @@ public class DeckCommands {
         if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
             numberOfAllowedUsages = allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(cardname)).getNumberOfAllowedUsages();
         } else if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
-            numberOfAllowedUsages = 3;
+            numberOfAllowedUsages = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardname)).getNumberOfAllowedUsages();
         }
         if (numberOfCardsInDeck == numberOfAllowedUsages) {
             return false;

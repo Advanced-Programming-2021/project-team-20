@@ -1,15 +1,11 @@
 package project.view;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.List;
-import java.util.Map;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -17,13 +13,9 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -33,6 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -56,7 +50,8 @@ public class ImportAndExportController implements Initializable {
     private Rectangle importRectangle;
     @FXML
     private Rectangle exportRectangle;
-   
+    @FXML
+    private Label selectedCardNameLabel;
 
     private ImportAndExport importAndExport = new ImportAndExport();
     private static List<List<Card>> allCardsInDifferentPages;
@@ -93,6 +88,8 @@ public class ImportAndExportController implements Initializable {
         if (sizeOfCardsInDifferentPages != UIStorage.getAllTypeOfCards().get("allCards").size()) {
             createPacksOfCardsForEachPage();
         }
+        selectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        selectedCardNameLabel.setTextFill(Color.BLUE);
         setEffectsOfButtons();
     }
 
@@ -154,6 +151,7 @@ public class ImportAndExportController implements Initializable {
                 @Override
                 public void handle(MouseEvent t) {
                     cardNameForExport = rectangle.getId();
+                    selectedCardNameLabel.setText("Selected Card For Export: " + cardNameForExport);
                     setEffectsOfButtons();
                 }
             });
@@ -269,6 +267,9 @@ public class ImportAndExportController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Card", "*.csv"));
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Card", "*.json"));
         File file = fileChooser.showOpenDialog(MainView.getStage());
+        if (file == null) {
+            return;
+        }
         String result = importAndExport.importCard(file);
         if (result.equals("this card does not exist")) {
             showAlert("THIS FILE NOT A CARD", "ERROR");
@@ -296,6 +297,8 @@ public class ImportAndExportController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Card", "*.csv"));
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Card", "*.json"));
         File file = fileChooser.showSaveDialog(MainView.getStage());
+        if (file == null)
+            return;
 
         if (importAndExport.exportCard(cardNameForExport, file).equals("ERROR")) {
             showAlert("FILE CANNOT BE EXPORTED", "ERROR");

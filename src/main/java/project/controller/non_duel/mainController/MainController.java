@@ -6,7 +6,6 @@ import project.controller.non_duel.loginMenu.LoginMenu;
 import project.controller.non_duel.profile.Profile;
 import project.controller.non_duel.scoreboard.Scoreboard;
 import project.controller.non_duel.shop.Shop;
-import project.view.View;
 
 public class MainController {
 
@@ -42,7 +41,7 @@ public class MainController {
         if (isInLoginMenu) {
             String resultOfLoginUser = loginMenu.findCommand(command);
             if (resultOfLoginUser.equals("user logged in successfully!")) {
-                View.setCurrentMenu("Main Menu");
+                // View.setCurrentMenu("Main Menu");
                 isInLoginMenu = false;
             }
             return resultOfLoginUser;
@@ -69,7 +68,7 @@ public class MainController {
         if (isInMainMenu) {
             isInMainMenu = false;
             isInLoginMenu = true;
-            View.setCurrentMenu("Login Menu");
+            // View.setCurrentMenu("Login Menu");
             return;
         }
         if (isInDeckCommands) {
@@ -87,7 +86,7 @@ public class MainController {
         }
 
         isInMainMenu = true;
-        View.setCurrentMenu("Main Menu");
+        // View.setCurrentMenu("Main Menu");
     }
 
     public boolean enterMenu(String menuname) {
@@ -95,32 +94,32 @@ public class MainController {
         if (menuname.equals("Deck")) {
             isInDeckCommands = true;
             isInMainMenu = false;
-            View.setCurrentMenu(menuname);
+            // View.setCurrentMenu(menuname);
             return true;
         } else if (menuname.equals("Scoreboard")) {
             isInScoreBoard = true;
             isInMainMenu = false;
-            View.setCurrentMenu(menuname);
+            // View.setCurrentMenu(menuname);
             return true;
         } else if (menuname.equals("Profile")) {
             isInProfile = true;
             isInMainMenu = false;
-            View.setCurrentMenu(menuname);
+            // View.setCurrentMenu(menuname);
             return true;
         } else if (menuname.equals("Shop")) {
             isInShop = true;
             isInMainMenu = false;
-            View.setCurrentMenu(menuname);
+            // View.setCurrentMenu(menuname);
             return true;
         } else if (menuname.equals("Duel")) {
             isInDuelMenu = true;
             isInMainMenu = false;
-            View.setCurrentMenu(menuname);
+            // View.setCurrentMenu(menuname);
             return true;
         } else if (menuname.equals("ImportAndExport")) {
             isInImportAndExport = true;
             isInLoginMenu = false;
-            View.setCurrentMenu(menuname);
+            // View.setCurrentMenu(menuname);
             return true;
         }
         return false;

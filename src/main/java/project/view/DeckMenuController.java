@@ -139,7 +139,7 @@ public class DeckMenuController implements Initializable {
 
         mainDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, mainDeckPane, true);
-            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
+             SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
         });
 
@@ -152,7 +152,7 @@ public class DeckMenuController implements Initializable {
 
         sideDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, sideDeckPane, false);
-            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
+             SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
         });
 
@@ -166,7 +166,7 @@ public class DeckMenuController implements Initializable {
 
         scrollPane.setOnDragDropped(e -> {
             transferCardToScrollBar(e);
-            // SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCards.mp3");
+            SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
         });
     }
@@ -355,6 +355,7 @@ public class DeckMenuController implements Initializable {
                 rectangle.setOnDragDetected(null);
                 label.setText(0 + "");
             } else {
+                rectangle.setOpacity(1);
                 int numberOfCardsInUselessCards = countNumberOfCardsInUselessCards(rectangle.getId());
                 label.setText("" + numberOfCardsInUselessCards);
             }
@@ -392,6 +393,7 @@ public class DeckMenuController implements Initializable {
     }
 
     private boolean doesCardExistInUseLessCards(String cardname) {
+        
         return LoginController.getOnlineUser().getAllUselessCards().contains(cardname);
     }
 
@@ -496,91 +498,6 @@ public class DeckMenuController implements Initializable {
 
     public static void setAnchorPane(AnchorPane anchorPane) {
         DeckMenuController.anchorPane = anchorPane;
-    }
-
-    public static AnchorPane getAnchorPane() {
-        return anchorPane;
-    }
-
-    public static void setAllMainDeckRectangle(List<Rectangle> allMainDeckRectangle) {
-        DeckMenuController.allMainDeckRectangle = allMainDeckRectangle;
-    }
-
-    public Button getBackbtn() {
-        return this.backbtn;
-    }
-
-    public void setBackbtn(Button backbtn) {
-        this.backbtn = backbtn;
-    }
-
-    public Button getActivateDeckbtn() {
-        return this.activateDeckbtn;
-    }
-
-    public void setActivateDeckbtn(Button activateDeckbtn) {
-        this.activateDeckbtn = activateDeckbtn;
-    }
-
-    public Label getActivatedStatusLabel() {
-        return this.activatedStatusLabel;
-    }
-
-    public void setActivatedStatusLabel(Label activatedStatusLabel) {
-        this.activatedStatusLabel = activatedStatusLabel;
-    }
-
-    public Rectangle getShownCardRectangle() {
-        return this.shownCardRectangle;
-    }
-
-    public void setShownCardRectangle(Rectangle shownCardRectangle) {
-        this.shownCardRectangle = shownCardRectangle;
-    }
-
-    public DeckCommands getDeckCommands() {
-        return this.deckCommands;
-    }
-
-    public void setDeckCommands(DeckCommands deckCommands) {
-        this.deckCommands = deckCommands;
-    }
-
-    public DeckMenuController backbtn(Button backbtn) {
-        setBackbtn(backbtn);
-        return this;
-    }
-
-    public DeckMenuController activateDeckbtn(Button activateDeckbtn) {
-        setActivateDeckbtn(activateDeckbtn);
-        return this;
-    }
-
-    public DeckMenuController activatedStatusLabel(Label activatedStatusLabel) {
-        setActivatedStatusLabel(activatedStatusLabel);
-        return this;
-    }
-
-    public DeckMenuController shownCardRectangle(Rectangle shownCardRectangle) {
-        setShownCardRectangle(shownCardRectangle);
-        return this;
-    }
-
-    public DeckMenuController deckCommands(DeckCommands deckCommands) {
-        setDeckCommands(deckCommands);
-        return this;
-    }
-
-    public static void setAllSideDeckRectangle(List<Rectangle> allSideDeckRectangle) {
-        DeckMenuController.allSideDeckRectangle = allSideDeckRectangle;
-    }
-
-    public static void setAllScrollBarLabels(List<Label> allScrollBarLabels) {
-        DeckMenuController.allScrollBarLabels = allScrollBarLabels;
-    }
-
-    public static void setAllCardDiscriptionLabels(List<Label> allCardDiscriptionLabels) {
-        DeckMenuController.allCardDiscriptionLabels = allCardDiscriptionLabels;
     }
 
     public void backToMainMenu() {
