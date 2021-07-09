@@ -343,12 +343,10 @@ public class CardCreatorController implements Initializable {
         File file = fileChooser.showOpenDialog(MainView.getStage());
         if (file != null) {
             changeImage(file.getAbsolutePath());
-            imagePath = file.getAbsolutePath();
-        } else {
-            imagePath = "src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg";
-            changeImage(imagePath);
         }
+        imagePath = file.getAbsolutePath();
         getNumberOfAllowedUsages();
+
     }
 
 
@@ -1351,9 +1349,9 @@ public class CardCreatorController implements Initializable {
             anchorPane.getChildren().remove(button);
 
             ArrayList<Button> buttons = new ArrayList<>();
-            SpellCardValue[] spellCardValues = SpellCardValue.values();
+            TrapCardValue[] trapCardValues = TrapCardValue.values();
             previousVbox = new VBox();
-            for (SpellCardValue cardValue : spellCardValues) {
+            for (TrapCardValue cardValue : trapCardValues) {
                 buttons.add(new Button(cardValue.toString()));
             }
 
@@ -2539,8 +2537,6 @@ public class CardCreatorController implements Initializable {
         anchorPane.getChildren().add(buttonForFinish);
     }
 
-    ArrayList<String> monsterFamilyTrapEquip;
-    ArrayList<String> monsterFamilyTrapField;
 
     private void createSpellCard(VBox vBox, Button buttonForFinish) {
         anchorPane.getChildren().remove(vBox);
@@ -2567,8 +2563,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> stringsQuick = new ArrayList<>();
         ArrayList<String> stringsContinuous = new ArrayList<>();
         ArrayList<String> userReplyArrayList = new ArrayList<>();
-        monsterFamilyTrapEquip = new ArrayList<>();
-        monsterFamilyTrapField = new ArrayList<>();
+        ArrayList<String> monsterFamilyTrapEquip = new ArrayList<>();
+        ArrayList<String> monsterFamilyTrapField = new ArrayList<>();
         int counter = 0;
         switch (spellCardValue) {
             case "NORMAL":
@@ -2730,7 +2726,11 @@ public class CardCreatorController implements Initializable {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
             SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
                 CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
-                currentPrice, hashMapEffects, cardImage, monsterFamilyTrapEquip, monsterFamilyTrapField, numbersOfEffectsToSend);
+                currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
+
+//            SpellCard1 spellCard1 = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+//                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
+//                currentPrice, hashMapEffects, cardImage, monsterFamilyTrapEquip, monsterFamilyTrapField, numbersOfEffectsToSend);
 
             System.out.println("finished");
             CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
@@ -2754,5 +2754,4 @@ public class CardCreatorController implements Initializable {
     public void back(ActionEvent actionEvent) {
         backToMainMenu();
     }
-
 }
