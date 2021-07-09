@@ -176,5 +176,5 @@ public class TrapCard1 {
             userReplyForActivations.add(UserReplyForActivation.DISCARD_1_CARD);}
         }
 
-    }
+    } 
 }
