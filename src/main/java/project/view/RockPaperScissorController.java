@@ -83,8 +83,13 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void determineUsers() {
-        firstPlayerName = DuelStarter.getFirstPlayer();
-        secondPlayerName = DuelStarter.getSecondPlayer();
+        try {
+            firstPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
+            secondPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
+        } catch (Exception e) {
+            firstPlayerName = DuelStarter.getFirstPlayer();
+            secondPlayerName = DuelStarter.getSecondPlayer();
+        }
     }
 
     private void determineInitialCoordinates(Rectangle rect) {
@@ -217,9 +222,9 @@ public class RockPaperScissorController implements Initializable {
             showAlert("PLAYER " + firstPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
             try { // if game created before
-                setTurn(2);
+                setTurn(1);
             } catch (Exception e) {
-                new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(),DuelStarter.getSecondPlayer());
+                new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
                 System.out.println("Exception 2 ");
                 // e.printStackTrace();
             }

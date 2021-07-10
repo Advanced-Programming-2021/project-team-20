@@ -543,7 +543,7 @@ public class DuelController {
     }
 
     public void startDuel(int index) {
-        fakeTurn = turn = 1;
+        fakeTurn = turn;
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
         if (turn == 1) {
             phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
