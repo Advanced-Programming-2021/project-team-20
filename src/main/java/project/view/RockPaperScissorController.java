@@ -21,9 +21,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.view.pooyaviewpackage.DuelView;
 import project.view.transitions.RockPaperScissorTransition;
+import project.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.controller.duel.GamePackage.DuelBoard;
 import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
+import project.model.Deck;
 
 public class RockPaperScissorController implements Initializable {
 
@@ -202,13 +204,11 @@ public class RockPaperScissorController implements Initializable {
             didAnyOneWin = false;
         } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
                 || (player1Selection == 3 && player2Selection == 2)) {
-            try {
-                GameManager.getDuelControllerByIndex(0).setTurn(1); // if game created before
-                DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-                duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(), duelBoard.getOpponentCardsInDeck());
+            try { // if game created before
+                setTurn(1);
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer());
-                System.out.println("Exception 1 "); 
+                System.out.println("Exception 1 ");
                 // e.printStackTrace();
             }
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
@@ -217,18 +217,31 @@ public class RockPaperScissorController implements Initializable {
             showAlert("PLAYER " + firstPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
             try {
-                GameManager.getDuelControllerByIndex(0).setTurn(2); // if game ceated before
-                DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-                duelBoard.initializeCardsInDuelBoard(duelBoard.getOpponentCardsInDeck(), duelBoard.getAllyCardsInDeck());
+                setTurn(2);
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
-                System.out.println("Exception 2 "); 
+                System.out.println("Exception 2 ");
                 // e.printStackTrace();
             }
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
             didAnyOneWin = true;
             showAlert("PLAYER " + secondPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
+        }
+    }
+
+    private void setTurn(int turn) {
+        GameManager.getDuelControllerByIndex(0).setTurn(turn);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+        ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRoundS = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
+        Deck firstPlayerActiveDeck = changeCardsBetweenTwoRoundS.getAllyPlayerDeck();
+        Deck secondPlayerActiveDeck = changeCardsBetweenTwoRoundS.getOpponentPlayerDeck();
+        if (turn == 1) {
+            duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
+                    DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
+        } else {
+            duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true),
+                    DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true));
         }
     }
 
