@@ -346,7 +346,7 @@ public class CardCreatorController implements Initializable {
             changeImage(file.getAbsolutePath());
             imagePath = file.getAbsolutePath();
         } else {
-            imagePath = "src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg";
+            imagePath = "src\\main\\resources\\project\\cards\\cardCreatorImage.jpg";
             changeImage(imagePath);
         }
         getNumberOfAllowedUsages();

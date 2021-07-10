@@ -638,7 +638,7 @@ public class DuelBoard {
         allCardsInDeck.clear();
 
         for (int i = 0; i < allCardsInMainDeck.size(); i++) {
-            String cardName = Utility.giveCardNameRemovingRedundancy(allCardsInDeck.get(i).getCardName());
+            String cardName = Utility.giveCardNameRemovingRedundancy(allCardsInMainDeck.get(i));
             if (allMonsterCards.containsKey(cardName)) {
                 MonsterCard monsterCard = (MonsterCard) allMonsterCards.get(cardName);
                 allCardsInDeck.add((MonsterCard) monsterCard.clone());
