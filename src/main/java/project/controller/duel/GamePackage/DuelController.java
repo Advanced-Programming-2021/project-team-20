@@ -582,12 +582,9 @@ public class DuelController {
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         isGameOver = true;
-        String output = winnerUser.getName() + " won the whole match with score: "
-            + ((turn == 1) ? (numberOfRounds * 1000) + " - " + playersScores.get(-turn + 2)
-            : playersScores.get(-turn + 2) + " - " + (numberOfRounds * 1000));
+        String output = winnerUser.getName() + " won the whole match with score: " + numberOfRounds * 1000;
         DuelStarter.getGameManager().addStringToWholeReportToClient(output);
         return output;
-        return winnerUser.getName() + " won the whole match with score: " + numberOfRounds * 1000;
     }
 
     public String endOneRoundOfDuel(int turn) {
@@ -603,12 +600,10 @@ public class DuelController {
         fakeTurn = 1;
         currentRound += 1;
         GameManager.clearAllVariablesOfThisIndex(0);
-        String output = winnerUser.getName() + " won the game and the score is: "
-            + ((turn == 1) ? (1000) + " - 0" : "0 - " + (1000));
+        String output = winnerUser.getName() + " won the game and the score is: 1000";
         DuelStarter.getGameManager().addStringToWholeReportToClient(output);
         return output;
     }
-        return winnerUser.getName() + " won the game and the score is: 1000";    }
 
     public String mediateOutputBeforeSendingToGameManager(String string, boolean needToMediate) {
         if (!needToMediate || isGameOver) {
