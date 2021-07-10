@@ -10,7 +10,6 @@ public final class Main {
 
 
     private static void runApp() {
-    //    ServerController.loadData();
         try {
             ServerSocket serverSocket = new ServerSocket(7777);
             while (true) {
