@@ -596,7 +596,7 @@ public class DuelView {
         } else if (keyEvent.getCode().getName().startsWith("Numpad")) {
             cheatCodes.append(keyEvent.getCode().getName().charAt(keyEvent.getCode().getName().length() - 1));
         } else {
-            cheatCodes.append(keyEvent.getCode().getName().toLowerCase());
+            cheatCodes.append(keyEvent.getText());
         }
     }
 

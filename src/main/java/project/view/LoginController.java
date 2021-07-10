@@ -78,6 +78,7 @@ public class LoginController implements Initializable {
             showAlert("NICKNAME IS REPEATED", "ERROR");
         } else {
             createUser();
+			setOnlineUser(Storage.getUserByName(usernameFieldForRegister.getText()));
             CustomDialog customDialog = new CustomDialog("USER CREATED SUCCESSFULLY!", "SUCCESSFUL", "mainMenu");
             customDialog.openDialog();
         }

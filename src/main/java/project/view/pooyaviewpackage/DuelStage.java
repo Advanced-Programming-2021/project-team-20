@@ -11,12 +11,12 @@ public class DuelStage extends Stage {
         DuelView duelView = new DuelView();
         AnchorPane anchorPane = duelView.getAnchorpaneAtBeginning(this);
         Scene scene = new Scene(anchorPane, 1200, 1000);
-    //    scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-    //        @Override
-    //        public void handle(KeyEvent keyEvent) {
-    //            duelView.checkCheatCommands(keyEvent);
-    //        }
-    //    });
+       scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+           @Override
+           public void handle(KeyEvent keyEvent) {
+               duelView.checkCheatCommands(keyEvent);
+           }
+       });
         this.setScene(scene);
         this.show();
     }
