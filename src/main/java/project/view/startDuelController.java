@@ -84,6 +84,10 @@ public class startDuelController implements Initializable {
     }
 
     private boolean checkConditionsOfPlayers(String secondPlayer) {
+        if(secondPlayer.equals(LoginController.getOnlineUser().getName())){
+             showAlert("You Cant Play With Yourself", "ERROR");
+             return false;
+        }
         int numberOfRounds = isMatchGame ? 3 : 1;
         String result = duelStarter.checkConditionsOfPlayers(LoginController.getOnlineUser().getName(), secondPlayer, numberOfRounds);
         if (!result.equals("game started")) {

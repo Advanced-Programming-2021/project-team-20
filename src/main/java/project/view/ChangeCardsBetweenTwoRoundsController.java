@@ -30,6 +30,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import project.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
+import project.controller.duel.GamePackage.DuelBoard;
 import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.controller.duel.Utility.Utility;
@@ -115,11 +116,11 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
     public void confirmChanges() {
         if (currentPlayerWhoChangesDeck.equals(opponentPlayerName) || opponentPlayerName.equals("AI")) {
-            try {
-                new MainView().changeView("/project/fxml/rockPaperScissorPage.fxml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+            Deck firstPlayerActiveDeck = changeCardsBetweenTwoRounds.getAllyPlayerDeck();
+            Deck secondPlayerActiveDeck = changeCardsBetweenTwoRounds.getOpponentPlayerDeck();
+            duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
+                    DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
         } else {
             currentPlayerWhoChangesDeck = opponentPlayerName;
             AnchorPane pane = null;
