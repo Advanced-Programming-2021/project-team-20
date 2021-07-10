@@ -552,6 +552,7 @@ public class DuelController {
             phaseController.setPhaseInGame(PhaseInGame.OPPONENT_MAIN_PHASE_1);
         }
         GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
+        System.out.println("deul started");
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
 

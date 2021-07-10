@@ -23,7 +23,7 @@ public class ChangeCardsBetweenTwoRounds {
 
     public String changeCardsBetweenTwoRounds(String input, int index) {
 
-        return null;
+        return "null";
         // String allyPlayerName =
         // GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
         // String opponentPlayerName =

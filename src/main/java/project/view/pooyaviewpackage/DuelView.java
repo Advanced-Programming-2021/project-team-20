@@ -711,6 +711,10 @@ public class DuelView {
         mainPhaseTwoLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_2);
         endPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_END_PHASE);
         nextPhaseLabel = new GamePhaseButton(null);
+        // nextPhaseLabel.setLayoutX(100);
+        // nextPhaseLabel.setLayoutY(500);
+        // nextPhaseButton.setX(100);
+        // nextPhaseButton.setY(500);
         nextPhaseButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
