@@ -2764,6 +2764,9 @@ public class CardCreatorController implements Initializable {
             customDialog.openDialog();
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
+//                 SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+//                     CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
+//                     currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
 //            SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
 //                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
 //                currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);

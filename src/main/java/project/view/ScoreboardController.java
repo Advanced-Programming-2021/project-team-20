@@ -2,10 +2,13 @@ package project.view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import project.controller.non_duel.scoreboard.Scoreboard;
 import project.view.Components.Person;
 
@@ -27,6 +30,7 @@ public class ScoreboardController {
     private TableColumn<Person, String> usernameColumn;
     @FXML
     private TableColumn<Person, Integer> scoreColumn;
+    private TableColumn<Integer, String> calltypel;
 
     public void fillLabel() {
 
@@ -62,9 +66,13 @@ public class ScoreboardController {
         scoreColumn.setStyle( "-fx-alignment: CENTER;");
         scoreColumn.setMinWidth(100);
         ObservableList<String> list = FXCollections.observableArrayList();
+
         tableView.setItems(data);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableView.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
+
+        String userNickname = LoginController.getOnlineUser().getNickname();
+        customiseFactory((TableColumn<Person, String>) tableView.getColumns().get(1), userNickname);
     }
     public void returnToMainMenu(ActionEvent actionEvent) {
         try {
@@ -72,5 +80,29 @@ public class ScoreboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void customiseFactory(TableColumn<Person, String> calltypel, String nickname) {
+        calltypel.setCellFactory(column -> {
+            return new TableCell<Person, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    setText(empty ? "" : getItem().toString());
+                    setGraphic(null);
+
+                    TableRow<Person> currentRow = getTableRow();
+
+                    if (!isEmpty()) {
+
+                        if(item.equals(nickname))
+                            currentRow.setStyle("-fx-background-color:lightcoral");
+                        else
+                            currentRow.setStyle("-fx-background-color:lightgreen");
+                    }
+                }
+            };
+        });
     }
 }

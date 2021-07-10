@@ -285,9 +285,17 @@ public class ShopController implements Initializable {
     }
 
     public void buyCard() {
-        SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3"); 
+        SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3");
          String answerOfShop = shop.findCommand("shop buy " + cardNameForBuy);
         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+        int userAmount = LoginController.getOnlineUser().getMoney();
+        if (cardAmount > userAmount) {
+            buybtn.setDisable(true);
+        }
+        else {
+            buybtn.setDisable(false);
+        }
 
     }
 
