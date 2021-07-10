@@ -86,7 +86,10 @@ public class RockPaperScissorController implements Initializable {
         try {
             firstPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
             secondPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
+            System.out.println(firstPlayerName);
+            System.out.println(secondPlayerName);
         } catch (Exception e) {
+            System.out.println("exception \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nn");
             firstPlayerName = DuelStarter.getFirstPlayer();
             secondPlayerName = DuelStarter.getSecondPlayer();
         }
