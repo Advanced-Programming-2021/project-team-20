@@ -39,6 +39,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CardCreatorController implements Initializable {
     private int currentMoneyOfUser;
@@ -1167,6 +1168,7 @@ public class CardCreatorController implements Initializable {
 
         hashMapEffects = monsterHashMap;
         allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
+        allSelectedEffectsThatHaveNumbers = (ArrayList<String>) allSelectedEffectsThatHaveNumbers.stream().distinct().collect(Collectors.toList());
         getNumberOfUserMonsterCard();
 //        MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attribute,
 //            family, value, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, 0, monsterHashMap, cardImage);
@@ -1371,8 +1373,13 @@ public class CardCreatorController implements Initializable {
             for (Button button1 : buttons) {
                 previousVbox.getChildren().add(button1);
             }
-            previousVbox.setLayoutY(100);
-            previousVbox.setLayoutX(400);
+            previousVbox.setLayoutY(200);
+            previousVbox.setLayoutX(430);
+            previousVbox.setMinHeight(200);
+            previousVbox.setMinWidth(100);
+            previousVbox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+                " -fx-font-size: 25; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+            previousVbox.setSpacing(20);
             anchorPane.getChildren().add(previousVbox);
 
 
@@ -1383,7 +1390,7 @@ public class CardCreatorController implements Initializable {
         trapCardValueNumber = finalI1;
         System.out.println(trapCardValueNumber);
 
-        enumClassName = "FlipSummonTrapCardEffect";
+        enumClassName = "b";
         trapController();
 //        nextMethod = "getMonsterAttackingTrapCardEffect";
 //        gotoTrapFunctionEffect();
@@ -1678,7 +1685,7 @@ public class CardCreatorController implements Initializable {
 
         hashMapEffects = enums;
         allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
-
+        allSelectedEffectsThatHaveNumbers = (ArrayList<String>) allSelectedEffectsThatHaveNumbers.stream().distinct().collect(Collectors.toList());
         getNumberOfUserTrapCard();
 //        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapValue, CardPosition.NOT_APPLICABLE,
 //            numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, 0, enums, cardImage);
@@ -1771,6 +1778,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 200, 470, 440, 25);
             selectedEffects = flipSummonTrapCardEffectNumbers;
         } else if (enumClassName.equals("MonsterAttackingTrapCardEffect")) {
             MonsterAttackingTrapCardEffect[] effects = MonsterAttackingTrapCardEffect.values();
@@ -1778,6 +1786,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(210, 100, 475, 500, 25);
             selectedEffects = monsterAttackingTrapCardEffectNumbers;
         } else if (enumClassName.equals("NormalSummonTrapCardEffect")) {
             NormalSummonTrapCardEffect[] effects = NormalSummonTrapCardEffect.values();
@@ -1785,6 +1794,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 200, 470, 440, 25);
             selectedEffects = normalSummonTrapCardEffectNumbers;
         } else if (enumClassName.equals("TributeSummonTrapCardEffect")) {
             TributeSummonTrapCardEffect[] effects = TributeSummonTrapCardEffect.values();
@@ -1792,6 +1802,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 200, 470, 440, 25);
             selectedEffects = tributeSummonTrapCardEffectNumbers;
         } else if (enumClassName.equals("NormalTrapCardEffect")) {
             NormalTrapCardEffect[] effects = NormalTrapCardEffect.values();
@@ -1799,6 +1810,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(135, 200, 470, 440, 25);
             selectedEffects = normalTrapCardEffectNumbers;
         } else if (enumClassName.equals("RitualSummonTrapCardEffect")) {
             RitualSummonTrapCardEffect[] effects = RitualSummonTrapCardEffect.values();
@@ -1806,6 +1818,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 220, 470, 440, 25);
             selectedEffects = ritualSummonTrapCardEffectNumbers;
         } else if (enumClassName.equals("SpecialSummonTrapCardEffect")) {
             SpecialSummonTrapCardEffect[] effects = SpecialSummonTrapCardEffect.values();
@@ -1813,6 +1826,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 220, 470, 440, 25);
             selectedEffects = specialSummonTrapCardEffectNumbers;
         } else if (enumClassName.equals("MonsterEffectActivationTrapCardEffect")) {
             MonsterEffectActivationTrapCardEffect[] effects = MonsterEffectActivationTrapCardEffect.values();
@@ -1820,6 +1834,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 220, 470, 440, 25);
             selectedEffects = monsterEffectActivationTrapCardEffectNumbers;
         } else if (enumClassName.equals("SpellCardActivationTrapCardEffect")) {
             SpellCardActivationTrapCardEffect[] effects = SpellCardActivationTrapCardEffect.values();
@@ -1827,6 +1842,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 220, 470, 440, 25);
             selectedEffects = spellCardActivationTrapCardEffectNumbers;
         } else if (enumClassName.equals("TrapCardActivationTrapCardEffect")) {
             TrapCardActivationTrapCardEffect[] effects = TrapCardActivationTrapCardEffect.values();
@@ -1834,6 +1850,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(290, 220, 470, 440, 25);
             selectedEffects = trapCardActivationTrapCardEffectNumbers;
         } else if (enumClassName.equals("UserReplyForActivation")) {
             UserReplyForActivation[] effects = UserReplyForActivation.values();
@@ -1841,6 +1858,7 @@ public class CardCreatorController implements Initializable {
                 String buttonName = e.toString();
                 buttons.add(new Button(buttonName));
             }
+            setLayoutVboxAndFinishButtonOfTrapEffects(100, 20, 470, 600, 20);
             selectedEffects = userReplyForActivationNumbers;
         }
 
@@ -1857,10 +1875,7 @@ public class CardCreatorController implements Initializable {
         }
 
 
-        previousVbox.setLayoutY(100);
-        previousVbox.setLayoutX(400);
-        previousButton.setLayoutY(400);
-        previousButton.setLayoutX(400);
+
         previousButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -1882,8 +1897,25 @@ public class CardCreatorController implements Initializable {
             previousVbox.getChildren().add(button);
         }
 
+        if (enumClassName.equals("UserReplyForActivation")) {
+            previousVbox.setSpacing(13);
+        }
+
         anchorPane.getChildren().add(previousVbox);
         anchorPane.getChildren().add(previousButton);
+    }
+
+    private void setLayoutVboxAndFinishButtonOfTrapEffects(int xVbox, int yVbox, int xFinishButton, int yFinishButton, int fontSize) {
+        previousVbox.setLayoutY(yVbox);
+        previousVbox.setLayoutX(xVbox);
+        previousVbox.setMinHeight(200);
+        previousVbox.setMinWidth(100);
+        previousVbox.setStyle("-fx-padding:10; -fx-border-radius:8; -fx-border-color: #a7a0a0;" +
+            " -fx-font-size: " + fontSize + "; -fx-background-color: #003e79; -fx-stroke: black; -fx-alignment: CENTER");
+        previousVbox.setSpacing(20);
+        previousButton.setLayoutX(xFinishButton);
+        previousButton.setLayoutY(yFinishButton);
+        previousButton.setStyle("-fx-font-size: " + fontSize);
     }
 
     private void trapController() {
@@ -1895,6 +1927,9 @@ public class CardCreatorController implements Initializable {
         }
 
         switch (enumClassName) {
+            case "b" :
+                enumClassName = "FlipSummonTrapCardEffect";
+                break;
             case "FlipSummonTrapCardEffect":
                 enumClassName = "MonsterAttackingTrapCardEffect";
                 break;
@@ -2670,6 +2705,8 @@ public class CardCreatorController implements Initializable {
 
         allSelectedEffectsThatHaveNumbers = getEnumsWithNumbers();
         monsterFamilySelectedInSpell = monsterFamilyTrap;
+        allSelectedEffectsThatHaveNumbers = (ArrayList<String>) allSelectedEffectsThatHaveNumbers.stream().distinct().collect(Collectors.toList());
+
         getNumberOfUserSpellCard();
 //        SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
 //            CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell, 0, enumValues, cardImage, monsterFamilyTrap);
@@ -2727,9 +2764,15 @@ public class CardCreatorController implements Initializable {
             customDialog.openDialog();
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
+<<<<<<< HEAD
             // SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
             //     CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
             //     currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
+=======
+//            SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
+//                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
+//                currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
+>>>>>>> 2a6ccdde4f44e31f4098a78adccde00c8d44730b
 
 //            SpellCard1 spellCard1 = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
 //                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
