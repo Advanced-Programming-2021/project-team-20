@@ -117,7 +117,7 @@ public class UIStorage {
     public static Image createImages(String path, String imagename) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("src\\main\\resources\\project\\images\\" + path + imagename + ".PNG");
+            stream = new FileInputStream("client\\src\\main\\resources\\project\\images\\" + path + imagename + ".PNG");
         } catch (Exception e) {
             e.printStackTrace();
         }

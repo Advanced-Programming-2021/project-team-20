@@ -112,7 +112,7 @@ public class LoginController implements Initializable {
     }
 
     private String chooseRandomImageForUser() {
-        File dir = new File("src\\main\\resources\\project\\images\\Characters\\radomCharacters");
+        File dir = new File("client\\src\\main\\resources\\project\\images\\Characters\\radomCharacters");
         File[] images = dir.listFiles();
         return images[new Random().nextInt(images.length)].getPath();
     }

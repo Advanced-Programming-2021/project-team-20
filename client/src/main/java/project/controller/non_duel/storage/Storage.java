@@ -40,7 +40,7 @@ public class Storage {
     private static HashMap<String, Card> allMonsterCards = new HashMap<>();
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private static Card unknownCard;
-    private String addressOfStorage = "Resourses\\";
+    private String addressOfStorage = "client\\Resourses\\";
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
     private static HashMap<String, Image> newImageOfNewCards = new HashMap<>();
@@ -96,9 +96,9 @@ public class Storage {
             File initialImage = new File(imagePath);
             bImage = ImageIO.read(initialImage);
             ImageIO.write(bImage, "png",
-                    new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                    new File("client\\src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
                             + user.getName() + ".png"));
-            user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+            user.setImagePath("client\\src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
                     + user.getName() + ".png");
         } catch (Exception e) {
             System.out.println("Exception occured :" + e.getMessage());
@@ -113,10 +113,10 @@ public class Storage {
             bImage = ImageIO.read(file);
             if (card.getCardType().equals(CardType.MONSTER)) {
                 ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName() + ".jpg"));
+                        new File("client\\src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName() + ".jpg"));
             } else {
                 ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
+                        new File("client\\src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,11 +311,11 @@ public class Storage {
     private Image createImageOfCards(String cardname) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("src\\main\\resources\\project\\cards\\monsters\\" + cardname + ".jpg");
+            stream = new FileInputStream("client\\src\\main\\resources\\project\\cards\\monsters\\" + cardname + ".jpg");
             return new Image(stream);
         } catch (Exception e) {
             try {
-                stream = new FileInputStream("src\\main\\resources\\project\\cards\\spelltraps\\" + cardname + ".jpg");
+                stream = new FileInputStream("client\\src\\main\\resources\\project\\cards\\spelltraps\\" + cardname + ".jpg");
                 return new Image(stream);
             } catch (Exception ee) {
                 ee.printStackTrace();
@@ -360,7 +360,9 @@ public class Storage {
 
         ArrayList<String> filenames = new ArrayList<>();
         File directory = new File(addressOfStorage + "Users\\");
+        System.out.println(directory.exists());
         File[] contents = directory.listFiles();
+       // System.out.println(contents.length);
         for (File f : contents) {
             filenames.add(f.getName() + "\\");
         }
