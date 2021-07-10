@@ -15,7 +15,7 @@ public class ServerController {
     private HashMap<String , User> loginedUsers = new HashMap<>();
     public static void runServer() {
         try {
-            ServerSocket serverSocket = new ServerSocket(7777);
+            ServerSocket serverSocket = new ServerSocket(12345);
             while (true) {
                 Socket socket = serverSocket.accept();
                 startNewThread(serverSocket, socket);

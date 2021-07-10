@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import project.ServerConnection;
 import project.controller.non_duel.storage.Storage;
 
 public class MainView extends Application {
@@ -32,7 +33,7 @@ public class MainView extends Application {
     }
 
     public static void main(String[] args) throws Exception {
-
+        ServerConnection.initializeNetwork();
         Storage storage = new Storage();
         storage.startProgram();
         // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
