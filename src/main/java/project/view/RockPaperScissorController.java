@@ -211,6 +211,7 @@ public class RockPaperScissorController implements Initializable {
                 || (player1Selection == 3 && player2Selection == 2)) {
             try { // if game created before
                 setTurn(1);
+                System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer());
                 System.out.println("Exception 1 ");
@@ -222,7 +223,8 @@ public class RockPaperScissorController implements Initializable {
             showAlert("PLAYER " + firstPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
             try { // if game created before
-                setTurn(1);
+                setTurn(2);
+                System.out.println(secondPlayerName + "   when player 2 \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
                 System.out.println("Exception 2 ");
