@@ -216,10 +216,10 @@ public class RockPaperScissorController implements Initializable {
             didAnyOneWin = true;
             showAlert("PLAYER " + firstPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
-            try {
+            try { // if game created before
                 setTurn(2);
             } catch (Exception e) {
-                new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
+                new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(),DuelStarter.getSecondPlayer());
                 System.out.println("Exception 2 ");
                 // e.printStackTrace();
             }

@@ -153,6 +153,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
         mainDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, mainDeckPane, true);
+            SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             showNmberOfCardsInLabels();
             cardsAddedToMainDeck++;
             setEffectsOfConfirmButton();
@@ -168,6 +169,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         sideDeckPane.setOnDragDropped(e -> {
             transferCardToMainOrSideDeck(e, sideDeckPane, false);
             showNmberOfCardsInLabels();
+            SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/pullingCard.mp3");
             cardsAddedToMainDeck--;
             setEffectsOfConfirmButton();
         });
