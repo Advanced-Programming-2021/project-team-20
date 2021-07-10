@@ -49,6 +49,9 @@ public class UpdateHealthPointsTransition extends Transition {
     }
 
     public void setIncreaseInHealth(int increaseInHealth) {
+        if (increaseInHealth + previousHealth < 0) {
+            increaseInHealth = - previousHealth;
+        }
         this.increaseInHealth = increaseInHealth;
     }
 }

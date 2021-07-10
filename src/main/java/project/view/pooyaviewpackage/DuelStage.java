@@ -7,18 +7,32 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class DuelStage extends Stage {
+    private DuelView duelView;
+    private boolean shiftKeyOn = false;
+
     DuelStage(){
-        DuelView duelView = new DuelView();
+        duelView = new DuelView();
         AnchorPane anchorPane = duelView.getAnchorpaneAtBeginning(this);
         Scene scene = new Scene(anchorPane, 1200, 1000);
-    //    scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-    //        @Override
-    //        public void handle(KeyEvent keyEvent) {
-    //            duelView.checkCheatCommands(keyEvent);
-    //        }
-    //    });
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                duelView.checkCheatCommands(keyEvent);
+            }
+        });
         this.setScene(scene);
         this.show();
     }
 
+    public boolean isShiftKeyOn() {
+        return shiftKeyOn;
+    }
+
+    public void setShiftKeyOn(boolean shiftKeyOn) {
+        this.shiftKeyOn = shiftKeyOn;
+    }
+
+    public DuelView getDuelView() {
+        return duelView;
+    }
 }

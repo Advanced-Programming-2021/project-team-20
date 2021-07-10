@@ -13,6 +13,7 @@ import project.controller.duel.GamePackage.SetTurnForGame;
 import project.controller.duel.GamePhaseControllers.*;
 import project.model.Deck;
 import project.model.cardData.General.Card;
+import project.model.cardData.General.CardLocation;
 
 public class GameManager {
     public static ArrayList<DuelController> duelControllerList = new ArrayList<>();
@@ -43,9 +44,9 @@ public class GameManager {
     public static ArrayList<AI> ais = new ArrayList<>();
 
     public void addANewGame(Deck firstPlayerActiveDeck, ArrayList<Card> firstPlayerMainDeck,
-            ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
-            ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
-            int numberOfRounds) {
+                            ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
+                            ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
+                            int numberOfRounds) {
         duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));
         duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllers.add(new ActivateSpellTrapController());
@@ -198,7 +199,7 @@ public class GameManager {
     }
 
 
-    public static void clearAllVariablesOfThisIndex(int index){
+    public static void clearAllVariablesOfThisIndex(int index) {
         duelControllerList.get(index).clearAllVariablesOfThisClass();
         duelBoardList.get(index).clearAllVariablesOfThisClass();
         activateSpellTrapControllers.get(index).clearAllVariablesOfThisClass();
@@ -223,4 +224,103 @@ public class GameManager {
         //changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
         //setTurnForGames.add(new SetTurnForGame());
     }
+
+
+    private String superAlmightyChangesString = "";
+    private String availableCardLocationForUseForClient = "";
+    private String changesInLifePointsToBeGivenToClient = "";
+
+
+    public String getChangesInLifePointsToBeGivenToClient() {
+        return changesInLifePointsToBeGivenToClient;
+    }
+
+    public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
+        changesInLifePointsToBeGivenToClient += string;
+        changesInLifePointsToBeGivenToClient += "\n";
+        System.out.println("If you will allow me changesInLifePoints is adding\n" + string + "\nto wholeReport");
+        wholeReportToClient += "&";
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
+    }
+
+    public void clearChangesInLifePointsToBeGivenToClient() {
+        changesInLifePointsToBeGivenToClient = "";
+    }
+
+    public String getSuperAlmightyChangesString() {
+        return superAlmightyChangesString;
+    }
+
+    public void addStringToSuperAlmightyString(String string) {
+        superAlmightyChangesString += string;
+        superAlmightyChangesString += "\n";
+        System.out.println("If you will allow me superAlmightyString is adding\n" + string + "\nto wholeReport");
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
+    }
+
+    public void clearSuperAlmightyString() {
+        superAlmightyChangesString = "";
+    }
+
+    public String getAvailableCardLocationForUseForClient() {
+        return availableCardLocationForUseForClient;
+    }
+
+    public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
+        if (string != null) {
+            System.out.println("@@@@@@@@@@@@@@Available Card Location is " + string.getRowOfCardLocation() + " "
+                + string.getIndex());
+            availableCardLocationForUseForClient += string.getRowOfCardLocation();
+            availableCardLocationForUseForClient += "\n";
+            availableCardLocationForUseForClient += string.getIndex();
+            availableCardLocationForUseForClient += "\n";
+        }
+    }
+
+    public void clearAvailableCardLocationForUseForClient() {
+        int timesSeenNextLine = 0;
+        while (timesSeenNextLine < 2) {
+            if (availableCardLocationForUseForClient.charAt(0) == '\n') {
+                timesSeenNextLine++;
+            }
+            availableCardLocationForUseForClient = availableCardLocationForUseForClient.substring(1);
+        }
+
+        // availableCardLocationForUseForClient = "";
+    }
+
+
+    private String whatUsersSay = "";
+
+
+    public void addStringToWhatUsersSay(String string) {
+        whatUsersSay += string;
+        whatUsersSay += "\n";
+        System.out.println("If you will allow me whatUsersSay is adding\n" + string + "\nto wholeReport");
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
+    }
+
+    private String wholeReportToClient = "";
+
+    public String getWholeReportToClient() {
+        return wholeReportToClient;
+    }
+
+    public void addStringToWholeReportToClient(String string) {
+        wholeReportToClient += string;
+        wholeReportToClient += "\n";
+    }
+
+    public void clearWholeReportToClient() {
+        // maybe first method should be cleared sooner, in its original function
+        // clearAvailableCardLocationForUseForClient();
+        clearChangesInLifePointsToBeGivenToClient();
+        clearSuperAlmightyString();
+        wholeReportToClient = "";
+    }
+
+
 }

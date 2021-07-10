@@ -7,6 +7,7 @@ import project.controller.duel.GamePackage.ActionConductors.FlipSummoningOrChang
 import project.controller.duel.GamePackage.ActionConductors.NormalSummonConductor;
 import project.controller.duel.GamePackage.ai.AI;
 import project.controller.duel.GamePhaseControllers.*;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.controller.duel.Utility.Utility;
 import project.controller.duel.cheat.Cheat;
@@ -14,6 +15,7 @@ import project.controller.non_duel.mainController.MainController;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 import project.model.cardData.General.CardLocation;
+import project.view.pooyaviewpackage.DuelView;
 
 public class DuelController {
     // turn = 1 -> ALLY, turn = 2 -> OPPONENT
@@ -43,16 +45,11 @@ public class DuelController {
     }
 
     public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
-        changesInLifePointsToBeGivenToClient += string;
-        changesInLifePointsToBeGivenToClient += "\n";
-        System.out.println("If you will allow me changesInLifePoints is adding\n" + string + "\nto wholeReport");
-        wholeReportToClient += "&";
-        wholeReportToClient += string;
-        wholeReportToClient += "\n";
+        DuelStarter.getGameManager().addStringToChangesInLifePointsToBeGivenToClient(string);
     }
 
     public void clearChangesInLifePointsToBeGivenToClient() {
-        changesInLifePointsToBeGivenToClient = "";
+        DuelStarter.getGameManager().clearChangesInLifePointsToBeGivenToClient();
     }
 
     public String getSuperAlmightyChangesString() {
@@ -60,11 +57,7 @@ public class DuelController {
     }
 
     public void addStringToSuperAlmightyString(String string) {
-        superAlmightyChangesString += string;
-        superAlmightyChangesString += "\n";
-        System.out.println("If you will allow me superAlmightyString is adding\n" + string + "\nto wholeReport");
-        wholeReportToClient += string;
-        wholeReportToClient += "\n";
+        DuelStarter.getGameManager().addStringToSuperAlmightyString(string);
     }
 
     public void clearSuperAlmightyString() {
@@ -72,30 +65,15 @@ public class DuelController {
     }
 
     public String getAvailableCardLocationForUseForClient() {
-        return availableCardLocationForUseForClient;
+        return DuelStarter.getGameManager().getAvailableCardLocationForUseForClient();
     }
 
     public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
-        if (string != null) {
-            System.out.println("@@@@@@@@@@@@@@Available Card Location is " + string.getRowOfCardLocation() + " "
-                + string.getIndex());
-            availableCardLocationForUseForClient += string.getRowOfCardLocation();
-            availableCardLocationForUseForClient += "\n";
-            availableCardLocationForUseForClient += string.getIndex();
-            availableCardLocationForUseForClient += "\n";
-        }
+        DuelStarter.getGameManager().addStringToAvailableCardLocationForUseForClient(string);
     }
 
     public void clearAvailableCardLocationForUseForClient() {
-        int timesSeenNextLine = 0;
-        while (timesSeenNextLine < 2) {
-            if (availableCardLocationForUseForClient.charAt(0) == '\n') {
-                timesSeenNextLine++;
-            }
-            availableCardLocationForUseForClient = availableCardLocationForUseForClient.substring(1);
-        }
-
-        // availableCardLocationForUseForClient = "";
+        DuelStarter.getGameManager().clearAvailableCardLocationForUseForClient();
     }
 
     private String whatUsersSay;
@@ -109,25 +87,17 @@ public class DuelController {
     }
 
     public void addStringToWhatUsersSay(String string) {
-        whatUsersSay += string;
-        whatUsersSay += "\n";
-        System.out.println("If you will allow me whatUsersSay is adding\n" + string + "\nto wholeReport");
-        wholeReportToClient += string;
-        wholeReportToClient += "\n";
+        DuelStarter.getGameManager().addStringToWhatUsersSay(string);
     }
 
     private String wholeReportToClient = "";
 
     public String getWholeReportToClient() {
-        return wholeReportToClient;
+        return DuelStarter.getGameManager().getWholeReportToClient();
     }
 
     public void clearWholeReportToClient() {
-        // maybe first method should be cleared sooner, in its original function
-        // clearAvailableCardLocationForUseForClient();
-        clearChangesInLifePointsToBeGivenToClient();
-        clearSuperAlmightyString();
-        wholeReportToClient = "";
+        DuelStarter.getGameManager().clearWholeReportToClient();
     }
 
     public DuelController(String firstUser, String secondUser, int numberOfRounds) {
@@ -612,9 +582,11 @@ public class DuelController {
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(index);
         isGameOver = true;
-        return winnerUser.getName() + " won the whole match with score: "
+        String output = winnerUser.getName() + " won the whole match with score: "
             + ((turn == 1) ? (numberOfRounds * 1000) + " - " + playersScores.get(-turn + 2)
             : playersScores.get(-turn + 2) + " - " + (numberOfRounds * 1000));
+        DuelStarter.getGameManager().addStringToWholeReportToClient(output);
+        return output;
     }
 
     public String endOneRoundOfDuel(int turn) {
@@ -628,12 +600,14 @@ public class DuelController {
         fakeTurn = 1;
         currentRound += 1;
         GameManager.clearAllVariablesOfThisIndex(0);
-        return winnerUser.getName() + " won the game and the score is: "
+        String output = winnerUser.getName() + " won the game and the score is: "
             + ((turn == 1) ? (1000) + " - 0" : "0 - " + (1000));
+        DuelStarter.getGameManager().addStringToWholeReportToClient(output);
+        return output;
     }
 
     public String mediateOutputBeforeSendingToGameManager(String string, boolean needToMediate) {
-        if (!needToMediate) {
+        if (!needToMediate || isGameOver) {
             return string;
         }
         AI ai = GameManager.getAIByIndex(0);

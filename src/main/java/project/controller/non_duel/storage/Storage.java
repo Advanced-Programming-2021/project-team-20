@@ -461,7 +461,6 @@ public class Storage {
         }
         return null;
     }
-
     public static HashMap<String, Card> getAllMonsterCards() {
         return allMonsterCards;
     }

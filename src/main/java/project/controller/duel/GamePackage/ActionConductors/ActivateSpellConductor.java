@@ -188,7 +188,8 @@ public class ActivateSpellConductor {
         }
         CardLocation finalMainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         String output = give500LifePointsToPlayerOwningACardOfThisEffect(index, finalMainCardLocation);
-        if (fieldSpellExtendedEffects.size() == 0 && equipSpellExtendedEffects.size() == 0 && continuousSpellCardEffects.size() == 0) {
+        if (fieldSpellExtendedEffects.get(0).getFieldSpellEffects().size() == 0 && equipSpellExtendedEffects.get(0).getEquipSpellEffects().size() == 0
+            && continuousSpellCardEffects.size() == 0) {
             SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(finalMainCardLocation, index);
         }
         if (!output.equals("")) {

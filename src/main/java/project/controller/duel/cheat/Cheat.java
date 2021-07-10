@@ -2,6 +2,7 @@ package project.controller.duel.cheat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 
 import project.controller.duel.GamePackage.DuelController;
@@ -14,18 +15,19 @@ import project.model.cardData.General.CardType;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
+import project.view.pooyaviewpackage.AdvancedCardMovingController;
 
 public class Cheat {
 
     public String findCheatCommand(String input, int index) {
 
         Matcher matcher;
-        matcher = Utility.getCommandMatcher(input, "cheat increase (-L|--LP) (?<amount>\\d+)");
+        matcher = Utility.getCommandMatcher(input, "cheat increase (-l|--lp) (?<amount>\\d+)");
         if (matcher.find()) {
             return increaseLifePoints(Integer.parseInt(matcher.group("amount")), index);
         }
 
-        matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (\\.+)");
+        matcher = Utility.getCommandMatcher(input, "cheat duel set-winner (.+)");
         if (matcher.find()) {
             return setWinner(matcher.group(1), index);
         }
@@ -77,7 +79,7 @@ public class Cheat {
                 GameManager.getDuelBoardByIndex(index).addCardToHand(cardsInGraveYard.get(i), turn);
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " +
                     (turn == 1 ? "ALLY_GRAVEYARD_ZONE" : "OPPONENT_GRAVEYARD_ZONE")
-                    + " " + i + " is being added to hand zone " + turn + " and should finally be NO_CHANGE");
+                    + " " + (i+1) + " is being added to hand zone " + turn + " and should finally be NO_CHANGE");
 
                 cardsInGraveYard.remove(i);
                 return cardname + " added to hand successfully!";
@@ -132,6 +134,7 @@ public class Cheat {
         if (allMonsterCards.containsKey(cardName)) {
             MonsterCard monster = (MonsterCard) allMonsterCards.get(cardName);
             GameManager.getDuelBoardByIndex(index).addCardToHand((MonsterCard) monster.clone(), turn);
+            AdvancedCardMovingController.setNewlyAddedCard((MonsterCard)monster.clone());
             GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
                 + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
 
@@ -143,11 +146,13 @@ public class Cheat {
             if (allSpellAndTrapCards.get(cardName).getCardType().equals(CardType.SPELL)) {
                 SpellCard spellCard = (SpellCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(index).addCardToHand((SpellCard) spellCard.clone(), turn);
+                AdvancedCardMovingController.setNewlyAddedCard((SpellCard)spellCard.clone());
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
                     + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
             } else {
                 TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(index).addCardToHand((TrapCard) trapCard.clone(), turn);
+                AdvancedCardMovingController.setNewlyAddedCard((TrapCard)trapCard.clone());
                 GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
                     + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
             }
@@ -168,10 +173,10 @@ public class Cheat {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         User allyUser = Storage.getUserByName(duelController.getPlayingUsers().get(0));
         User opponentUser = Storage.getUserByName(duelController.getPlayingUsers().get(1));
-        if (allyUser.getNickname().equals(nickname)) {
+        if (allyUser.getNickname().toLowerCase().equals(nickname)) {
             return duelController.endGame(1, index);
         }
-        if (opponentUser.getNickname().equals(nickname)) {
+        if (opponentUser.getNickname().toLowerCase().equals(nickname)) {
             return duelController.endGame(2, index);
         }
 

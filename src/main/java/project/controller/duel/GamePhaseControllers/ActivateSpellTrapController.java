@@ -274,7 +274,7 @@ public class ActivateSpellTrapController extends ChainController {
             } else if (!Card.isCardAMonster(card)) {
                 return "invalid selection\nplease try again";
             } else {
-                String regexString = "(.+)/";
+                String regexString = "([a-z_]+)/";
                 Pattern pattern = Pattern.compile(regexString);
                 Matcher matcher = pattern.matcher(message);
                 boolean ok = false;
