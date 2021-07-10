@@ -17,7 +17,7 @@
 
 .scroll-pane .viewport1 {
    -fx-background-image: url("importAndExport.PNG");
-} 
+}
 
 .chart-plot-background3{
    -fx-background-image: url('deckPackground.PNG');
@@ -101,10 +101,10 @@
    -fx-size: 35;
    -fx-border-width: 0 0 1 0;
    -fx-background-color: transparent;
-   -fx-border-color: 
+   -fx-border-color:
        transparent
        transparent
-       derive(-fx-base, 80%) 
+       derive(-fx-base, 80%)
        transparent;
    -fx-border-insets: 0 10 1 0;
 }
@@ -153,13 +153,13 @@
    -fx-font-family: "Old English Text MT";
 }
 
-/* 
+/*
 * Metro style Push Button
 * Author: Pedro Duque Vieira
 * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
 */
 .button {
-   -fx-padding: 5 22 5 22;   
+   -fx-padding: 5 22 5 22;
    -fx-border-color: #e2e2e2;
    -fx-border-width: 2;
    -fx-background-radius: 0;
@@ -245,5 +245,5 @@
 }
 
 .label{
-   
+
 }
