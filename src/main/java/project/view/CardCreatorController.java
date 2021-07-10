@@ -67,6 +67,9 @@ public class CardCreatorController implements Initializable {
     private MonsterCardFamily familyMonster;
     private MonsterCardAttribute attributeMonster;
 
+    public String getImagePath() {
+        return imagePath;
+    }
 
     private int numberOfTurnsForActivationSpell;
     private String spellCardValue;
@@ -1233,7 +1236,7 @@ public class CardCreatorController implements Initializable {
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
             MonsterCard1 monsterCard1 = new MonsterCard1(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
-                familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend);
+                familyMonster, valueMonster, cardName, cardDescription, CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend, imagePath);
 
             System.out.println("Created");
             CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
@@ -1752,7 +1755,7 @@ public class CardCreatorController implements Initializable {
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
             TrapCard1 trapCard = new TrapCard1(cardName, cardDescription, trapCardValue, CardPosition.NOT_APPLICABLE,
-                numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend);
+                numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard, currentPrice, hashMapEffects, cardImage, numbersOfEffectsToSend, imagePath);
             System.out.println("Card Created");
             CustomDialog customDialog = new CustomDialog("MESSAGE", "Card Created Successfully", "mainMenu");
             customDialog.openDialog();
@@ -2770,7 +2773,7 @@ public class CardCreatorController implements Initializable {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
             SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
                 CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
-                currentPrice, hashMapEffects, cardImage, monsterFamilyTrapEquip, monsterFamilyTrapField, numbersOfEffectsToSend);
+                currentPrice, hashMapEffects, cardImage, monsterFamilyTrapEquip, monsterFamilyTrapField, numbersOfEffectsToSend, imagePath);
 
 //            SpellCard1 spellCard1 = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
 //                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,

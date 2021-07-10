@@ -15,9 +15,10 @@ public class MonsterCard1 {
     public MonsterCard1(int attackPowerMonsterCard, int defencePowerMonsterCard, int levelOfMonsterCard, MonsterCardAttribute attributeMonster
         , MonsterCardFamily familyMonster, MonsterCardValue valueMonster, String cardName, String cardDescription
         , CardPosition notApplicable, int numberOfAllowedUsages, int i, HashMap<String, List<String>> hashMapEffects
-        , Image cardImage, HashMap<String, Integer> numbersOfEffectsToSend) {
+        , Image cardImage, HashMap<String, Integer> numbersOfEffectsToSend, String imagePath) {
         MonsterCard monsterCard = new MonsterCard(attackPowerMonsterCard, defencePowerMonsterCard, levelOfMonsterCard, attributeMonster,
             familyMonster,valueMonster, cardName, cardDescription, notApplicable, numberOfAllowedUsages, i, hashMapEffects, cardImage);
         Storage.addCardToNewCardsCrated(monsterCard);
+        Storage.saveNewImagesOfCardsInFile(monsterCard, imagePath);
     }
 }

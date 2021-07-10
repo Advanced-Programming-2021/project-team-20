@@ -34,7 +34,7 @@ public class SpellCard1 {
 
     public SpellCard1(String cardName, String cardDescription, SpellCardValue valueOf, CardPosition notApplicable, int numberOfAllowedUsages
         , int numberOfTurnsForActivationSpell, int i, HashMap<String, List<String>> enumValues, Image cardImage
-        , List<String> monsterFamilyTrapEquip, List<String> monsterFamilyTrapField, HashMap<String, Integer> numbersOfEffectsToSend) {
+        , List<String> monsterFamilyTrapEquip, List<String> monsterFamilyTrapField, HashMap<String, Integer> numbersOfEffectsToSend, String imagePath) {
         ArrayList<MonsterCardFamily> monsterCardFamilies = new ArrayList<>();
         for (int j = 1; j < monsterFamilyTrapEquip.size(); j++) {
             monsterCardFamilies.add(MonsterCardFamily.valueOf(monsterFamilyTrapEquip.get(i)));
@@ -56,8 +56,56 @@ public class SpellCard1 {
         Collection<Integer> integers = numbersOfEffectsToSend.values();
         ArrayList<Integer> finalIntegers = new ArrayList<>();
         finalIntegers.addAll(integers);
+        HashMap<String, List<String>> hashMap = new HashMap<>();
+        ArrayList<String> continu = new ArrayList<>();
+        for (int j = 0; j < continuousSpellCardEffects.size(); j++){
+            continu.add(continuousSpellCardEffects.get(j).toString());
+        }
+        hashMap.put("ContinuousSpellCardEffect", continu);
+        ArrayList<String> equip = new ArrayList<>();
+        for (int j = 0; j < equipSpellEffects.size(); j++){
+            equip.add(equipSpellEffects.get(j).toString());
+        }
+        hashMap.put("EquipSpellEffect", equip);
+        ArrayList<String> field = new ArrayList<>();
+        for (int j = 0; j < fieldSpellEffects.size(); j++){
+            field.add(fieldSpellEffects.get(j).toString());
+        }
+        hashMap.put("FieldSpellEffect", field);
+        ArrayList<String> logAc = new ArrayList<>();
+        for (int j = 0; j < logicalActivationRequirements.size(); j++){
+            logAc.add(logicalActivationRequirements.get(j).toString());
+        }
+        hashMap.put("LogicalActivationRequirement", logAc);
+        ArrayList<String> norma = new ArrayList<>();
+        for (int j = 0; j < normalSpellCardEffects.size(); j++){
+            norma.add(normalSpellCardEffects.get(j).toString());
+        }
+        hashMap.put("NormalSpellCardEffect", norma);
+        ArrayList<String> sentToGY = new ArrayList<>();
+        for (int j = 0; j < sentToGraveyardEffects.size(); j++){
+            sentToGY.add(sentToGraveyardEffects.get(j).toString());
+        }
+        hashMap.put("SentToGraveyardEffect", sentToGY);
+        ArrayList<String> quick = new ArrayList<>();
+        for (int j = 0; j < quickSpellEffects.size(); j++){
+            quick.add(quickSpellEffects.get(j).toString());
+        }
+        hashMap.put("QuickSpellEffect", quick);
+        ArrayList<String> ritual = new ArrayList<>();
+        for (int j = 0; j < ritualSpellEffects.size(); j++){
+            ritual.add(ritualSpellEffects.get(j).toString());
+        }
+        hashMap.put("RitualSpellEffect", ritual);
+        ArrayList<String> userReply = new ArrayList<>();
+        for (int j = 0; j < userReplyForActivations.size(); j++){
+            userReply.add(userReplyForActivations.get(j).toString());
+        }
+        hashMap.put("UserReplyForActivation", userReply);
         SpellCard spellCard = new SpellCard(cardName, cardDescription, valueOf, notApplicable, numberOfAllowedUsages
-            , numberOfTurnsForActivationSpell, i, enumValues, cardImage, monsterCardFamilies, finalIntegers);
+            , numberOfTurnsForActivationSpell, i, hashMap, cardImage, monsterCardFamilies, finalIntegers);
+
+        Storage.saveNewImagesOfCardsInFile(spellCard, imagePath);
         Storage.addCardToNewCardsCrated(spellCard);
     }
 

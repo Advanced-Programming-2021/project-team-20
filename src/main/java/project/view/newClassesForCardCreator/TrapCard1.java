@@ -7,9 +7,7 @@ import project.model.cardData.General.CardPosition;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.model.cardData.TrapCardData.TrapCardValue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class TrapCard1 {
     private int highestNumberOfTurnsOfActivation;
@@ -32,7 +30,7 @@ public class TrapCard1 {
 
     public TrapCard1(String cardName, String cardDescription, TrapCardValue trapCardValue, CardPosition notApplicable
         , int numberOfAllowedUsages, int numberOfTurnsForActivationForTrapCard, int i, HashMap<String, List<String>> hashMapEffects
-        , Image cardImage, HashMap<String, Integer> numbersOfEffectsToSend) {
+        , Image cardImage, HashMap<String, Integer> numbersOfEffectsToSend, String imagePath) {
 
         this.continuousTrapCardEffects = new ArrayList<>();
         this.flipSummonTrapCardEffects = new ArrayList<>();
@@ -48,11 +46,86 @@ public class TrapCard1 {
         this.spellCardActivationTrapCardEffects = new ArrayList<>();
         this.trapCardActivationTrapCardEffects = new ArrayList<>();
         this.userReplyForActivations = new ArrayList<>();
-        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapCardValue, notApplicable, numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard,
-        i, hashMapEffects, cardImage);
-        Storage.addCardToNewCardsCrated(trapCard);
+
         setEnumValues(hashMapEffects);
         addLogicalActivationRequirements();
+        HashMap<String, List<String>> hashMap = new HashMap<>();
+        ArrayList<String> cont = new ArrayList<>();
+        for (int j = 0; j < continuousTrapCardEffects.size(); j++){
+            cont.add(continuousTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("ContinuousTrapCardEffect", cont);
+        ArrayList<String> flip = new ArrayList<>();
+        for (int j = 0; j < flipSummonTrapCardEffects.size(); j++){
+            flip.add(flipSummonTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("FlipSummonTrapCardEffect", flip);
+        ArrayList<String> logAct = new ArrayList<>();
+        for (int j = 0; j < logicalActivationRequirements.size(); j++){
+            logAct.add(logicalActivationRequirements.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("LogicalActivationRequirement", logAct);
+        ArrayList<String> monsterAttacking = new ArrayList<>();
+        for (int j = 0; j < monsterAttackingTrapCardEffects.size(); j++){
+            monsterAttacking.add(monsterAttackingTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("MonsterAttackingTrapCardEffect", monsterAttacking);
+        ArrayList<String> monsterEffect = new ArrayList<>();
+        for (int j = 0; j < monsterEffectActivationTrapCardEffect.size(); j++){
+            monsterEffect.add(monsterEffectActivationTrapCardEffect.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("MonsterEffectActivationTrapCardEffect", monsterEffect);
+        ArrayList<String> normalSummonTrap = new ArrayList<>();
+        for (int j = 0; j < normalSummonTrapCardEffects.size(); j++){
+            normalSummonTrap.add(normalSummonTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("NormalSummonTrapCardEffect", normalSummonTrap);
+        ArrayList<String> normalTrap = new ArrayList<>();
+        for (int j = 0; j < normalTrapCardEffects.size(); j++){
+            normalTrap.add(normalSummonTrap.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("NormalTrapCardEffect", normalTrap);
+        ArrayList<String> ritual = new ArrayList<>();
+        for (int j = 0; j < ritualSummonTrapCardEffects.size(); j++){
+            ritual.add(ritualSummonTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("RitualSummonTrapCardEffect", ritual);
+        ArrayList<String> specialSummon = new ArrayList<>();
+        for (int j = 0; j < specialSummonTrapCardEffects.size(); j++){
+            specialSummon.add(specialSummonTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("SpecialSummonTrapCardEffect", specialSummon);
+        ArrayList<String> spellCard = new ArrayList<>();
+        for (int j = 0; j < spellCardActivationTrapCardEffects.size(); j++){
+            spellCard.add(specialSummonTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("SpellCardActivationTrapCardEffect", spellCard);
+        ArrayList<String> trapCardAc = new ArrayList<>();
+        for (int j = 0; j < trapCardActivationTrapCardEffects.size(); j++){
+            trapCardAc.add(trapCardActivationTrapCardEffects.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("TrapCardActivationTrapCardEffect", trapCardAc);
+        ArrayList<String> userReply = new ArrayList<>();
+        for (int j = 0; j < userReplyForActivations.size(); j++){
+            userReply.add(userReplyForActivations.get(j).toString());
+            //hashMap.put("ContinuousTrapCardEffect", continuousTrapCardEffects.get(i).toString());
+        }
+        hashMap.put("UserReplyForActivation", userReply);
+        TrapCard trapCard = new TrapCard(cardName, cardDescription, trapCardValue, notApplicable, numberOfAllowedUsages, numberOfTurnsForActivationForTrapCard,
+            i, hashMap, cardImage);
+        Storage.addCardToNewCardsCrated(trapCard);
+        Storage.saveNewImagesOfCardsInFile(trapCard, imagePath);
 //        this.turnCardWasSet = 0;
 //        this.highestNumberOfTurnsOfActivation = numberOfTurnsForActivation;
 //        this.numberOfTurnsForActivation = numberOfTurnsForActivation;
