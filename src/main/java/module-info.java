@@ -15,4 +15,5 @@ module PhaseOneProject {
     exports project.view.internet;
     exports project.view.newClassesForCardCreator;
     opens project.view.newClassesForCardCreator to javafx.fxml;
+    opens project.view.Components to javafx.base;
 }

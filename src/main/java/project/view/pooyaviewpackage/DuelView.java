@@ -603,29 +603,14 @@ public class DuelView {
         lastTimeKeyPressed = currentTimeKeyPressed;
         if (keyEvent.getCode().getName().equals("Space")) {
             cheatCodes.append(" ");
-        } else if (keyEvent.getCode().getName().equalsIgnoreCase("minus")) {
-            cheatCodes.append("-");
-        } else if (keyEvent.getCode().getName().equalsIgnoreCase("shift")) {
-            duelStage.setShiftKeyOn(true);
         } else if (keyEvent.getCode().getName().equals("Enter")) {
             System.out.println(cheatCodes);
-            String string = cheat.findCheatCommand(cheatCodes.toString(), 0);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Cheat Message");
-            alert.setContentText(string);
-            alert.showAndWait();
-            advancedCardMovingController.advanceForwardBattleField();
+            cheat.findCheatCommand(cheatCodes.toString(), 0);
             cheatCodes.setLength(0);
         } else if (keyEvent.getCode().getName().startsWith("Numpad")) {
             cheatCodes.append(keyEvent.getCode().getName().charAt(keyEvent.getCode().getName().length() - 1));
         } else {
-            if (duelStage.isShiftKeyOn()) {
-                cheatCodes.append(keyEvent.getCode().getName().toUpperCase());
-                duelStage.setShiftKeyOn(false);
-            } else {
-                cheatCodes.append(keyEvent.getCode().getName().toLowerCase());
-            }
+            cheatCodes.append(keyEvent.getText());
         }
     }
 

@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import project.controller.duel.CardEffects.MonsterEffectEnums.SentToGraveyardEffect;
 import project.controller.duel.CardEffects.SpellEffectEnums.*;
 import project.controller.non_duel.storage.Storage;
+import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.MonsterCardData.MonsterCardFamily;

@@ -587,6 +587,7 @@ public class DuelController {
             : playersScores.get(-turn + 2) + " - " + (numberOfRounds * 1000));
         DuelStarter.getGameManager().addStringToWholeReportToClient(output);
         return output;
+        return winnerUser.getName() + " won the whole match with score: " + numberOfRounds * 1000;
     }
 
     public String endOneRoundOfDuel(int turn) {
@@ -594,6 +595,8 @@ public class DuelController {
         if (lifePoints.get(turn - 1) > maxLifePointOfPlayers.get(turn - 1)) {
             maxLifePointOfPlayers.set(turn - 1, lifePoints.get(turn - 1));
         }
+        GameManager.getDuelBoardByIndex(0).resetCards(1);
+        GameManager.getDuelBoardByIndex(0).resetCards(2);
         playersScores.set(turn - 1, playersScores.get(turn - 1) + 1000);
         isPlayersChangedDecks = false;
         this.turn = 1;
@@ -605,6 +608,7 @@ public class DuelController {
         DuelStarter.getGameManager().addStringToWholeReportToClient(output);
         return output;
     }
+        return winnerUser.getName() + " won the game and the score is: 1000";    }
 
     public String mediateOutputBeforeSendingToGameManager(String string, boolean needToMediate) {
         if (!needToMediate || isGameOver) {
