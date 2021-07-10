@@ -350,7 +350,7 @@ public class CardCreatorController implements Initializable {
             changeImage(file.getAbsolutePath());
             imagePath = file.getAbsolutePath();
         } else {
-            imagePath = "src\\main\\resources\\project\\cards\\monsters\\Unknown.jpg";
+            imagePath = "src\\main\\resources\\project\\cards\\cardCreatorImage.jpg";
             changeImage(imagePath);
         }
         getNumberOfAllowedUsages();
@@ -1228,7 +1228,7 @@ public class CardCreatorController implements Initializable {
 
     private void lastStepOfCreatingMonsterCard() {
         if (currentMoneyOfUser < currentPrice * 0.1) {
-            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY", "mainMenu");
             customDialog.openDialog();
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
@@ -1240,7 +1240,7 @@ public class CardCreatorController implements Initializable {
             customDialog.openDialog();
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
-        backToMainMenu();
+//        backToMainMenu();
     }
 
     private ArrayList<String> getEnumsWithNumbers() {
@@ -1747,7 +1747,7 @@ public class CardCreatorController implements Initializable {
 
     private void lastStepOfCreatingTrapCard() {
         if (currentMoneyOfUser < currentPrice * 0.1) {
-            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY", "mainMenu");
             customDialog.openDialog();
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
@@ -1759,7 +1759,7 @@ public class CardCreatorController implements Initializable {
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
 
-        backToMainMenu();
+//        backToMainMenu();
     }
 
 
@@ -2764,7 +2764,7 @@ public class CardCreatorController implements Initializable {
 
     private void lastStepOfCreatingSpellCard() {
         if (currentMoneyOfUser < currentPrice * 0.1) {
-            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+            CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY", "mainMenu");
             customDialog.openDialog();
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
@@ -2783,7 +2783,7 @@ public class CardCreatorController implements Initializable {
         }
 
 
-        backToMainMenu();
+//        backToMainMenu();
 
     }
 
