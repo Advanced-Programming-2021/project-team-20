@@ -1,42 +1,46 @@
 package project.view.Components;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Person {
 
-    private int ranking;
-    private String nickname = null;
-    private int score;
+    private SimpleIntegerProperty ranking = new SimpleIntegerProperty();
+    private SimpleStringProperty nickname = new SimpleStringProperty();
+    private SimpleIntegerProperty score = new SimpleIntegerProperty();
 
     public Person() {
     }
 
     public Person(int ranking, String nickname, int score) {
-        this.ranking = ranking;
-        this.nickname = nickname;
-        this.score = score;
+        this.ranking.set(ranking);
+        this.nickname.set(nickname);
+        this.score.set(score);
     }
 
     public int getRanking() {
-        return this.ranking;
+        return this.ranking.get();
     }
 
     public void setRanking(int ranking) {
-        this.ranking = ranking;
+        this.ranking.set(ranking);
     }
 
     public int getScore() {
-        return this.score;
+        return this.score.get();
     }
 
     public void setScore(int score) {
-        this.score = score;
+        this.score.set(score);
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.get();
     }
 
+
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        this.nickname.set(nickname);
     }
 
 }
