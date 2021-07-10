@@ -46,6 +46,7 @@ public class Scoreboard {
             }
         }
 
+//        System.out.println(finalResult+"B");
         return finalResult.toString();
     }
 
@@ -95,6 +96,7 @@ public class Scoreboard {
         scoreOfUsers = scoreOfUsers.stream().distinct().collect(Collectors.toList());
 
         Collections.sort(scoreOfUsers, Collections.reverseOrder());
+//        System.out.println(scoreOfUsers+"a");
         return scoreOfUsers;
     }
 }

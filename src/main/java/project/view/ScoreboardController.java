@@ -29,12 +29,12 @@ public class ScoreboardController {
     public void fillLabel() {
         System.out.println("fill");
         String allPeople = new Scoreboard().findCommands("scoreboard show");
-        String[] allPeopleSplited = allPeople.split(",");
-        Person[] person = new Person[allPeopleSplited.length / 3];
+        String[] allPeopleSpliced = allPeople.split(",");
+        Person[] person = new Person[allPeopleSpliced.length / 3];
         for (int i = 0; i < person.length; i++) {
-            int ranking = Integer.parseInt(allPeopleSplited[i * 3]);
-            String nickname = allPeopleSplited[i * 3 + 1];
-            int score = Integer.parseInt(allPeopleSplited[i * 3 + 2]);
+            int ranking = Integer.parseInt(allPeopleSpliced[i * 3]);
+            String nickname = allPeopleSpliced[i * 3 + 1];
+            int score = Integer.parseInt(allPeopleSpliced[i * 3 + 2]);
             person[i] = new Person(ranking, nickname, score);
         }
         final ObservableList<Person> data = FXCollections.observableArrayList(
@@ -57,8 +57,9 @@ public class ScoreboardController {
         scoreColumn.setStyle("-fx-alignment: CENTER;");
         scoreColumn.setMinWidth(100);
 
-        ObservableList<String> list = FXCollections.observableArrayList();
+        ObservableList<Person> list = FXCollections.observableArrayList();
         tableView.setItems(data);
+        tableView.setItems(list);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tableView.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
 
