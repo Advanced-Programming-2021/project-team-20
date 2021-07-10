@@ -208,7 +208,8 @@ public class RockPaperScissorController implements Initializable {
                 duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(), duelBoard.getOpponentCardsInDeck());
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer());
-                e.printStackTrace();
+                System.out.println("Exception 1 "); 
+                // e.printStackTrace();
             }
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);
@@ -221,7 +222,8 @@ public class RockPaperScissorController implements Initializable {
                 duelBoard.initializeCardsInDuelBoard(duelBoard.getOpponentCardsInDeck(), duelBoard.getAllyCardsInDeck());
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
-                e.printStackTrace();
+                System.out.println("Exception 2 "); 
+                // e.printStackTrace();
             }
             GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
             GameManager.getDuelControllerByIndex(0).startDuel(0);

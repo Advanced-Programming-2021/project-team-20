@@ -598,7 +598,6 @@ public class DuelView {
         } else {
             cheatCodes.append(keyEvent.getText());
         }
-        System.out.println(keyEvent.getText());
     }
 
     private void prepareObjectsForWorking() {
