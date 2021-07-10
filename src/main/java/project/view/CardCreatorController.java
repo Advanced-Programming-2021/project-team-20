@@ -2608,8 +2608,8 @@ public class CardCreatorController implements Initializable {
         ArrayList<String> stringsQuick = new ArrayList<>();
         ArrayList<String> stringsContinuous = new ArrayList<>();
         ArrayList<String> userReplyArrayList = new ArrayList<>();
-        ArrayList<String> monsterFamilyTrapEquip = new ArrayList<>();
-        ArrayList<String> monsterFamilyTrapField = new ArrayList<>();
+        monsterFamilyTrapEquip = new ArrayList<>();
+        monsterFamilyTrapField = new ArrayList<>();
         int counter = 0;
         switch (spellCardValue) {
             case "NORMAL":

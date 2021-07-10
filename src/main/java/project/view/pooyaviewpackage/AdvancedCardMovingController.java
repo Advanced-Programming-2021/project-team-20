@@ -70,6 +70,7 @@ public class AdvancedCardMovingController {
                 String output = AdvancedCardMovingController.getReport();
                 System.out.println("WinLoss: " + output);
                 DuelView.getStage().close();
+                DuelView.getBackgroundMusic().setMute(true);
                 // if (!oneRound && (currentRound == 1 || currentRound == 2)) {
                 DuelView.endOneRoundOfDuel(matcher.group(0));
                 AdvancedCardMovingController.setReport("");

@@ -31,6 +31,8 @@ import project.model.cardData.SpellCardData.SpellCardValue;
 import project.model.modelsforview.*;
 import project.view.CustomDialog;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -66,7 +68,7 @@ public class DuelView {
     private static boolean isWaitingForRightClickOptionListHit;
     private static Group allCards;
     private static CardLocation cardLocationToSendCardTo;
-    private static NextPhaseButton nextPhaseButton;
+    //private static NextPhaseButton nextPhaseButton;
     private static Transition transition;
     private static ControllerForView controllerForView;
     private static Group moreCardInfoGroup;
@@ -414,7 +416,7 @@ public class DuelView {
         prepareObjectsForWorking();
         anchorPane.getChildren().add(battleFieldView);
         anchorPane.getChildren().add(allCards);
-        anchorPane.getChildren().addAll(nextPhaseButton, nextPhaseButton.getLabel());
+        //anchorPane.getChildren().addAll(nextPhaseButton, nextPhaseButton.getLabel());
         moreCardInfoGroup.getChildren().add(cardAttackForCardMoreInfo);
         moreCardInfoGroup.getChildren().add(cardDefenseForCardMoreInfo);
         moreCardInfoGroup.getChildren().add(cardLevelForCardMoreInfo);
@@ -576,7 +578,7 @@ public class DuelView {
         deckScene = new DeckScene();
         graveyardScene = new GraveyardScene();
         allCards = new Group();
-        nextPhaseButton = new NextPhaseButton();
+        //nextPhaseButton = new NextPhaseButton();
         transition = new Transition();
         controllerForView = new ControllerForView();
         sendingRequestsToServer = new SendingRequestsToServer();
@@ -631,21 +633,24 @@ public class DuelView {
         }
         // System.out.println(keyEvent.getText());
     }
-
+    public static MediaPlayer getBackgroundMusic(){
+        return backgroundMusic;
+    }
     private void prepareObjectsForWorking() {
         battleFieldView = new BattleFieldView();
         URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
         backgroundMusic = new MediaPlayer(new Media(resource.toString()));
         mediaView = new MediaView();
         mediaView.setMediaPlayer(backgroundMusic);
-        // backgroundMusic.setAutoPlay(true);
+        backgroundMusic.setAutoPlay(true);
+        backgroundMusic.setMute(false);
         backgroundMusic.setVolume(0.4);
         backgroundMusic.setOnEndOfMedia(new Runnable() {
             public void run() {
                 backgroundMusic.seek(Duration.ZERO);
             }
         });
-        // backgroundMusic.play();
+        backgroundMusic.play();
         surrender = new Rectangle(DuelView.getStageWidth() * 11 / 12, 0, DuelView.getStageWidth() / 12, DuelView.getStageHeight() / 8);
         surrender.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/ingameicons/surrender.png").toExternalForm())));
         surrender.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -659,6 +664,7 @@ public class DuelView {
                 // System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
                 String output = GameManager.getDuelControllerByIndex(0).getInput("surrender", true);
                 // System.out.println("Surrender: " + output);
+                backgroundMusic.setMute(true);
                 stage.close();
                 // if (oneRound) {
                 //     endOneRoundOfDuel(output);
@@ -715,12 +721,12 @@ public class DuelView {
         // nextPhaseLabel.setLayoutY(500);
         // nextPhaseButton.setX(100);
         // nextPhaseButton.setY(500);
-        nextPhaseButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println(GameManager.getDuelControllerByIndex(0).getInput("advanced show board", true));
-            }
-        });
+//        nextPhaseButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                System.out.println(GameManager.getDuelControllerByIndex(0).getInput("advanced show board", true));
+//            }
+//        });
         shouldICallPayAndDestroy = false;
         nextPhaseLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -1232,9 +1238,9 @@ public class DuelView {
         return cardLocationToSendCardTo;
     }
 
-    public static NextPhaseButton getNextPhaseButton() {
-        return nextPhaseButton;
-    }
+//    public static NextPhaseButton getNextPhaseButton() {
+//        return nextPhaseButton;
+//    }
 
     public static Transition getTransition() {
         return transition;
