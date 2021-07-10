@@ -303,6 +303,10 @@ public class GameManager {
         wholeReportToClient += "\n";
     }
 
+    public void clearWhatUsersSay() {
+        whatUsersSay = "";
+    }
+
     private String wholeReportToClient = "";
 
     public String getWholeReportToClient() {

@@ -63,7 +63,7 @@ public class Transition {
         }
         int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
         System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
-        if (turn == currentTurn){
+        if (turn == currentTurn || GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1).equals("AI")){
             cardView.setCanBeSeen(true);
         } else {
             cardView.setCanBeSeen(false);

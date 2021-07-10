@@ -136,7 +136,7 @@ public class DuelController {
         }
         // totalTurnsUntilNow = 1;
     }
-
+//private boolean firstTimeStarting;
     public String getInput(String string, boolean needToMediate) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
         allInputs.add(string);
@@ -166,7 +166,11 @@ public class DuelController {
 
         ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
         SetTurnForGame setTurnForGame = GameManager.getSetTurnForGamesByIndex(0);
-
+//        if (firstTimeStarting){
+//            lifePoints.set(0, 8000);
+//            lifePoints.set(1,8000);
+//            firstTimeStarting = false;
+//        }
         if (string.startsWith("cheat")) {
             Cheat cheat = new Cheat();
             return cheat.findCheatCommand(string, 0);
@@ -554,7 +558,9 @@ public class DuelController {
         GameManager.getDuelBoardByIndex(index).shuffleMainDecks();
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
-
+        DuelStarter.getGameManager().clearWholeReportToClient();
+        DuelStarter.getGameManager().clearWhatUsersSay();
+        //firstTimeStarting = true;
     }
 
     public String endGame(int turn, int index) {

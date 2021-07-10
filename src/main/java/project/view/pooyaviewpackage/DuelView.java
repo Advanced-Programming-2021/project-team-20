@@ -729,15 +729,23 @@ public class DuelView {
                             conductPhaseChanging(output, false);
                         }
                     } else {
+                        boolean shouldPrepareAICard = false;
+                        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+                        if (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
+                            shouldPrepareAICard = true;
+                        }
+                        if (shouldPrepareAICard) {
+                            updatePrivacyForCardsForAI();
+                        }
                         String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
                         System.out.println("we are playing with ai");
                         System.out.println("&" + output + "&");
                         if (output.contains("phase: ")) {
+                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
                             if (output.contains("phase: draw phase") && output.contains("new card added to hand") && output.contains("phase: standby phase")) {
                                 GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                updatePrivacyForCardsForAI();
                                 //DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                                PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.3)));
+                                PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.2)));
                                 pauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent actionEvent) {
@@ -753,6 +761,17 @@ public class DuelView {
                                                     @Override
                                                     public void handle(ActionEvent actionEvent) {
                                                         GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                                                        PauseTransition newestPauseTransition = new PauseTransition(Duration.seconds(0.3));
+                                                        newestPauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                                                            @Override
+                                                            public void handle(ActionEvent actionEvent) {
+                                                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                                                                updatePrivacyForCards();
+                                                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
+                                                                advancedCardMovingController.advanceForwardBattleField();
+                                                            }
+                                                        });
+                                                        newestPauseTransition.play();
                                                     }
                                                 });
                                                 newerPauseTransition.play();
@@ -764,8 +783,6 @@ public class DuelView {
                                 });
                                 pauseTransition.play();
                             }
-                        } else {
-                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
                         }
                     }
                 } else {
