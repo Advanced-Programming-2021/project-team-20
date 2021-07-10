@@ -703,6 +703,7 @@ public class DuelView {
                 }
             }
         });
+        GamePhaseButton.removeAllGamePhaseButtons();
         drawPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_DRAW_PHASE);
         standByPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_STANDBY_PHASE);
         mainPhaseOneLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_1);

@@ -56,7 +56,7 @@ public class AdvancedCardMovingController {
         String string = DuelStarter.getGameManager().getWholeReportToClient();
         if (!string.isBlank()) {
             System.out.println("advanceForwardBattleField is called with input =\n" + string);
-            String winloss = "(\\S+) won the game and the score is: (\\S+) - (\\S+)";
+            String winloss = "(\\S+) won the game and the score is: (\\S+)";
             Pattern pattern = Pattern.compile(winloss);
             Matcher matcher = pattern.matcher(string);
             if (matcher.find()) {
@@ -74,7 +74,7 @@ public class AdvancedCardMovingController {
                 DuelView.endOneRoundOfDuel(matcher.group(0));
                 AdvancedCardMovingController.setReport("");
             } else {
-                winloss = "(\\S+) won the whole match with score: (\\S+) - (\\S+)";
+                winloss = "(\\S+) won the whole match with score: (\\S+)";
                 pattern = Pattern.compile(winloss);
                 matcher = pattern.matcher(string);
                 if (matcher.find()) {

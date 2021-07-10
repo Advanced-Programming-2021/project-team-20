@@ -228,4 +228,7 @@ public class GamePhaseButton extends Rectangle {
             allGamePhaseButtons.get(0).isColoredImageOn = true;
         }
     }
+    public static void removeAllGamePhaseButtons(){
+        allGamePhaseButtons.clear();
+    }
 }

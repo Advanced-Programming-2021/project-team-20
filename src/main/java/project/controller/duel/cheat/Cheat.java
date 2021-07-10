@@ -173,10 +173,10 @@ public class Cheat {
         DuelController duelController = GameManager.getDuelControllerByIndex(index);
         User allyUser = Storage.getUserByName(duelController.getPlayingUsers().get(0));
         User opponentUser = Storage.getUserByName(duelController.getPlayingUsers().get(1));
-        if (allyUser.getNickname().toLowerCase().equals(nickname)) {
+        if (allyUser.getNickname().equals(nickname)) {
             return duelController.endGame(1, index);
         }
-        if (opponentUser.getNickname().toLowerCase().equals(nickname)) {
+        if (opponentUser.getNickname().equals(nickname)) {
             return duelController.endGame(2, index);
         }
 
