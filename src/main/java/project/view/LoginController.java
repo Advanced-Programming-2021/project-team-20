@@ -79,7 +79,7 @@ public class LoginController implements Initializable {
         } else {
             createUser();
 			setOnlineUser(Storage.getUserByName(usernameFieldForRegister.getText()));
-            CustomDialog customDialog = new CustomDialog("USER CREATED SUCCESSFULLY!", "SUCCESSFUL", "mainMenu");
+            CustomDialog customDialog = new CustomDialog( "SUCCESSFUL","USER CREATED SUCCESSFULLY!", "mainMenu");
             customDialog.openDialog();
         }
         usernameFieldForRegister.setText("");
