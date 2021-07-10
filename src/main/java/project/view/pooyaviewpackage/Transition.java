@@ -61,18 +61,25 @@ public class Transition {
             translate.setAutoReverse(true);
             parallelTransition.getChildren().add(translate);
         }
-        parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
-                System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
-                if (turn == currentTurn){
-                    cardView.setCanBeSeen(true);
-                } else {
-                    cardView.setCanBeSeen(false);
-                }
-            }
-        });
+        int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
+        System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
+        if (turn == currentTurn){
+            cardView.setCanBeSeen(true);
+        } else {
+            cardView.setCanBeSeen(false);
+        }
+//        parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
+//                System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
+//                if (turn == currentTurn){
+//                    cardView.setCanBeSeen(true);
+//                } else {
+//                    cardView.setCanBeSeen(false);
+//                }
+//            }
+//        });
         ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardIncreasingInHand(turn);
         for (int i = 0; i < translateTransitions.size(); i++) {
             parallelTransition.getChildren().add(translateTransitions.get(i));

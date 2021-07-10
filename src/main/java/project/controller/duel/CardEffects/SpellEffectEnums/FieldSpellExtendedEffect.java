@@ -138,13 +138,12 @@ public class FieldSpellExtendedEffect {
             finalAttackPower += fieldSpellExtendedEffects.get(0).getFirstAttack();
             finalDefensePower += fieldSpellExtendedEffects.get(0).getFirstDefense();
         }
-        if (fieldSpellExtendedEffects.get(1).getFirstMonsterCardFamilies().contains(monsterCardFamily)) {
-            finalAttackPower += fieldSpellExtendedEffects.get(1).getFirstAttack();
-            finalDefensePower += fieldSpellExtendedEffects.get(1).getFirstDefense();
+        if (fieldSpellExtendedEffects.get(0).getSecondMonsterCardFamilies().contains(monsterCardFamily)) {
+            finalAttackPower += fieldSpellExtendedEffects.get(0).getSecondAttack();
+            finalDefensePower += fieldSpellExtendedEffects.get(0).getSecondDefense();
         }
         ArrayList<FieldSpellEffect> fieldSpellEffects = fieldSpellExtendedEffects.get(0).getFieldSpellEffects();
-        if (fieldSpellEffects
-            .contains(FieldSpellEffect.BEAST_MONSTERS_OWNER_CONTROLS_GAIN_100_ATK_FOR_EACH_MONSTER_IN_GY)
+        if (fieldSpellEffects.contains(FieldSpellEffect.BEAST_MONSTERS_OWNER_CONTROLS_GAIN_100_ATK_FOR_EACH_MONSTER_IN_GY)
             && fieldSpellExtendedEffects.get(0).getFirstMonsterCardFamilies().contains(monsterCardFamily)
             && isSpellFieldCardOnOurSide(monsterCardLocation, spellFieldCardLocation)) {
             RowOfCardLocation rowOfCardLocation = monsterCardLocation.getRowOfCardLocation();

@@ -33,6 +33,7 @@ import project.view.CustomDialog;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -219,8 +220,14 @@ public class DuelView {
         executor.setRemoveOnCancelPolicy(true);
     }
 
+    private DuelStage duelStage;
+
+    public DuelStage getDuelStage() {
+        return duelStage;
+    }
 
     public AnchorPane getAnchorpaneAtBeginning(Stage stage) {
+        duelStage = (DuelStage) stage;
         cheatCodes.setLength(0);
         // FakeMain.call();
         areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
@@ -229,6 +236,7 @@ public class DuelView {
         DuelView.stage.setTitle("Duel Page");
 
         AnchorPane anchorPane = new AnchorPane();
+        DuelView.anchorPane = anchorPane;
         System.out.println(battleFieldView == null);
         anchorPane.setOnMouseClicked(e -> {
             if (shouldDuelViewClickingAbilitiesWork) {
@@ -532,6 +540,14 @@ public class DuelView {
         return xHelperForCardViewConstructor;
     }
 
+    public static void setXHelperForCardViewConstructor(double xHelperForCardViewConstructor) {
+        DuelView.xHelperForCardViewConstructor = xHelperForCardViewConstructor;
+    }
+
+    public static void setYHelperForCardViewConstructor(double yHelperForCardViewConstructor) {
+        DuelView.yHelperForCardViewConstructor = yHelperForCardViewConstructor;
+    }
+
     public static double getYHelperForCardViewConstructor() {
         return yHelperForCardViewConstructor;
     }
@@ -564,7 +580,7 @@ public class DuelView {
         transition = new Transition();
         controllerForView = new ControllerForView();
         sendingRequestsToServer = new SendingRequestsToServer();
-        advancedCardMovingController = new AdvancedCardMovingController();
+        advancedCardMovingController = new AdvancedCardMovingController(this);
         showOptionsToUser = new AlertAndMenuItems();
         moreCardInfoSection = new MoreCardInfoSection();
         moreCardInfoGroup = new Group();
@@ -589,15 +605,31 @@ public class DuelView {
         lastTimeKeyPressed = currentTimeKeyPressed;
         if (keyEvent.getCode().getName().equals("Space")) {
             cheatCodes.append(" ");
+        } else if (keyEvent.getCode().getName().equalsIgnoreCase("minus")) {
+            cheatCodes.append("-");
+        } else if (keyEvent.getCode().getName().equalsIgnoreCase("shift")) {
+            duelStage.setShiftKeyOn(true);
         } else if (keyEvent.getCode().getName().equals("Enter")) {
             System.out.println(cheatCodes);
-            cheat.findCheatCommand(cheatCodes.toString(), 0);
+            String string = cheat.findCheatCommand(cheatCodes.toString(), 0);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Cheat Message");
+            alert.setContentText(string);
+            alert.showAndWait();
+            advancedCardMovingController.advanceForwardBattleField();
             cheatCodes.setLength(0);
         } else if (keyEvent.getCode().getName().startsWith("Numpad")) {
             cheatCodes.append(keyEvent.getCode().getName().charAt(keyEvent.getCode().getName().length() - 1));
         } else {
-            cheatCodes.append(keyEvent.getText());
+            if (duelStage.isShiftKeyOn()) {
+                cheatCodes.append(keyEvent.getCode().getName().toUpperCase());
+                duelStage.setShiftKeyOn(false);
+            } else {
+                cheatCodes.append(keyEvent.getCode().getName().toLowerCase());
+            }
         }
+        System.out.println(keyEvent.getText());
     }
 
     private void prepareObjectsForWorking() {
@@ -623,14 +655,16 @@ public class DuelView {
                 if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
                     oneRound = false;
                 }
+                int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
+                System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
                 String output = GameManager.getDuelControllerByIndex(0).getInput("surrender", true);
                 System.out.println("Surrender: " + output);
                 stage.close();
-                if (oneRound) {
-                    endOneRoundOfDuel(output);
-                } else {
-                    endGame(output);
-                }
+                // if (oneRound) {
+                //     endOneRoundOfDuel(output);
+                // } else {
+                endGame(output);
+                // }
             }
         });
         isGameMute = false;
@@ -669,6 +703,7 @@ public class DuelView {
                 }
             }
         });
+        GamePhaseButton.removeAllGamePhaseButtons();
         drawPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_DRAW_PHASE);
         standByPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_STANDBY_PHASE);
         mainPhaseOneLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -841,7 +876,7 @@ public class DuelView {
             }
             xHelperForCardViewConstructor = battleFieldView.getUpperLeftX() + 40;
             yHelperForCardViewConstructor = battleFieldView.getUpperLeftY() + 108;
-            CardView cardView = new CardView(currentCardForView, true, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
+            CardView cardView = new CardView(currentCardForView, false, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
             cardView.applyClickingAbilitiesToCardView(this);
             cardView.applyDragDetectingAbilityToCardView();
             System.out.println("preparing " + cardView.getCard().getCardName());
@@ -850,7 +885,6 @@ public class DuelView {
         moreCardInfoSection.updateCardMoreInfoSection((CardView) allCards.getChildren().get(0),
             ((CardView) allCards.getChildren().get(0)).getCard().getCardDescription());
     }
-
 
     public void updatePrivacyForCards() {
         ArrayList<CardView> allyCardViews = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
@@ -1086,12 +1120,12 @@ public class DuelView {
         }
     }
 
-    private void endOneRoundOfDuel(String result) {
+    public static void endOneRoundOfDuel(String result) {
         CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, true);
         customDialog.openDialog();
     }
 
-    private void endGame(String result) {
+    public static void endGame(String result) {
         CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, false);
         customDialog.openDialog();
     }
@@ -1121,7 +1155,7 @@ public class DuelView {
         return previousMouseEvent;
     }
 
-    public static project.model.modelsforview.CardView getDraggingObject() {
+    public static CardView getDraggingObject() {
         return draggingObject;
     }
 

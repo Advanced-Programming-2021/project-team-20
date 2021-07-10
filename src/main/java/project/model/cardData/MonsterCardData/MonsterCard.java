@@ -51,19 +51,23 @@ public class MonsterCard extends Card {
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
     private ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffects;
     private ArrayList<FieldSpellExtendedEffect> fieldSpellExtendedEffects;
-    public void addEquipSpellExtendedEffects(EquipSpellExtendedEffect equipSpellExtendedEffect){
+
+    public void addEquipSpellExtendedEffects(EquipSpellExtendedEffect equipSpellExtendedEffect) {
         this.equipSpellExtendedEffects.add(equipSpellExtendedEffect);
     }
-    public void removeEquipSpellExtendedEffect(EquipSpellExtendedEffect equipSpellExtendedEffect){
+
+    public void removeEquipSpellExtendedEffect(EquipSpellExtendedEffect equipSpellExtendedEffect) {
         this.equipSpellEffects.remove(equipSpellExtendedEffect);
     }
-    public void addFieldSpellExtendedEffects(FieldSpellExtendedEffect fieldSpellExtendedEffect){
+
+    public void addFieldSpellExtendedEffects(FieldSpellExtendedEffect fieldSpellExtendedEffect) {
         this.fieldSpellExtendedEffects.add(fieldSpellExtendedEffect);
     }
+
     public MonsterCard(int attackPower, int defensePower, int level, MonsterCardAttribute attribute,
-            MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
-            String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice,
-            HashMap<String, List<String>> enumValues, Image image) {
+                       MonsterCardFamily monsterCardFamily, MonsterCardValue monsterCardValue, String cardName,
+                       String cardDescription, CardPosition cardPosition, int numberOfAllowedUsages, int cardPrice,
+                       HashMap<String, List<String>> enumValues, Image image) {
         super(cardName, CardType.MONSTER, cardDescription, cardPosition, numberOfAllowedUsages, cardPrice, image);
         this.attackPower = attackPower;
         this.defensePower = defensePower;
@@ -105,9 +109,9 @@ public class MonsterCard extends Card {
             summoningRequirements.add(SummoningRequirement.CAN_BE_TRIBUTE_SUMMONED);
             summoningRequirements.add(SummoningRequirement.TRIBUTE_3_MONSTERS);
             summoningRequirements.add(
-                    SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+                SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             summoningRequirements
-                    .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+                .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_NORMAL_SUMMONED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
@@ -118,16 +122,16 @@ public class MonsterCard extends Card {
         }
         if (cardName.equals("Beast King Barbaros")) {
             summoningRequirements.add(
-                    SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+                SummoningRequirement.IN_CASE_OF_NORMAL_SUMMON_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             summoningRequirements
-                    .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
+                .add(SummoningRequirement.IN_CASE_OF_SET_THERE_IS_NO_NEED_TO_COUNT_NUMBER_OF_TRIBUTES_NEEDED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_NORMAL_SUMMONED);
             uponSummoningEffects.add(UponSummoningEffect.SET_ATK_1900_IF_SET);
             uponSummoningEffects.add(UponSummoningEffect.DESTROY_ALL_OF_YOUR_OPPONENTS_CARDS);
         }
         if (cardName.equals("Terratiger, the Empowered Warrior")) {
             uponSummoningEffects.add(
-                    UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
+                UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION);
         }
         if (cardName.equals("The Tricky")) {
             summoningRequirements.add(SummoningRequirement.CAN_BE_SPECIAL_SUMMONED);
@@ -141,34 +145,34 @@ public class MonsterCard extends Card {
         } else if (cardName.equals("Exploder Dragon")) {
             beingAttackedEffects.add(BeingAttackedEffect.NEITHER_PLAYER_RECEIVES_BATTLE_DAMAGE_IF_MONSTER_DIES);
             beingAttackedEffects
-                    .add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
+                .add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
         } else if (cardName.equals("Yomi Ship")) {
             beingAttackedEffects
-                    .add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
+                .add(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD);
         } else if (cardName.equals("Marshmallon")) {
             beingAttackedEffects.add(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE);
             beingAttackedEffects
-                    .add(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE);
+                .add(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE);
         } else if (cardName.equals("Texchanger")) {
             beingAttackedEffects.add(BeingAttackedEffect.NEGATE_ATTACK_ONCE_PER_TURN);
             beingAttackedEffects
-                    .add(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN);
+                .add(BeingAttackedEffect.SPECIAL_SUMMON_CYBERSE_NORMAL_MONSTER_FROM_HAND_GV_DECK_ONCE_PER_TURN);
         } else if (cardName.equals("Man-Eater Bug")) {
             flipEffects.add(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD);
         } else if (cardName.equals("Suijin")) {
             beingAttackedEffects.add(BeingAttackedEffect.SET_ATTACKING_MONSTER_ATK_TO_0_ONCE_PER_TURN);
         } else if (cardName.equals("Herald Of Creation")) {
             optionalMonsterEffects.add(
-                    OptionalMonsterEffect.ONCE_PER_TURN_DISCARD_1_CARD_SEND_LEVEL_7_OR_MORE_MONSTER_FROM_GY_TO_HAND);
+                OptionalMonsterEffect.ONCE_PER_TURN_DISCARD_1_CARD_SEND_LEVEL_7_OR_MORE_MONSTER_FROM_GY_TO_HAND);
         } else if (cardName.equals("Scanner")) {
             optionalMonsterEffects.add(
-                    OptionalMonsterEffect.ONCE_PER_TURN_CHOOSE_A_MONSTER_IN_YOUR_OPPONENTS_GRAVEYARD_AND_COPY_ALL_CHARACTERISTICS_UNTIL_THE_END_OF_THAT_TURN);
+                OptionalMonsterEffect.ONCE_PER_TURN_CHOOSE_A_MONSTER_IN_YOUR_OPPONENTS_GRAVEYARD_AND_COPY_ALL_CHARACTERISTICS_UNTIL_THE_END_OF_THAT_TURN);
         } else if (cardName.equals("The Calculator")) {
             continuousMonsterEffects.add(
-                    ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL);
+                ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL);
         } else if (cardName.equals("Mirage Dragon")) {
             continuousMonsterEffects
-                    .add(ContinuousMonsterEffect.OPPONENT_CANNOT_ACTIVATE_TRAP_CARDS_WHILE_THIS_CARD_IS_FACE_UP);
+                .add(ContinuousMonsterEffect.OPPONENT_CANNOT_ACTIVATE_TRAP_CARDS_WHILE_THIS_CARD_IS_FACE_UP);
         } else if (cardName.equals("Command Knight")) {
             continuousMonsterEffects.add(ContinuousMonsterEffect.ALL_MONSTERS_OWNER_CONTROLS_GAIN_400_ATK);
             continuousMonsterEffects.add(ContinuousMonsterEffect.CANNOT_BE_ATTACKED_IF_YOU_CONTROL_ANOTHER_MONSTER);
@@ -181,7 +185,7 @@ public class MonsterCard extends Card {
 
     public MonsterCard(MonsterCard monster) {
         super(monster.getCardName(), CardType.MONSTER, monster.getCardDescription(), monster.getCardPosition(),
-                monster.getNumberOfAllowedUsages(), monster.getCardPrice(), monster.getImage());
+            monster.getNumberOfAllowedUsages(), monster.getCardPrice(), monster.getImage());
         this.attackPower = monster.getAttackPower();
         this.defensePower = monster.getDefensePower();
         this.attackPowerConsideringEffects = 0;
@@ -203,6 +207,7 @@ public class MonsterCard extends Card {
         this.sentToGraveyardEffects = monster.getSentToGraveyardEffects();
         this.equipSpellEffects = monster.getEquipSpellEffects();
         this.fieldSpellEffects = monster.getFieldSpellEffects();
+        this.equipSpellExtendedEffects = monster.getEquipSpellExtendedEffects();
     }
 
     public MonsterCardValue getMonsterCardValue() {
@@ -394,7 +399,7 @@ public class MonsterCard extends Card {
 
         for (int i = 1; i < enumValues.get("ContinuousMonsterEffect").size(); i++) {
             continuousMonsterEffects
-                    .add(ContinuousMonsterEffect.valueOf(enumValues.get("ContinuousMonsterEffect").get(i)));
+                .add(ContinuousMonsterEffect.valueOf(enumValues.get("ContinuousMonsterEffect").get(i)));
         }
 
         for (int i = 1; i < enumValues.get("FlipEffect").size(); i++) {
@@ -433,21 +438,21 @@ public class MonsterCard extends Card {
         if (cardLocationOfFirstSpellFieldCard != null) {
             System.out.println("ally has spell field card %%%");
             finalAttackPower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                    cardLocationOfFirstSpellFieldCard, index, "attack");
+                cardLocationOfFirstSpellFieldCard, index, "attack");
             finalDefensePower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                    cardLocationOfFirstSpellFieldCard, index, "defense");
+                cardLocationOfFirstSpellFieldCard, index, "defense");
         }
         if (cardLocationOfSecondSpellFieldCard != null) {
             System.out.println("opponent has spell field card %%%");
             finalAttackPower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                    cardLocationOfSecondSpellFieldCard, index, "attack");
+                cardLocationOfSecondSpellFieldCard, index, "attack");
             finalDefensePower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                    cardLocationOfSecondSpellFieldCard, index, "defense");
+                cardLocationOfSecondSpellFieldCard, index, "defense");
 
         }
         finalAttackPower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("attack", cardLocation, index);
         finalDefensePower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("defense", cardLocation,
-                index);
+            index);
         if (string.equals("attack")) {
             return finalAttackPower;
         }
@@ -459,32 +464,32 @@ public class MonsterCard extends Card {
 
 
     private static int giveChangesInATKDEFConsideringContinuousMonsterEffect(CardLocation cardLocation, int index,
-            String attackOrDefense) {
+                                                                             String attackOrDefense) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(cardLocation);
         ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = monsterCard.getContinuousMonsterEffects();
         int finalAttackPower = 0;
         int finalDefensePower = 0;
         if (continuousMonsterEffects.contains(
-                ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL)) {
+            ContinuousMonsterEffect.ATK_IS_SET_300_MULTIPLIED_BY_TOTAL_OF_FACE_UP_MONSTER_LEVELS_YOU_CONTROL)) {
             int sumOfLevels = 0;
             if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                 for (int i = 0; i < 5; i++) {
                     Card card = duelBoard
-                            .getCardByCardLocation(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1));
+                        .getCardByCardLocation(new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1));
                     if (Card.isCardAMonster(card)
-                            && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
-                                    || card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                        && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
+                        || card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
                         sumOfLevels += ((MonsterCard) card).getLevel();
                     }
                 }
             } else {
                 for (int i = 0; i < 5; i++) {
                     Card card = duelBoard
-                            .getCardByCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1));
+                        .getCardByCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1));
                     if (Card.isCardAMonster(card)
-                            && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
-                                    || card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                        && (card.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
+                        || card.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
                         sumOfLevels += ((MonsterCard) card).getLevel();
                     }
                 }
@@ -498,7 +503,7 @@ public class MonsterCard extends Card {
     }
 
     private static int giveChangesInATKDEFConsideringOtherContinuousMonsterEffects(String string,
-            CardLocation cardLocation, int index) {
+                                                                                   CardLocation cardLocation, int index) {
         if (string.equals("defense")) {
             return 0;
         }
@@ -515,7 +520,7 @@ public class MonsterCard extends Card {
     }
 
     private static int giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(ArrayList<Card> monsterCards,
-            int index) {
+                                                                                    int index) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
         int attackChanges = 0;
         for (int i = 0; i < monsterCards.size(); i++) {
@@ -523,10 +528,10 @@ public class MonsterCard extends Card {
             MonsterCard sampleMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(cardLocationOfAllyMonster);
             if (sampleMonsterCard != null) {
                 ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = sampleMonsterCard
-                        .getContinuousMonsterEffects();
+                    .getContinuousMonsterEffects();
                 if (continuousMonsterEffects.contains(ContinuousMonsterEffect.ALL_MONSTERS_OWNER_CONTROLS_GAIN_400_ATK)
-                        && (sampleMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
-                                || sampleMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
+                    && (sampleMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
+                    || sampleMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION))) {
                     attackChanges += 400;
                 }
             }

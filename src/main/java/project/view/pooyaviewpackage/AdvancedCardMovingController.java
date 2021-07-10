@@ -4,12 +4,14 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import project.controller.duel.PreliminaryPackage.DuelStarter;
 import project.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
@@ -21,62 +23,116 @@ import java.awt.*;
 import java.awt.image.PixelInterleavedSampleModel;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AdvancedCardMovingController {
     ArrayList<ChangeConductor> allChangeConductorsObjects;
+    private static String report = "";
+    private DuelView duelView;
+    private static Card newlyAddedCard;
+
+    public static void setNewlyAddedCard(Card newlyAddedCard) {
+        AdvancedCardMovingController.newlyAddedCard = newlyAddedCard;
+    }
+
+    public AdvancedCardMovingController(DuelView duelView) {
+        this.duelView = duelView;
+    }
+
+    public static String getReport() {
+        return report;
+    }
+
+    public static void setReport(String report) {
+        AdvancedCardMovingController.report = report;
+    }
 
     public ArrayList<ChangeConductor> getAllChangeConductorsObjects() {
         return allChangeConductorsObjects;
     }
 
     public void advanceForwardBattleField() {
-        String string = GameManager.getDuelControllerByIndex(0).getWholeReportToClient();
+        String string = DuelStarter.getGameManager().getWholeReportToClient();
         if (!string.isBlank()) {
             System.out.println("advanceForwardBattleField is called with input =\n" + string);
-            String[] miniStrings = string.split("\n");
-            int numberOfUserSayings = 0;
-            for (int i = 0; i < miniStrings.length; i++) {
-                if (miniStrings[i].startsWith("*")) {
-                    numberOfUserSayings++;
+            String winloss = "(\\S+) won the game and the score is: (\\S+)";
+            Pattern pattern = Pattern.compile(winloss);
+            Matcher matcher = pattern.matcher(string);
+            if (matcher.find()) {
+                report = matcher.group(0);
+                boolean oneRound = true;
+                if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
+                    oneRound = false;
                 }
-            }
-            ArrayList<ArrayList<String>> changeConductorsInStringForm = new ArrayList<>();
-            ArrayList<String> bulkOfStrings = new ArrayList<>();
-            boolean firstTimeOccurringUserSaying = true;
-            for (int i = 0; i < miniStrings.length; i++) {
-                System.out.println("one of ministrings " + i + " is " + miniStrings[i]);
-                if (miniStrings[i].startsWith("*") && firstTimeOccurringUserSaying) {
-                    bulkOfStrings.add(miniStrings[i]);
-                    firstTimeOccurringUserSaying = false;
-                } else if (miniStrings[i].startsWith("*")) {
-                    //changeConductorsInStringForm.get(helpIndex).add(new ArrayList<>());
+                int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
+                System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
+                String output = AdvancedCardMovingController.getReport();
+                System.out.println("WinLoss: " + output);
+                DuelView.getStage().close();
+                // if (!oneRound && (currentRound == 1 || currentRound == 2)) {
+                DuelView.endOneRoundOfDuel(matcher.group(0));
+                AdvancedCardMovingController.setReport("");
+            } else {
+                winloss = "(\\S+) won the whole match with score: (\\S+)";
+                pattern = Pattern.compile(winloss);
+                matcher = pattern.matcher(string);
+                if (matcher.find()) {
+                    report = matcher.group(0);
+                    //System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
+                    //   String output = AdvancedCardMovingController.getReport();
+                    //    System.out.println("WinLoss: " + output);
+                    DuelView.getStage().close();
+                    DuelView.endGame(matcher.group(0));
+                    //    AdvancedCardMovingController.setReport("");
+                } else {
+                    String[] miniStrings = string.split("\n");
+                    int numberOfUserSayings = 0;
+                    for (int i = 0; i < miniStrings.length; i++) {
+                        if (miniStrings[i].startsWith("*")) {
+                            numberOfUserSayings++;
+                        }
+                    }
+                    ArrayList<ArrayList<String>> changeConductorsInStringForm = new ArrayList<>();
+                    ArrayList<String> bulkOfStrings = new ArrayList<>();
+                    boolean firstTimeOccurringUserSaying = true;
+                    for (int i = 0; i < miniStrings.length; i++) {
+                        System.out.println("one of ministrings " + i + " is " + miniStrings[i]);
+                        if (miniStrings[i].startsWith("*") && firstTimeOccurringUserSaying) {
+                            bulkOfStrings.add(miniStrings[i]);
+                            firstTimeOccurringUserSaying = false;
+                        } else if (miniStrings[i].startsWith("*")) {
+                            //changeConductorsInStringForm.get(helpIndex).add(new ArrayList<>());
+                            changeConductorsInStringForm.add(bulkOfStrings);
+                            bulkOfStrings = new ArrayList<>();
+                            bulkOfStrings.add(miniStrings[i]);
+                        } else {
+                            bulkOfStrings.add(miniStrings[i]);
+                        }
+                    }
                     changeConductorsInStringForm.add(bulkOfStrings);
                     bulkOfStrings = new ArrayList<>();
-                    bulkOfStrings.add(miniStrings[i]);
-                } else {
-                    bulkOfStrings.add(miniStrings[i]);
-                }
-            }
-            changeConductorsInStringForm.add(bulkOfStrings);
-            bulkOfStrings = new ArrayList<>();
-            allChangeConductorsObjects = new ArrayList<>();
-            int helpIndex = 0;
-            for (int i = 0; i < changeConductorsInStringForm.size(); i++) {
-                for (int j = 0; j < changeConductorsInStringForm.get(i).size(); j++) {
-                    System.out.println("this string is being added " + changeConductorsInStringForm.get(i).get(j));
-                    allChangeConductorsObjects.add(new ChangeConductor(changeConductorsInStringForm.get(i).get(j), helpIndex));
-                    helpIndex++;
-                }
+                    allChangeConductorsObjects = new ArrayList<>();
+                    int helpIndex = 0;
+                    for (int i = 0; i < changeConductorsInStringForm.size(); i++) {
+                        for (int j = 0; j < changeConductorsInStringForm.get(i).size(); j++) {
+                            System.out.println("this string is being added " + changeConductorsInStringForm.get(i).get(j));
+                            allChangeConductorsObjects.add(new ChangeConductor(changeConductorsInStringForm.get(i).get(j), helpIndex));
+                            helpIndex++;
+                        }
 //            ArrayList<Object> giveMeObjects = improveForwardBattleFieldItShouldGiveArrayListOfAllElements(changeConductorsInStringForm.get(i));
 //            for (int j = 0; j < giveMeObjects.size(); j++) {
 //                allChangeConductorsObjects.add(new ChangeConductor(giveMeObjects.get(j)));
 //            }
-            }
+                    }
 //        for (int i = 0; i < allChangeConductorsObjects.size() - 1; i++) {
 //            allChangeConductorsObjects.get(i).chainThisChangeConductorToYourself(allChangeConductorsObjects.get(i + 1));
 //        }
-            allChangeConductorsObjects.get(0).conductChange();
-            GameManager.getDuelControllerByIndex(0).clearWholeReportToClient();
+                    allChangeConductorsObjects.get(0).conductChange();
+                    DuelStarter.getGameManager().clearWholeReportToClient();
+                }
+            }
+
         }
     }
 
@@ -124,12 +180,31 @@ public class AdvancedCardMovingController {
         } else {
             System.out.println("Look dude my string is " + change);
             String[] subCommands = change.split(" ");
+            int sideOfFinalDestination = (subCommands[9].equals("zone") ? 0 : Integer.parseInt(subCommands[9]));
+            if (subCommands[1].equals("UNKNOWN")) {
+                int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+                if (turn == 1){
+                    DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() +
+                        DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7);
+                    DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY() +
+                        DuelView.getBattleFieldView().getHeight() - 2 * CardView.getCardHeight() + 20);
+                } else {
+                    DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX()+40);
+                    DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY()+108);
+                }
+                System.out.println("cheating card name is "+newlyAddedCard.getCardName()+" going to sideOfFInalDestination = "+sideOfFinalDestination+
+                    " right now turn = "+GameManager.getDuelControllerByIndex(0).getTurn());
+                CardView cardView = new CardView(newlyAddedCard, true,
+                    (turn == 1 ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE), duelView);
+                DuelView.getAllCards().getChildren().add(cardView);
+                return new ObjectOfChange(DuelView.getTransition().sendCardToHandZone(cardView, sideOfFinalDestination), action.NOT_APPLICABLE);
+            }
             RowOfCardLocation initialRowOfCardLocation = RowOfCardLocation.valueOf(subCommands[1]);
             int initialSide = (initialRowOfCardLocation.toString().startsWith("ALLY") ? 1 : 2);
             int index = Integer.parseInt(subCommands[2]);
             boolean staying = subCommands[5].equals("stayed");
             String finalDestination = subCommands[7];
-            int sideOfFinalDestination = (subCommands[9].equals("zone") ? 0 : Integer.parseInt(subCommands[9]));
+
             CardPosition finalCardPosition = (subCommands[14].equals("NO_CHANGE") ? CardPosition.NOT_APPLICABLE : CardPosition.valueOf(subCommands[14]));
             System.out.println("rowOfCardLocation = " + initialRowOfCardLocation + " index = " + index + " finalDestination = " +
                 finalDestination + " sideOfFinalDestination = " + sideOfFinalDestination + " finalCardPosition = " + finalCardPosition);
@@ -227,6 +302,30 @@ class ChangeConductor implements conductChange {
         if (helpIndex != DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().size() - 1) {
             chainThisChangeConductorToYourself();
         }
+//        else {
+//            if (!AdvancedCardMovingController.getReport().equals("")) {
+//                Platform.runLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        boolean oneRound = true;
+//                        if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
+//                            oneRound = false;
+//                        }
+//                        int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
+//                        System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
+//                        String output = AdvancedCardMovingController.getReport();
+//                        System.out.println("WinLoss: " + output);
+//                        DuelView.getStage().close();
+//                        if (!oneRound && (currentRound == 1 || currentRound == 2)) {
+//                            DuelView.endOneRoundOfDuel(output);
+//                        } else {
+//                            DuelView.endGame(output);
+//                        }
+//                        AdvancedCardMovingController.setReport("");
+//                    }
+//                });
+//            }
+//        }
         AudioClip audioClip = objectOfChange.giveMediaPlayerBasedOnAction();
         if (objectOfChange.getObject() instanceof ParallelTransition) {
             ((ParallelTransition) objectOfChange.getObject()).play();

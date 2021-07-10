@@ -88,7 +88,7 @@ public class DuelStarter {
 
         if (!isThisDeckValid(secondUserActiveDeck)) {
             return secondUserName + " has not valid deck";
-        } 
+        }
        DuelStarter.numberOfRounds = numberOfRounds;
        DuelStarter.firstPlayer = firstUserName;
        DuelStarter.secondPlayer = secondUserName;
@@ -102,9 +102,14 @@ public class DuelStarter {
         Deck secondUserActiveDeck = getActiveDeck(secondUser);
         startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
     }
+    private static GameManager gameManager;
+
+    public static GameManager getGameManager() {
+        return gameManager;
+    }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber, Deck firstUserActiveDeck,
-            Deck secondUserActiveDeck) {
+                              Deck secondUserActiveDeck) {
 
         ArrayList<Card> firstUserMainDeck = getMainOrSideDeckCards(firstUserActiveDeck, true);
         ArrayList<Card> firstUserSideDeck = getMainOrSideDeckCards(firstUserActiveDeck, false);
@@ -112,7 +117,7 @@ public class DuelStarter {
         ArrayList<Card> secondUserSideDeck = getMainOrSideDeckCards(secondUserActiveDeck, false);
         Collections.shuffle(firstUserMainDeck);
         Collections.shuffle(secondUserMainDeck);
-        GameManager gameManager = new GameManager();
+        gameManager = new GameManager();
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
                 secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
         GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
