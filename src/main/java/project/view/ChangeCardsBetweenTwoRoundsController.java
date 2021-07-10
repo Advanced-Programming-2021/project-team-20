@@ -37,6 +37,7 @@ import project.controller.duel.Utility.Utility;
 import project.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.cardData.General.Card;
+import project.view.pooyaviewpackage.DuelView;
 
 public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
@@ -117,10 +118,16 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     public void confirmChanges() {
         if (currentPlayerWhoChangesDeck.equals(opponentPlayerName) || opponentPlayerName.equals("AI")) {
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+            ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager
+                    .getChangeCardsBetweenTwoRoundsByIndex(0);
             Deck firstPlayerActiveDeck = changeCardsBetweenTwoRounds.getAllyPlayerDeck();
             Deck secondPlayerActiveDeck = changeCardsBetweenTwoRounds.getOpponentPlayerDeck();
             duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
                     DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
+            GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(0).startDuel(0);
+            SongPlayer.getInstance().pauseMusic();
+            DuelView.callStage();
         } else {
             currentPlayerWhoChangesDeck = opponentPlayerName;
             AnchorPane pane = null;
