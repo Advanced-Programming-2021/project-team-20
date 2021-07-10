@@ -1236,7 +1236,7 @@ public class CardCreatorController implements Initializable {
             customDialog.openDialog();
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
-        backToMainMenu();
+     //   backToMainMenu();
     }
 
     private ArrayList<String> getEnumsWithNumbers() {
@@ -1251,13 +1251,13 @@ public class CardCreatorController implements Initializable {
         return answer;
     }
 
-    private void backToMainMenu() {
-        try {
-            new MainView().changeView("/project/fxml/mainMenu.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // private void backToMainMenu() {
+    //     try {
+    //         new MainView().changeView("/project/fxml/mainMenu.fxml");
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
 
     private void changeAdditionOfThisEffectInTheGivenPlace(int finalI, ArrayList<Integer> integersValues, ArrayList<Button> buttons) {
@@ -1755,7 +1755,7 @@ public class CardCreatorController implements Initializable {
             UIStorage.addNodesForViewWhenNewCardCreated();
         }
 
-        backToMainMenu();
+     //   backToMainMenu();
     }
 
 
@@ -2764,15 +2764,9 @@ public class CardCreatorController implements Initializable {
             customDialog.openDialog();
         } else {
             LoginController.getOnlineUser().setMoney((int) (currentMoneyOfUser - 0.1 * currentPrice));
-<<<<<<< HEAD
-            // SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
-            //     CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
-            //     currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
-=======
 //            SpellCard1 spellCard = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
 //                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
 //                currentPrice, hashMapEffects, cardImage, monsterFamilySelectedInSpell, numbersOfEffectsToSend);
->>>>>>> 2a6ccdde4f44e31f4098a78adccde00c8d44730b
 
 //            SpellCard1 spellCard1 = new SpellCard1(cardName, cardDescription, SpellCardValue.valueOf(spellCardValue),
 //                CardPosition.NOT_APPLICABLE, numberOfAllowedUsages, numberOfTurnsForActivationSpell,
@@ -2785,7 +2779,7 @@ public class CardCreatorController implements Initializable {
         }
 
 
-        backToMainMenu();
+      //   backToMainMenu();
 
     }
 
@@ -2798,6 +2792,6 @@ public class CardCreatorController implements Initializable {
 
 
     public void back(ActionEvent actionEvent) {
-        backToMainMenu();
+        // backToMainMenu();
     }
 }
