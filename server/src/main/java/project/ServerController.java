@@ -16,6 +16,7 @@ public class ServerController {
     private static String badRequestFormat = "Bad request format";
     private static String error = "Error";
     private static String successful = "Successful";
+    private static String type = "type";
     private static HashMap<String, User> loginedUsers = new HashMap<>();
 
     public static void runServer() {
@@ -69,7 +70,7 @@ public class ServerController {
         try {
             if (rootNode.isJsonObject()) {
                 JsonObject details = rootNode.getAsJsonObject();
-                String type = details.get("type").getAsString();
+                String type = details.get(ServerController.type).getAsString();
                 return findCommand(type, details);
             } else {
                 return badRequestFormat;
@@ -101,5 +102,9 @@ public class ServerController {
 
     public static String getSuccessful() {
         return successful;
+    }
+
+    public static HashMap<String, User> getLoginedUsers() {
+        return loginedUsers;
     }
 }

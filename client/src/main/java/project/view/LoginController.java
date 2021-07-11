@@ -1,11 +1,18 @@
 package project.view;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.ResourceBundle;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +20,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import project.DeserializeInformationFromServer;
+import project.ServerConnection;
+import project.ToGsonFormatToSendDataToServer;
 import project.controller.non_duel.storage.Storage;
 import project.model.User;
 
@@ -33,11 +44,12 @@ public class LoginController implements Initializable {
     private PasswordField passwordFieldfORegister;
 
     private static User onlineUser;
+    private static String token;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-            SongPlayer.getInstance().pauseMusic();
-            SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
     }
 
     public void loginUser(ActionEvent ev) {
@@ -72,49 +84,40 @@ public class LoginController implements Initializable {
         if (usernameFieldForRegister.getText().equals("") || nickNameFieldForRegister.getText().equals("")
                 || passwordFieldfORegister.getText().equals("")) {
             showAlert("FILL FIELDS", "ERROR");
-        } else if (doesUserWithThisUsernameAlreadyExists()) {
-            showAlert("USERNAME IS REPEATED", "ERROR");
-        } else if (doesUserWithThisNicknameAlreadyExists()) {
-            showAlert("NICKNAME IS REPEATED", "ERROR");
-        } else {
-            createUser();
-			setOnlineUser(Storage.getUserByName(usernameFieldForRegister.getText()));
-            CustomDialog customDialog = new CustomDialog( "SUCCESSFUL","USER CREATED SUCCESSFULLY!", "mainMenu");
-            customDialog.openDialog();
+            return;
         }
+        String data = ToGsonFormatToSendDataToServer.ToGsonFormatRegister(usernameFieldForRegister.getText(),
+                nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
+        String result = ServerConnection.sendDataToServerAndRecieveResult(data);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.DeserializeRegister(result);
+        if (deserializeResult.get(DeserializeInformationFromServer.getType())
+                .equals(DeserializeInformationFromServer.getError())) {
+            showAlert(deserializeResult.get(DeserializeInformationFromServer.getMessage()),
+                    DeserializeInformationFromServer.getError());
+        } else {
+            token = deserializeResult.get(DeserializeInformationFromServer.getToken());
+            CustomDialog customDialog = new CustomDialog(DeserializeInformationFromServer.getSuccess(),
+                    deserializeResult.get(DeserializeInformationFromServer.getMessage()), "mainMenu");
+            customDialog.openDialog();
+            onlineUser = new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
+                    passwordFieldfORegister.getText(), "");
+            onlineUser.setImage(createImageAlaki());
+        }
+
         usernameFieldForRegister.setText("");
         passwordFieldfORegister.setText("");
         nickNameFieldForRegister.setText("");
     }
 
-    private void createUser() {
-        String filePath = chooseRandomImageForUser();
-        User user = new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
-                passwordFieldfORegister.getText(), filePath);
-        user.setImage(UIStorage.createImages(filePath));
-        Storage.addUserToAllUsers(user);
-
-    }
-
-    private boolean doesUserWithThisUsernameAlreadyExists() {
-        if (Storage.getUserByName(usernameFieldForRegister.getText()) == null)
-            return false;
-        return true;
-    }
-
-    private boolean doesUserWithThisNicknameAlreadyExists() {
-        ArrayList<User> allUsers = Storage.getAllUsers();
-        for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getNickname().equals(nickNameFieldForRegister.getText()))
-                return true;
+    private Image createImageAlaki() {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream("\\src\\main\\resources\\project\\images\\userLabel.jpg");
+            return new Image(stream);
+        } catch (Exception e) {
+            System.out.println("exception in createImageAlaki");
         }
-        return false;
-    }
-
-    private String chooseRandomImageForUser() {
-        File dir = new File("client\\src\\main\\resources\\project\\images\\Characters\\radomCharacters");
-        File[] images = dir.listFiles();
-        return images[new Random().nextInt(images.length)].getPath();
+        return new Image(stream);
     }
 
     public static void setOnlineUser(User onlineUser) {
@@ -124,5 +127,4 @@ public class LoginController implements Initializable {
     public static User getOnlineUser() {
         return onlineUser;
     }
-
 }

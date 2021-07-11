@@ -19,4 +19,16 @@ public class ServerConnection {
             x.printStackTrace();
         }
     }
+
+    public static String sendDataToServerAndRecieveResult(String data) {
+        try {
+            dataOutputStream.writeUTF(data);
+            dataOutputStream.flush();
+            return dataInputStream.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "exception";
+        }
+
+    }
 }

@@ -47,10 +47,10 @@ public class LoginMenu {
     private static String createUser(String userName, String nickName, String password) {
         String filePath = chooseRandomImageForUser();
         Storage.addUserToAllUsers(new User(userName, nickName, password, filePath));
-        return "user created successfully!";
+        return "USER CREATED SUCCESSFULLY!";
     }
 
-    private boolean doesUserWithThisUsernameAlreadyExistsLoginMenu(String command) {
+    private static boolean doesUserWithThisUsernameAlreadyExistsLoginMenu(String command) {
         String username = LoginMenuPatterns.findUsernameLoginUser(command);
         if (Storage.getUserByName(username) == null)
             return false;
@@ -94,17 +94,29 @@ public class LoginMenu {
 
         if (doesUserWithThisUsernameAlreadyExistsCreateMenu(userName)) {
             return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getError(),
-                    "user with username " + userName + " already exists");
+                    "USERNAME IS REPEATED");
         }
         if (doesUserWithThisNicknameAlreadyExists(nickName)) {
             return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getError(),
-                    "user with nickname " + nickName + " already exists");
+                    "NICKNAME IS REPEATED");
         }
         return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getSuccessful(),
                 createUser(userName, nickName, password));
     }
 
     public static synchronized String loginUser(JsonObject details) {
+        String userName = "";
+        String password = "";
+        try {
+            userName = details.get("userName").getAsString();
+            password = details.get("password").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+
+        if(!doesUserWithThisUsernameAlreadyExistsLoginMenu(userName)){
+
+        }
         return null;
     }
 
