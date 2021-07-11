@@ -47,7 +47,7 @@ public class ServerController {
                 socket.close();
                 serverSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("connection reset");
             }
         }).start();
     }
@@ -56,9 +56,14 @@ public class ServerController {
             throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
+            System.out.println(input);
             String result = process(input);
             if (result.equals(""))
                 break;
+            System.out.println(result);
+            if(result.equals("sendImage")){
+                
+            }
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
         }

@@ -2,7 +2,10 @@ package project.controller.loginMenu;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.awt.image.*;
 
 import com.google.gson.JsonObject;
 
@@ -13,48 +16,17 @@ import project.model.User;
 
 public class LoginMenu {
 
-    public String findCommand(String command) {
-
-        if (LoginMenuPatterns.isItCreateUserPattern(command)) {
-            if (doesUserWithThisUsernameAlreadyExistsCreateMenu(command)) {
-                String username = LoginMenuPatterns.findUsernameCreateUser(command);
-                return "user with username " + username + " already exists";
-            }
-            if (doesUserWithThisNicknameAlreadyExists(command)) {
-                String nickname = LoginMenuPatterns.findNicknameCreateUser(command);
-                return "user with nickname " + nickname + " already exists";
-            }
-            // return createUser(command);
-        }
-        if (LoginMenuPatterns.isItLoginUserPattern(command)) {
-            if (!doesUserWithThisUsernameAlreadyExistsLoginMenu(command)) {
-                return "Username and password didn't match!";
-            }
-            if (!doesPasswordAndUsernameMatch(command)) {
-                return "Username and password didn't match!";
-            }
-            return loginUser(command);
-        }
-        return "invalid command";
-    }
-
-    private static boolean doesUserWithThisUsernameAlreadyExistsCreateMenu(String userName) {
+    private static boolean doesUserWithThisUsernameAlreadyExists(String userName) {
         if (Storage.getUserByName(userName) == null)
             return false;
         return true;
     }
 
-    private static String createUser(String userName, String nickName, String password) {
+    private static User createUser(String userName, String nickName, String password) {
         String filePath = chooseRandomImageForUser();
-        Storage.addUserToAllUsers(new User(userName, nickName, password, filePath));
-        return "USER CREATED SUCCESSFULLY!";
-    }
-
-    private static boolean doesUserWithThisUsernameAlreadyExistsLoginMenu(String command) {
-        String username = LoginMenuPatterns.findUsernameLoginUser(command);
-        if (Storage.getUserByName(username) == null)
-            return false;
-        return true;
+        User user = new User(userName, nickName, password, filePath);
+        Storage.addUserToAllUsers(user);
+        return user;
     }
 
     private static boolean doesUserWithThisNicknameAlreadyExists(String nickName) {
@@ -72,10 +44,7 @@ public class LoginMenu {
         return "user logged in successfully!";
     }
 
-    private boolean doesPasswordAndUsernameMatch(String command) {
-        String username = LoginMenuPatterns.findUsernameLoginUser(command);
-        String password = LoginMenuPatterns.findPasswordLoginUser(command);
-        User user = Storage.getUserByName(username);
+    private static boolean doesPasswordAndUsernameMatch(User user, String password) {
         String correctPassword = user.getPassword();
         return correctPassword.equals(password);
     }
@@ -92,16 +61,17 @@ public class LoginMenu {
             return ServerController.getBadRequestFormat();
         }
 
-        if (doesUserWithThisUsernameAlreadyExistsCreateMenu(userName)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getError(),
-                    "USERNAME IS REPEATED");
+        if (doesUserWithThisUsernameAlreadyExists(userName)) {
+            return ToGsonFormatForSendInformation.toGsonFormatForRegister(ServerController.getError(),
+                    "USERNAME IS REPEATED", null);
         }
         if (doesUserWithThisNicknameAlreadyExists(nickName)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getError(),
-                    "NICKNAME IS REPEATED");
+            return ToGsonFormatForSendInformation.toGsonFormatForRegister(ServerController.getError(),
+                    "NICKNAME IS REPEATED", null);
         }
-        return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getSuccessful(),
-                createUser(userName, nickName, password));
+        User user = createUser(userName, nickName, password);
+        return ToGsonFormatForSendInformation.toGsonFormatForRegister(ServerController.getSuccessful(),
+                "USER CREATED SUCCESSFULY!", user);
     }
 
     public static synchronized String loginUser(JsonObject details) {
@@ -114,14 +84,31 @@ public class LoginMenu {
             return ServerController.getBadRequestFormat();
         }
 
-        if(!doesUserWithThisUsernameAlreadyExistsLoginMenu(userName)){
-
+        if (!doesUserWithThisUsernameAlreadyExists(userName)) {
+            return ToGsonFormatForSendInformation.toGsonFormatForLogin(ServerController.getError(),
+                    "Username And Password Didn't Match!", null);
         }
-        return null;
+        User user = Storage.getUserByName(userName);
+        if (!doesPasswordAndUsernameMatch(user, password)) {
+            return ToGsonFormatForSendInformation.toGsonFormatForLogin(ServerController.getError(),
+                    "Username And Password Didn't Match!", null);
+        }
+        HashMap<String, User> loginedUsers = ServerController.getLoginedUsers();
+
+        for (Map.Entry<String, User> entry : loginedUsers.entrySet()) {
+            if (user.getName().equals(entry.getValue().getName())) {
+                return ToGsonFormatForSendInformation.toGsonFormatForLogin(ServerController.getError(), "User Allready logined", null);
+            }
+        }
+
+        // Image iamge ;
+
+        return ToGsonFormatForSendInformation.toGsonFormatForLogin(ServerController.getSuccessful(),
+                "User Logined Successfully!", user);
     }
 
     private static String chooseRandomImageForUser() {
-        File dir = new File("server\\src\\main\\resources\\project\\images\\Characters\\radomCharacters");
+        File dir = new File("src\\main\\resources\\project\\images\\Characters\\radomCharacters");
         File[] images = dir.listFiles();
         return images[new Random().nextInt(images.length)].getPath();
     }

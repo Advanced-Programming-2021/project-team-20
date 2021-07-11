@@ -47,13 +47,13 @@ public class Storage {
 
     public void startProgram() throws Exception {
 
-        addUsersToArrayList();
-        addMonsterCards();
-        addTrapCards();
-        addSpellCards();
+        // addUsersToArrayList();
+        // addMonsterCards();
+        // addTrapCards();
+        // addSpellCards();
 
-        unknownCard = new Card("cardName", null, "", null, 10, 125, null);
-        unknownCard.setImage(createImageOfCards("Unknown"));
+        // unknownCard = new Card("cardName", null, "", null, 10, 125, null);
+        // unknownCard.setImage(createImageOfCards("Unknown"));
 
     }
 
@@ -91,83 +91,83 @@ public class Storage {
 
     public static void saveNewImageOfUsers(User user, String imagePath) {
         // for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
-        BufferedImage bImage = null;
-        try {
-            File initialImage = new File(imagePath);
-            bImage = ImageIO.read(initialImage);
-            ImageIO.write(bImage, "png",
-                    new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
-                            + user.getName() + ".png"));
-            user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
-                    + user.getName() + ".png");
-        } catch (Exception e) {
-            System.out.println("Exception occured :" + e.getMessage());
-        }
+        // BufferedImage bImage = null;
+        // try {
+        //     File initialImage = new File(imagePath);
+        //     bImage = ImageIO.read(initialImage);
+        //     ImageIO.write(bImage, "png",
+        //             new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+        //                     + user.getName() + ".png"));
+        //     user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+        //             + user.getName() + ".png");
+        // } catch (Exception e) {
+        //     System.out.println("Exception occured :" + e.getMessage());
         // }
+        // // }
     }
 
     public static void saveNewImagesOfCardsInFile(Card card, String imagePath) {
-        BufferedImage bImage = null;
-        try {
-            File file = new File(imagePath);
-            bImage = ImageIO.read(file);
-            if (card.getCardType().equals(CardType.MONSTER)) {
-                ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName() + ".jpg"));
-            } else {
-                ImageIO.write(bImage, "png",
-                        new File("src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // BufferedImage bImage = null;
+        // try {
+        //     File file = new File(imagePath);
+        //     bImage = ImageIO.read(file);
+        //     if (card.getCardType().equals(CardType.MONSTER)) {
+        //         ImageIO.write(bImage, "png",
+        //                 new File("src\\main\\resources\\project\\cards\\monsters\\" + card.getCardName() + ".jpg"));
+        //     } else {
+        //         ImageIO.write(bImage, "png",
+        //                 new File("src\\main\\resources\\project\\cards\\spelltraps\\" + card.getCardName() + ".jpg"));
+        //     }
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
     }
 
     private void savaUsersInFile() {
-        File file;
-        for (int i = 0; i < allUsers.size(); i++) {
-            file = new File(addressOfStorage + "Users\\" + allUsers.get(i).getName());
-            file.mkdir();
-            try {
-                FileWriter fileWriter = new FileWriter(
-                        addressOfStorage + "Users\\" + allUsers.get(i).getName() + "\\User.json");
-                fileWriter.write(toGsonFormat(allUsers.get(i)));
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(0);
-            }
+        // File file;
+        // for (int i = 0; i < allUsers.size(); i++) {
+        //     file = new File(addressOfStorage + "Users\\" + allUsers.get(i).getName());
+        //     file.mkdir();
+        //     try {
+        //         FileWriter fileWriter = new FileWriter(
+        //                 addressOfStorage + "Users\\" + allUsers.get(i).getName() + "\\User.json");
+        //         fileWriter.write(toGsonFormat(allUsers.get(i)));
+        //         fileWriter.close();
+        //     } catch (IOException e) {
+        //         e.printStackTrace();
+        //         System.exit(0);
+        //     }
 
-            HashMap<String, Deck> allDecks = allUsers.get(i).getDecks();
-            JsonArray allDecksJson = new JsonArray();
+        //     HashMap<String, Deck> allDecks = allUsers.get(i).getDecks();
+        //     JsonArray allDecksJson = new JsonArray();
 
-            if (allDecks != null) {
-                for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
-                    JsonObject wholeDeckJson = new JsonObject();
-                    wholeDeckJson.addProperty("deckname", entry.getValue().getDeckname());
-                    wholeDeckJson.addProperty("isActivated", entry.getValue().getIsDeckActive());
-                    wholeDeckJson.add("mainDeck",
-                            new Gson().toJsonTree(entry.getValue().getMainDeck()).getAsJsonArray());
-                    wholeDeckJson.add("sideDeck",
-                            new Gson().toJsonTree(entry.getValue().getSideDeck()).getAsJsonArray());
-                    allDecksJson.add(wholeDeckJson);
-                }
-            }
-            JsonObject wholeDecksOfUser = new JsonObject();
-            wholeDecksOfUser.add("decks", allDecksJson);
-            wholeDecksOfUser.add("uselessCards",
-                    new Gson().toJsonTree(allUsers.get(i).getAllUselessCards()).getAsJsonArray());
+        //     if (allDecks != null) {
+        //         for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
+        //             JsonObject wholeDeckJson = new JsonObject();
+        //             wholeDeckJson.addProperty("deckname", entry.getValue().getDeckname());
+        //             wholeDeckJson.addProperty("isActivated", entry.getValue().getIsDeckActive());
+        //             wholeDeckJson.add("mainDeck",
+        //                     new Gson().toJsonTree(entry.getValue().getMainDeck()).getAsJsonArray());
+        //             wholeDeckJson.add("sideDeck",
+        //                     new Gson().toJsonTree(entry.getValue().getSideDeck()).getAsJsonArray());
+        //             allDecksJson.add(wholeDeckJson);
+        //         }
+        //     }
+        //     JsonObject wholeDecksOfUser = new JsonObject();
+        //     wholeDecksOfUser.add("decks", allDecksJson);
+        //     wholeDecksOfUser.add("uselessCards",
+        //             new Gson().toJsonTree(allUsers.get(i).getAllUselessCards()).getAsJsonArray());
 
-            try {
-                FileWriter fileWriter = new FileWriter(
-                        addressOfStorage + "Users\\" + allUsers.get(i).getName() + "\\DeckAndCards.json");
-                fileWriter.write(wholeDecksOfUser.toString());
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(0);
-            }
-        }
+        //     try {
+        //         FileWriter fileWriter = new FileWriter(
+        //                 addressOfStorage + "Users\\" + allUsers.get(i).getName() + "\\DeckAndCards.json");
+        //         fileWriter.write(wholeDecksOfUser.toString());
+        //         fileWriter.close();
+        //     } catch (IOException e) {
+        //         e.printStackTrace();
+        //         System.exit(0);
+        //     }
+        // }
     }
 
     private String toGsonFormat(User user) {
@@ -183,56 +183,56 @@ public class Storage {
 
     private void addTrapCards() {
 
-        try {
+        // try {
 
-            FileReader filereader = new FileReader(addressOfStorage + "CSV\\Trap.csv");
-            CSVReader csvReader = new CSVReader(filereader);
-            String[] nextRecord;
+        //     FileReader filereader = new FileReader(addressOfStorage + "CSV\\Trap.csv");
+        //     CSVReader csvReader = new CSVReader(filereader);
+        //     String[] nextRecord;
 
-            while ((nextRecord = csvReader.readNext()) != null) {
-                if (nextRecord[1].equals("Trap")) {
-                    String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
-                    allSpellAndTrapCards.put(correctCardName,
-                            new TrapCard(nextRecord[0], nextRecord[3],
-                                    TrapCardValue.valueOf(nextRecord[2].toUpperCase()), null,
-                                    nextRecord[4].equals("Unlimited") ? 3 : 1, 120, Integer.parseInt(nextRecord[5]),
-                                    addEffectsTrapCards(nextRecord), createImageOfCards(nextRecord[0])));
-                }
-            }
-            csvReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
+        //     while ((nextRecord = csvReader.readNext()) != null) {
+        //         if (nextRecord[1].equals("Trap")) {
+        //             String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
+        //             allSpellAndTrapCards.put(correctCardName,
+        //                     new TrapCard(nextRecord[0], nextRecord[3],
+        //                             TrapCardValue.valueOf(nextRecord[2].toUpperCase()), null,
+        //                             nextRecord[4].equals("Unlimited") ? 3 : 1, 120, Integer.parseInt(nextRecord[5]),
+        //                             addEffectsTrapCards(nextRecord), createImageOfCards(nextRecord[0])));
+        //         }
+        //     }
+        //     csvReader.close();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //     System.exit(0);
+        // }
     }
 
     private void addSpellCards() {
 
-        try {
-            FileReader filereader = new FileReader(addressOfStorage + "CSV\\Spell.csv");
-            CSVReader csvReader = new CSVReader(filereader);
-            String[] nextRecord;
-            int numberOfTurnsOfActivation = 120;
-            while ((nextRecord = csvReader.readNext()) != null) {
-                if (nextRecord[1].equals("Spell")) {
-                    if (nextRecord[0].startsWith("Swords of R")) {
-                        numberOfTurnsOfActivation = 6;
-                    }
-                    String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
-                    allSpellAndTrapCards.put(correctCardName,
-                            new SpellCard(nextRecord[0], nextRecord[3],
-                                    SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
-                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
-                                    Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
-                                    createImageOfCards(nextRecord[0]), addMonsterCardFamilyToSpellCards(nextRecord[16]),
-                                    addArrayListOfIntegerToSpellCard(nextRecord[15])));
-                }
-            }
-            csvReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
+        // try {
+        //     FileReader filereader = new FileReader(addressOfStorage + "CSV\\Spell.csv");
+        //     CSVReader csvReader = new CSVReader(filereader);
+        //     String[] nextRecord;
+        //     int numberOfTurnsOfActivation = 120;
+        //     while ((nextRecord = csvReader.readNext()) != null) {
+        //         if (nextRecord[1].equals("Spell")) {
+        //             if (nextRecord[0].startsWith("Swords of R")) {
+        //                 numberOfTurnsOfActivation = 6;
+        //             }
+        //             String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
+        //             allSpellAndTrapCards.put(correctCardName,
+        //                     new SpellCard(nextRecord[0], nextRecord[3],
+        //                             SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
+        //                             nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
+        //                             Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
+        //                             createImageOfCards(nextRecord[0]), addMonsterCardFamilyToSpellCards(nextRecord[16]),
+        //                             addArrayListOfIntegerToSpellCard(nextRecord[15])));
+        //         }
+        //     }
+        //     csvReader.close();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //     System.exit(0);
+        // }
     }
 
     private ArrayList<MonsterCardFamily> addMonsterCardFamilyToSpellCards(String columnValues) {
@@ -247,65 +247,65 @@ public class Storage {
 
     private ArrayList<Integer> addArrayListOfIntegerToSpellCard(String columnValues) {
         ArrayList<Integer> integers = new ArrayList<>();
-        integers.add(Integer.parseInt(columnValues));
+        // integers.add(Integer.parseInt(columnValues));
         return integers;
     }
 
     private HashMap<String, List<String>> addEffectsSpellCards(String[] cardValues) {
         HashMap<String, List<String>> enumValues = new HashMap<>();
-        enumValues.put("ContinuousSpellCardEffect", Arrays.asList(cardValues[6].split("#")));
-        enumValues.put("EquipSpellEffect", Arrays.asList(cardValues[7].split("#")));
-        enumValues.put("FieldSpellEffect", Arrays.asList(cardValues[8].split("#")));
-        enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[9].split("#")));
-        enumValues.put("NormalSpellCardEffect", Arrays.asList(cardValues[10].split("#")));
-        enumValues.put("SentToGraveyardEffect", Arrays.asList(cardValues[11].split("#")));
-        enumValues.put("QuickSpellEffect", Arrays.asList(cardValues[12].split("#")));
-        enumValues.put("RitualSpellEffect", Arrays.asList(cardValues[13].split("#")));
-        enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[14].split("#")));
+        // enumValues.put("ContinuousSpellCardEffect", Arrays.asList(cardValues[6].split("#")));
+        // enumValues.put("EquipSpellEffect", Arrays.asList(cardValues[7].split("#")));
+        // enumValues.put("FieldSpellEffect", Arrays.asList(cardValues[8].split("#")));
+        // enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[9].split("#")));
+        // enumValues.put("NormalSpellCardEffect", Arrays.asList(cardValues[10].split("#")));
+        // enumValues.put("SentToGraveyardEffect", Arrays.asList(cardValues[11].split("#")));
+        // enumValues.put("QuickSpellEffect", Arrays.asList(cardValues[12].split("#")));
+        // enumValues.put("RitualSpellEffect", Arrays.asList(cardValues[13].split("#")));
+        // enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[14].split("#")));
         return enumValues;
     }
 
     private HashMap<String, List<String>> addEffectsTrapCards(String[] cardValues) {
         HashMap<String, List<String>> enumValues = new HashMap<>();
-        enumValues.put("ContinuousTrapCardEffect", Arrays.asList(cardValues[6].split("#")));
-        enumValues.put("FlipSummonTrapCardEffect", Arrays.asList(cardValues[7].split("#")));
-        enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[8].split("#")));
-        enumValues.put("MonsterAttackingTrapCardEffect", Arrays.asList(cardValues[9].split("#")));
-        enumValues.put("MonsterEffectActivationTrapCardEffect", Arrays.asList(cardValues[10].split("#")));
-        enumValues.put("NormalSummonTrapCardEffect", Arrays.asList(cardValues[11].split("#")));
-        enumValues.put("NormalTrapCardEffect", Arrays.asList(cardValues[12].split("#")));
-        enumValues.put("RitualSummonTrapCardEffect", Arrays.asList(cardValues[13].split("#")));
-        enumValues.put("SpecialSummonTrapCardEffect", Arrays.asList(cardValues[14].split("#")));
-        enumValues.put("SpellCardActivationTrapCardEffect", Arrays.asList(cardValues[15].split("#")));
-        enumValues.put("TrapCardActivationTrapCardEffect", Arrays.asList(cardValues[16].split("#")));
-        enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[17].split("#")));
+        // enumValues.put("ContinuousTrapCardEffect", Arrays.asList(cardValues[6].split("#")));
+        // enumValues.put("FlipSummonTrapCardEffect", Arrays.asList(cardValues[7].split("#")));
+        // enumValues.put("LogicalActivationRequirement", Arrays.asList(cardValues[8].split("#")));
+        // enumValues.put("MonsterAttackingTrapCardEffect", Arrays.asList(cardValues[9].split("#")));
+        // enumValues.put("MonsterEffectActivationTrapCardEffect", Arrays.asList(cardValues[10].split("#")));
+        // enumValues.put("NormalSummonTrapCardEffect", Arrays.asList(cardValues[11].split("#")));
+        // enumValues.put("NormalTrapCardEffect", Arrays.asList(cardValues[12].split("#")));
+        // enumValues.put("RitualSummonTrapCardEffect", Arrays.asList(cardValues[13].split("#")));
+        // enumValues.put("SpecialSummonTrapCardEffect", Arrays.asList(cardValues[14].split("#")));
+        // enumValues.put("SpellCardActivationTrapCardEffect", Arrays.asList(cardValues[15].split("#")));
+        // enumValues.put("TrapCardActivationTrapCardEffect", Arrays.asList(cardValues[16].split("#")));
+        // enumValues.put("UserReplyForActivation", Arrays.asList(cardValues[17].split("#")));
         return enumValues;
     }
 
     private void addMonsterCards() {
-        try {
-            FileReader filereader = new FileReader(addressOfStorage + "CSV\\Monster.csv");
-            CSVReader csvReader = new CSVReader(filereader);
-            String[] nextRecord;
-            int firstRow = 0;
-            while ((nextRecord = csvReader.readNext()) != null) {
-                if (firstRow > 0) {
-                    String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
-                    allMonsterCards.put(correctCardName,
-                            new MonsterCard(Integer.parseInt(nextRecord[5]), Integer.parseInt(nextRecord[6]),
-                                    Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
-                                    MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
-                                    MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
-                                    null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord),
-                                    createImageOfCards(nextRecord[0])));
-                }
-                firstRow++;
-            }
-            csvReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
+        // try {
+        //     FileReader filereader = new FileReader(addressOfStorage + "CSV\\Monster.csv");
+        //     CSVReader csvReader = new CSVReader(filereader);
+        //     String[] nextRecord;
+        //     int firstRow = 0;
+        //     while ((nextRecord = csvReader.readNext()) != null) {
+        //         if (firstRow > 0) {
+        //             String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
+        //             allMonsterCards.put(correctCardName,
+        //                     new MonsterCard(Integer.parseInt(nextRecord[5]), Integer.parseInt(nextRecord[6]),
+        //                             Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
+        //                             MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
+        //                             MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
+        //                             null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord),
+        //                             createImageOfCards(nextRecord[0])));
+        //         }
+        //         firstRow++;
+        //     }
+        //     csvReader.close();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //     System.exit(0);
+        // }
     }
 
     private Image createImageOfCards(String cardname) {

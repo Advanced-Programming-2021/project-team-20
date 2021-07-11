@@ -45,6 +45,7 @@ public class LoginController implements Initializable {
 
     private static User onlineUser;
     private static String token;
+    private static Image image;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -57,21 +58,21 @@ public class LoginController implements Initializable {
             showAlert("FILL FIELDS", "ERROR");
             passwordField.setText("");
             usernameField.setText("");
-        } else if (Storage.getUserByName(usernameField.getText()) == null) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH", "ERROR");
-            passwordField.setText("");
-            usernameField.setText("");
-        } else if (!Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH", "ERROR");
-            passwordField.setText("");
-            usernameField.setText("");
-        } else {
-            setOnlineUser(Storage.getUserByName(usernameField.getText()));
-            try {
-                new MainView().changeView("/project/fxml/mainMenu.fxml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }
+        String data = ToGsonFormatToSendDataToServer.toGsonFormatLogin(usernameField.getText(),
+                passwordField.getText());
+        String result = ServerConnection.sendDataToServerAndRecieveResult(data);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeLogin(result);
+        if (deserializeResult.get("type").equals("Error")) {
+            showAlert(deserializeResult.get("message"), "Error");
+            return;
+        }
+        image = createImageAlaki();
+        // setOnlineUser(Storage.getUserByName(usernameField.getText()));
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -86,10 +87,10 @@ public class LoginController implements Initializable {
             showAlert("FILL FIELDS", "ERROR");
             return;
         }
-        String data = ToGsonFormatToSendDataToServer.ToGsonFormatRegister(usernameFieldForRegister.getText(),
+        String data = ToGsonFormatToSendDataToServer.toGsonFormatRegister(usernameFieldForRegister.getText(),
                 nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
         String result = ServerConnection.sendDataToServerAndRecieveResult(data);
-        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.DeserializeRegister(result);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeRegister(result);
         if (deserializeResult.get(DeserializeInformationFromServer.getType())
                 .equals(DeserializeInformationFromServer.getError())) {
             showAlert(deserializeResult.get(DeserializeInformationFromServer.getMessage()),
@@ -99,9 +100,11 @@ public class LoginController implements Initializable {
             CustomDialog customDialog = new CustomDialog(DeserializeInformationFromServer.getSuccess(),
                     deserializeResult.get(DeserializeInformationFromServer.getMessage()), "mainMenu");
             customDialog.openDialog();
-            onlineUser = new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
-                    passwordFieldfORegister.getText(), "");
-            onlineUser.setImage(createImageAlaki());
+            image = createImageAlaki();
+            // onlineUser = new User(usernameFieldForRegister.getText(),
+            // nickNameFieldForRegister.getText(),
+            // passwordFieldfORegister.getText(), "");
+            // onlineUser.setImage(createImageAlaki());
         }
 
         usernameFieldForRegister.setText("");
@@ -112,12 +115,12 @@ public class LoginController implements Initializable {
     private Image createImageAlaki() {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("\\src\\main\\resources\\project\\images\\userLabel.jpg");
+            stream = new FileInputStream("src\\main\\resources\\project\\images\\userLabel.jpg");
             return new Image(stream);
         } catch (Exception e) {
             System.out.println("exception in createImageAlaki");
         }
-        return new Image(stream);
+        return null;
     }
 
     public static void setOnlineUser(User onlineUser) {

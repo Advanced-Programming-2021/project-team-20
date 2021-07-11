@@ -13,11 +13,30 @@ public class DeserializeInformationFromServer {
     private static String message = "message";
     private static String token = "token";
 
-    public static HashMap<String, String> DeserializeRegister(String informationOfServer) {
+    public static HashMap<String, String> deserializeRegister(String informationOfServer) {
 
         HashMap<String, String> information = new HashMap<>();
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(informationOfServer);
+        try {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            information.put(type, jsonObject.get(type).getAsString());
+            information.put(message, jsonObject.get(message).getAsString());
+            if (information.get(type).equals(success)) {
+                information.put(token, jsonObject.get(token).getAsString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            information.put("type", "Error");
+            information.put("message", "Error");
+        }
+        return information;
+    }
+
+    public static HashMap<String, String> deserializeLogin(String indormationOfServer) {
+        HashMap<String, String> information = new HashMap<>();
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(indormationOfServer);
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             information.put(type, jsonObject.get(type).getAsString());

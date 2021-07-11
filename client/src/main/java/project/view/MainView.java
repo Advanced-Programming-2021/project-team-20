@@ -28,12 +28,11 @@ public class MainView extends Application {
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.show();
-       
 
     }
 
     public static void main(String[] args) throws Exception {
-        //  ServerConnection.initializeNetwork();
+        ServerConnection.initializeNetwork();
         Storage storage = new Storage();
         storage.startProgram();
         // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
