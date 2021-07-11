@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import project.controller.storage.Storage;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Storage storage = new Storage();
+        storage.startProgram();
         ServerController.runServer();
     }
-    
 }

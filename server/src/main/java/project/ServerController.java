@@ -14,15 +14,23 @@ import project.model.User;
 
 public class ServerController {
     private static String badRequestFormat = "Bad request format";
+    private static String error = "Error";
+    private static String successful = "Successful";
     private static HashMap<String, User> loginedUsers = new HashMap<>();
 
     public static void runServer() {
+        Socket socket = null;
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             while (true) {
-                Socket socket = serverSocket.accept();
+                socket = serverSocket.accept();
                 startNewThread(serverSocket, socket);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,7 +85,7 @@ public class ServerController {
             case "register":
                 return LoginMenu.registerUser(details);
             case "login":
-                return LoginMenu.loginUser(details);     
+                return LoginMenu.loginUser(details);
             default:
                 return badRequestFormat;
         }
@@ -87,4 +95,11 @@ public class ServerController {
         return badRequestFormat;
     }
 
+    public static String getError() {
+        return error;
+    }
+
+    public static String getSuccessful() {
+        return successful;
+    }
 }

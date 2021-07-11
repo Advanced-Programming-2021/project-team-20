@@ -93,13 +93,15 @@ public class LoginMenu {
         }
 
         if (doesUserWithThisUsernameAlreadyExistsCreateMenu(userName)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error",
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getError(),
                     "user with username " + userName + " already exists");
         }
         if (doesUserWithThisNicknameAlreadyExists(nickName)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "user with nickname " + nickName + " already exists"); 
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getError(),
+                    "user with nickname " + nickName + " already exists");
         }
-        return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Successful", createUser(userName, nickName, password));
+        return ToGsonFormatForSendInformation.ToGsonFormatForRegister(ServerController.getSuccessful(),
+                createUser(userName, nickName, password));
     }
 
     public static synchronized String loginUser(JsonObject details) {

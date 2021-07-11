@@ -40,7 +40,7 @@ public class Storage {
     // private static HashMap<String, Card> allMonsterCards = new HashMap<>();
     // private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     // private static Card unknownCard;
-    private String addressOfStorage = "client\\Resourses\\";
+    private String addressOfStorage = "Resourses\\";
     // private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     // private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
     // private static HashMap<String, Image> newImageOfNewCards = new HashMap<>();
@@ -96,9 +96,9 @@ public class Storage {
             File initialImage = new File(imagePath);
             bImage = ImageIO.read(initialImage);
             ImageIO.write(bImage, "png",
-                    new File("client\\src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+                    new File("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
                             + user.getName() + ".png"));
-            user.setImagePath("client\\src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
+            user.setImagePath("src\\main\\resources\\project\\images\\Characters\\chosenCharacters\\image"
                     + user.getName() + ".png");
         } catch (Exception e) {
             System.out.println("Exception occured :" + e.getMessage());
