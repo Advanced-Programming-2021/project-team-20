@@ -51,8 +51,8 @@ public class SendCardToGraveyardConductor {
         }
     }
 
-    public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> spellCards;
         if (graveyardToSendCardTo == 1) {
             spellCards = duelBoard.getAllySpellCards();
@@ -66,12 +66,12 @@ public class SendCardToGraveyardConductor {
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD)
                     && !spellCard.isOncePerTurnCardEffectUsed()){
                     spellCard.setOncePerTurnCardEffectUsed(true);
-                    PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
-                    String output = phaseController.ifPossibleDrawACard(index, graveyardToSendCardTo);
+                    PhaseController phaseController = GameManager.getPhaseControllerByIndex(token);
+                    String output = phaseController.ifPossibleDrawACard(token, graveyardToSendCardTo);
                     if (output.equals("")) {
                         return output;
                     }
-                    DuelController duelController = GameManager.getDuelControllerByIndex(index);
+                    DuelController duelController = GameManager.getDuelControllerByIndex(token);
                     String playerUsername = duelController.getPlayingUsernameByTurn(graveyardToSendCardTo);
                     return output + " of player " + playerUsername;
                 }
