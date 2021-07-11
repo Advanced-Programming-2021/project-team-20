@@ -14,15 +14,15 @@ import java.util.ArrayList;
 
 public class SendCardToGraveyardConductor {
 
-    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);
         duelBoard.removeCardByCardLocation(cardToBeRemoved);
         return card;
     }
 
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
         if (cardGoingToBeSentToGraveyard != null) {
             int graveyardToSendCardTo;
@@ -37,13 +37,13 @@ public class SendCardToGraveyardConductor {
             duelBoard.destroyEquipSpellsRelatedToThisCard(targetingCardLocation, graveyardToSendCardTo);
             Card card = duelBoard.getCardByCardLocation(targetingCardLocation);
             if (Card.isCardAMonster(card)) {
-                checkIfPlayerShouldDrawACard(graveyardToSendCardTo, index);
+                checkIfPlayerShouldDrawACard(graveyardToSendCardTo, token);
             }
             if (Card.isCardASpell(card)) {
                 //duelBoard.removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(targetingCardLocation);
                 duelBoard.removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(targetingCardLocation);
             }
-            Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, token);
             duelBoard.addCardToGraveyard(removedCard, graveyardToSendCardTo);
             GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
                 + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
