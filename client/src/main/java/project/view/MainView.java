@@ -33,7 +33,7 @@ public class MainView extends Application {
     }
 
     public static void main(String[] args) throws Exception {
-        ServerConnection.initializeNetwork();
+        // ServerConnection.initializeNetwork();
         Storage storage = new Storage();
         storage.startProgram();
         // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
