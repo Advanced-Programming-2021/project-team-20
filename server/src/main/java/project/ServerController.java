@@ -7,12 +7,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
+import project.controller.loginMenu.LoginMenu;
 import project.model.User;
 
 public class ServerController {
-    private HashMap<String , User> loginedUsers = new HashMap<>();
+    private static String badRequestFormat = "Bad request format";
+    private static HashMap<String, User> loginedUsers = new HashMap<>();
+
     public static void runServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
@@ -53,8 +56,35 @@ public class ServerController {
     }
 
     private static String process(String input) {
-    //    JsonObject    
+        JsonParser parser = new JsonParser();
+        JsonElement rootNode = parser.parse(input);
+        try {
+            if (rootNode.isJsonObject()) {
+                JsonObject details = rootNode.getAsJsonObject();
+                String type = details.get("type").getAsString();
+                return findCommand(type, details);
+            } else {
+                return badRequestFormat;
+            }
+        } catch (Exception e) {
+            return badRequestFormat;
+        }
 
-        return null;
     }
+
+    private static String findCommand(String type, JsonObject details) {
+        switch (type) {
+            case "register":
+                return LoginMenu.registerUser(details);
+            case "login":
+                return LoginMenu.loginUser(details);     
+            default:
+                return badRequestFormat;
+        }
+    }
+
+    public static String getBadRequestFormat() {
+        return badRequestFormat;
+    }
+
 }
