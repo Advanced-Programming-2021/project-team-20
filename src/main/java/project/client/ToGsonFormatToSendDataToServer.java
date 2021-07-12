@@ -45,5 +45,11 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("token", LoginController.getToken());
         return jsonObject.toString();
     }
-    
+
+    public static String toGsonFormatGetScoreboardInformation() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "scoreboard");
+        return jsonObject.toString();
+    }
+
 }
