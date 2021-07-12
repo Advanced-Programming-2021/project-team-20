@@ -9,7 +9,6 @@ import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.profile.Profile;
 import project.server.controller.non_duel.deckCommands.DeckCommands;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class ServerController {
                 socket.close();
                 serverSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Connection reset");
             }
         }).start();
     }
@@ -151,5 +150,5 @@ public class ServerController {
 
     public static void setLoginedUser(String string, User user) {
         loginedUsers.put(string, user);
-    } 
+    }
 }
