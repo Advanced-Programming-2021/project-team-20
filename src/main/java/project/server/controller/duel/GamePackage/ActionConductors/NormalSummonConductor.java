@@ -59,7 +59,7 @@ public class NormalSummonConductor {
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());
         //GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
-        duelBoard.addCardToMonsterZone(mainCard, turn);
+        duelBoard.addCardToMonsterZone(mainCard, turn, token);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
             + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION");
         mainCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
@@ -166,7 +166,7 @@ public class NormalSummonConductor {
         } else {
             isClassWaitingForPlayerToPickMonsterToSpecialSummon = false;
             SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
-            duelBoard.addCardToMonsterZone(cardToBeSpecialSummoned, actionTurn);
+            duelBoard.addCardToMonsterZone(cardToBeSpecialSummoned, actionTurn, token);
 
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
                 + " " + cardLocation.getIndex() + " is being added to monster zone " + actionTurn + " and should finally be FACE_UP_DEFENSE_POSITION");

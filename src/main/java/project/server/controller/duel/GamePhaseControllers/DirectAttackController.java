@@ -28,7 +28,7 @@ public class DirectAttackController extends BattlePhaseController {
             SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(token);
             ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
             DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
-            String resultOfChecking = Utility.isACardSelected(0, "", false);
+            String resultOfChecking = Utility.isACardSelected(token, "", false);
             if (!resultOfChecking.equals("")) {
                 return resultOfChecking;
             } else {

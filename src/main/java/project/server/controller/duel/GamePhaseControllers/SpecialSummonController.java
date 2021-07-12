@@ -191,7 +191,7 @@ public class SpecialSummonController extends SummonSetCommonClass {
                 output += canChainingOccur;
                 return output;
             }
-            return output + Action.conductAllActions(0);
+            return output + Action.conductAllActions(token);
         }
         return "invalid input\nplease enter attacking or defensive";
     }

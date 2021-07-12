@@ -33,7 +33,7 @@ public class ActivateTrapConductor {
         if (rowOfMainTrapCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE) || rowOfMainTrapCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
             duelBoard.removeCardByCardLocation(mainTrapCardLocation);
             int actionTurn = uninterruptedAction.getActionTurn();
-            duelBoard.addCardToSpellZone(mainTrapCard, actionTurn);
+            duelBoard.addCardToSpellZone(mainTrapCard, actionTurn, token);
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + mainTrapCardLocation.getRowOfCardLocation()
                 + " " + mainTrapCardLocation.getIndex() + " is being added to spell zone " + actionTurn + " and should finally be FACE_UP_ACTIVATED_POSITION");
         } else {
@@ -325,7 +325,7 @@ public class ActivateTrapConductor {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         int actionTurn = thisAction.getActionTurn();
         Card card = SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1), token);
-        duelBoard.addCardToMonsterZone(card, actionTurn);
+        duelBoard.addCardToMonsterZone(card, actionTurn, token);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1).getRowOfCardLocation()
             + " " + cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1).getIndex() + " is being added to monster zone " + actionTurn + " and should finally be "
             + cardPosition);

@@ -42,7 +42,7 @@ public class SetCardController extends SummonSetCommonClass {
             } else {
                 Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
                 if (Card.isCardAMonster(card)) {
-                    return monsterCardSetInputCheck(card);
+                    return monsterCardSetInputCheck(card, token);
                 } else if (Card.isCardASpell(card) || Card.isCardATrap(card)) {
                     return spellOrTrapCardSetInputCheck(card, token);
                 }
