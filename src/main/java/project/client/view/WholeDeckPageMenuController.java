@@ -130,8 +130,6 @@ public class WholeDeckPageMenuController implements Initializable {
     }
 
     public void deleteDeck() {
-        // deckCommands.deleteDeck(chosenDeck,
-        // LoginController.getOnlineUser().getName());
         String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("deleteDeck", "deckName",
                 chosenDeck);
         String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(sendDataToServer);
@@ -191,6 +189,7 @@ public class WholeDeckPageMenuController implements Initializable {
 
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName", createdDeckName);
         // String result = deckCommands.createDeck(createdDeckName,
         // LoginController.getOnlineUser().getName());
         // if (createdDeckName.equals("")) {

@@ -10,7 +10,6 @@ import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.server.ServerController;
-import project.server.ToGsonFormatForSendInformation;
 import project.server.controller.duel.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 
@@ -141,16 +140,17 @@ public class Shop {
     private static String buyCard(String cardName) {
         int userAmount = user.getMoney();
         if (!isItInvalidCardName(cardName)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "there is no card with this name");
+            // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "there is no card with this name");
         }
         Card card = getCardWithName(cardName);
         int cardAmount = card.getCardPrice();
         if (cardAmount > userAmount) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "not enough money");
+            // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "not enough money");
         }
         user.setMoney(userAmount - cardAmount);
         user.addCardToAllUselessCards(cardName);
-        return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "successful buy");
+        return "null";
+        // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "successful buy");
     }
 
     private static User getUserWithTokenFromHashMap(String token) {

@@ -19,7 +19,6 @@ public class ServerConnection {
             x.printStackTrace();
         }
     }
-
     
     public static String sendDataToServerAndRecieveResult(String data) {
         try {

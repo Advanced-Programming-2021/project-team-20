@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.client.ServerConnection;
-import project.server.controller.non_duel.storage.Storage;
 
 public class MainView extends Application {
     private static Stage stage;
@@ -34,13 +33,15 @@ public class MainView extends Application {
 
     public static void main(String[] args) throws Exception {
          ServerConnection.initializeNetwork();
-        Storage storage = new Storage();
-        storage.startProgram();
+        // Storage storage = new Storage();
+        // storage.startProgram();
         // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
         UIStorage.createPreliminaryToStartProgram();
         // LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
-        storage.endProgram();
+        String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
+        ServerConnection.sendDataToServerAndRecieveResult(logout);
+        // storage.endProgram();
     }
 
     public void changeView(String fxml) throws IOException {
