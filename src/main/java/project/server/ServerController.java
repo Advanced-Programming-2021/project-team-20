@@ -97,6 +97,8 @@ public class ServerController {
                 return Scoreboard.findCommands("scoreboard show");
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
+            case "createDeck":
+                return DeckCommands.createDeck(details);
             case "changePassword":
                 return Profile.changePassword(details);
             case "changeNickName":

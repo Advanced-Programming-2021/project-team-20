@@ -116,8 +116,8 @@ public class DeckMenuController implements Initializable {
 
     private void showNmberOfCardsInLabels() {
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
-        sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(deckname,
-                LoginController.getOnlineUser().getName());
+        // sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(deckname,
+        //         LoginController.getOnlineUser().getName());
         if (sizeOfEachPart.get("mainDeckSize") < 40) {
             sizeOfMainDeckLabel.setTextFill(Color.RED);
         } else {
