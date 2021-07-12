@@ -151,5 +151,5 @@ public class ServerController {
 
     public static void setLoginedUser(String string, User user) {
         loginedUsers.put(string, user);
-    }
+    } 
 }
