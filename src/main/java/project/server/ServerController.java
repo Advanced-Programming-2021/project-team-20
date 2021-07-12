@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import project.model.User;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
+import project.server.controller.non_duel.scoreboard.Scoreboard;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -87,6 +88,8 @@ public class ServerController {
                 return LoginMenu.registerUser(details);
             case "login":
                 return LoginMenu.loginUser(details);
+            case "scoreboard":
+                return Scoreboard.findCommands("scoreboard show");
             default:
                 return badRequestFormat;
         }

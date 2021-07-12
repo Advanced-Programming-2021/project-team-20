@@ -1,20 +1,20 @@
 package project.server.controller.non_duel.scoreboard;
 
+import project.model.User;
+import project.server.controller.non_duel.storage.Storage;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import project.server.controller.non_duel.storage.Storage;
-import project.model.User;
-
 public class Scoreboard {
 
-    private ArrayList<User> allUsers;
-    private int rankOfPlayers;
-    private StringBuilder finalResult;
+    private static ArrayList<User> allUsers;
+    private static int rankOfPlayers;
+    private static StringBuilder finalResult;
 
-    public String findCommands(String command) {
+    public static String findCommands(String command) {
         rankOfPlayers = 1;
         finalResult = new StringBuilder();
         if (command.equals("scoreboard show")) {
@@ -24,7 +24,8 @@ public class Scoreboard {
         return "invalid command!";
     }
 
-    private String sortUsers() {
+
+    private static String sortUsers() {
 
         List<Integer> scoreOfUsers = new ArrayList<>();
         scoreOfUsers = getScoreOfUsers();
@@ -52,7 +53,7 @@ public class Scoreboard {
         return finalResult.toString();
     }
 
-    private void sortUsersWithSameScore(ArrayList<User> usersWithSameScroe) {
+    private static void sortUsersWithSameScore(ArrayList<User> usersWithSameScroe) {
 
         ArrayList<String> nicknames = new ArrayList<>();
         for (int i = 0; i < usersWithSameScroe.size(); i++) {
@@ -75,7 +76,7 @@ public class Scoreboard {
         }
     }
 
-    private ArrayList<User> getUserByScore(int score) {
+    private static ArrayList<User> getUserByScore(int score) {
 
         ArrayList<User> usersWithSameScroe = new ArrayList<>();
         for (int i = 0; i < allUsers.size(); i++) {
@@ -87,7 +88,7 @@ public class Scoreboard {
 
     }
 
-    private List<Integer> getScoreOfUsers() {
+    private static List<Integer> getScoreOfUsers() {
 
         allUsers = Storage.getAllUsers();
         List<Integer> scoreOfUsers = new ArrayList<>();
