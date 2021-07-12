@@ -1,16 +1,17 @@
 package project.server;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import project.model.User;
+import project.server.controller.non_duel.loginMenu.LoginMenu;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-
-import com.google.gson.*;
-
-import project.server.controller.non_duel.loginMenu.LoginMenu;
-import project.model.User;
 
 public class ServerController {
     private static String badRequestFormat = "Bad request format";
@@ -101,5 +102,9 @@ public class ServerController {
 
     public static String getSuccessful() {
         return successful;
+    }
+
+    public static void setLoginedUser(String string, User user) {
+        loginedUsers.put(string, user);
     }
 }

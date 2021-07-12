@@ -69,6 +69,8 @@ public class LoginMenu {
 
     private static String loginUser(String command) {
         String username = LoginMenuPatterns.findUsernameLoginUser(command);
+        //TODO: what string should I send?
+        ServerController.setLoginedUser("", Storage.getUserByName(username));
         //   Profile.setOnlineUser(Storage.getUserByName(username));
         return "user logged in successfully!";
     }
@@ -114,11 +116,11 @@ public class LoginMenu {
         }
 
         if (!doesUserWithThisUsernameAlreadyExistsLoginMenu(username)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "invalid username or password");
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "Username and password didn't match!");
         }
         String commandForCheckPassword = "user login -u " + username + " -p" + password;
         if (!doesPasswordAndUsernameMatch(commandForCheckPassword)) {
-            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "invalid username or password");
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "Username and password didn't match!");
         }
         String commandForLogin = "user login -u " + username + " -p " + password;
         return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Successful", loginUser(commandForLogin));
