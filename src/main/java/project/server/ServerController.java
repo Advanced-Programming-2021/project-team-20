@@ -60,11 +60,12 @@ public class ServerController {
             throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
-            System.out.println(input);
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
             String result = process(input);
             if (result.equals(""))
                 break;
-            System.out.println(result);
+            System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
         }
@@ -99,6 +100,16 @@ public class ServerController {
                 return DeckCommands.deleteDeck(details);
             case "createDeck":
                 return DeckCommands.createDeck(details);
+            case "addCardToUselessCards":
+                return DeckCommands.addCardToAllUselessCards(details);
+            case "deleteCardFromMainOrSideDeck":
+                return DeckCommands.deleteCardFromMainOrSideDeck(details);
+            case "deleteCardFromUselessCards":
+                return DeckCommands.deleteCardFromAllUselessCards(details);
+            case "addCardToMainOrSideDeck":
+                return DeckCommands.addCardToMainOrSideDeck(details);
+            case "activeDeck":
+                return DeckCommands.activateDeck(details);    
             case "changePassword":
                 return Profile.changePassword(details);
             case "changeNickName":
