@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import project.client.CardsStorage;
 import project.client.ServerConnection;
 
 public class MainView extends Application {
@@ -28,16 +29,12 @@ public class MainView extends Application {
         stage.setScene(scene);
         stage.show();
 
-
     }
 
     public static void main(String[] args) throws Exception {
-         ServerConnection.initializeNetwork();
-        // Storage storage = new Storage();
-        // storage.startProgram();
-        // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
-        UIStorage.createPreliminaryToStartProgram();
-        // LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
+        ServerConnection.initializeNetwork();
+        CardsStorage storage = new CardsStorage();
+        storage.startProgram();
         launch(args);
         String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
         ServerConnection.sendDataToServerAndRecieveResult(logout);

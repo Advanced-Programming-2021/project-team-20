@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import project.model.cardData.General.Card;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,8 @@ import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 import project.model.Deck;
+import project.model.cardData.General.CardType;
+import project.server.controller.non_duel.storage.Storage;
 
 public class WholeDeckPageMenuController implements Initializable {
 
@@ -136,7 +139,7 @@ public class WholeDeckPageMenuController implements Initializable {
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
-        if(!deserializeResult.get("type").equals("Successful")){
+        if (!deserializeResult.get("type").equals("Successful")) {
             return;
         }
         if (decksInDifferentPages.get(currentPageToShowDecks).size() == 1) {
@@ -189,21 +192,23 @@ public class WholeDeckPageMenuController implements Initializable {
 
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
-        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName", createdDeckName);
-        // String result = deckCommands.createDeck(createdDeckName,
-        // LoginController.getOnlineUser().getName());
-        // if (createdDeckName.equals("")) {
-        // showAlert("ENTER DECK NAME", "ERROR");
-        // return;
-        // }
-        // if (result.equals("deck already exists")) {
-        // showAlert("DECK ALREADY EXISTS", "ERROR");
-        // createdDeckNameField.setText("");
-        // return;
-        // }
-        showAlert("DECK CREATED SUCCESSFULLY!", "SUCCESSFUL");
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName",
+                createdDeckName);
+        String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(sendDataToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer
+                .deserializeForOnlyTypeAndMessage(resultOfServer);
+        showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+        if (deserializeResult.get("type").equals("Error")) {
+            createdDeckNameField.setText("");
+            return;
+        }
+
+        Deck deck = new Deck(createdDeckName);
+        LoginController.getOnlineUser().addDeckToAllDecks(createdDeckName, deck);
+
+        LoginController.getOnlineUser().addDeckToAllDecks(createdDeckName, deck);
+
         createdDeckNameField.setText("");
-        Deck deck = LoginController.getOnlineUser().getDecks().get(createdDeckName);
         if (decksInDifferentPages.get(decksInDifferentPages.size() - 1).size() == 4) {
             List<Deck> anotherDeckPage = new ArrayList<>();
             anotherDeckPage.add(deck);
@@ -274,24 +279,19 @@ public class WholeDeckPageMenuController implements Initializable {
                 } else {
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
-                    // HashMap<String, Integer> sizeOfEachPart =
-                    // deckCommands.getNumberOfEachTypeOfCardsInDeck(
-                    // decksInDifferentPages.get(currentPageToShowDecks).get(2 * i +
-                    // j).getDeckname(),
-                    // LoginController.getOnlineUser().getName());
-                    // labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
-                    // .setText(sizeOfEachPart.get("mainDeckSize") + "");
-                    // setImageOfDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i +
-                    // j).getIsDeckActive(),
-                    // sizeOfEachPart.get("mainDeckSize"), fourRectangleToShowDecks.get(2 * i + j));
-                    // labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j)
-                    // .setText(sizeOfEachPart.get("sideDeckSize") + "");
-                    // labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j)
-                    // .setText(sizeOfEachPart.get("monstersSize") + "");
-                    // labelsToShowInformationOfDeck.get("spellsSize" + i + "" + j)
-                    // .setText(sizeOfEachPart.get("spellsSize") + "");
-                    // labelsToShowInformationOfDeck.get("trapsSize" + i + "" + j)
-                    // .setText(sizeOfEachPart.get("trapsSize") + "");
+                    HashMap<String, Integer> sizeOfEachPart = getNumberOfEachTypeOfCardsInDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j));
+                    labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
+                            .setText(sizeOfEachPart.get("mainDeckSize") + "");
+                    setImageOfDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getIsDeckActive(),
+                            sizeOfEachPart.get("mainDeckSize"), fourRectangleToShowDecks.get(2 * i + j));
+                    labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j)
+                            .setText(sizeOfEachPart.get("sideDeckSize") + "");
+                    labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j)
+                            .setText(sizeOfEachPart.get("monstersSize") + "");
+                    labelsToShowInformationOfDeck.get("spellsSize" + i + "" + j)
+                            .setText(sizeOfEachPart.get("spellsSize") + "");
+                    labelsToShowInformationOfDeck.get("trapsSize" + i + "" + j)
+                            .setText(sizeOfEachPart.get("trapsSize") + "");
                 }
             }
         }
@@ -332,6 +332,33 @@ public class WholeDeckPageMenuController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static HashMap<String, Integer> getNumberOfEachTypeOfCardsInDeck(Deck deck) {
+        int numberOfMonsterCards = 0;
+        int numberOfSpellCards = 0;
+        int numberOfTrapCards = 0;
+        List<String> mainDeckCards = deck.getMainDeck();
+      
+        HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
+        sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
+        sizeOfEachPart.put("sideDeckSize", deck.getSizeOfSideDeck());
+        for (int i = 0; i < mainDeckCards.size(); i++) {
+            Card card = Storage.getCardByName(mainDeckCards.get(i));
+            if (card.getCardType().equals(CardType.MONSTER)) {
+                numberOfMonsterCards++;
+            } else {
+                if (card.getCardType().equals(CardType.SPELL)) {
+                    numberOfSpellCards++;
+                } else {
+                    numberOfTrapCards++;
+                }
+            }
+        }
+        sizeOfEachPart.put("monstersSize", numberOfMonsterCards);
+        sizeOfEachPart.put("spellsSize", numberOfSpellCards);
+        sizeOfEachPart.put("trapsSize", numberOfTrapCards);
+        return sizeOfEachPart;
     }
 
     public static void setAnchorPane(AnchorPane anchorPane) {
