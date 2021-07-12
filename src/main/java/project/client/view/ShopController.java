@@ -23,7 +23,6 @@ import javafx.util.Duration;
 import project.client.ServerConnection;
 import project.model.User;
 import project.model.cardData.General.Card;
-import project.server.ToGsonFormatForSendInformation;
 import project.server.controller.non_duel.shop.Shop;
 import project.server.controller.non_duel.storage.Storage;
 
@@ -300,17 +299,17 @@ public class ShopController implements Initializable {
 
         String jsonString = "{\"token\":" + token + ", \"cardName\":" + cardNameForBuy + "}";
 
-        String answerOfShop = ServerConnection.sendDataToServerAndRecieveResult(ToGsonFormatForSendInformation.ToGsonFormatForRegister("shopBuy", jsonString));
-        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-        int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
-        //TODO: get User from server again
-        int userAmount = LoginController.getOnlineUser().getMoney();
-        if (cardAmount > userAmount) {
-            buybtn.setDisable(true);
-        }
-        else {
-            buybtn.setDisable(false);
-        }
+        // String answerOfShop = ServerConnection.sendDataToServerAndRecieveResult(ToGsonFormatForSendInformation.ToGsonFormatForRegister("shopBuy", jsonString));
+        // equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        // int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+        // //TODO: get User from server again
+        // int userAmount = LoginController.getOnlineUser().getMoney();
+        // if (cardAmount > userAmount) {
+        //     buybtn.setDisable(true);
+        // }
+        // else {
+        //     buybtn.setDisable(false);
+        // }
 
     }
 
