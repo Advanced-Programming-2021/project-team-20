@@ -138,7 +138,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
             }
             Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck();
             new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
-                    activeDeck.getDeckname());
+                    activeDeck.getDeckname(), "");
         }
     }
 
@@ -400,7 +400,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         copyPropertyToTransferredCard(transfferdRectangle, addedRectangle);
         pane.getChildren().add(addedRectangle);
         changeCardsBetweenTwoRounds.addCardToMianOrSideDeck(transfferdRectangle.getId(), isTransferToMainDeck,
-                currentPlayerWhoChangesDeck);
+                currentPlayerWhoChangesDeck, "");
         deleteDraggedCard(transfferdRectangle);
     }
 

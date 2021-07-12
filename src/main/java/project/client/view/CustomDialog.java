@@ -119,7 +119,7 @@ public class CustomDialog extends Stage {
         btn.setTranslateX(bg.getWidth() - 75);
         btn.setTranslateY(bg.getHeight() - 50);
         if (isOneRoundOfDuelEnded) {
-            btn.setOnAction(e -> callChangeCardsBetweenTwoRounds());
+            btn.setOnAction(e -> callChangeCardsBetweenTwoRounds(""));
         } else {
             btn.setOnAction(e -> callMainMenu());
         }
