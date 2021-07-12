@@ -20,9 +20,10 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import project.model.User;
+import project.model.cardData.General.Card;
 import project.server.controller.non_duel.shop.Shop;
 import project.server.controller.non_duel.storage.Storage;
-import project.model.cardData.General.Card;
 
 import java.net.URL;
 import java.util.*;
@@ -61,11 +62,17 @@ public class ShopController implements Initializable {
     private static Label equalUserMoneyLabel;
     private static Button equalBuybtn;
     private Shop shop = new Shop();
+    private static String token;
+    private static User user;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         SongPlayer.getInstance().pauseMusic();
         SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/Shop.mp3");
+
+        //TODO: get user from server with token
+        user = null;
+//        user = ShopController.getUserFromServerWithToken();
 
         if (rectanglesToShowCards == null) {
             rectanglesToShowCards = UIStorage.getAllShopRectangles();
@@ -90,10 +97,12 @@ public class ShopController implements Initializable {
     }
 
     private void setEffectsOfLabels() {
+
         equalUserMoneyLabel = userMoneyLabel;
         equalUserMoneyLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalUserMoneyLabel.setTextFill(Color.BLUE);
-        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+//        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        equalUserMoneyLabel.setText("My Money: " + user.getMoney());
         equalSelectedCardNameLabel = selectedCardNameLabel;
         equalSelectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumbserOfShoppingCardsLabel = numbserOfShoppingCardsLabel;
@@ -159,7 +168,7 @@ public class ShopController implements Initializable {
     private void setEffectsOfBuyButtonAndShowLabel() {
         Card card = Storage.getCardByName(cardNameForBuy);
         int cardPrice = card.getCardPrice();
-        if (cardPrice > LoginController.getOnlineUser().getMoney()) {
+        if (cardPrice > user.getMoney()) {
             equalSelectedCardNameLabel.setTextFill(Color.RED);
             equalSelectedCardNameLabel
                     .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
@@ -286,16 +295,20 @@ public class ShopController implements Initializable {
 
     public void buyCard() {
         SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3");
-         String answerOfShop = shop.findCommand("shop buy " + cardNameForBuy);
-        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-        int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
-        int userAmount = LoginController.getOnlineUser().getMoney();
-        if (cardAmount > userAmount) {
-            buybtn.setDisable(true);
-        }
-        else {
-            buybtn.setDisable(false);
-        }
+
+        String jsonString = "{\"token\":" + token + ", \"cardName\":" + cardNameForBuy + "}";
+
+        // String answerOfShop = ServerConnection.sendDataToServerAndRecieveResult(ToGsonFormatForSendInformation.ToGsonFormatForRegister("shopBuy", jsonString));
+        // equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        // int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+        // //TODO: get User from server again
+        // int userAmount = LoginController.getOnlineUser().getMoney();
+        // if (cardAmount > userAmount) {
+        //     buybtn.setDisable(true);
+        // }
+        // else {
+        //     buybtn.setDisable(false);
+        // }
 
     }
 

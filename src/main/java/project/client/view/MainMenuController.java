@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import project.client.ServerConnection;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 
@@ -78,6 +79,8 @@ public class MainMenuController implements Initializable {
     }
 
     public void backToLoginPage() {
+        String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
+        ServerConnection.sendDataToServerAndRecieveResult(logout);
         try {
             new MainView().changeView("/project/fxml/loginPage.fxml");
         } catch (IOException e) {

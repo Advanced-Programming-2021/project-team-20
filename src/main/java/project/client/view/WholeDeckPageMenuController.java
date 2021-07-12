@@ -19,9 +19,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import project.server.controller.non_duel.deckCommands.DeckCommands;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 import project.model.Deck;
-import javafx.application.Platform;
 
 public class WholeDeckPageMenuController implements Initializable {
 
@@ -46,7 +47,6 @@ public class WholeDeckPageMenuController implements Initializable {
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
     private static List<List<Deck>> decksInDifferentPages;
     private static AnchorPane anchorPane;
-    private DeckCommands deckCommands = new DeckCommands();
     private static String chosenDeck = new String();
     private int currentPageToShowDecks = 0;
     private static Button equalToNextPagebtn;
@@ -54,9 +54,6 @@ public class WholeDeckPageMenuController implements Initializable {
     private static Button equalToDeleteDeckbtn;
     private static Button equalToEditDeckbtn;
     private static Label equalDeckNameLabel;
-    private Thread thread;
-    private boolean isEnteredMouse = false;
-    private Long firstTimeMouseEnteredRectangle = 0l;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -77,19 +74,6 @@ public class WholeDeckPageMenuController implements Initializable {
         addRectangleOfDecksToPage();
         addInformationLabelOfDeckToPane();
         createNewPage();
-        thread = new Thread(() -> {
-            while (true) {
-                if (System.currentTimeMillis() - firstTimeMouseEnteredRectangle > 5000) {
-                    showCardsInDeck();
-                    break;
-                }
-                try {
-                    thread.sleep(1000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         setEffectsOfEditAndDeleteButtons();
         setEffectOfpreviousAndnextDecksbtn();
         MainView.changeScene(pane);
@@ -108,15 +92,6 @@ public class WholeDeckPageMenuController implements Initializable {
         fourRectangleToShowDecks = UIStorage.getFourRectangleToShowDecks();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
-        //    myThread[i] = new MyThread(fourRectangleToShowDecks.get(index).getId() + "dadasd");
-            fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent arg0) {
-                    firstTimeMouseEnteredRectangle = System.currentTimeMillis();
-               //     myThread[index].start();
-                }
-            });
-
             fourRectangleToShowDecks.get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent t) {
@@ -125,14 +100,7 @@ public class WholeDeckPageMenuController implements Initializable {
                     equalDeckNameLabel.setText(chosenDeck);
                 }
             });
-            fourRectangleToShowDecks.get(i).setOnMouseExited(MouseEvent -> {
-            //    myThread[index].stop(); // stopping thread t1
-            });
         }
-    }
-
-    private void showCardsInDeck() {
-        System.out.println("x");
     }
 
     private void addRectangleOfDecksToPage() {
@@ -162,7 +130,15 @@ public class WholeDeckPageMenuController implements Initializable {
     }
 
     public void deleteDeck() {
-        deckCommands.deleteDeck(chosenDeck, LoginController.getOnlineUser().getName());
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("deleteDeck", "deckName",
+                chosenDeck);
+        String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(sendDataToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer
+                .deserializeForOnlyTypeAndMessage(resultOfServer);
+        showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+        if(!deserializeResult.get("type").equals("Successful")){
+            return;
+        }
         if (decksInDifferentPages.get(currentPageToShowDecks).size() == 1) {
             if (currentPageToShowDecks != 0) {
                 decksInDifferentPages.remove(currentPageToShowDecks);
@@ -179,12 +155,12 @@ public class WholeDeckPageMenuController implements Initializable {
             }
             editDecksInDifferentPageWhenDeckDeleted();
         }
+        LoginController.getOnlineUser().deleteDeck(chosenDeck);
         chosenDeck = "";
         equalDeckNameLabel.setText("");
         createNewPage();
         setEffectOfpreviousAndnextDecksbtn();
         setEffectsOfEditAndDeleteButtons();
-        showAlert("DECK DELETED SUCCESSFULLY!", "SUCCESSFUL");
     }
 
     private void editDecksInDifferentPageWhenDeckDeleted() {
@@ -213,16 +189,18 @@ public class WholeDeckPageMenuController implements Initializable {
 
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
-        String result = deckCommands.createDeck(createdDeckName, LoginController.getOnlineUser().getName());
-        if (createdDeckName.equals("")) {
-            showAlert("ENTER DECK NAME", "ERROR");
-            return;
-        }
-        if (result.equals("deck already exists")) {
-            showAlert("DECK ALREADY EXISTS", "ERROR");
-            createdDeckNameField.setText("");
-            return;
-        }
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName", createdDeckName);
+        // String result = deckCommands.createDeck(createdDeckName,
+        // LoginController.getOnlineUser().getName());
+        // if (createdDeckName.equals("")) {
+        // showAlert("ENTER DECK NAME", "ERROR");
+        // return;
+        // }
+        // if (result.equals("deck already exists")) {
+        // showAlert("DECK ALREADY EXISTS", "ERROR");
+        // createdDeckNameField.setText("");
+        // return;
+        // }
         showAlert("DECK CREATED SUCCESSFULLY!", "SUCCESSFUL");
         createdDeckNameField.setText("");
         Deck deck = LoginController.getOnlineUser().getDecks().get(createdDeckName);
@@ -296,21 +274,24 @@ public class WholeDeckPageMenuController implements Initializable {
                 } else {
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
-                    HashMap<String, Integer> sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(
-                            decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(),
-                            LoginController.getOnlineUser().getName());
-                    labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
-                            .setText(sizeOfEachPart.get("mainDeckSize") + "");
-                    setImageOfDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getIsDeckActive(),
-                            sizeOfEachPart.get("mainDeckSize"), fourRectangleToShowDecks.get(2 * i + j));
-                    labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j)
-                            .setText(sizeOfEachPart.get("sideDeckSize") + "");
-                    labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j)
-                            .setText(sizeOfEachPart.get("monstersSize") + "");
-                    labelsToShowInformationOfDeck.get("spellsSize" + i + "" + j)
-                            .setText(sizeOfEachPart.get("spellsSize") + "");
-                    labelsToShowInformationOfDeck.get("trapsSize" + i + "" + j)
-                            .setText(sizeOfEachPart.get("trapsSize") + "");
+                    // HashMap<String, Integer> sizeOfEachPart =
+                    // deckCommands.getNumberOfEachTypeOfCardsInDeck(
+                    // decksInDifferentPages.get(currentPageToShowDecks).get(2 * i +
+                    // j).getDeckname(),
+                    // LoginController.getOnlineUser().getName());
+                    // labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
+                    // .setText(sizeOfEachPart.get("mainDeckSize") + "");
+                    // setImageOfDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i +
+                    // j).getIsDeckActive(),
+                    // sizeOfEachPart.get("mainDeckSize"), fourRectangleToShowDecks.get(2 * i + j));
+                    // labelsToShowInformationOfDeck.get("sideDeck" + i + "" + j)
+                    // .setText(sizeOfEachPart.get("sideDeckSize") + "");
+                    // labelsToShowInformationOfDeck.get("monstersSize" + i + "" + j)
+                    // .setText(sizeOfEachPart.get("monstersSize") + "");
+                    // labelsToShowInformationOfDeck.get("spellsSize" + i + "" + j)
+                    // .setText(sizeOfEachPart.get("spellsSize") + "");
+                    // labelsToShowInformationOfDeck.get("trapsSize" + i + "" + j)
+                    // .setText(sizeOfEachPart.get("trapsSize") + "");
                 }
             }
         }

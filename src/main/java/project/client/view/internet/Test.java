@@ -1,4 +1,4 @@
-package project.view.internet;
+package project.client.view.internet;
 import java.net.URISyntaxException;
 
     import javafx.animation.Animation;

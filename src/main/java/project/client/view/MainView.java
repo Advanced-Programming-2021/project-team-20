@@ -33,14 +33,16 @@ public class MainView extends Application {
     }
 
     public static void main(String[] args) throws Exception {
-        // ServerConnection.initializeNetwork();
-        Storage storage = new Storage();
-        storage.startProgram();
+         ServerConnection.initializeNetwork();
+        // Storage storage = new Storage();
+        // storage.startProgram();
         // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
         UIStorage.createPreliminaryToStartProgram();
         // LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
-        storage.endProgram();
+        String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
+        ServerConnection.sendDataToServerAndRecieveResult(logout);
+        // storage.endProgram();
     }
 
     public void changeView(String fxml) throws IOException {
