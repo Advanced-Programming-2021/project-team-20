@@ -1,4 +1,4 @@
-package project.view.pooyaviewpackage;
+package project.client.view.pooyaviewpackage;
 
 import javafx.application.Application;
 import javafx.scene.Group;

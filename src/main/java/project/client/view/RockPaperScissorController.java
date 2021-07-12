@@ -20,7 +20,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.client.view.pooyaviewpackage.DuelView;
-import project.view.transitions.RockPaperScissorTransition;
 import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.PreliminaryPackage.DuelStarter;
@@ -45,12 +44,12 @@ public class RockPaperScissorController implements Initializable {
     private Rectangle player1SelectionRectangle;
     @FXML
     private Rectangle player2SelectionRectangle;
-    private RockPaperScissorTransition transition1;
-    private RockPaperScissorTransition transition2;
-    private RockPaperScissorTransition transition3;
-    private RockPaperScissorTransition transition4;
-    private RockPaperScissorTransition transition5;
-    private RockPaperScissorTransition transition6;
+    // private RockPaperScissorTransition transition1;
+    // private RockPaperScissorTransition transition2;
+    // private RockPaperScissorTransition transition3;
+    // private RockPaperScissorTransition transition4;
+    // private RockPaperScissorTransition transition5;
+    // private RockPaperScissorTransition transition6;
     private HashMap<Rectangle, List<Double>> initialCoordinates = new HashMap<>();
 
     private HashMap<String, Image> imagesForRockPaperScissor;
@@ -115,21 +114,21 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void rotateRectangles(Rectangle rec, int abc) {
-        RockPaperScissorTransition moveRectangles = new RockPaperScissorTransition(rec);
-        moveRectangles.play();
-        if (abc == 1) {
-            transition1 = moveRectangles;
-        } else if (abc == 2) {
-            transition2 = moveRectangles;
-        } else if (abc == 3) {
-            transition3 = moveRectangles;
-        } else if (abc == 4) {
-            transition4 = moveRectangles;
-        } else if (abc == 5) {
-            transition5 = moveRectangles;
-        } else if (abc == 6) {
-            transition6 = moveRectangles;
-        }
+        // RockPaperScissorTransition moveRectangles = new RockPaperScissorTransition(rec);
+        // moveRectangles.play();
+        // if (abc == 1) {
+        //     transition1 = moveRectangles;
+        // } else if (abc == 2) {
+        //     transition2 = moveRectangles;
+        // } else if (abc == 3) {
+        //     transition3 = moveRectangles;
+        // } else if (abc == 4) {
+        //     transition4 = moveRectangles;
+        // } else if (abc == 5) {
+        //     transition5 = moveRectangles;
+        // } else if (abc == 6) {
+        //     transition6 = moveRectangles;
+        // }
     }
 
     public void clickedRectangles(MouseEvent mouseEvent, String token) {
@@ -343,12 +342,12 @@ public class RockPaperScissorController implements Initializable {
     }
 
     private void pauseTransition() {
-        transition1.pause();
-        transition2.pause();
-        transition3.pause();
-        transition4.pause();
-        transition5.pause();
-        transition6.pause();
+        // transition1.pause();
+        // transition2.pause();
+        // transition3.pause();
+        // transition4.pause();
+        // transition5.pause();
+        // transition6.pause();
     }
 
     public void exitFromRectangles(MouseEvent mouseEvent) {
@@ -365,12 +364,12 @@ public class RockPaperScissorController implements Initializable {
 
     public void startTransition() {
         if (!didPlayer2Select) {
-            transition1.play();
-            transition2.play();
-            transition3.play();
-            transition4.play();
-            transition5.play();
-            transition6.play();
+            // transition1.play();
+            // transition2.play();
+            // transition3.play();
+            // transition4.play();
+            // transition5.play();
+            // transition6.play();
         }
     }
 

@@ -1,19 +1,24 @@
 package project.client.view;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
+import com.google.gson.*;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import project.server.controller.non_duel.storage.Storage;
+import javafx.scene.image.Image;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
+import project.model.Deck;
 import project.model.User;
 
 public class LoginController implements Initializable {
@@ -33,33 +38,34 @@ public class LoginController implements Initializable {
     private PasswordField passwordFieldfORegister;
 
     private static User onlineUser;
+    private static String token;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-            SongPlayer.getInstance().pauseMusic();
-            SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
+        SongPlayer.getInstance().pauseMusic();
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
     }
 
-    public void loginUser(ActionEvent ev) {
+    public void loginUser() {
         if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
             showAlert("FILL FIELDS", "ERROR");
             passwordField.setText("");
             usernameField.setText("");
-        } else if (Storage.getUserByName(usernameField.getText()) == null) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH", "ERROR");
-            passwordField.setText("");
-            usernameField.setText("");
-        } else if (!Storage.getUserByName(usernameField.getText()).getPassword().equals(passwordField.getText())) {
-            showAlert("USERNAME AND PASSWORD DID NOT MATCH", "ERROR");
-            passwordField.setText("");
-            usernameField.setText("");
-        } else {
-            setOnlineUser(Storage.getUserByName(usernameField.getText()));
-            try {
-                new MainView().changeView("/project/fxml/mainMenu.fxml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }
+        String data = ToGsonFormatToSendDataToServer.toGsonFormatLogin(usernameField.getText(),
+                passwordField.getText());
+        String result = ServerConnection.sendDataToServerAndRecieveResult(data);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeLogin(result);
+        if (deserializeResult.get("type").equals("Error")) {
+            showAlert(deserializeResult.get("message"), "Error");
+            return;
+        }
+        token = deserializeResult.get("token");
+        createUser(deserializeResult);
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -72,49 +78,93 @@ public class LoginController implements Initializable {
         if (usernameFieldForRegister.getText().equals("") || nickNameFieldForRegister.getText().equals("")
                 || passwordFieldfORegister.getText().equals("")) {
             showAlert("FILL FIELDS", "ERROR");
-        } else if (doesUserWithThisUsernameAlreadyExists()) {
-            showAlert("USERNAME IS REPEATED", "ERROR");
-        } else if (doesUserWithThisNicknameAlreadyExists()) {
-            showAlert("NICKNAME IS REPEATED", "ERROR");
-        } else {
-            createUser();
-			setOnlineUser(Storage.getUserByName(usernameFieldForRegister.getText()));
-            CustomDialog customDialog = new CustomDialog( "SUCCESSFUL","USER CREATED SUCCESSFULLY!", "mainMenu");
-            customDialog.openDialog();
+            return;
         }
+        String data = ToGsonFormatToSendDataToServer.toGsonFormatRegister(usernameFieldForRegister.getText(),
+                nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
+        String result = ServerConnection.sendDataToServerAndRecieveResult(data);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeRegister(result);
+        if (deserializeResult.get(DeserializeInformationFromServer.getType())
+                .equals(DeserializeInformationFromServer.getError())) {
+            showAlert(deserializeResult.get(DeserializeInformationFromServer.getMessage()),
+                    DeserializeInformationFromServer.getError());
+        } else {
+            token = deserializeResult.get("token");
+            CustomDialog customDialog = new CustomDialog(DeserializeInformationFromServer.getSuccess(),
+                    deserializeResult.get(DeserializeInformationFromServer.getMessage()), "mainMenu");
+            customDialog.openDialog();
+            // onlineUser = new User(usernameFieldForRegister.getText(),
+            // nickNameFieldForRegister.getText(),
+            // passwordFieldfORegister.getText(), "");
+            // onlineUser.setImage(createImageAlaki());
+        }
+
         usernameFieldForRegister.setText("");
         passwordFieldfORegister.setText("");
         nickNameFieldForRegister.setText("");
     }
 
-    private void createUser() {
-        String filePath = chooseRandomImageForUser();
-        User user = new User(usernameFieldForRegister.getText(), nickNameFieldForRegister.getText(),
-                passwordFieldfORegister.getText(), filePath);
-        user.setImage(UIStorage.createImages(filePath));
-        Storage.addUserToAllUsers(user);
-
-    }
-
-    private boolean doesUserWithThisUsernameAlreadyExists() {
-        if (Storage.getUserByName(usernameFieldForRegister.getText()) == null)
-            return false;
-        return true;
-    }
-
-    private boolean doesUserWithThisNicknameAlreadyExists() {
-        ArrayList<User> allUsers = Storage.getAllUsers();
-        for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getNickname().equals(nickNameFieldForRegister.getText()))
-                return true;
+    private Image createImageAlaki() {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream("src\\main\\resources\\project\\images\\userLabel.jpg");
+            return new Image(stream);
+        } catch (Exception e) {
+            System.out.println("exception in createImageAlaki");
         }
-        return false;
+        return null;
     }
 
-    private String chooseRandomImageForUser() {
-        File dir = new File("client\\src\\main\\resources\\project\\images\\Characters\\radomCharacters");
-        File[] images = dir.listFiles();
-        return images[new Random().nextInt(images.length)].getPath();
+    private void createUser(HashMap<String, String> deserializeResult) {
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(deserializeResult.get("userInformation"));
+        User user = null;
+        if (jsonElement.isJsonObject()) {
+            JsonObject detailes = jsonElement.getAsJsonObject();
+            user = new User(detailes.get("name").getAsString(), detailes.get("nickname").getAsString(),
+                    detailes.get("password").getAsString(), "");
+            user.setMoney(detailes.get("money").getAsInt());
+            user.setScore(detailes.get("score").getAsInt());
+            user.setImage(createImageAlaki());
+        }
+
+        jsonElement = jsonParser.parse(deserializeResult.get("wholeDeck"));
+        if (jsonElement.isJsonObject()) {
+            JsonObject details = jsonElement.getAsJsonObject();
+            JsonArray allDecks = details.getAsJsonArray("decks");
+            Deck deck;
+
+            if (allDecks != null) {
+                for (int i = 0; i < allDecks.size(); i++) {
+                    JsonObject getDeckFromJsonFromat = allDecks.get(i).getAsJsonObject();
+                    deck = addDecksToUser(getDeckFromJsonFromat);
+                    user.addDeckToAllDecks(getDeckFromJsonFromat.get("deckname").getAsString(), deck);
+                }
+            }
+
+            JsonArray allUselessCards = details.getAsJsonArray("uselessCards");
+            for (JsonElement jsonElement1 : allUselessCards) {
+                user.addCardToAllUselessCards(jsonElement1.getAsString());
+            }
+        }
+        onlineUser = user;
+    }
+
+    private Deck addDecksToUser(JsonObject getDeckFromJsonFromat) {
+
+        Deck deck = new Deck(getDeckFromJsonFromat.get("deckname").getAsString());
+        deck.setDeckActive(getDeckFromJsonFromat.get("isActivated").getAsBoolean());
+
+        JsonArray mainDeck = getDeckFromJsonFromat.getAsJsonArray("mainDeck");
+        for (JsonElement jsonElement : mainDeck) {
+            deck.addCardToMainDeck(jsonElement.getAsString());
+        }
+
+        JsonArray sideDeck = getDeckFromJsonFromat.getAsJsonArray("sideDeck");
+        for (JsonElement jsonElement : sideDeck) {
+            deck.addCardToSideDeck(jsonElement.getAsString());
+        }
+        return deck;
     }
 
     public static void setOnlineUser(User onlineUser) {
@@ -125,4 +175,7 @@ public class LoginController implements Initializable {
         return onlineUser;
     }
 
+    public static String getToken() {
+        return token;
+    }
 }

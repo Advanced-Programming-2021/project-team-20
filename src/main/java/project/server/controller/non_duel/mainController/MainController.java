@@ -39,12 +39,12 @@ public class MainController {
     public String switchCaseInput(String command) {
 
         if (isInLoginMenu) {
-            String resultOfLoginUser = loginMenu.findCommand(command);
-            if (resultOfLoginUser.equals("user logged in successfully!")) {
-                // View.setCurrentMenu("Main Menu");
-                isInLoginMenu = false;
-            }
-            return resultOfLoginUser;
+            // String resultOfLoginUser = loginMenu.findCommand(command);
+            // if (resultOfLoginUser.equals("user logged in successfully!")) {
+            //     // View.setCurrentMenu("Main Menu");
+            //     isInLoginMenu = false;
+            // }
+            // return resultOfLoginUser;
         }
         if (isInDeckCommands) {
        //     return deckCommands.findCommands(command);

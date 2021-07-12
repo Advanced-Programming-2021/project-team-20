@@ -1,4 +1,4 @@
-package project.view.internet;
+package project.client.view.internet;
 
     import javafx.application.Platform;
     import javafx.beans.Observable;

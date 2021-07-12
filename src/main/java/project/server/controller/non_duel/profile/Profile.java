@@ -1,68 +1,109 @@
 package project.server.controller.non_duel.profile;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import javafx.scene.image.Image;
-import project.client.view.LoginController;
-import project.server.controller.non_duel.storage.Storage;
+import com.google.gson.JsonObject;
+
 import project.model.User;
-
+import project.server.ServerController;
+import project.server.ToGsonFormatForSendInformationToClient;
+import project.server.controller.non_duel.storage.Storage;
 
 public class Profile {
 
-    private ProfilePatterns profilePatterns;
+    public static synchronized String changeNickname(JsonObject details) {
 
-    // public String findCommands(String command) {
-    // profilePatterns = new ProfilePatterns();
-    // HashMap<String, String> foundCommadns =
-    // profilePatterns.findCommands(command);
-    // if (foundCommadns == null) {
-    // return "invalid command!";
-    // }
-    // if (foundCommadns.containsKey("nickname")) {
-    // return changeNickname(foundCommadns.get("nickname"));
-    // }
+        String newNickName = "";
+        String token = "";
+        try {
+            newNickName = details.get("newNickName").getAsString();
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ServerController.getBadRequestFormat();
+        }
 
-    // return changePassword(foundCommadns.get("current password"),
-    // foundCommadns.get("new password"));
-    // }
-
-    public String changeNickname(String nickname) {
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
 
         ArrayList<User> allUsers = Storage.getAllUsers();
         for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getNickname().equals(nickname)) {
-                return "user with nickname already exists";
+            if (allUsers.get(i).getNickname().equals(newNickName)) {
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
+                        "NEW NICKNAME IS REPEATED");
             }
         }
-        LoginController.getOnlineUser().setNickname(nickname);
-
-        return "nickname changed successfully!";
+        user.setNickname(newNickName);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "NICKNAME CHANGED SUCCESSFULLY!");
     }
 
-    public String changePassword(String currentPassword, String newPassword) {
+    public static String changePassword(JsonObject details) {
 
-        if (!currentPassword.equals(LoginController.getOnlineUser().getPassword())) {
-            return "current password is invalid";
+        String currentPassword = "";
+        String newPassword = "";
+        String token = "";
+        try {
+            currentPassword = details.get("currentPassword").getAsString();
+            newPassword = details.get("newPassword").getAsString();
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ServerController.getBadRequestFormat();
         }
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+
+        if (!currentPassword.equals(user.getPassword())) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
+                    "CURRENT PASSWORD IS WRONG");
+        }
+
         if (newPassword.equals(currentPassword)) {
-            return "please enter a new password";
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "ENTER NEW PASSWORD");
         }
 
-        LoginController.getOnlineUser().setPassword(newPassword);
-        return "password changed successfully!";
+        user.setPassword(newPassword);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "PASSWORD CHANGED SUCCESSFULLY!");
     }
 
     public void changeImage(String imagePath) {
-        InputStream stream = null;
+        // InputStream stream = null;
+        // try {
+        // stream = new FileInputStream(imagePath);
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
+        // LoginController.getOnlineUser().setImage(new Image(stream));
+        // Storage.saveNewImageOfUsers(LoginController.getOnlineUser() ,imagePath);
+    }
+
+    public static String getInformationOfUser(JsonObject details) {
+        String token = "";
         try {
-            stream = new FileInputStream(imagePath);
+            token = details.get("token").getAsString();
         } catch (Exception e) {
             e.printStackTrace();
+            return ServerController.getBadRequestFormat();
         }
-        LoginController.getOnlineUser().setImage(new Image(stream));
-        Storage.saveNewImageOfUsers(LoginController.getOnlineUser() ,imagePath);
+        HashMap<String, User> loginedUsers = ServerController.getLoginedUsers();
+        User user = null;
+        for (Map.Entry<String, User> entry : loginedUsers.entrySet()) {
+            if (token.equals(entry.getKey())) {
+                user = entry.getValue();
+                break;
+            }
+        }
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForGetInformationOfProfile(user);
     }
 }
