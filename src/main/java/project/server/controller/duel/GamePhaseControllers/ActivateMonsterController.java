@@ -40,11 +40,11 @@ public class ActivateMonsterController extends ChainController {
         return isClassWaitingForUserToChooseMonsterFromOpponentGraveyard;
     }
 
-    public String activateMonsterEffectInputAnalysis(String string) {
+    public String activateMonsterEffectInputAnalysis(String string, String token) {
         String inputRegex = "(?<=\\n|^)activate[\\s]+effect(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
-            return startChecking(0);
+            return startChecking(token);
         }
         return null;
     }
@@ -336,7 +336,7 @@ public class ActivateMonsterController extends ChainController {
             Card card = removeCardAndGetRemovedCard(targetingCardLocation, token);
             duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
 
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
                 + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
 
 

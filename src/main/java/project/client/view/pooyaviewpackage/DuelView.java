@@ -134,6 +134,12 @@ public class DuelView {
 
     private static boolean areWePlayingWithAI;
 
+    private static String token;
+
+    public static String getToken() {
+        return token;
+    }
+
     public static boolean isAreWePlayingWithAI() {
         return areWePlayingWithAI;
     }
@@ -185,7 +191,7 @@ public class DuelView {
     }
 
     public static String getDeckString() {
-        deckString = GameManager.getDuelControllerByIndex(0).getInput("show deck", true);
+        deckString = GameManager.getDuelControllerByIndex(token).getInput("show deck", true, token);
         // System.out.println("deckString" + deckString);
         return deckString;
     }
@@ -203,7 +209,7 @@ public class DuelView {
     }
 
     public static String getGraveyardString() {
-        deckString = GameManager.getDuelControllerByIndex(0).getInput("show graveyard", true);
+        deckString = GameManager.getDuelControllerByIndex(token).getInput("show graveyard", true, token);
         // System.out.println("deckString" + deckString);
         return graveyardString;
     }
@@ -227,7 +233,7 @@ public class DuelView {
         duelStage = (DuelStage) stage;
         cheatCodes.setLength(0);
         // FakeMain.call();
-        areWePlayingWithAI = GameManager.getDuelControllerByIndex(0).isAIPlaying();
+        areWePlayingWithAI = GameManager.getDuelControllerByIndex(token).isAIPlaying();
         prepareArrayListsForWorking();
         DuelView.stage = stage;
         DuelView.stage.setTitle("Duel Page");
@@ -263,7 +269,7 @@ public class DuelView {
 
                                         if (cardLocationSelecting != null) {
                                             // System.out.println("important selection:" + "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting) + ":");
-                                            String output = GameManager.getDuelControllerByIndex(0).getInput("select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+                                            String output = GameManager.getDuelControllerByIndex(token).getInput("select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
                                             System.out.println("&@&@&@&@& " + output);
                                             if (output == null) {
 
@@ -276,7 +282,7 @@ public class DuelView {
                                                 //alert.setContentText(output);
                                                 ButtonType result = alert.showAndWait().orElse(end);
                                                 if (result.equals(end)) {
-                                                    output = GameManager.getDuelControllerByIndex(0).getInput("finish selecting", true);
+                                                    output = GameManager.getDuelControllerByIndex(token).getInput("finish selecting", true, token);
                                                     System.out.println("&@&@&@&@& " + output);
                                                     advancedCardMovingController.advanceForwardBattleField();
                                                 } else {
@@ -298,9 +304,9 @@ public class DuelView {
                                                     newAlert.setContentText(output);
                                                     ButtonType result = newAlert.showAndWait().orElse(attackingButton);
                                                     if (result.equals(attackingButton)) {
-                                                        output = GameManager.getDuelControllerByIndex(0).getInput(
+                                                        output = GameManager.getDuelControllerByIndex(token).getInput(
                                                             //(output.contains("attacking")?"attacking":"attack")
-                                                            "attacking", true);
+                                                            "attacking", true, token);
                                                         Alert newerAlert = new Alert(Alert.AlertType.INFORMATION);
                                                         newerAlert.setTitle("Information Dialog");
                                                         newerAlert.setHeaderText("Result Message");
@@ -310,9 +316,9 @@ public class DuelView {
                                                         //   stage.close();
                                                         DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
                                                     } else if (result.equals(defensiveButton)) {
-                                                        output = GameManager.getDuelControllerByIndex(0).getInput(
+                                                        output = GameManager.getDuelControllerByIndex(token).getInput(
                                                             //(output.contains("defensive")?"defensive":"defense")
-                                                            "defensive", true);
+                                                            "defensive", true, token);
                                                         Alert newerAlert = new Alert(Alert.AlertType.INFORMATION);
                                                         newerAlert.setTitle("Information Dialog");
                                                         newerAlert.setHeaderText("Result Message");
@@ -501,9 +507,9 @@ public class DuelView {
             alert.setContentText(matcher.group(0));
             ButtonType result = alert.showAndWait().orElse(destroy);
             if (result.equals(pay)) {
-                GameManager.getDuelControllerByIndex(0).getInput("pay", true);
+                GameManager.getDuelControllerByIndex(token).getInput("pay", true, token);
             } else if (result.equals(destroy)) {
-                GameManager.getDuelControllerByIndex(0).getInput("destroy", true);
+                GameManager.getDuelControllerByIndex(token).getInput("destroy", true, token);
             }
             advancedCardMovingController.advanceForwardBattleField();
             PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.3)));
@@ -608,7 +614,7 @@ public class DuelView {
             duelStage.setShiftKeyOn(true);
         } else if (keyEvent.getCode().getName().equals("Enter")) {
             System.out.println(cheatCodes);
-            String string = cheat.findCheatCommand(cheatCodes.toString(), 0);
+            String string = cheat.findCheatCommand(cheatCodes.toString(), token);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Cheat Message");
@@ -652,12 +658,12 @@ public class DuelView {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 boolean oneRound = true;
-                if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
+                if (GameManager.getDuelControllerByIndex(token).getNumberOfRounds() == 3) {
                     oneRound = false;
                 }
-                int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
+                int currentRound = GameManager.getDuelControllerByIndex(token).getCurrentRound();
                 // System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
-                String output = GameManager.getDuelControllerByIndex(0).getInput("surrender", true);
+                String output = GameManager.getDuelControllerByIndex(token).getInput("surrender", true, token);
                 // System.out.println("Surrender: " + output);
                 backgroundMusic.setMute(true);
                 stage.close();
@@ -728,21 +734,21 @@ public class DuelView {
             public void handle(MouseEvent mouseEvent) {
                 if (shouldDuelViewClickingAbilitiesWork) {
                     if (!areWePlayingWithAI) {
-                        String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
+                        String output = GameManager.getDuelControllerByIndex(token).getInput("next phase", true, token);
                         // System.out.println("&" + output + "&");
                         if (output.contains("phase: ")) {
                             conductPhaseChanging(output, false);
                         }
                     } else {
                         boolean shouldPrepareAICard = false;
-                        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+                        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(token).getPhaseInGame();
                         if (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
                             shouldPrepareAICard = true;
                         }
                         if (shouldPrepareAICard) {
                             updatePrivacyForCardsForAI();
                         }
-                        String output = GameManager.getDuelControllerByIndex(0).getInput("next phase", true);
+                        String output = GameManager.getDuelControllerByIndex(token).getInput("next phase", true, token);
                         // System.out.println("we are playing with ai");
                         // System.out.println("&" + output + "&");
                         if (output.contains("phase: ")) {
@@ -824,8 +830,8 @@ public class DuelView {
 
         // System.out.println(" what upper left x  we see is " + battleFieldView.getUpperLeftX());
         // System.out.println("what height we see is " + battleFieldView.getHeight());
-        ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(0).getAllyCardsInHand();
-        ArrayList<Card> allyCardsInDeck = GameManager.getDuelBoardByIndex(0).getAllyCardsInDeck();
+        ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(token).getAllyCardsInHand();
+        ArrayList<Card> allyCardsInDeck = GameManager.getDuelBoardByIndex(token).getAllyCardsInDeck();
         for (int i = 0; i < allyCardsInDeck.size() + allyCardsInHand.size(); i++) {
             boolean inHand = false;
             if (i < allyCardsInHand.size()) {
@@ -849,8 +855,8 @@ public class DuelView {
         }
 
 
-        String firstUsername = GameManager.getDuelControllerByIndex(0).getPlayingUsernameByTurn(1);
-        String secondUsername = GameManager.getDuelControllerByIndex(0).getPlayingUsernameByTurn(2);
+        String firstUsername = GameManager.getDuelControllerByIndex(token).getPlayingUsernameByTurn(1);
+        String secondUsername = GameManager.getDuelControllerByIndex(token).getPlayingUsernameByTurn(2);
         String firstNickname = Storage.getUserByName(firstUsername).getNickname();
         String secondNickname = Storage.getUserByName(secondUsername).getNickname();
         Image firstPlayerImage = Storage.getUserByName(firstUsername).getImage();
@@ -888,8 +894,8 @@ public class DuelView {
         }
 
 
-        ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(0).getOpponentCardsInHand();
-        ArrayList<Card> opponentCardsInDeck = GameManager.getDuelBoardByIndex(0).getOpponentCardsInDeck();
+        ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(token).getOpponentCardsInHand();
+        ArrayList<Card> opponentCardsInDeck = GameManager.getDuelBoardByIndex(token).getOpponentCardsInDeck();
         for (int i = 0; i < opponentCardsInDeck.size() + opponentCardsInHand.size(); i++) {
             if (i < opponentCardsInHand.size()) {
                 currentCardForView = opponentCardsInHand.get(i);
@@ -911,7 +917,7 @@ public class DuelView {
     public void updatePrivacyForCards() {
         ArrayList<CardView> allyCardViews = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
         ArrayList<CardView> opponentCardViews = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
-        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        int turn = GameManager.getDuelControllerByIndex(token).getTurn();
         if (turn == 1) {
             for (int i = 0; i < allyCardViews.size(); i++) {
                 allyCardViews.get(i).setCanBeSeen(true);
@@ -1004,17 +1010,17 @@ public class DuelView {
         //     + cardLocationSelecting.getIndex());
 
         if (cardLocationSelecting != null) {
-            String output = GameManager.getDuelControllerByIndex(0).getInput(
+            String output = GameManager.getDuelControllerByIndex(token).getInput(
                 "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
-                true);
+                true, token);
             // System.out.println("&" + output);
         }
     }
 
     private void takeCareOfDraggingAction(CardLocation initialCardLocation, CardLocation finalCardLocation,
                                           project.model.modelsforview.CardView cardViewBeingDragged, TwoDimensionalPoint finalTwoDimensionalPoint) {
-        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
-        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
+        int turn = GameManager.getDuelControllerByIndex(token).getTurn();
+        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(token).getPhaseInGame();
         boolean allySummonSetActivateCardPhase = phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1)
             || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2);
         boolean opponentSummonSetActivateCardPhase = phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1)
@@ -1097,17 +1103,17 @@ public class DuelView {
     private void draggingAction(MouseEvent previousMouseEvent, Object currentDroppedObject) {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(previousMouseEvent, null);
         if (cardLocationSelecting != null) {
-            String output = GameManager.getDuelControllerByIndex(0).getInput(
+            String output = GameManager.getDuelControllerByIndex(token).getInput(
                 "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
-                true);
+                true, token);
             // System.out.println("&" + output);
-            Object card = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocationSelecting);
+            Object card = GameManager.getDuelBoardByIndex(token).getCardByCardLocation(cardLocationSelecting);
             if (card != null) {
-                CardType cardType = GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocationSelecting)
+                CardType cardType = GameManager.getDuelBoardByIndex(token).getCardByCardLocation(cardLocationSelecting)
                     .getCardType();
                 if (cardType.equals(CardType.MONSTER)) {
-                    if (GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_1)
-                        || GameManager.getPhaseControllerByIndex(0).getPhaseInGame()
+                    if (GameManager.getPhaseControllerByIndex(token).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_1)
+                        || GameManager.getPhaseControllerByIndex(token).getPhaseInGame()
                         .equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
 
                     }
@@ -1121,11 +1127,7 @@ public class DuelView {
     public void singleClickActionSpecial(TwoDimensionalPoint twoDimensionalPoint, CardView cardView) {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(twoDimensionalPoint, cardView);
         if (cardLocationSelecting != null) {
-            String output = GameManager.getDuelControllerByIndex(0).getInput(
-                "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting),
-                true);
-            // System.out.println("single click: " + output);
-            output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
+            String output = GameManager.getDuelControllerByIndex(token).getInput("card show --selected", true, token);
             // System.out.println("show card: " + output);
             String cardDescriptionUselessString = "Description: (.+)";
             Pattern pattern = Pattern.compile(cardDescriptionUselessString);

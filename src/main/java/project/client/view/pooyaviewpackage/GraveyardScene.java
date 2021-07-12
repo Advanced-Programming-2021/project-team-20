@@ -97,7 +97,8 @@ public class GraveyardScene extends Application {
                                 indexOfChosenCardInGraveyard = i;
                                 if (isClassWaitingForUserToChooseCardFromGraveyard) {
                                     String miniString = (DuelView.isIsAllySeeingGraveyard() ? "" : "--opponent ");
-                                    String output = GameManager.getDuelControllerByIndex(0).getInput("select " + miniString + "--graveyard " + (indexOfChosenCardInGraveyard + 1), true);
+                                    String token =DuelView.getToken();
+                                    String output = GameManager.getDuelControllerByIndex(token).getInput("select " + miniString + "--graveyard " + (indexOfChosenCardInGraveyard + 1), true, token);
                                     System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
                                     if (output.contains("this card cannot be") || output.contains("this is not a")
                                         || output.contains("this monster is not") || output.contains("please try")) {
@@ -115,7 +116,7 @@ public class GraveyardScene extends Application {
                                         alert.setContentText(output);
                                         ButtonType result = alert.showAndWait().orElse(attackingButton);
                                         if (result.equals(attackingButton)) {
-                                            output = GameManager.getDuelControllerByIndex(0).getInput("attacking", true);
+                                            output = GameManager.getDuelControllerByIndex(token).getInput("attacking", true, token);
                                             Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
                                             newAlert.setTitle("Information Dialog");
                                             newAlert.setHeaderText("Result Message");
@@ -125,7 +126,7 @@ public class GraveyardScene extends Application {
                                             stage.close();
                                             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
                                         } else if (result.equals(defensiveButton)) {
-                                            output = GameManager.getDuelControllerByIndex(0).getInput("defensive", true);
+                                            output = GameManager.getDuelControllerByIndex(token).getInput("defensive", true, token);
                                             Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
                                             newAlert.setTitle("Information Dialog");
                                             newAlert.setHeaderText("Result Message");

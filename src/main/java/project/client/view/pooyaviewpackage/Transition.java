@@ -61,9 +61,10 @@ public class Transition {
             translate.setAutoReverse(true);
             parallelTransition.getChildren().add(translate);
         }
-        int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
+        String token = DuelView.getToken();
+        int currentTurn = GameManager.getDuelControllerByIndex(token).getTurn();
         System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
-        if (turn == currentTurn || GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1).equals("AI")){
+        if (turn == currentTurn || GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1).equals("AI")){
             cardView.setCanBeSeen(true);
         } else {
             cardView.setCanBeSeen(false);
@@ -185,7 +186,7 @@ public class Transition {
             ParallelTransition parallelTransition = new ParallelTransition();
             parallelTransition.getChildren().add(troubleFlipTransition.getStHideFront());
             parallelTransition.getChildren().add(rotateTransition);
-            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination);
+            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination, DuelView.getToken());
             parallelTransition.getChildren().add(translateTransition);
             DuelView.getControllerForView().changeLabelOfCardForSendingMonsterToMonsterZone(cardView);
             ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(initialSide);
@@ -203,7 +204,7 @@ public class Transition {
         CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
         if (initialCardLocation != null) {
             ParallelTransition parallelTransition = new ParallelTransition();
-            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination);
+            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination, DuelView.getToken());
             parallelTransition.getChildren().add(translateTransition);
             if (cardPosition.equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                 RotateTransition rotateTransition = rotateCardNintyDegrees(cardView);

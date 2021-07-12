@@ -269,8 +269,9 @@ public class AlertAndMenuItems {
     public void doYouWantToAlert(String nowItWillBeTurn){
         Alert alert = new Alert(CONFIRMATION, nowItWillBeTurn, ButtonType.YES, ButtonType.NO);
         ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+        String token = DuelView.getToken();
         if (result.equals(ButtonType.YES)) {
-            String output = GameManager.getDuelControllerByIndex(0).getInput("yes", true);
+            String output = GameManager.getDuelControllerByIndex(token).getInput("yes", true, token);
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");
@@ -299,7 +300,7 @@ public class AlertAndMenuItems {
                 DuelView.getDeckScene().start(new Stage());
             }
         } else if (result.equals(ButtonType.NO)){
-            String output = GameManager.getDuelControllerByIndex(0).getInput("no", true);
+            String output = GameManager.getDuelControllerByIndex(token).getInput("no", true, token);
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");

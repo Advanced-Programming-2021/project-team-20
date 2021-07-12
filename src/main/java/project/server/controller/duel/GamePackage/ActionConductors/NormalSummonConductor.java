@@ -35,13 +35,13 @@ public class NormalSummonConductor {
         return isClassWaitingForPlayerToPickMonsterToSpecialSummon;
     }
 
-    public static String conductNormalSummoningActionUninterruptedAction(int index, int numberInListOfActions) {
+    public static String conductNormalSummoningActionUninterruptedAction(String token, int numberInListOfActions) {
         //if (!isActionCanceled){
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(token);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
-            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), token);
         }
         int turn = 0;
         CardLocation superFinalCardLocation = null;
@@ -60,21 +60,21 @@ public class NormalSummonConductor {
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());
         //GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
         duelBoard.addCardToMonsterZone(mainCard, turn);
-        GameManager.getDuelControllerByIndex(index).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
+        GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
             + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION");
         mainCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
         MonsterCard monsterCard = (MonsterCard) mainCard;
         monsterCard.setCardPositionChanged(true);
-        GameManager.getDuelControllerByIndex(index).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
+        GameManager.getDuelControllerByIndex(token).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
         return "summoned successfully";
     }
 
-    public static String conductNormalSummoningAction(int index, int numberInListOfActions) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+    public static String conductNormalSummoningAction(String token, int numberInListOfActions) {
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(token);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        ArrayList<Action> actions = GameManager.getActionsByIndex(index);
+        ArrayList<Action> actions = GameManager.getActionsByIndex(token);
         Action action = actions.get(numberInListOfActions);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         if (!action.isActionCanceled()) {
             if (shouldRedirectConductorToAvoidRepetition) {
                 shouldRedirectConductorToAvoidRepetition = false;
@@ -88,7 +88,7 @@ public class NormalSummonConductor {
                 monsterCard.setAttackPower(1900);
             }
             if (uponSummoningEffects.contains(UponSummoningEffect.IF_NORMAL_SUMMONED_SPECIAL_SUMMON_1_LEVEL_4_OR_LESS_NORMAL_MONSTER_FROM_HAND_IN_DEFENSE_POSITION)) {
-                if (doesPlayerHaveLevel4OrLessNormalMonsterInHand(action.getActionTurn(), index)) {
+                if (doesPlayerHaveLevel4OrLessNormalMonsterInHand(action.getActionTurn(), token)) {
                     shouldRedirectConductorToAvoidRepetition = true;
                     promptingUserToActivateMonsterEffect = true;
                     monsterCardToBeNormalSummoned = mainCardLocation;
@@ -100,8 +100,8 @@ public class NormalSummonConductor {
         return "";
     }
 
-    public static boolean doesPlayerHaveLevel4OrLessNormalMonsterInHand(int actionTurn, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static boolean doesPlayerHaveLevel4OrLessNormalMonsterInHand(int actionTurn, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> cardsInHand = null;
         if (actionTurn == 1) {
             cardsInHand = duelBoard.getAllyCardsInHand();
@@ -147,10 +147,10 @@ public class NormalSummonConductor {
         return Action.conductAllActions(token);
     }
 
-    public static String checkGivenInputForMonsterToSpecialSummon(int index) {
-        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
+    public static String checkGivenInputForMonsterToSpecialSummon(String token) {
+        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(token);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         CardLocation cardLocation = selectedCardLocations.get(selectedCardLocations.size() - 1);
         Card cardToBeSpecialSummoned = duelBoard.getCardByCardLocation(cardLocation);
         if (Card.isCardATrap(cardToBeSpecialSummoned) || Card.isCardASpell(cardToBeSpecialSummoned)) {
@@ -165,15 +165,15 @@ public class NormalSummonConductor {
             return "this card is not in your hand.\nselect another card";
         } else {
             isClassWaitingForPlayerToPickMonsterToSpecialSummon = false;
-            SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, index);
+            SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
             duelBoard.addCardToMonsterZone(cardToBeSpecialSummoned, actionTurn);
 
-            GameManager.getDuelControllerByIndex(index).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
                 + " " + cardLocation.getIndex() + " is being added to monster zone " + actionTurn + " and should finally be FACE_UP_DEFENSE_POSITION");
 
 
             cardToBeSpecialSummoned.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);
-            return "monster special summoned successfully\n" + Action.conductAllActions(index);
+            return "monster special summoned successfully\n" + Action.conductAllActions(token);
         }
     }
 }

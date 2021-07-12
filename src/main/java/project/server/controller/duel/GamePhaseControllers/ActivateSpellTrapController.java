@@ -112,7 +112,7 @@ public class ActivateSpellTrapController extends ChainController {
         Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
         ActivateMonsterController activateMonsterController = GameManager.getActivateMonsterControllerByIndex(token);
         if (Card.isCardAMonster(card)) {
-            return activateMonsterController.activateMonsterEffectInputAnalysis("activate effect");
+            return activateMonsterController.activateMonsterEffectInputAnalysis("activate effect", token);
         } else {
             return checkCorrectPhase(token);
         }
@@ -611,13 +611,13 @@ public class ActivateSpellTrapController extends ChainController {
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         int actionTurn = uninterruptedAction.getActionTurn();
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_SPELL, actionTurn, mainCard.getSpeedOfCard());
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_SPELL, actionTurn, mainCard.getSpeedOfCard(), token);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_TRAP)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_TRAP, actionTurn, mainCard.getSpeedOfCard());
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.ALLY_ACTIVATING_TRAP, actionTurn, mainCard.getSpeedOfCard(), token);
         } else if (uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_SPELL, actionTurn, mainCard.getSpeedOfCard());
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_SPELL, actionTurn, mainCard.getSpeedOfCard(), token);
         } else if (uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_TRAP)) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_TRAP, actionTurn, mainCard.getSpeedOfCard());
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(ActionType.OPPONENT_ACTIVATING_TRAP, actionTurn, mainCard.getSpeedOfCard(), token);
         }
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, token);
     }

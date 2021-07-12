@@ -27,11 +27,11 @@ public class MoreCardInfoSection {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
+                int fakeTurn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getFakeTurn();
                 CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
                 boolean isForAlly = cardLocation.getRowOfCardLocation().toString().startsWith("ALLY") && (fakeTurn == 1) ||
                     cardLocation.getRowOfCardLocation().toString().startsWith("OPPO") && (fakeTurn == 2);
-
+                String token = DuelView.getToken();
                 Rectangle cardImageForCardMoreInfo = DuelView.getCardImageForCardMoreInfo();
                 BattleFieldView battleFieldView = DuelView.getBattleFieldView();
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
@@ -126,12 +126,12 @@ public class MoreCardInfoSection {
                         cardNameForCardMoreInfo.setText(" " + cardView.getCard().getCardName());
 
                         if (cardLocationSelecting == null) {
-                            cardAttackForCardMoreInfo.setText(" ATK : " + MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1), 0));
-                            cardDefenseForCardMoreInfo.setText(" DEF : " + MonsterCard.giveATKDEFConsideringEffects("defense", new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1), 0));
+                            cardAttackForCardMoreInfo.setText(" ATK : " + MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1), token));
+                            cardDefenseForCardMoreInfo.setText(" DEF : " + MonsterCard.giveATKDEFConsideringEffects("defense", new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1), token));
 
                         } else {
-                            cardAttackForCardMoreInfo.setText(" ATK : " + MonsterCard.giveATKDEFConsideringEffects("attack", cardLocationSelecting, 0));
-                            cardDefenseForCardMoreInfo.setText(" DEF : " + MonsterCard.giveATKDEFConsideringEffects("defense", cardLocationSelecting, 0));
+                            cardAttackForCardMoreInfo.setText(" ATK : " + MonsterCard.giveATKDEFConsideringEffects("attack", cardLocationSelecting, token));
+                            cardDefenseForCardMoreInfo.setText(" DEF : " + MonsterCard.giveATKDEFConsideringEffects("defense", cardLocationSelecting, token));
 
                         }
                         cardLevelForCardMoreInfo.setText(" LVL: " + ((MonsterCard) cardView.getCard()).getLevel());

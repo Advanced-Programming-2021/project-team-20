@@ -23,10 +23,10 @@ public class DuelStarter {
     private static int numberOfRounds;
     private static String firstPlayer;
     private static String secondPlayer;
-    public String findCommand(String command) {
+    public String findCommand(String command, String token) {
 
         if (isDuelStarted) {
-            return GameManager.getDuelControllerByIndex(0).getInput(command, true);
+            return GameManager.getDuelControllerByIndex(token).getInput(command, true, token);
         }
 
         StartDuelPatterns startDuelPatterns = new StartDuelPatterns();
@@ -95,12 +95,12 @@ public class DuelStarter {
         return "game started";
     }
 
-    public void createNewGame(String firstUserName, String secondUserName) {
+    public void createNewGame(String firstUserName, String secondUserName, String firstUserToken, String secondUserToken) {
         User firstUser = Storage.getUserByName(firstUserName);
         User secondUser = Storage.getUserByName(secondUserName);
         Deck firstUserActiveDeck = getActiveDeck(firstUser);
         Deck secondUserActiveDeck = getActiveDeck(secondUser);
-        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck);
+        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck, firstUserToken, secondUserToken);
     }
     private static GameManager gameManager;
 
@@ -109,7 +109,7 @@ public class DuelStarter {
     }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber, Deck firstUserActiveDeck,
-                              Deck secondUserActiveDeck) {
+                              Deck secondUserActiveDeck, String firstUserToken, String secondUserToken) {
 
         ArrayList<Card> firstUserMainDeck = getMainOrSideDeckCards(firstUserActiveDeck, true);
         ArrayList<Card> firstUserSideDeck = getMainOrSideDeckCards(firstUserActiveDeck, false);
@@ -119,9 +119,9 @@ public class DuelStarter {
         Collections.shuffle(secondUserMainDeck);
         gameManager = new GameManager();
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
-                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber);
-        GameManager.getDuelControllerByIndex(0).setPlayersChangedDecks(true);
-        GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber, firstUserToken, secondUserToken);
+        GameManager.getDuelControllerByIndex(firstUserToken).setPlayersChangedDecks(true);
+        GameManager.getDuelControllerByIndex(firstUserToken).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
     }
 
     public static ArrayList<Card> getMainOrSideDeckCards(Deck activeDeck, boolean isCardsInMainDeck) {

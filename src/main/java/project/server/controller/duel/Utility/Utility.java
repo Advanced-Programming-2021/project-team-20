@@ -89,9 +89,9 @@ public class Utility {
         return cardIndex;
     }
 
-    public static int changeArrayIndexFromOneToFiveToYuGiOhIndex(int cardIndex, boolean choosingSelf) {
-        if (!choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 2
-                || choosingSelf && GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
+    public static int changeArrayIndexFromOneToFiveToYuGiOhIndex(int cardIndex, boolean choosingSelf, String token) {
+        if (!choosingSelf && GameManager.getDuelControllerByIndex(token).getAiTurn() == 2
+                || choosingSelf && GameManager.getDuelControllerByIndex(token).getAiTurn() == 1) {
             if (cardIndex == 1) {
                 return 5;
             } else if (cardIndex == 2) {
@@ -116,21 +116,21 @@ public class Utility {
         }
     }
 
-    public static String isACardSelected(int index, String stringUsedInOutput, boolean continueChecking) {
-        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
+    public static String isACardSelected(String token, String stringUsedInOutput, boolean continueChecking) {
+        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(token);
         if (!selectCardController.doesSelectedCardLocationsHaveCard()) {
             return "no card is selected yet";
         } else {
             if (continueChecking) {
-                return SummonSetCommonClass.isCardInHand(index, stringUsedInOutput, true);
+                return SummonSetCommonClass.isCardInHand(token, stringUsedInOutput, true);
             }
             return "";
         }
     }
 
-    public static String areWeInMainPhase(int index) {
-        PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+    public static String areWeInMainPhase(String token) {
+        PhaseController phaseController = GameManager.getPhaseControllerByIndex(token);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
         int turn = duelController.getTurn();
         if (!phaseController.isPhaseCurrentlyMainPhase(turn)) {
             return "action not allowed in this phase";
@@ -138,9 +138,9 @@ public class Utility {
         return "";
     }
 
-    public static String areWeInBattlePhase(int index) {
-        PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+    public static String areWeInBattlePhase(String token) {
+        PhaseController phaseController = GameManager.getPhaseControllerByIndex(token);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
         int turn = duelController.getTurn();
         if (!phaseController.isPhaseCurrentlyBattlePhase(turn)) {
             return "action not allowed in this phase";

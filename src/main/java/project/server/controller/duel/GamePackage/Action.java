@@ -260,7 +260,7 @@ public class Action {
             } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 3) {
                 return output.toString() + duelController.endGame(action.getActionTurn(), token);
             } else {
-                return output.toString() + duelController.endOneRoundOfDuel(action.getActionTurn());
+                return output.toString() + duelController.endOneRoundOfDuel(action.getActionTurn(), token);
             }
         } else if (duelController.getLifePoints().get(action.getActionTurn() - 1) <= 0) {
             if (duelController.getNumberOfRounds() == 1 && duelController.getCurrentRound() == 1) {
@@ -268,7 +268,7 @@ public class Action {
             } else if (duelController.getNumberOfRounds() == 3 && duelController.getCurrentRound() == 3) {
                 return output.toString() + duelController.endGame(3 - action.getActionTurn(), token);
             } else {
-                return output.toString() + duelController.endOneRoundOfDuel(3 - action.getActionTurn());
+                return output.toString() + duelController.endOneRoundOfDuel(3 - action.getActionTurn(), token);
             }
         } else {
             return "";

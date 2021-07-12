@@ -69,16 +69,16 @@ public class AIBoardUnderstander {
         opponentCardsInDeck = new ArrayList<>();
     }
 
-    protected void updateVariablesForBoard() {
+    protected void updateVariablesForBoard(AI ai) {
         opponentMonsterSpellBoardAnalysis.clearVariables();
         opponentHandBoardAnalysis.clearVariables();
         aiMonsterSpellBoardAnalysis.clearVariables();
         aiHandBoardAnalysis.clearVariables();
         aiGraveyardBoardAnalysis.clearVariables();
         opponentGraveyardBoardAnalysis.clearVariables();
-        DuelController duelController = GameManager.getDuelControllerByIndex(0);
+        DuelController duelController = GameManager.getDuelControllerByIndex(ai.getToken());
         int aiTurn = duelController.getAiTurn();
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(ai.getToken());
         if (aiTurn == 1) {
             opponentMonsterCards = duelBoard.getOpponentMonsterCards();
             opponentCardsInHand = duelBoard.getOpponentCardsInHand();
@@ -129,12 +129,12 @@ public class AIBoardUnderstander {
 
     }
 
-    protected void updateInformationFromOpponentMonsterZone() {
+    protected void updateInformationFromOpponentMonsterZone(String token) {
         for (int i = 0; i < opponentMonsterCards.size(); i++) {
             if (opponentMonsterCards.get(i) != null) {
                 if (Card.isCardAMonster(opponentMonsterCards.get(i))){
                     MonsterCard monsterCard = (MonsterCard) opponentMonsterCards.get(i);
-                    updateInformationAboutMonsterCardsInThisArrayList(i, monsterCard, opponentMonsterSpellBoardAnalysis);
+                    updateInformationAboutMonsterCardsInThisArrayList(i, monsterCard, opponentMonsterSpellBoardAnalysis, token);
                 }
             }
         }
@@ -144,16 +144,16 @@ public class AIBoardUnderstander {
         updateInformationFromSpellTrapZone(opponentSpellTrapCards, opponentMonsterSpellBoardAnalysis);
     }
 
-    protected void updateInformationFromOpponentHandZone() {
-        updateInformationFromHand(opponentHandBoardAnalysis, opponentCardsInHand);
+    protected void updateInformationFromOpponentHandZone(String token) {
+        updateInformationFromHand(opponentHandBoardAnalysis, opponentCardsInHand, token);
     }
 
-    protected void updateInformationFromAIMonsterZone() {
+    protected void updateInformationFromAIMonsterZone(String token) {
         for (int i = 0; i < aiMonsterCards.size(); i++) {
             if (aiMonsterCards.get(i) != null) {
                 if (Card.isCardAMonster(aiMonsterCards.get(i))){
                     MonsterCard monsterCard = (MonsterCard) aiMonsterCards.get(i);
-                    updateInformationAboutMonsterCardsInThisArrayList(i, monsterCard, aiMonsterSpellBoardAnalysis);
+                    updateInformationAboutMonsterCardsInThisArrayList(i, monsterCard, aiMonsterSpellBoardAnalysis, token);
                 }
             }
         }
@@ -163,12 +163,12 @@ public class AIBoardUnderstander {
         updateInformationFromSpellTrapZone(aiSpellTrapCards, aiMonsterSpellBoardAnalysis);
     }
 
-    protected void updateInformationFromAIGraveyardZone() {
-        updateInformationFromHand(aiGraveyardBoardAnalysis, aiCardsInGraveyard);
+    protected void updateInformationFromAIGraveyardZone(String token) {
+        updateInformationFromHand(aiGraveyardBoardAnalysis, aiCardsInGraveyard, token);
     }
 
-    protected void updateInformationFromOpponentGraveyardZone() {
-        updateInformationFromHand(opponentGraveyardBoardAnalysis, opponentCardsInGraveyard);
+    protected void updateInformationFromOpponentGraveyardZone(String token) {
+        updateInformationFromHand(opponentGraveyardBoardAnalysis, opponentCardsInGraveyard, token);
     }
 
     private void updateInformationFromSpellTrapZone(ArrayList<Card> aiSpellTrapCards, AIBoardAnalysis aiBoardAnalysis) {
@@ -185,16 +185,16 @@ public class AIBoardUnderstander {
         }
     }
 
-    protected void updateInformationFromAIHandZone() {
-        updateInformationFromHand(aiHandBoardAnalysis, aiCardsInHand);
+    protected void updateInformationFromAIHandZone(String token) {
+        updateInformationFromHand(aiHandBoardAnalysis, aiCardsInHand, token);
     }
 
-    private void updateInformationFromHand(AIBoardAnalysis handOrGraveyardBoardAnalysis, ArrayList<Card> cardsInHandOrGraveyard) {
+    private void updateInformationFromHand(AIBoardAnalysis handOrGraveyardBoardAnalysis, ArrayList<Card> cardsInHandOrGraveyard, String token) {
         for (int i = 0; i < cardsInHandOrGraveyard.size(); i++) {
             if (cardsInHandOrGraveyard.get(i) != null) {
                 if (Card.isCardAMonster(cardsInHandOrGraveyard.get(i))) {
                     MonsterCard monsterCard = (MonsterCard) cardsInHandOrGraveyard.get(i);
-                    updateInformationAboutMonsterCardsInThisArrayList(i, monsterCard, handOrGraveyardBoardAnalysis);
+                    updateInformationAboutMonsterCardsInThisArrayList(i, monsterCard, handOrGraveyardBoardAnalysis, token);
                 } else if (Card.isCardASpell(cardsInHandOrGraveyard.get(i))) {
                     SpellCard spellCard = (SpellCard) cardsInHandOrGraveyard.get(i);
                     updateInformationAboutSpellCardsInTheseArrayLists(i, spellCard, handOrGraveyardBoardAnalysis);
@@ -206,11 +206,11 @@ public class AIBoardUnderstander {
         }
     }
 
-    private void updateInformationAboutMonsterCardsInThisArrayList(int i, MonsterCard monsterCard, AIBoardAnalysis aiBoardAnalysis) {
+    private void updateInformationAboutMonsterCardsInThisArrayList(int i, MonsterCard monsterCard, AIBoardAnalysis aiBoardAnalysis, String token) {
         if (monsterCard != null){
             if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
                 || monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)
-                && MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(opponentMonsterCardsRowOfCardLocation, i + 1), 0) >= 2100) {
+                && MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(opponentMonsterCardsRowOfCardLocation, i + 1), token) >= 2100) {
                 if (monsterCard.getEquipSpellEffects().size() > 0) {
                     ArrayList<Integer> indexesOfMonstersWithHighAttackPowerBecauseOfEquipOrFieldSpells = aiBoardAnalysis.getIndexesOfMonstersWithHighAttackPowerBecauseOfEquipOrFieldSpells();
                     indexesOfMonstersWithHighAttackPowerBecauseOfEquipOrFieldSpells.add(i);
@@ -219,7 +219,7 @@ public class AIBoardUnderstander {
             }
             if (monsterCard.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)
                 || monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)
-                && MonsterCard.giveATKDEFConsideringEffects("defense", new CardLocation(opponentMonsterCardsRowOfCardLocation, i + 1), 0) >= 2000) {
+                && MonsterCard.giveATKDEFConsideringEffects("defense", new CardLocation(opponentMonsterCardsRowOfCardLocation, i + 1), token) >= 2000) {
                 if (monsterCard.getEquipSpellEffects().size() > 0) {
                     ArrayList<Integer> indexesOfMonstersWithHighDefensePowerBecauseOfEquipOrFieldSpells = aiBoardAnalysis.getIndexesOfMonstersWithHighDefensePowerBecauseOfEquipOrFieldSpells();
                     indexesOfMonstersWithHighDefensePowerBecauseOfEquipOrFieldSpells.add(i);

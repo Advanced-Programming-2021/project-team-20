@@ -14,15 +14,15 @@ import java.util.ArrayList;
 
 public class SendCardToGraveyardConductor {
 
-    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static Card removeCardAndGetRemovedCard(CardLocation cardToBeRemoved, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         Card card = duelBoard.getCardByCardLocation(cardToBeRemoved);
         duelBoard.removeCardByCardLocation(cardToBeRemoved);
         return card;
     }
 
-    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static void sendCardToGraveyardAfterRemoving(CardLocation targetingCardLocation, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         Card cardGoingToBeSentToGraveyard = duelBoard.getCardByCardLocation(targetingCardLocation);
         if (cardGoingToBeSentToGraveyard != null) {
             int graveyardToSendCardTo;
@@ -34,25 +34,25 @@ public class SendCardToGraveyardConductor {
             } else {
                 graveyardToSendCardTo = 2;
             }
-            duelBoard.destroyEquipSpellsRelatedToThisCard(targetingCardLocation, graveyardToSendCardTo);
+            duelBoard.destroyEquipSpellsRelatedToThisCard(targetingCardLocation, graveyardToSendCardTo, token);
             Card card = duelBoard.getCardByCardLocation(targetingCardLocation);
             if (Card.isCardAMonster(card)) {
-                checkIfPlayerShouldDrawACard(graveyardToSendCardTo, index);
+                checkIfPlayerShouldDrawACard(graveyardToSendCardTo, token);
             }
             if (Card.isCardASpell(card)) {
                 //duelBoard.removeFieldSpellEffectsOnCardsWhenSpellFieldIsDestroyed(targetingCardLocation);
                 duelBoard.removeEquipSpellEffectsOnCardsWhenEquipSpellIsDestroyed(targetingCardLocation);
             }
-            Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, index);
+            Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, token);
             duelBoard.addCardToGraveyard(removedCard, graveyardToSendCardTo);
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
                 + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
             duelBoard.refreshCharacteristicsOfACardSentToGraveyard(removedCard);
         }
     }
 
-    public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> spellCards;
         if (graveyardToSendCardTo == 1) {
             spellCards = duelBoard.getAllySpellCards();
@@ -66,12 +66,12 @@ public class SendCardToGraveyardConductor {
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_MONSTER_OWNER_CONTROLS_IS_DESTROYED_DRAW_1_CARD)
                     && !spellCard.isOncePerTurnCardEffectUsed()){
                     spellCard.setOncePerTurnCardEffectUsed(true);
-                    PhaseController phaseController = GameManager.getPhaseControllerByIndex(index);
-                    String output = phaseController.ifPossibleDrawACard(index, graveyardToSendCardTo);
+                    PhaseController phaseController = GameManager.getPhaseControllerByIndex(token);
+                    String output = phaseController.ifPossibleDrawACard(token, graveyardToSendCardTo);
                     if (output.equals("")) {
                         return output;
                     }
-                    DuelController duelController = GameManager.getDuelControllerByIndex(index);
+                    DuelController duelController = GameManager.getDuelControllerByIndex(token);
                     String playerUsername = duelController.getPlayingUsernameByTurn(graveyardToSendCardTo);
                     return output + " of player " + playerUsername;
                 }

@@ -33,7 +33,7 @@ public class AICardFinder {
                     if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD)) {
                         ai.setShouldRedirectAIMind(true);
                         ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                     }
                 }
             }
@@ -57,7 +57,7 @@ public class AICardFinder {
                     if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_MONSTERS)) {
                         ai.setShouldRedirectAIMind(true);
                         ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class AICardFinder {
                     if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS)) {
                         ai.setShouldRedirectAIMind(true);
                         ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                        return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                     }
                 }
             }
@@ -174,7 +174,7 @@ public class AICardFinder {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
                     ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_A_CARD_FROM_YOUR_HAND_TO_DISCARD);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -200,7 +200,7 @@ public class AICardFinder {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
                     ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -259,7 +259,7 @@ public class AICardFinder {
                 ArrayList<QuickSpellEffect> quickSpellEffects = spellCard.getQuickSpellEffects();
                 if (quickSpellEffects.contains(QuickSpellEffect.TARGET_1_SPELL_TRAP_CARD_AND_DESTROY)) {
                     ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING_IN_CHAIN);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -269,7 +269,7 @@ public class AICardFinder {
                 ArrayList<QuickSpellEffect> quickSpellEffects = spellCard.getQuickSpellEffects();
                 if (quickSpellEffects.contains(QuickSpellEffect.DISCARD_1_CARD_THEN_TARGET_UP_TO_2_SPELL_CARDS_AND_DESTROY)) {
                     ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_A_CARD_FROM_YOUR_HAND_TO_DISCARD_IN_CHAIN);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -301,7 +301,7 @@ public class AICardFinder {
                 (aiMonsterCardsInBoard.get(i)).getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                 ai.setShouldRedirectAIMind(true);
                 ai.setAiActionType(AIActionType.CHANGE_CARD_POSITION_TO_ATTACK);
-                return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
             }
         }
         return "select --monster 1";
@@ -322,7 +322,7 @@ public class AICardFinder {
                     (aiMonsterCardsInBoard.get(i)).getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ATTACK_DIRECTLY);
-                    return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -341,8 +341,8 @@ public class AICardFinder {
                     && !((MonsterCard) aiMonsterCardsInBoard.get(i)).isHasCardAlreadyAttacked() &&
                     (aiMonsterCardsInBoard.get(i)).getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION) &&
                     ai.getAiBattlePhaseMind().doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards
-                        (new CardLocation(ai.getAiBoardUnderstander().aiMonsterCardsRowOfCardLocation, i + 1), new CardLocation(ai.getAiBoardUnderstander().opponentMonsterCardsRowOfCardLocation, j + 1), 0)) {
-                    foundAttack = MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(ai.getAiBoardUnderstander().aiMonsterCardsRowOfCardLocation, i + 1), 0);
+                        (new CardLocation(ai.getAiBoardUnderstander().aiMonsterCardsRowOfCardLocation, i + 1), new CardLocation(ai.getAiBoardUnderstander().opponentMonsterCardsRowOfCardLocation, j + 1), ai.getToken())) {
+                    foundAttack = MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(ai.getAiBoardUnderstander().aiMonsterCardsRowOfCardLocation, i + 1), ai.getToken());
 
                     if (opponentMonsterCardsInBoard.get(j).getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
                         if (foundAttack > maximumAttack) {
@@ -361,8 +361,8 @@ public class AICardFinder {
             }
             if (maximumAttack != -10000 || minimumAttack != 10000) {
                 ai.setShouldRedirectAIMind(true);
-                setAIActionTypeForAttackingOpponentMonster(ai, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(bestJ + 1, false));
-                return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(bestI + 1, true);
+                setAIActionTypeForAttackingOpponentMonster(ai, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(bestJ + 1, false, ai.getToken()));
+                return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(bestI + 1, true, ai.getToken());
             }
         }
         return "nothing found";
@@ -395,7 +395,7 @@ public class AICardFinder {
                 ArrayList<RitualSummonTrapCardEffect> ritualSummonTrapCardEffects = trapCard.getRitualSummonTrapCardEffects();
                 if (normalSummonTrapCardEffects.size() > 0 || flipSummonTrapCardEffects.size() > 0 || tributeSummonTrapCardEffects.size() > 0
                     || specialSummonTrapCardEffects.size() > 0 || ritualSummonTrapCardEffects.size() > 0) {
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -403,13 +403,13 @@ public class AICardFinder {
     }
 
     protected String findActiveMainCardInPreviousUninterruptedAction(AI ai) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation mainCardLocation = uninterruptedAction.getFinalMainCardLocation();
         RowOfCardLocation mainCardRowOfCardLocation = mainCardLocation.getRowOfCardLocation();
         int mainCardIndex = mainCardLocation.getIndex();
         String finalDecisionRowOfCardLocation = "";
-        int finalDecisionIndex = Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(mainCardIndex, false);
+        int finalDecisionIndex = Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(mainCardIndex, false, ai.getToken());
         if (mainCardRowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_ZONE) || mainCardRowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_ZONE)) {
             finalDecisionRowOfCardLocation = " --opponent --spell ";
         } else if (mainCardRowOfCardLocation.equals(RowOfCardLocation.ALLY_MONSTER_ZONE) || mainCardRowOfCardLocation.equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
@@ -461,7 +461,7 @@ public class AICardFinder {
                 if (normalSpellCardEffects.contains(NormalSpellCardEffect.CONTROL_ONE_OF_OPPONENTS_MONSTERS_UNTIL_END_PHASE)) {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -504,7 +504,7 @@ public class AICardFinder {
                 if (flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD)) {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.FLIP_SUMMON);
-                    return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -520,7 +520,7 @@ public class AICardFinder {
                 if (normalTrapCardEffects.contains(NormalTrapCardEffect.OPPONENT_DISCARDS_ALL_CARDS_WITH_A_GIVEN_NAME_OTHERWISE_OWNER_LOSES_ONE_RANDOM_CARD)) {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }
@@ -602,7 +602,7 @@ public class AICardFinder {
                 if (monsterAttackingTrapCardEffects.contains(monsterAttackingTrapCardEffect)) {
                     ai.setShouldRedirectAIMind(true);
                     ai.setAiActionType(AIActionType.ACTIVATE_EFFECT);
-                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true);
+                    return "select --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true, ai.getToken());
                 }
             }
         }

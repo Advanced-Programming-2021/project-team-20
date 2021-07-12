@@ -131,129 +131,32 @@ public class GameManager {
 
     }
 
-    public static void removeClassesWhenGameIsOver(int index) {
-        duelControllerList.remove(index);
-        duelBoardList.remove(index);
-        activateSpellTrapControllers.remove(index);
-        activateMonsterControllers.remove(index);
-        attackMonsterToMonsterControllers.remove(index);
-        attackMonsterToMonsterConductors.remove(index);
-        battlePhaseControllers.remove(index);
-        chainControllers.remove(index);
-        changeCardPositionControllers.remove(index);
-        directAttackControllers.remove(index);
-        continuousMonsterEffectControllers.remove(index);
+    public static void removeClassesWhenGameIsOver(String token) {
+        duelControllerHashMap.remove(token);
+        duelBoardHashMap.remove(token);
+        activateSpellTrapControllerHashMap.remove(token);
+        activateMonsterControllerHashMap.remove(token);
+        attackMonsterToMonsterControllerHashMap.remove(token);
+        attackMonsterToMonsterConductorHashMap.remove(token);
+        battlePhaseControllerHashMap.remove(token);
+        chainControllerHashMap.remove(token);
+        changeCardPositionControllerHashMap.remove(token);
+        directAttackControllerHashMap.remove(token);
+        continuousMonsterEffectControllerHashMap.remove(token);
         // mainPhaseControllers.remove(index);
-        normalSummonControllers.remove(index);
-        flipSummonControllers.remove(index);
-        specialSummonControllers.remove(index);
-        tributeSummonControllers.remove(index);
-        selectCardControllers.remove(index);
-        setCardControllers.remove(index);
-        summonSetCommonClasses.remove(index);
-        phaseControllers.remove(index);
-        actions.remove(index);
-        uninterruptedActions.remove(index);
-        changeCardsBetweenTwoRounds.remove(index);
-        setTurnForGames.remove(index);
-        ais.remove(index);
-    }
-
-    public static DuelController getDuelControllerByIndex(int index) {
-        return duelControllerList.get(index);
-
-    }
-
-    public static DuelBoard getDuelBoardByIndex(int index) {
-        return duelBoardList.get(index);
-    }
-
-    public static ActivateSpellTrapController getActivateSpellTrapControllerByIndex(int index) {
-        return activateSpellTrapControllers.get(index);
-    }
-
-    public static ActivateMonsterController getActivateMonsterControllerByIndex(int index) {
-        return activateMonsterControllers.get(index);
-    }
-
-    public static AttackMonsterToMonsterController getAttackMonsterToMonsterControllerByIndex(int index) {
-        return attackMonsterToMonsterControllers.get(index);
-    }
-
-    public static AttackMonsterToMonsterConductor getAttackMonsterToMonsterConductorsByIndex(int index) {
-        return attackMonsterToMonsterConductors.get(index);
-    }
-
-    public static BattlePhaseController battlePhaseController(int index) {
-        return battlePhaseControllers.get(index);
-    }
-
-    public static ChainController getChainControllerByIndex(int index) {
-        return chainControllers.get(index);
-    }
-
-    public static ChangeCardPositionController getChangeCardPositionController(int index) {
-        return changeCardPositionControllers.get(index);
-    }
-
-    public static DirectAttackController getDirectAttackControllerByIndex(int index) {
-        return directAttackControllers.get(index);
-    }
-
-    public static FlipSummonController getFlipSummonControllerByIndex(int index) {
-        return flipSummonControllers.get(index);
-    }
-
-    public static ContinuousMonsterEffectController getContinuousMonsterEffectControllersByIndex(int index) {
-        return continuousMonsterEffectControllers.get(index);
-    }
-
-    public static NormalSummonController getNormalSummonControllerByIndex(int index) {
-        return normalSummonControllers.get(index);
-    }
-
-    public static SpecialSummonController getSpecialSummonControllerByIndex(int index) {
-        return specialSummonControllers.get(index);
-    }
-
-    public static TributeSummonController getTributeSummonControllerByIndex(int index) {
-        return tributeSummonControllers.get(index);
-    }
-
-    public static SelectCardController getSelectCardControllerByIndex(int index) {
-        return selectCardControllers.get(index);
-    }
-
-    public static SetCardController getSetCardControllerByIndex(int index) {
-        return setCardControllers.get(index);
-    }
-
-    public static ArrayList<Action> getActionsByIndex(int index) {
-        return actions.get(index);
-    }
-
-    public static ArrayList<Action> getUninterruptedActionsByIndex(int index) {
-        return uninterruptedActions.get(index);
-    }
-
-    public static AI getAIByIndex(int index) {
-        return ais.get(index);
-    }
-
-    public static SummonSetCommonClass getSummonSetCommonClassByIndex(int index) {
-        return summonSetCommonClasses.get(index);
-    }
-
-    public static PhaseController getPhaseControllerByIndex(int index) {
-        return phaseControllers.get(index);
-    }
-
-    public static SetTurnForGame getSetTurnForGamesByIndex(int index) {
-        return setTurnForGames.get(index);
-    }
-
-    public static ChangeCardsBetweenTwoRounds getChangeCardsBetweenTwoRoundsByIndex(int index) {
-        return changeCardsBetweenTwoRounds.get(index);
+        normalSummonControllerHashMap.remove(token);
+        flipSummonControllerHashMap.remove(token);
+        specialSummonControllerHashMap.remove(token);
+        tributeSummonControllerHashMap.remove(token);
+        selectCardControllerHashMap.remove(token);
+        setCardControllerHashMap.remove(token);
+        summonSetCommonClassHashMap.remove(token);
+        phaseControllerHashMap.remove(token);
+        actionsHashMap.remove(token);
+        uninterruptedActionsHashMap.remove(token);
+        changeCardsBetweenTwoRoundsHashMap.remove(token);
+        setTurnForGameHashMap.remove(token);
+        aiHashMap.remove(token);
     }
 
 
@@ -282,7 +185,7 @@ public class GameManager {
         return attackMonsterToMonsterConductorHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
-    public static BattlePhaseController battlePhaseController(String token) {
+    public static BattlePhaseController getBattlePhaseControllerByIndex(String token) {
         return battlePhaseControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
@@ -354,28 +257,28 @@ public class GameManager {
         return changeCardsBetweenTwoRoundsHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
-    public static void clearAllVariablesOfThisIndex(int index) {
-        duelControllerList.get(index).clearAllVariablesOfThisClass();
-        duelBoardList.get(index).clearAllVariablesOfThisClass();
-        activateSpellTrapControllers.get(index).clearAllVariablesOfThisClass();
-        activateMonsterControllers.get(index).clearAllVariablesOfThisClass();
-        attackMonsterToMonsterControllers.get(index).clearAllVariablesOfThisClass();
-        attackMonsterToMonsterConductors.get(index).clearAllVariablesOfThisClass();
-        battlePhaseControllers.get(index).clearAllVariablesOfThisClass();
-        chainControllers.get(index).clearAllVariablesOfThisClass();
-        changeCardPositionControllers.get(index).clearAllVariablesOfThisClass();
-        directAttackControllers.get(index).clearAllVariablesOfThisClass();
+    public static void clearAllVariablesOfThisIndex(String token) {
+        getDuelControllerByIndex(token).clearAllVariablesOfThisClass();
+        getDuelBoardByIndex(token).clearAllVariablesOfThisClass();
+        getActivateSpellTrapControllerByIndex(token).clearAllVariablesOfThisClass();
+        getActivateMonsterControllerByIndex(token).clearAllVariablesOfThisClass();
+        getAttackMonsterToMonsterControllerByIndex(token).clearAllVariablesOfThisClass();
+        getAttackMonsterToMonsterConductorsByIndex(token).clearAllVariablesOfThisClass();
+        getBattlePhaseControllerByIndex(token).clearAllVariablesOfThisClass();
+        getChainControllerByIndex(token).clearAllVariablesOfThisClass();
+        getChangeCardPositionController(token).clearAllVariablesOfThisClass();
+        getDirectAttackControllerByIndex(token).clearAllVariablesOfThisClass();
         // mainPhaseControllers.add(new MainPhaseController());
-        normalSummonControllers.get(index).clearAllVariablesOfThisClass();
-        flipSummonControllers.get(index).clearAllVariablesOfThisClass();
-        specialSummonControllers.get(index).clearAllVariablesOfThisClass();
-        tributeSummonControllers.get(index).clearAllVariablesOfThisClass();
-        selectCardControllers.get(index).clearAllVariablesOfThisClass();
-        setCardControllers.get(index).clearAllVariablesOfThisClass();
-        summonSetCommonClasses.get(index).clearAllVariablesOfThisClass();
-        phaseControllers.get(index).clearAllVariablesOfThisClass();
-        actions.get(index).clear();
-        uninterruptedActions.get(index).clear();
+        getNormalSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getFlipSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSpecialSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getTributeSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSelectCardControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSetCardControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSummonSetCommonClassByIndex(token).clearAllVariablesOfThisClass();
+        getPhaseControllerByIndex(token).clearAllVariablesOfThisClass();
+        getActionsByIndex(token).clear();
+        getUninterruptedActionsByIndex(token).clear();
         //changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
         //setTurnForGames.add(new SetTurnForGame());
     }

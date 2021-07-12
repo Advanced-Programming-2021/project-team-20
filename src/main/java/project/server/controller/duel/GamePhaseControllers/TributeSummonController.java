@@ -37,7 +37,7 @@ public class TributeSummonController extends ChainController {
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
             NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(token);
-            String resultOfChecking = normalSummonController.normalSummonInputAnalysis("normal summon", "tribute summon");
+            String resultOfChecking = normalSummonController.normalSummonInputAnalysis("normal summon", "tribute summon", token);
             if (resultOfChecking.startsWith("you can't") || resultOfChecking.startsWith("there are")) {
                 return resultOfChecking;
             }

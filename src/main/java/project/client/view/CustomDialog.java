@@ -136,7 +136,7 @@ public class CustomDialog extends Stage {
         }
     }
 
-    private void callChangeCardsBetweenTwoRounds() {
+    private void callChangeCardsBetweenTwoRounds(String token) {
         closeDialog();
         AnchorPane pane = null;
         try {
@@ -144,10 +144,10 @@ public class CustomDialog extends Stage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String currentPlayerWhoChangesDeck = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
-        Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck();
+        String currentPlayerWhoChangesDeck = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
+        Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck();
         new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
-                activeDeck.getDeckname());
+                activeDeck.getDeckname(), token);
     }
 
     private Button createButton(Rectangle bg, boolean isRockPaperScissorController) {

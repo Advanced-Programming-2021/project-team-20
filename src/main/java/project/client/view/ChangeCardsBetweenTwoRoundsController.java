@@ -82,16 +82,16 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         equalDeckNameLabel = deckNameLabel;
     }
 
-    public void showPage(AnchorPane pane, String playerName, String deckname) {
+    public void showPage(AnchorPane pane, String playerName, String deckname, String token) {
         setAnchorPane(pane);
         currentPlayerWhoChangesDeck = playerName;
         this.deckname = deckname;
-        initializePlayersAndDecks();
+        initializePlayersAndDecks(token);
         allCardDiscriptionLabels = UIStorage.getAllCardDiscriptionLabels1();
         if (!isAddedNecessaryThingsForTheFirstTime) {
             initializeLabesForShowSizeOfDeck();
         }
-        changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
+        changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
         equalDeckNameLabel.setText(deckname);
         equalShowPlayerNameLabel.setText("PLAYER TURN: " + playerName);
         getRectanglesFromUIUtilityForPanes();
@@ -103,29 +103,29 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         MainView.changeScene(pane);
     }
 
-    private void initializePlayersAndDecks() {
-        allyPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
-        opponentPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
+    private void initializePlayersAndDecks(String token) {
+        allyPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
+        opponentPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1);
         if (currentPlayerWhoChangesDeck.equals(allyPlayerName)) {
-            mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck();
-            sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getSideDeck();
+            mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getMainDeck();
+            sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getSideDeck();
         } else {
-            mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getMainDeck();
-            sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getSideDeck();
+            mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getMainDeck();
+            sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getSideDeck();
         }
     }
 
-    public void confirmChanges() {
+    public void confirmChanges(String token) {
         if (currentPlayerWhoChangesDeck.equals(opponentPlayerName) || opponentPlayerName.equals("AI")) {
-            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
             ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager
-                    .getChangeCardsBetweenTwoRoundsByIndex(0);
+                    .getChangeCardsBetweenTwoRoundsByIndex(token);
             Deck firstPlayerActiveDeck = changeCardsBetweenTwoRounds.getAllyPlayerDeck();
             Deck secondPlayerActiveDeck = changeCardsBetweenTwoRounds.getOpponentPlayerDeck();
             duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
                     DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
-            GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            GameManager.getDuelControllerByIndex(0).startDuel(0);
+            GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(token).startDuel(token);
             SongPlayer.getInstance().pauseMusic();
             DuelView.callStage();
         } else {
@@ -136,7 +136,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck();
+            Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck();
             new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
                     activeDeck.getDeckname());
         }

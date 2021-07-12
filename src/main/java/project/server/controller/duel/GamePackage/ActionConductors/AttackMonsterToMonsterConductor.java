@@ -361,11 +361,11 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         Action action = actions.get(numberInListOfActionsOfClass);
         if (!isConductBattleNegatedBecauseOfMonsterEffect && !action.isActionCanceled()) {
             if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
-                String output = faceUpAttackPositionMonsterToFaceUpAttackPositionMonster();
+                String output = faceUpAttackPositionMonsterToFaceUpAttackPositionMonster(token);
                 resetVariables();
                 return output;
             }
-            String output = faceUpAttackPositionMonsterToFaceUpDefensePositionMonster();
+            String output = faceUpAttackPositionMonsterToFaceUpDefensePositionMonster(token);
             resetVariables();
             return output;
         }
@@ -411,7 +411,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterATK);
             didAttackingUserReceiveDamage = true;
         }
-        return finishAttackConduction();
+        return finishAttackConduction(token);
     }
 
     public String faceUpAttackPositionMonsterToFaceUpDefensePositionMonster(String token) {
@@ -434,7 +434,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterDEF);
             didAttackingUserReceiveDamage = true;
         }
-        return finishAttackConduction();
+        return finishAttackConduction(token);
     }
 
     public void tendToNeitherPlayerReceivesBattleDamageIfMonsterDies(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {

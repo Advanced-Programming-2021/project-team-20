@@ -214,9 +214,9 @@ public class CardView extends Rectangle {
                 item9.setVisible(false);
                 item10.setVisible(false);
                 if (DuelView.isShouldDuelViewClickingAbilitiesWork()) {
-                    int turn = GameManager.getDuelControllerByIndex(0).getTurn();
-                    PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-                    int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
+                    int turn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn();
+                    PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(DuelView.getToken()).getPhaseInGame();
+                    int fakeTurn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getFakeTurn();
                     int belongingTurn = 2;
                     double meanY = (bounds.getMinY() + bounds.getMaxY()) / 2;
                     System.out.println("PREPARE FOR THE ALMIGHTY JIGEN with meanY = " + meanY);

@@ -18,11 +18,12 @@ public class SendingRequestsToServer {
         System.out.println();
         System.out.println();
         System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
         System.out.println("&" + output);
         //  DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
-        output = GameManager.getDuelControllerByIndex(0).getInput("normal summon", true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("normal summon", true, token);
         System.out.println("***Normal Summoning Message from server received is : " + output);
         if (output.contains("successfully")) {
 
@@ -72,11 +73,12 @@ public class SendingRequestsToServer {
     }
 
     public void sendTributeSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
         System.out.println("&" + output);
         //    DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
-        output = GameManager.getDuelControllerByIndex(0).getInput("tribute summon", true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("tribute summon", true, token);
         if (output.contains("successfully")) {
 
 
@@ -98,9 +100,10 @@ public class SendingRequestsToServer {
     }
 
     public void sendSpecialSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         System.out.println("&" + output);
-        output = GameManager.getDuelControllerByIndex(0).getInput("special summon", true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("special summon", true, token);
         System.out.println("*" + output);
         if (output.contains("successfully")) {
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -116,7 +119,8 @@ public class SendingRequestsToServer {
     }
 
     public void sendShowGraveyardRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("show graveyard", true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("show graveyard", true, token);
         System.out.println("&" + output);
         CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
         DuelView.setIsAllySeeingGraveyard(cardLocation.getRowOfCardLocation().toString().startsWith("ALLY"));
@@ -125,9 +129,10 @@ public class SendingRequestsToServer {
     }
 
     public void sendSettingRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         System.out.println("&&&&" + output);
-        output = GameManager.getDuelControllerByIndex(0).getInput("set", true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("set", true, token);
         System.out.println("*" + output);
         if (output.contains("successfully")) {
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -142,9 +147,10 @@ public class SendingRequestsToServer {
     }
 
     public void sendActivateEffectRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         System.out.println("&" + output);
-        output = GameManager.getDuelControllerByIndex(0).getInput("activate effect", true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("activate effect", true, token);
         System.out.println("*" + output);
         if (output.contains("activated")) {
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -229,7 +235,8 @@ public class SendingRequestsToServer {
 
     public void sendAttackMonsterToMonsterRequestToServer(CardLocation cardLocationSelecting, CardLocation finalCardLocation, int yugiohIndex) {
         System.out.println("ZENOS IS ATTACKING MONSTER TO MONSTER :select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         System.out.println("&&&&" + output);
         int yugiohOpponentMonsterIndex;
         if (finalCardLocation == null) {
@@ -244,10 +251,10 @@ public class SendingRequestsToServer {
         }
         System.out.println("ZENOS IS HUNTING :select " + giveStringToGiveToServerByCardLocation(finalCardLocation));
         System.out.println("yugioh index is " + yugiohOpponentMonsterIndex);
-        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        int turn = GameManager.getDuelControllerByIndex(token).getTurn();
         CardView beingAttackedCardView = DuelView.getControllerForView().getCardViewByCardLocation(finalCardLocation);
         CardView attackerCardView = DuelView.getControllerForView().getCardViewByCardLocation(cardLocationSelecting);
-        output = GameManager.getDuelControllerByIndex(0).getInput("attack " + yugiohOpponentMonsterIndex, true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("attack " + yugiohOpponentMonsterIndex, true, token);
         System.out.println("*" + output);
         conductSwitchingInAttackingMonster(output);
     }
@@ -285,20 +292,22 @@ public class SendingRequestsToServer {
     }
 
     public void sendAttackDirectRequestToServer(CardLocation cardLocationSelecting) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         //String output = GameManager.getDuelControllerByIndex(0).getInput("card show --selected", true);
         System.out.println("&&&&" + output);
         //controllerForView.getFinalCardLocationOfCurrentCardBeforeServer(cardView);
-        output = GameManager.getDuelControllerByIndex(0).getInput("attack direct", true);
+        output = GameManager.getDuelControllerByIndex(token).getInput("attack direct", true, token);
         System.out.println("*" + output);
         conductSwitchingTurnsInDirectAttacking(output);
     }
 
     public void sendFlipSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         System.out.println("mmm " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         System.out.println("&&&&" + output);
-        output = GameManager.getDuelControllerByIndex(0).getInput("flip-summon", true);
+        output = GameManager.getDuelControllerByIndex(DuelView.getToken()).getInput("flip-summon", true, token);
         System.out.println("*" + output);
         if (!output.equals("")) {
             if (output.contains("successfully")) {
@@ -316,16 +325,17 @@ public class SendingRequestsToServer {
     }
 
     public void sendChangingCardPositionRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
-        String output = GameManager.getDuelControllerByIndex(0).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true);
+        String token = DuelView.getToken();
+        String output = GameManager.getDuelControllerByIndex(token).getInput("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token);
         System.out.println("&&&&" + output);
         CardPosition cardPosition = cardView.getCard().getCardPosition();
         output = "";
         boolean finallyAttackPosition = false;
         if (cardPosition.equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
-            output = GameManager.getDuelControllerByIndex(0).getInput("set --position defense", true);
+            output = GameManager.getDuelControllerByIndex(token).getInput("set --position defense", true, token);
         } else if (cardPosition.equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
             finallyAttackPosition = true;
-            output = GameManager.getDuelControllerByIndex(0).getInput("set --position attack", true);
+            output = GameManager.getDuelControllerByIndex(token).getInput("set --position attack", true, token);
         }
         System.out.println("*" + output);
         if (!output.equals("")) {
@@ -372,7 +382,7 @@ public class SendingRequestsToServer {
     }
 
     public static String giveStringToGiveToServerByCardLocation(CardLocation cardLocation) {
-        int turn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
+        int turn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getFakeTurn();
         if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)) {
             if (turn == 1) {
                 return "--spell " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());

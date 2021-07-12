@@ -59,13 +59,14 @@ public class AdvancedCardMovingController {
             String winloss = "(\\S+) won the game and the score is: (\\S+)";
             Pattern pattern = Pattern.compile(winloss);
             Matcher matcher = pattern.matcher(string);
+            String token = DuelView.getToken();
             if (matcher.find()) {
                 report = matcher.group(0);
                 boolean oneRound = true;
-                if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
+                if (GameManager.getDuelControllerByIndex(token).getNumberOfRounds() == 3) {
                     oneRound = false;
                 }
-                int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
+                int currentRound = GameManager.getDuelControllerByIndex(token).getCurrentRound();
                 System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
                 String output = AdvancedCardMovingController.getReport();
                 System.out.println("WinLoss: " + output);
@@ -183,7 +184,7 @@ public class AdvancedCardMovingController {
             String[] subCommands = change.split(" ");
             int sideOfFinalDestination = (subCommands[9].equals("zone") ? 0 : Integer.parseInt(subCommands[9]));
             if (subCommands[1].equals("UNKNOWN")) {
-                int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+                int turn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn();
                 if (turn == 1){
                     DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() +
                         DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7);
@@ -194,7 +195,7 @@ public class AdvancedCardMovingController {
                     DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY()+108);
                 }
                 System.out.println("cheating card name is "+newlyAddedCard.getCardName()+" going to sideOfFInalDestination = "+sideOfFinalDestination+
-                    " right now turn = "+GameManager.getDuelControllerByIndex(0).getTurn());
+                    " right now turn = "+GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn());
                 CardView cardView = new CardView(newlyAddedCard, true,
                     (turn == 1 ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE), duelView);
                 DuelView.getAllCards().getChildren().add(cardView);

@@ -79,13 +79,13 @@ public class RockPaperScissorController implements Initializable {
         rotateRectangles(scissor2Rectangle, 6);
         determineInitialCoordinates(scissor2Rectangle);
         fillRectangles();
-        determineUsers();
+        determineUsers("some token");
     }
 
-    private void determineUsers() {
+    private void determineUsers(String token) {
         try {
-            firstPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
-            secondPlayerName = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1);
+            firstPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
+            secondPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1);
             System.out.println(firstPlayerName);
             System.out.println(secondPlayerName);
         } catch (Exception e) {
@@ -132,7 +132,7 @@ public class RockPaperScissorController implements Initializable {
         }
     }
 
-    public void clickedRectangles(MouseEvent mouseEvent) {
+    public void clickedRectangles(MouseEvent mouseEvent, String token) {
         Rectangle rectangle = (Rectangle) mouseEvent.getSource();
         int selection;
         if (rectangle.getId().contains("stone")) {
@@ -146,7 +146,7 @@ public class RockPaperScissorController implements Initializable {
             player1Selection = selection;
             canSecondPlayerSelect = true;
             if (secondPlayerName.equals("AI")) {
-                handleAIPlayerSelection();
+                handleAIPlayerSelection(token);
             } else {
                 CustomDialog customDialog = new CustomDialog("CONFIRMATION",
                         "Now " + secondPlayerName + " Must choose");
@@ -158,11 +158,11 @@ public class RockPaperScissorController implements Initializable {
             player2Selection = selection;
             didPlayer2Select = true;
             pauseTransition();
-            handleResult();
+            handleResult(token);
         }
     }
 
-    private void handleAIPlayerSelection() {
+    private void handleAIPlayerSelection(String token) {
         if (player1Selection == 1) {
             player2Selection = 3;
         } else {
@@ -170,10 +170,10 @@ public class RockPaperScissorController implements Initializable {
         }
         didPlayer2Select = true;
         pauseTransition();
-        handleResult();
+        handleResult(token);
     }
 
-    private void handleResult() {
+    private void handleResult(String token) {
         // for (Map.Entry<Rectangle, List<Double>> entry :
         // initialCoordinates.entrySet()) {
         // TranslateTransition translate = new TranslateTransition();
@@ -213,37 +213,37 @@ public class RockPaperScissorController implements Initializable {
         } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
                 || (player1Selection == 3 && player2Selection == 2)) {
             try { // if game created before
-                setTurn(1);
+                setTurn(1, token);
                 System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer());
                 // System.out.println("Exception 1 ");
                 // e.printStackTrace();
             }
-            GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            GameManager.getDuelControllerByIndex(0).startDuel(0);
+            GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(token).startDuel(token);
             didAnyOneWin = true;
             showAlert("PLAYER " + firstPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         } else {
             try { // if game created before
-                setTurn(2);
+                setTurn(2, token);
                 System.out.println(secondPlayerName + "   when player 2 \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } catch (Exception e) {
                 new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer());
                 // System.out.println("Exception 2 ");
                 // e.printStackTrace();
             }
-            GameManager.getDuelControllerByIndex(0).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            GameManager.getDuelControllerByIndex(0).startDuel(0);
+            GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(token).startDuel(token);
             didAnyOneWin = true;
             showAlert("PLAYER " + secondPlayerName + " WON THE GAME AND MUST START GAME", "CONFIRMATION", true);
         }
     }
 
-    private void setTurn(int turn) {
-        GameManager.getDuelControllerByIndex(0).setTurn(turn);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-        ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRoundS = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0);
+    private void setTurn(int turn, String token) {
+        GameManager.getDuelControllerByIndex(token).setTurn(turn);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRoundS = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
         Deck firstPlayerActiveDeck = changeCardsBetweenTwoRoundS.getAllyPlayerDeck();
         Deck secondPlayerActiveDeck = changeCardsBetweenTwoRoundS.getOpponentPlayerDeck();
         if (turn == 1) {

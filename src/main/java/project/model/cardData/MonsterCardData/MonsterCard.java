@@ -424,35 +424,35 @@ public class MonsterCard extends Card {
 
     }
 
-    public static int giveATKDEFConsideringEffects(String string, CardLocation cardLocation, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static int giveATKDEFConsideringEffects(String string, CardLocation cardLocation, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(cardLocation);
         int finalAttackPower = monsterCard.getAttackPower();
         int finalDefensePower = monsterCard.getDefensePower();
-        finalAttackPower += giveChangesInATKDEFConsideringContinuousMonsterEffect(cardLocation, index, "attack");
-        finalDefensePower += giveChangesInATKDEFConsideringContinuousMonsterEffect(cardLocation, index, "defense");
-        finalAttackPower += EquipSpellExtendedEffect.giveChangesOnATKDEFConsideringEquipSpellEffects(cardLocation, index, "attack");
-        finalDefensePower += EquipSpellExtendedEffect.giveChangesOnATKDEFConsideringEquipSpellEffects(cardLocation, index, "defense");
-        CardLocation cardLocationOfFirstSpellFieldCard = giveLocationOfPossibleSpellFieldCard(0, 1);
-        CardLocation cardLocationOfSecondSpellFieldCard = giveLocationOfPossibleSpellFieldCard(0, 2);
+        finalAttackPower += giveChangesInATKDEFConsideringContinuousMonsterEffect(cardLocation, token, "attack");
+        finalDefensePower += giveChangesInATKDEFConsideringContinuousMonsterEffect(cardLocation, token, "defense");
+        finalAttackPower += EquipSpellExtendedEffect.giveChangesOnATKDEFConsideringEquipSpellEffects(cardLocation, token, "attack");
+        finalDefensePower += EquipSpellExtendedEffect.giveChangesOnATKDEFConsideringEquipSpellEffects(cardLocation, token, "defense");
+        CardLocation cardLocationOfFirstSpellFieldCard = giveLocationOfPossibleSpellFieldCard(token, 1);
+        CardLocation cardLocationOfSecondSpellFieldCard = giveLocationOfPossibleSpellFieldCard(token, 2);
         if (cardLocationOfFirstSpellFieldCard != null) {
             System.out.println("ally has spell field card %%%");
             finalAttackPower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                cardLocationOfFirstSpellFieldCard, index, "attack");
+                cardLocationOfFirstSpellFieldCard, token, "attack");
             finalDefensePower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                cardLocationOfFirstSpellFieldCard, index, "defense");
+                cardLocationOfFirstSpellFieldCard, token, "defense");
         }
         if (cardLocationOfSecondSpellFieldCard != null) {
             System.out.println("opponent has spell field card %%%");
             finalAttackPower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                cardLocationOfSecondSpellFieldCard, index, "attack");
+                cardLocationOfSecondSpellFieldCard, token, "attack");
             finalDefensePower += FieldSpellExtendedEffect.giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(cardLocation,
-                cardLocationOfSecondSpellFieldCard, index, "defense");
+                cardLocationOfSecondSpellFieldCard, token, "defense");
 
         }
-        finalAttackPower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("attack", cardLocation, index);
+        finalAttackPower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("attack", cardLocation, token);
         finalDefensePower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("defense", cardLocation,
-            index);
+            token);
         if (string.equals("attack")) {
             return finalAttackPower;
         }
@@ -463,9 +463,8 @@ public class MonsterCard extends Card {
     }
 
 
-    private static int giveChangesInATKDEFConsideringContinuousMonsterEffect(CardLocation cardLocation, int index,
-                                                                             String attackOrDefense) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    private static int giveChangesInATKDEFConsideringContinuousMonsterEffect(CardLocation cardLocation, String token, String attackOrDefense) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(cardLocation);
         ArrayList<ContinuousMonsterEffect> continuousMonsterEffects = monsterCard.getContinuousMonsterEffects();
         int finalAttackPower = 0;
@@ -503,25 +502,24 @@ public class MonsterCard extends Card {
     }
 
     private static int giveChangesInATKDEFConsideringOtherContinuousMonsterEffects(String string,
-                                                                                   CardLocation cardLocation, int index) {
+                                                                                   CardLocation cardLocation, String token) {
         if (string.equals("defense")) {
             return 0;
         }
         int attackChanges = 0;
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> allyMonsterCards = duelBoard.getAllyMonsterCards();
         ArrayList<Card> opponentMonsterCards = duelBoard.getOpponentMonsterCards();
         if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
-            attackChanges += giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(allyMonsterCards, index);
+            attackChanges += giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(allyMonsterCards, token);
         } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-            attackChanges += giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(opponentMonsterCards, index);
+            attackChanges += giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(opponentMonsterCards, token);
         }
         return attackChanges;
     }
 
-    private static int giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(ArrayList<Card> monsterCards,
-                                                                                    int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    private static int giveIncreasesInATKForContinuousMonsterEffectsInThisArrayList(ArrayList<Card> monsterCards, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         int attackChanges = 0;
         for (int i = 0; i < monsterCards.size(); i++) {
             CardLocation cardLocationOfAllyMonster = new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1);
@@ -539,8 +537,8 @@ public class MonsterCard extends Card {
         return attackChanges;
     }
 
-    private static CardLocation giveLocationOfPossibleSpellFieldCard(int index, int turn) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    private static CardLocation giveLocationOfPossibleSpellFieldCard(String token, int turn) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         Card possibleCard = null;
         CardLocation possibleCardLocation = null;
         if (turn == 1) {

@@ -36,7 +36,7 @@ public class AIMainPhaseMind {
         numberOfTributesNeeded -= 1;
         //not a pretty elegent method for choosing tributes
         int index = indexesOfMonstersWorthyOfBeingTributes.get(indexesOfMonstersWorthyOfBeingTributes.size() - 1);
-        return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, true);
+        return "select --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, true, ai.getToken());
     }
 
     protected String getCommandForDiscardingCardsInSpecialSummoning(AI ai) {
@@ -68,7 +68,7 @@ public class AIMainPhaseMind {
             //indexesOfSpellTrapsWorthyOfKilling.remove(indexesOfSpellTrapsWorthyOfKilling.size() - 1);
             indexOfPreviouslyChosenSpellTrapForKilling = index;
             ai.setAiFurtherActivationInput(AIFurtherActivationInput.SELECT_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING);
-            return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, false);
+            return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, false, ai.getToken());
         } else if (ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.SELECT_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING)) {
             ArrayList<Integer> indexesOfSpellTrapsWorthyOfKilling =
                 ai.getAiBoardUnderstander().getOpponentMonsterSpellBoardAnalysis().getIndexesOfSpellTrapsWorthyOfKilling();
@@ -81,7 +81,7 @@ public class AIMainPhaseMind {
                     if (index != indexOfPreviouslyChosenSpellTrapForKilling) {
                         ai.setAiFurtherActivationInput(AIFurtherActivationInput.NOTHING);
                         indexOfPreviouslyChosenSpellTrapForKilling = -1;
-                        return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, false);
+                        return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, false, ai.getToken());
                     }
                 }
             } else {
@@ -90,15 +90,15 @@ public class AIMainPhaseMind {
                     if (index != indexOfPreviouslyChosenSpellTrapForKilling) {
                         ai.setAiFurtherActivationInput(AIFurtherActivationInput.NOTHING);
                         indexOfPreviouslyChosenSpellTrapForKilling = -1;
-                        return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, false);
+                        return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(index + 1, false, ai.getToken());
                     }
                 }
-            }
-            for (int i = 0; i < 5; i++) {
-                if (i != indexOfPreviouslyChosenSpellTrapForKilling) {
-                    ai.setAiFurtherActivationInput(AIFurtherActivationInput.NOTHING);
-                    indexOfPreviouslyChosenSpellTrapForKilling = -1;
-                    return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false);
+                for (int i = 0; i < 5; i++) {
+                    if (i != indexOfPreviouslyChosenSpellTrapForKilling) {
+                        ai.setAiFurtherActivationInput(AIFurtherActivationInput.NOTHING);
+                        indexOfPreviouslyChosenSpellTrapForKilling = -1;
+                        return "select --opponent --spell " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false, ai.getToken());
+                    }
                 }
             }
         } else if (ai.getAiFurtherActivationInput().equals(AIFurtherActivationInput.SELECT_2_OF_OPPONENT_SPELL_TRAP_CARDS_WORTHY_OF_KILLING_IN_CHAIN)) {
@@ -171,21 +171,21 @@ public class AIMainPhaseMind {
         if (monstersWorthyOfKilling.size() == 0) {
             for (int i = 0; i < ai.getAiBoardUnderstander().getOpponentMonsterCards().size(); i++) {
                 if (ai.getAiBoardUnderstander().getOpponentMonsterCards().get(i) != null) {
-                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false);
+                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false, ai.getToken());
                 }
             }
         }
         int maximumAttack = 0;
         int desiredIndex = monstersWorthyOfKilling.get(0);
         for (int i = 0; i < monstersWorthyOfKilling.size(); i++) {
-            if (GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
-                int monsterAttack = MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1), 0);
+            if (GameManager.getDuelControllerByIndex(ai.getToken()).getAiTurn() == 1) {
+                int monsterAttack = MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1), ai.getToken());
                 if (monsterAttack > maximumAttack) {
                     maximumAttack = monsterAttack;
                     desiredIndex = i;
                 }
             } else {
-                int monsterAttack = MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1), 0);
+                int monsterAttack = MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1), ai.getToken());
                 if (monsterAttack > maximumAttack) {
                     maximumAttack = monsterAttack;
                     desiredIndex = i;
@@ -193,33 +193,33 @@ public class AIMainPhaseMind {
             }
         }
         if (maximumAttack >= 2200) {
-            return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(desiredIndex + 1, false);
+            return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(desiredIndex + 1, false, ai.getToken());
         }
         for (int i = 0; i < monstersWorthyOfKilling.size(); i++) {
             CardLocation cardLocation = null;
-            if (GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
+            if (GameManager.getDuelControllerByIndex(ai.getToken()).getAiTurn() == 1) {
                 cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1);
             } else {
                 cardLocation = new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1);
             }
-            MonsterCard monsterCard = (MonsterCard) GameManager.getDuelBoardByIndex(0).getCardByCardLocation(cardLocation);
+            MonsterCard monsterCard = (MonsterCard) GameManager.getDuelBoardByIndex(ai.getToken()).getCardByCardLocation(cardLocation);
             ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();
             if (beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
-                return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false);
+                return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false, ai.getToken());
             }
         }
-        return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(monstersWorthyOfKilling.get(0) + 1, false);
+        return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(monstersWorthyOfKilling.get(0) + 1, false, ai.getToken());
     }
 
     protected String getCommandWhenAIIsInMainPhaseWithNoNecessaryQuery(AI ai) {
         ai.updateAIInformationAccordingToBoard();
         aiKeyVariablesUpdater.updateVariablesOfThisClassAccordingToSituation(ai);
-        DuelController duelController = GameManager.getDuelControllerByIndex(0);
+        DuelController duelController = GameManager.getDuelControllerByIndex(ai.getToken());
         ArrayList<CardLocation> allyMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(false, true);
         ArrayList<CardLocation> opponentMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, true);
-        boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, 0, true);
-        boolean doOpponentMonstersDominateAIAlone = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, 0, false);
-        boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
+        boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, ai.getToken(), true);
+        boolean doOpponentMonstersDominateAIAlone = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, ai.getToken(), false);
+        boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, ai.getToken(), true);
         if (aiKeyVariablesUpdater.isDoesAIHaveCardDrawingSpellCardsInHand()) {
             return aiCardFinder.findCardDrawingSpellCardInHandToActivate(ai);
         }
@@ -322,10 +322,10 @@ public class AIMainPhaseMind {
                 return aiCardFinder.findMonsterNeedingTributeInHandToSpecialSummon(ai);
             }
         }
-        if (GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.OPPONENT_MAIN_PHASE_2) &&
-            GameManager.getDuelControllerByIndex(0).getAiTurn() == 2 ||
-            GameManager.getPhaseControllerByIndex(0).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_2) &&
-                GameManager.getDuelControllerByIndex(0).getAiTurn() == 1) {
+        if (GameManager.getPhaseControllerByIndex(ai.getToken()).getPhaseInGame().equals(PhaseInGame.OPPONENT_MAIN_PHASE_2) &&
+            GameManager.getDuelControllerByIndex(ai.getToken()).getAiTurn() == 2 ||
+            GameManager.getPhaseControllerByIndex(ai.getToken()).getPhaseInGame().equals(PhaseInGame.ALLY_MAIN_PHASE_2) &&
+                GameManager.getDuelControllerByIndex(ai.getToken()).getAiTurn() == 1) {
 
         }
         return "next phase";
@@ -336,14 +336,14 @@ public class AIMainPhaseMind {
     protected String getCommandForChoosingToActivateTrapInChainOrNotInMainPhase1(AI ai) {
         //ai.getAiInformationUpdater().updateVariablesForBoard();
         //ai turn chain 3rd time not handeled
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         ArrayList<CardLocation> opponentMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, true);
         ArrayList<CardLocation> allyMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(false, true);
-        boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, 0, true);
-        boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
+        boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, ai.getToken(), true);
+        boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, ai.getToken(), true);
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)) {
-            SpellCard finalCardActivated = (SpellCard) GameManager.getDuelBoardByIndex(0).getCardByCardLocation(uninterruptedAction.getFinalMainCardLocation());
+            SpellCard finalCardActivated = (SpellCard) GameManager.getDuelBoardByIndex(ai.getToken()).getCardByCardLocation(uninterruptedAction.getFinalMainCardLocation());
             ArrayList<NormalSpellCardEffect> normalSpellCardEffects = finalCardActivated.getNormalSpellCardEffects();
             if (doAIMonstersDominateOpponentWithBuffEffects && normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD)) {
                 return "yes";
@@ -357,8 +357,8 @@ public class AIMainPhaseMind {
                 return "yes";
             }
             boolean canOpponentSpecialSummonMonstersWithHighAttack = false;
-            ArrayList<Card> allyCardsInGraveyard = GameManager.getDuelBoardByIndex(0).getAllyCardsInGraveyard();
-            ArrayList<Card> opponentCardsInGraveyard = GameManager.getDuelBoardByIndex(0).getOpponentCardsInGraveyard();
+            ArrayList<Card> allyCardsInGraveyard = GameManager.getDuelBoardByIndex(ai.getToken()).getAllyCardsInGraveyard();
+            ArrayList<Card> opponentCardsInGraveyard = GameManager.getDuelBoardByIndex(ai.getToken()).getOpponentCardsInGraveyard();
             for (int i = 0; i < opponentCardsInGraveyard.size(); i++) {
                 if (Card.isCardAMonster(opponentCardsInGraveyard.get(i)) && ((MonsterCard) opponentCardsInGraveyard.get(i)).getAttackPower() >= 2200) {
                     canOpponentSpecialSummonMonstersWithHighAttack = true;
@@ -373,11 +373,11 @@ public class AIMainPhaseMind {
                 return "yes";
             }
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_TRAP) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_TRAP)) {
-            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(ai.getToken());
             TrapCard trapCard = (TrapCard) duelBoard.getCardByCardLocation(uninterruptedAction.getFinalMainCardLocation());
             ArrayList<NormalTrapCardEffect> normalTrapCardEffects = trapCard.getNormalTrapCardEffects();
             boolean canOpponentSpecialSummonMonstersWithHighAttack = false;
-            int opponentTurn = 3 - GameManager.getDuelControllerByIndex(0).getAiTurn();
+            int opponentTurn = 3 - GameManager.getDuelControllerByIndex(ai.getToken()).getAiTurn();
             ArrayList<Card> opponentGraveyardCards = null;
             if (opponentTurn == 1) {
                 opponentGraveyardCards = duelBoard.getAllyCardsInGraveyard();
@@ -403,7 +403,7 @@ public class AIMainPhaseMind {
     }
 
     protected String getCommandForChoosingSpellTrapToActivateInChainInMainPhase1(AI ai) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action uninterruptedAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_SPELL) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_SPELL)
             || uninterruptedAction.getActionType().equals(ActionType.ALLY_ACTIVATING_TRAP) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_ACTIVATING_TRAP)) {
@@ -430,13 +430,13 @@ public class AIMainPhaseMind {
     }
 
     protected String getCommandForChoosingToActivateSpellTrapForThirdTimeInChain(AI ai) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action aiSummoningAction = uninterruptedActions.get(uninterruptedActions.size() - 2);
         CardLocation mainCardLocation = aiSummoningAction.getFinalMainCardLocation();
-        MonsterCard summonedMonsterCard = (MonsterCard) GameManager.getDuelBoardByIndex(0).getCardByCardLocation(mainCardLocation);
+        MonsterCard summonedMonsterCard = (MonsterCard) GameManager.getDuelBoardByIndex(ai.getToken()).getCardByCardLocation(mainCardLocation);
         Action opponentTrapActivatingAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation opponentTrapLocation = opponentTrapActivatingAction.getFinalMainCardLocation();
-        TrapCard trapCard = (TrapCard) GameManager.getDuelBoardByIndex(0).getCardByCardLocation(opponentTrapLocation);
+        TrapCard trapCard = (TrapCard) GameManager.getDuelBoardByIndex(ai.getToken()).getCardByCardLocation(opponentTrapLocation);
         ArrayList<NormalSummonTrapCardEffect> normalSummonTrapCardEffects = trapCard.getNormalSummonTrapCardEffects();
         if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.IF_ATK_IS_AT_LEAST_1000_ATK_DESTROY_IT)) {
             if (summonedMonsterCard.getAttackPower() >= 2200) {
@@ -447,8 +447,8 @@ public class AIMainPhaseMind {
         } else if (normalSummonTrapCardEffects.contains(NormalSummonTrapCardEffect.DESTROY_ALL_MONSTERS_ON_FIELD)) {
             ArrayList<CardLocation> opponentMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(true, true);
             ArrayList<CardLocation> allyMonsterCardLocationsNoNull = ai.createCardLocationArrayFromThisArray(false, true);
-            boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, 0, true);
-            boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, 0, true);
+            boolean doOpponentMonstersDominateAIWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(opponentMonsterCardLocationsNoNull, allyMonsterCardLocationsNoNull, ai.getToken(), true);
+            boolean doAIMonstersDominateOpponentWithBuffEffects = ai.getAiBattlePhaseMind().doMonstersInThisSideDominateTheOtherSideExtendable(allyMonsterCardLocationsNoNull, opponentMonsterCardLocationsNoNull, ai.getToken(), true);
             if (doOpponentMonstersDominateAIWithBuffEffects) {
                 return "no";
             } else if (doAIMonstersDominateOpponentWithBuffEffects) {

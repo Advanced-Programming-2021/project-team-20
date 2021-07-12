@@ -109,8 +109,8 @@ public class EquipSpellExtendedEffect {
         return equipSpellEffects;
     }
 
-    public static int giveChangesOnATKDEFConsideringEquipSpellEffects(CardLocation monsterCardLocation, int index, String attackOrDefense) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    public static int giveChangesOnATKDEFConsideringEquipSpellEffects(CardLocation monsterCardLocation, String token, String attackOrDefense) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardLocation);
         MonsterCardFamily monsterCardFamily = monsterCard.getMonsterCardFamily();
         ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffects = monsterCard.getEquipSpellExtendedEffects();

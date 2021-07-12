@@ -9,10 +9,10 @@ public class SetTurnForGame {
     private int player1Selection;
     private int player2Selection;
 
-    public String setTurnBetweenTwoPlayer(String input, int index) {
+    public String setTurnBetweenTwoPlayer(String input, String token) {
 
-        String allyPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(0);
-        String opponentPlayerName = GameManager.getDuelControllerByIndex(index).getPlayingUsers().get(1);
+        String allyPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
+        String opponentPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1);
 
         if (canFirstPlayerSelect) {
             if (input.equals("1") || input.equals("2") || input.equals("3")) {
@@ -53,28 +53,28 @@ public class SetTurnForGame {
 
         if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
             || (player1Selection == 3 && player2Selection == 2)) {
-            GameManager.getDuelControllerByIndex(index).setTurn(1);
+            GameManager.getDuelControllerByIndex(token).setTurn(1);
             if (opponentPlayerName.equals("AI")){
-                GameManager.getDuelControllerByIndex(0).setAiTurn(2);
+                GameManager.getDuelControllerByIndex(token).setAiTurn(2);
             }
-            GameManager.getDuelControllerByIndex(index).startDuel(index);
-            GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            if (GameManager.getDuelControllerByIndex(0).getCurrentRound() >= 2) {
-                DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+            GameManager.getDuelControllerByIndex(token).startDuel(token);
+            GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            if (GameManager.getDuelControllerByIndex(token).getCurrentRound() >= 2) {
+                DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
                 duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(), duelBoard.getOpponentCardsInDeck());
             }
             setFieldsOfClassLikeForNextRound();
             return allyPlayerName + " must start game";
         }
 
-        GameManager.getDuelControllerByIndex(index).setTurn(2);
+        GameManager.getDuelControllerByIndex(token).setTurn(2);
         if (opponentPlayerName.equals("AI")){
-            GameManager.getDuelControllerByIndex(0).setAiTurn(1);
+            GameManager.getDuelControllerByIndex(token).setAiTurn(1);
         }
-        GameManager.getDuelControllerByIndex(index).startDuel(index);
-        GameManager.getDuelControllerByIndex(index).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-        if (GameManager.getDuelControllerByIndex(0).getCurrentRound() >= 2) {
-            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
+        GameManager.getDuelControllerByIndex(token).startDuel(token);
+        GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+        if (GameManager.getDuelControllerByIndex(token).getCurrentRound() >= 2) {
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
             duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(), duelBoard.getOpponentCardsInDeck());
         }
         setFieldsOfClassLikeForNextRound();

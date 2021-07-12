@@ -123,8 +123,8 @@ public class FieldSpellExtendedEffect {
     }
 
     public static int giveIncreasesInATKOrDEFGivenSpellFieldCardEffectsAndMonsterCard(CardLocation monsterCardLocation
-        , CardLocation spellFieldCardLocation, int index, String attackOrDefense) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        , CardLocation spellFieldCardLocation, String token, String attackOrDefense) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(monsterCardLocation);
         MonsterCardFamily monsterCardFamily = monsterCard.getMonsterCardFamily();
         SpellCard spellFieldCard = (SpellCard) duelBoard.getCardByCardLocation(spellFieldCardLocation);

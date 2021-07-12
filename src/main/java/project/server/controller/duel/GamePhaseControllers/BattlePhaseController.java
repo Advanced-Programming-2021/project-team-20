@@ -60,11 +60,11 @@ public class BattlePhaseController extends ChainController {
         DuelController duelController = GameManager.getDuelControllerByIndex(token);
         int turn = duelController.getTurn();
         String output = "";
-        output = areMonsterWithATK1500OrMoreEligibleToAttack(allySpellCards, allyCardLocation);
+        output = areMonsterWithATK1500OrMoreEligibleToAttack(allySpellCards, allyCardLocation, token);
         if (!output.equals("")) {
             return output;
         }
-        output = areMonsterWithATK1500OrMoreEligibleToAttack(opponentSpellCards, allyCardLocation);
+        output = areMonsterWithATK1500OrMoreEligibleToAttack(opponentSpellCards, allyCardLocation, token);
         if (!output.equals("")) {
             return output;
         }

@@ -90,9 +90,10 @@ public class DeckScene extends Application {
                         if (group.getChildren().get(i).equals(rectangle)) {
                             indexOfChosenCardInDeck = i;
                             if (isClassWaitingForUserToChooseCardFromDeck) {
-                                String miniString = (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1 ? "" : "--opponent ");
+                                String token = DuelView.getToken();
+                                String miniString = (GameManager.getDuelControllerByIndex(token).getFakeTurn() == 1 ? "" : "--opponent ");
                                 System.out.println("sending to server "+"select " + miniString + "--deck " + indexOfChosenCardInDeck);
-                                String output = GameManager.getDuelControllerByIndex(0).getInput("select " + miniString + "--deck " + (indexOfChosenCardInDeck+1), true);
+                                String output = GameManager.getDuelControllerByIndex(token).getInput("select " + miniString + "--deck " + (indexOfChosenCardInDeck+1), true, token);
                                 System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
                                 if (output.contains("this card cannot be") || output.contains("this is not a")
                                     || output.contains("this monster is not") || output.contains("invalid")
@@ -111,7 +112,7 @@ public class DeckScene extends Application {
                                     alert.setContentText(output);
                                     ButtonType result = alert.showAndWait().orElse(attackingButton);
                                     if (result.equals(attackingButton)) {
-                                        output = GameManager.getDuelControllerByIndex(0).getInput("attacking", true);
+                                        output = GameManager.getDuelControllerByIndex(token).getInput("attacking", true, token);
                                         Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
                                         newAlert.setTitle("Information Dialog");
                                         newAlert.setHeaderText("Result Message");
@@ -122,7 +123,7 @@ public class DeckScene extends Application {
                                         stage.close();
                                         DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
                                     } else if (result.equals(defensiveButton)) {
-                                        output = GameManager.getDuelControllerByIndex(0).getInput("defensive", true);
+                                        output = GameManager.getDuelControllerByIndex(token).getInput("defensive", true, token);
                                         Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
                                         newAlert.setTitle("Information Dialog");
                                         newAlert.setHeaderText("Result Message");

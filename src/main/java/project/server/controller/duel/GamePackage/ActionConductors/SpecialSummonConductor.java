@@ -15,12 +15,12 @@ import project.model.cardData.SpellCardData.SpellCardValue;
 import java.util.ArrayList;
 
 public class SpecialSummonConductor {
-    public static String conductSpecialSummoningActionUninterruptedAction(int index, int numberInListOfActions) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+    public static String conductSpecialSummoningActionUninterruptedAction(String token, int numberInListOfActions) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(token);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
         for (int i = 0; i < uninterruptedAction.getSpendingCards().size(); i++) {
-            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getSpendingCards().get(i), token);
         }
         int turn = 0;
         CardLocation superFinalCardLocation = null;
@@ -37,9 +37,9 @@ public class SpecialSummonConductor {
         }
         //GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
         CardLocation initialCardLocationOfMonster = uninterruptedAction.getMainCardLocation();
-        tendToFirstAndSecondCardsInHandWithBadIndex(index, numberInListOfActions, initialCardLocationOfMonster);
+        tendToFirstAndSecondCardsInHandWithBadIndex(token, numberInListOfActions, initialCardLocationOfMonster);
         for (int i = 0; i < uninterruptedAction.getCardsToBeDiscarded().size(); i++) {
-            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getCardsToBeDiscarded().get(i), index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(uninterruptedAction.getCardsToBeDiscarded().get(i), token);
         }
         CardLocation correctCardLocationOfMonster;
         if (uninterruptedAction.isSecondCardInHandAfterFirstCardInHand()) {
@@ -49,9 +49,9 @@ public class SpecialSummonConductor {
         }
         Card mainCard = duelBoard.getCardByCardLocation(correctCardLocationOfMonster);
         duelBoard.removeCardByCardLocation(correctCardLocationOfMonster);
-        duelBoard.addCardToMonsterZone(mainCard, turn);
+        duelBoard.addCardToMonsterZone(mainCard, turn, token);
 
-        GameManager.getDuelControllerByIndex(index).addStringToSuperAlmightyString("mainCardLocation " + correctCardLocationOfMonster.getRowOfCardLocation()
+        GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + correctCardLocationOfMonster.getRowOfCardLocation()
             + " " + correctCardLocationOfMonster.getIndex() + " is being added to monster zone " + turn + " and should finally be " + uninterruptedAction.getCardPositionOfMainCard());
 
         mainCard.setCardPosition(uninterruptedAction.getCardPositionOfMainCard());
@@ -60,12 +60,12 @@ public class SpecialSummonConductor {
         return "special summoned successfully";
     }
 
-    public static String conductSpecialSummoningAction(int index, int numberInListOfActions) {
+    public static String conductSpecialSummoningAction(String token, int numberInListOfActions) {
         return "";
     }
 
-    private static void tendToFirstAndSecondCardsInHandWithBadIndex(int index, int numberInListOfActions, CardLocation mainMonsterCardLocation) {
-        Action uninterruptedAction = GameManager.getUninterruptedActionsByIndex(index).get(numberInListOfActions);
+    private static void tendToFirstAndSecondCardsInHandWithBadIndex(String token, int numberInListOfActions, CardLocation mainMonsterCardLocation) {
+        Action uninterruptedAction = GameManager.getUninterruptedActionsByIndex(token).get(numberInListOfActions);
         if (uninterruptedAction.getCardsToBeDiscarded().size() > 0) {
             ArrayList<CardLocation> cardsToBeDiscarded = uninterruptedAction.getCardsToBeDiscarded();
             int indexOfCardToBeDiscarded = cardsToBeDiscarded.get(cardsToBeDiscarded.size() - 1).getIndex();

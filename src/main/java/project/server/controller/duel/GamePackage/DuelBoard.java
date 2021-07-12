@@ -356,15 +356,14 @@ public class DuelBoard {
         }
     }
 
-    public void destroyEquipSpellsRelatedToThisCard(CardLocation targetingCardLocation, int graveyardToSendCardTo) {
+    public void destroyEquipSpellsRelatedToThisCard(CardLocation targetingCardLocation, int graveyardToSendCardTo, String token) {
         // if change of heart is used and changes card locations, the corresponding
         // arraylist in spell card should be updated too
-        destroyEquipSpellsRelatedToThisCardInThisArrayList(allySpellCards, targetingCardLocation, true);
-        destroyEquipSpellsRelatedToThisCardInThisArrayList(opponentSpellCards, targetingCardLocation, false);
+        destroyEquipSpellsRelatedToThisCardInThisArrayList(allySpellCards, targetingCardLocation, true, token);
+        destroyEquipSpellsRelatedToThisCardInThisArrayList(opponentSpellCards, targetingCardLocation, false, token);
     }
 
-    private void destroyEquipSpellsRelatedToThisCardInThisArrayList(ArrayList<Card> spellCards,
-                                                                    CardLocation targetingCardLocation, boolean bool) {
+    private void destroyEquipSpellsRelatedToThisCardInThisArrayList(ArrayList<Card> spellCards, CardLocation targetingCardLocation, boolean bool, String token) {
         for (int i = 0; i < spellCards.size(); i++) {
             if (Card.isCardASpell(spellCards.get(i))) {
                 SpellCard spellCard = (SpellCard) spellCards.get(i);
@@ -376,7 +375,7 @@ public class DuelBoard {
                         && targetingCardLocation.getIndex() == equipSpellCardLocations.get(j).getIndex()) {
                         SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(new CardLocation(
                             (bool ? RowOfCardLocation.ALLY_SPELL_ZONE : RowOfCardLocation.OPPONENT_SPELL_ZONE),
-                            i + 1), 0);
+                            i + 1), token);
                     }
                 }
                 // boolean hope = true;
@@ -449,7 +448,7 @@ public class DuelBoard {
         return card;
     }
 
-    public void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardLocations) {
+    public void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardLocations, String token) {
         ArrayList<Card> cards = new ArrayList<>();
         for (int i = 0; i < cardLocations.size(); i++) {
             cards.add(getCardByCardLocation(cardLocations.get(i)));
@@ -463,7 +462,7 @@ public class DuelBoard {
             if (rowOfCardLocation.equals(RowOfCardLocation.ALLY_HAND_ZONE)
                 || rowOfCardLocation.equals(RowOfCardLocation.ALLY_DECK_ZONE)) {
                 allyCardsInGraveyard.add(cards.get(i));
-                GameManager.getDuelControllerByIndex(0)
+                GameManager.getDuelControllerByIndex(token)
                     .addStringToSuperAlmightyString("mainCardLocation "
                         + cardLocations.get(i).getRowOfCardLocation() + " " + cardLocations.get(i).getIndex()
                         + " is being added to graveyard zone " + 1
@@ -471,7 +470,7 @@ public class DuelBoard {
 
             } else {
                 opponentCardsInGraveyard.add(cards.get(i));
-                GameManager.getDuelControllerByIndex(0)
+                GameManager.getDuelControllerByIndex(token)
                     .addStringToSuperAlmightyString("mainCardLocation "
                         + cardLocations.get(i).getRowOfCardLocation() + " " + cardLocations.get(i).getIndex()
                         + " is being added to graveyard zone " + 2
@@ -508,7 +507,7 @@ public class DuelBoard {
         arrayList.add(card);
     }
 
-    public void addCardToMonsterZone(Card card, int turn) {
+    public void addCardToMonsterZone(Card card, int turn, String token) {
         ArrayList<Card> arrayList;
         CardLocation cardLocation;
         if (turn == 1) {
@@ -518,13 +517,13 @@ public class DuelBoard {
             arrayList = giveArrayListByRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE);
             cardLocation = giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false);
         }
-        GameManager.getDuelControllerByIndex(0).addStringToAvailableCardLocationForUseForClient(cardLocation);
+        GameManager.getDuelControllerByIndex(token).addStringToAvailableCardLocationForUseForClient(cardLocation);
         if (cardLocation != null) {
             arrayList.set(cardLocation.getIndex(), card);
         }
     }
 
-    public void addCardToSpellZone(Card card, int turn) {
+    public void addCardToSpellZone(Card card, int turn, String token) {
         ArrayList<Card> arrayList;
         CardLocation cardLocation;
         if (turn == 1) {
@@ -544,7 +543,7 @@ public class DuelBoard {
                 cardLocation = giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_ZONE, false);
             }
         }
-        GameManager.getDuelControllerByIndex(0).addStringToAvailableCardLocationForUseForClient(cardLocation);
+        GameManager.getDuelControllerByIndex(token).addStringToAvailableCardLocationForUseForClient(cardLocation);
         if (cardLocation != null) {
             arrayList.set(cardLocation.getIndex(), card);
         }
@@ -612,12 +611,12 @@ public class DuelBoard {
         }
     }
 
-    public void shuffleMainDecks() {
-        Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck());
-        Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck().getMainDeck());
+    public void shuffleMainDecks(String token) {
+        Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getMainDeck());
+        Collections.shuffle(GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getMainDeck());
     }
 
-    public void resetCards(int player1Or2) {
+    public void resetCards(int player1Or2, String token) {
 
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
@@ -626,11 +625,11 @@ public class DuelBoard {
         List<String> allCardsInMainDeck = null;
         if (player1Or2 == 1) {
             allCardsInDeck = allyCardsInDeck;
-            allCardsInMainDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck().getMainDeck();
+            allCardsInMainDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getMainDeck();
         }
         if (player1Or2 == 2) {
             allCardsInDeck = opponentCardsInDeck;
-            allCardsInMainDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getOpponentPlayerDeck()
+            allCardsInMainDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck()
                 .getMainDeck();
         }
 
@@ -653,9 +652,9 @@ public class DuelBoard {
         }
     }
 
-    public String showMainDuelBoard(int index) {
+    public String showMainDuelBoard(String token) {
 
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
         int turn = duelController.getTurn();
         User myTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(turn));
         User otherTurnUser = Storage.getUserByName(duelController.getPlayingUsernameByTurn(-turn + 3));
@@ -665,16 +664,16 @@ public class DuelBoard {
             "\t\t" + otherTurnUser.getNickname() + " : " + duelController.getLifePoints().get(-turn + 2) + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(-turn + 3).reverse().toString() + "\n");
         builderDuelBoard.append(reverseWords(toShowInDuelBoardFormatCardsInDeck(-turn + 3).toString()) + "\n");
-        builderDuelBoard.append((toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3)) + "\n");
-        builderDuelBoard.append((toShowInDuelBoardFormatMonsterCards(-turn + 3) + "\n"));
+        builderDuelBoard.append((toShowInDuelBoardFormatSpellAndTrapCards(-turn + 3, token)) + "\n");
+        builderDuelBoard.append((toShowInDuelBoardFormatMonsterCards(-turn + 3, token) + "\n"));
         builderDuelBoard
             .append(reverseWords(toShowInDuelBoardFormatGraveyardAndFieldZone(-turn + 3).toString()) + "\n");
 
         builderDuelBoard.append("---------------------------------------------------\n");
 
         builderDuelBoard.append(toShowInDuelBoardFormatGraveyardAndFieldZone(turn).toString() + "\n");
-        builderDuelBoard.append(toShowInDuelBoardFormatMonsterCards(turn) + "\n");
-        builderDuelBoard.append(toShowInDuelBoardFormatSpellAndTrapCards(turn) + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatMonsterCards(turn, token) + "\n");
+        builderDuelBoard.append(toShowInDuelBoardFormatSpellAndTrapCards(turn, token) + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInDeck(turn).toString() + "\n");
         builderDuelBoard.append(toShowInDuelBoardFormatCardsInHand(turn).toString() + "\n");
         builderDuelBoard
@@ -720,7 +719,7 @@ public class DuelBoard {
         return showGraveyardAndFieldZoneSize;
     }
 
-    private String toShowInDuelBoardFormatMonsterCards(int whichPlayer) {
+    private String toShowInDuelBoardFormatMonsterCards(int whichPlayer, String token) {
         StringBuilder showMonsterCards = new StringBuilder();
         showMonsterCards.append("\t");
         if (whichPlayer == 2) {
@@ -732,13 +731,13 @@ public class DuelBoard {
                 showMonsterCards.append(howPlacedInZone(allyMonsterCards.get(i)) + "\t");
             }
         }
-        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        int turn = GameManager.getDuelControllerByIndex(token).getTurn();
         if (turn == 2)
             return reverseWordsWhenTurnIs2(showMonsterCards.reverse().toString());
         return showMonsterCards.toString();
     }
 
-    private String toShowInDuelBoardFormatSpellAndTrapCards(int whichPlayer) {
+    private String toShowInDuelBoardFormatSpellAndTrapCards(int whichPlayer, String token) {
         StringBuilder showSpellAndTrapCards = new StringBuilder();
         showSpellAndTrapCards.append("\t");
         if (whichPlayer == 2) {
@@ -751,7 +750,7 @@ public class DuelBoard {
             }
         }
 
-        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
+        int turn = GameManager.getDuelControllerByIndex(token).getTurn();
         if (turn == 2)
             return reverseWordsWhenTurnIs2(showSpellAndTrapCards.reverse().toString());
         return showSpellAndTrapCards.toString();
@@ -806,9 +805,9 @@ public class DuelBoard {
         return showCardsInHandBuilder;
     }
 
-    public String showSelectedCard(int index, int turn) {
+    public String showSelectedCard(String token, int turn) {
 
-        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(index);
+        SelectCardController selectCardController = GameManager.getSelectCardControllerByIndex(token);
         ArrayList<CardLocation> selectedCardLocations = selectCardController.getSelectedCardLocations();
         if (selectedCardLocations.size() == 0) {
             return "no card is selected yet";
@@ -831,10 +830,10 @@ public class DuelBoard {
                 return "card is not visible";
             }
         }
-        return showCard(cardLocation);
+        return showCard(cardLocation, token);
     }
 
-    private String showCard(CardLocation selectedCard) {
+    private String showCard(CardLocation selectedCard, String token) {
         String cardName = getCardByCardLocation(selectedCard).getCardName();
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
@@ -847,9 +846,9 @@ public class DuelBoard {
             shownCardStringBuilder.append("Level: " + monsterCard.getLevel() + "\n");
             shownCardStringBuilder.append("Type: " + monsterCard.getMonsterCardFamily() + "\n");
             shownCardStringBuilder
-                .append("ATK: " + MonsterCard.giveATKDEFConsideringEffects("attack", selectedCard, 0) + "\n");
+                .append("ATK: " + MonsterCard.giveATKDEFConsideringEffects("attack", selectedCard, token) + "\n");
             shownCardStringBuilder
-                .append("DEF: " + MonsterCard.giveATKDEFConsideringEffects("defense", selectedCard, 0) + "\n");
+                .append("DEF: " + MonsterCard.giveATKDEFConsideringEffects("defense", selectedCard, token) + "\n");
             shownCardStringBuilder.append("Description: " + monsterCard.getCardDescription());
         } else {
             if (allSpellAndTrapCards.get(Utility.giveCardNameRemovingRedundancy(cardName)).getCardType()
@@ -880,23 +879,23 @@ public class DuelBoard {
         return false;
     }
 
-    public String showDuelBoard(int index) {
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+    public String showDuelBoard(String token) {
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
         int turn = duelController.getTurn();
         String output = "";
         if (turn == 1) {
-            output += printFirstPlayerData(0);
-            output += printSecondPlayerData(0);
+            output += printFirstPlayerData(token);
+            output += printSecondPlayerData(token);
         } else {
-            output += printSecondPlayerData(0);
-            output += printFirstPlayerData(0);
+            output += printSecondPlayerData(token);
+            output += printFirstPlayerData(token);
         }
         return output;
     }
 
-    private String printFirstPlayerData(int index) {
+    private String printFirstPlayerData(String token) {
         String output = "";
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
         output += duelController.getPlayingUsers().get(0) + ":" + duelController.getLifePoints().get(0) + "\n";
         output += "ally cards in hand\n";
         for (int i = 0; i < allyCardsInHand.size(); i++) {
@@ -915,9 +914,9 @@ public class DuelBoard {
         return output;
     }
 
-    private String printSecondPlayerData(int index) {
+    private String printSecondPlayerData(String token) {
         String output = "";
-        DuelController duelController = GameManager.getDuelControllerByIndex(index);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
         output += duelController.getPlayingUsers().get(1) + ":" + duelController.getLifePoints().get(1) + "\n";
         output += "opponent cards in hand\n";
         for (int i = 0; i < opponentCardsInHand.size(); i++) {
