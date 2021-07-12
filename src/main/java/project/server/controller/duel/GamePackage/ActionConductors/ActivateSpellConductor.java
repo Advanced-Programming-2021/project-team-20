@@ -280,7 +280,7 @@ public class ActivateSpellConductor {
                 SpellCard spellCard = (SpellCard) card;
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS) && spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                    duelController.increaseLifePoints(500, 1);
+                    duelController.increaseLifePoints(500, 1, token);
                     output += ("500 life points is added to player " + duelController.getPlayingUsernameByTurn(1) + "\n");
                 }
             }
@@ -292,7 +292,7 @@ public class ActivateSpellConductor {
                 SpellCard spellCard = (SpellCard) card;
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS) && spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                    duelController.increaseLifePoints(500, 2);
+                    duelController.increaseLifePoints(500, 2, token);
                     output += ("500 life points is added to player " + duelController.getPlayingUsernameByTurn(2) + "\n");
 
                 }

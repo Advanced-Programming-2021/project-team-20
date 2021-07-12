@@ -430,7 +430,7 @@ public class ActivateTrapConductor {
     public static void pay2000HP(Action action, String token) {
         DuelController duelController = GameManager.getDuelControllerByIndex(token);
         int actionTurn = action.getActionTurn();
-        duelController.increaseLifePoints(-2000, actionTurn);
+        duelController.increaseLifePoints(-2000, actionTurn, token);
     }
 
     public static boolean doesPreviousUninterruptedActionContainACardEffectThatSpecialSummonsAMonster(Action uninterruptedAction, String token) {
@@ -473,6 +473,6 @@ public class ActivateTrapConductor {
         int actionTurn = action.getActionTurn();
         int attackOfMainCard = MonsterCard.giveATKDEFConsideringEffects("attack", mainCardLocation, token);
         DuelController duelController = GameManager.getDuelControllerByIndex(token);
-        duelController.increaseLifePoints(attackOfMainCard * (-1), actionTurn);
+        duelController.increaseLifePoints(attackOfMainCard * (-1), actionTurn, token);
     }
 }

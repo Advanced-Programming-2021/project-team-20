@@ -457,18 +457,18 @@ public class ControllerForView {
                 DuelView.setCardLocationToSendCardTo(GameManager.getDuelBoardByIndex(token).giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true));
                 System.out.println("YOU ARE EXCLUSIVELY DOOMED CAUSE CARD LOCATION TO SEND CARD TO IS NULL");
             }
-            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient();
+            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(token);
             // System.out.println(cardLocation+" POUPOLl");
             translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + Integer.parseInt((cardLocation.split("\n"))[1]) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX());
             translateTransition.setToY(510 - cardView.getUpperLeftY());
         } else {
-            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient();
+            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(token);
             //System.out.println(cardLocation+" POUPOLL");
             translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + Integer.parseInt((cardLocation.split("\n"))[1]) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX());
             translateTransition.setToY(510 - 20 - CardView.getCardHeight() - cardView.getUpperLeftY());
             cardView.setShouldBeSeen180DegreesReversed(true);
         }
-        GameManager.getDuelControllerByIndex(DuelView.getToken()).clearAvailableCardLocationForUseForClient();
+        GameManager.getDuelControllerByIndex(DuelView.getToken()).clearAvailableCardLocationForUseForClient(token);
         translateTransition.setCycleCount(1);
         translateTransition.setAutoReverse(true);
         return translateTransition;
@@ -525,7 +525,7 @@ public class ControllerForView {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(500), cardView);
         String token = DuelView.getToken();
         if (turn == 1) {
-            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient();
+            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(DuelView.getToken());
             double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
             double yTranslation = 510 + CardView.getCardHeight() - cardView.getUpperLeftY();
             if (cardView.getCard().getCardType().equals(CardType.SPELL) && ((SpellCard) cardView.getCard()).getSpellCardValue().equals(SpellCardValue.FIELD)) {
@@ -536,7 +536,7 @@ public class ControllerForView {
                 translateTransition.setToY(yTranslation);
             }
         } else {
-            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient();
+            String cardLocation = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(DuelView.getToken());
             double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
             double yTranslation = 510 - 20 - 2 * CardView.getCardHeight() - cardView.getUpperLeftY();
             if (cardView.getCard().getCardType().equals(CardType.SPELL) && ((SpellCard) cardView.getCard()).getSpellCardValue().equals(SpellCardValue.FIELD)) {
@@ -548,7 +548,7 @@ public class ControllerForView {
             }
             cardView.setShouldBeSeen180DegreesReversed(true);
         }
-        GameManager.getDuelControllerByIndex(DuelView.getToken()).clearAvailableCardLocationForUseForClient();
+        GameManager.getDuelControllerByIndex(DuelView.getToken()).clearAvailableCardLocationForUseForClient(DuelView.getToken());
         translateTransition.setCycleCount(1);
         translateTransition.setAutoReverse(true);
         return translateTransition;

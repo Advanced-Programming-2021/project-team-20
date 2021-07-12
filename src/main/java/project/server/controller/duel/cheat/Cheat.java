@@ -186,7 +186,7 @@ public class Cheat {
 
     private String increaseLifePoints(int amount, String token) {
         GameManager.getDuelControllerByIndex(token).increaseLifePoints(amount,
-            GameManager.getDuelControllerByIndex(token).getTurn());
+            GameManager.getDuelControllerByIndex(token).getTurn(), token);
         return "lifePoint increased " + amount + " successfully!";
     }
 }

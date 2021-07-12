@@ -458,8 +458,8 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE) && isBeingAttackedMonsterFlipped) {
             playersLifePointsChange.set(actionTurn - 1, playersLifePointsChange.get(actionTurn - 1) - 1000);
         }
-        duelController.increaseLifePoints(playersLifePointsChange.get(0), 1);
-        duelController.increaseLifePoints(playersLifePointsChange.get(1), 2);
+        duelController.increaseLifePoints(playersLifePointsChange.get(0), 1, token);
+        duelController.increaseLifePoints(playersLifePointsChange.get(1), 2, token);
         String output = "";
         output += tendToFaceUpAttackPositionMonsterLogicallyWinning(beingAttackedEffectsForAttackingMonster, beingAttackedEffectsForDefendingMonster);
         output += tendToFaceUpAttackPositionMonsterLogicallyEqual(beingAttackedEffectsForAttackingMonster, beingAttackedEffectsForDefendingMonster);

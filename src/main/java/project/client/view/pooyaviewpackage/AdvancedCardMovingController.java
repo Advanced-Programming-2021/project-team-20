@@ -11,8 +11,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import project.server.controller.duel.PreliminaryPackage.DuelStarter;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
@@ -53,7 +51,7 @@ public class AdvancedCardMovingController {
     }
 
     public void advanceForwardBattleField() {
-        String string = DuelStarter.getGameManager().getWholeReportToClient();
+        String string = JsonCreator.getResult("DuelStarter.getGameManager().getWholeReportToClient()");
         if (!string.isBlank()) {
             System.out.println("advanceForwardBattleField is called with input =\n" + string);
             String winloss = "(\\S+) won the game and the score is: (\\S+)";
@@ -63,10 +61,11 @@ public class AdvancedCardMovingController {
             if (matcher.find()) {
                 report = matcher.group(0);
                 boolean oneRound = true;
-                if (GameManager.getDuelControllerByIndex(token).getNumberOfRounds() == 3) {
+                int numberOfRounds = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getNumberOfRounds()"));
+                if (numberOfRounds == 3) {
                     oneRound = false;
                 }
-                int currentRound = GameManager.getDuelControllerByIndex(token).getCurrentRound();
+                int currentRound = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getCurrentRound()"));
                 System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
                 String output = AdvancedCardMovingController.getReport();
                 System.out.println("WinLoss: " + output);
@@ -131,7 +130,7 @@ public class AdvancedCardMovingController {
 //            allChangeConductorsObjects.get(i).chainThisChangeConductorToYourself(allChangeConductorsObjects.get(i + 1));
 //        }
                     allChangeConductorsObjects.get(0).conductChange();
-                    DuelStarter.getGameManager().clearWholeReportToClient();
+                    JsonCreator.getResult("DuelStarter.getGameManager().clearWholeReportToClient()");
                 }
             }
 
@@ -184,7 +183,7 @@ public class AdvancedCardMovingController {
             String[] subCommands = change.split(" ");
             int sideOfFinalDestination = (subCommands[9].equals("zone") ? 0 : Integer.parseInt(subCommands[9]));
             if (subCommands[1].equals("UNKNOWN")) {
-                int turn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn();
+                int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
                 if (turn == 1){
                     DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() +
                         DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7);
@@ -195,7 +194,7 @@ public class AdvancedCardMovingController {
                     DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY()+108);
                 }
                 System.out.println("cheating card name is "+newlyAddedCard.getCardName()+" going to sideOfFInalDestination = "+sideOfFinalDestination+
-                    " right now turn = "+GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn());
+                    " right now turn = "+JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
                 CardView cardView = new CardView(newlyAddedCard, true,
                     (turn == 1 ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE), duelView);
                 DuelView.getAllCards().getChildren().add(cardView);

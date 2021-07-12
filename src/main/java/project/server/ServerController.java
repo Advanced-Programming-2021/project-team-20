@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import project.model.User;
+import project.server.controller.duel.PreliminaryPackage.ClientMessageReceiver;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
 
@@ -90,6 +91,8 @@ public class ServerController {
                 return LoginMenu.loginUser(details);
             case "scoreboard":
                 return Scoreboard.findCommands("scoreboard show");
+            case "duel":
+                return ClientMessageReceiver.findCommands(details);
             default:
                 return badRequestFormat;
         }

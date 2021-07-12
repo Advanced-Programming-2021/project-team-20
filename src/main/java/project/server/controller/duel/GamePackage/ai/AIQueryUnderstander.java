@@ -20,40 +20,40 @@ public class AIQueryUnderstander {
         PhaseInGame phaseInGame = phaseController.getPhaseInGame();
         String whatAISays;
         if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.ALLY_DRAW_PHASE) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_DRAW_PHASE)) {
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*", ai.getToken());
             return "next phase";
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.ALLY_STANDBY_PHASE) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_STANDBY_PHASE)) {
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*", ai.getToken());
             return "next phase";
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1)) {
             whatAISays = understandQueryInMainPhaseAITurn(ai);
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*", ai.getToken());
             return whatAISays;
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE)) {
             whatAISays = understandQueryInBattlePhaseAITurn(ai);
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*", ai.getToken());
             return whatAISays;
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2)) {
             whatAISays = understandQueryInMainPhaseAITurn(ai);
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*", ai.getToken());
             return whatAISays;
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.ALLY_END_PHASE) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.OPPONENT_END_PHASE)) {
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*", ai.getToken());
             return "next phase";
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1)) {
             whatAISays = understandQueryInMainPhase1OpponentTurn(ai);
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*", ai.getToken());
             return whatAISays;
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE)) {
             whatAISays = understandQueryInBattlePhaseOpponentTurn(ai);
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*", ai.getToken());
             return whatAISays;
         } else if (aiTurn == 1 && phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2) || aiTurn == 2 && phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
             whatAISays = understandQueryInMainPhase2OpponentTurn(ai);
-            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*");
+            GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": " + whatAISays + "*", ai.getToken());
             return whatAISays;
         }
-        GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*");
+        GameManager.getDuelControllerByIndex(ai.getToken()).addStringToWhatUsersSay("*user" + aiTurn + ": next phase*", ai.getToken());
         return "next phase";
     }
 

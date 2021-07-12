@@ -517,7 +517,7 @@ public class DuelBoard {
             arrayList = giveArrayListByRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE);
             cardLocation = giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_MONSTER_ZONE, false);
         }
-        GameManager.getDuelControllerByIndex(token).addStringToAvailableCardLocationForUseForClient(cardLocation);
+        GameManager.getDuelControllerByIndex(token).addStringToAvailableCardLocationForUseForClient(cardLocation, token);
         if (cardLocation != null) {
             arrayList.set(cardLocation.getIndex(), card);
         }
@@ -543,7 +543,7 @@ public class DuelBoard {
                 cardLocation = giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_ZONE, false);
             }
         }
-        GameManager.getDuelControllerByIndex(token).addStringToAvailableCardLocationForUseForClient(cardLocation);
+        GameManager.getDuelControllerByIndex(token).addStringToAvailableCardLocationForUseForClient(cardLocation, token);
         if (cardLocation != null) {
             arrayList.set(cardLocation.getIndex(), card);
         }

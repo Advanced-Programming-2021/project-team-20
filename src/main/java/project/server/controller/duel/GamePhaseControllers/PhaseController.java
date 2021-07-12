@@ -122,7 +122,7 @@ public class PhaseController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         int turn = duelController.getTurn();
         if (string.equals("pay")) {
-            duelController.increaseLifePoints(-100, turn);
+            duelController.increaseLifePoints(-100, turn, token);
             numberOfSpellCardsToPayFor -= 1;
             numberOfSpellCardsPayedFor += 1;
             if (numberOfSpellCardsToPayFor == 0) {

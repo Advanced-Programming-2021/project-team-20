@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import project.ServerConnection;
+import project.client.ServerConnection;
 import project.server.controller.non_duel.storage.Storage;
 
 public class MainView extends Application {

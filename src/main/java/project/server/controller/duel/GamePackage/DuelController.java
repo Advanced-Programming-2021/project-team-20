@@ -44,13 +44,11 @@ public class DuelController {
         return changesInLifePointsToBeGivenToClient;
     }
 
-    public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
-        DuelStarter.getGameManager().addStringToChangesInLifePointsToBeGivenToClient(string);
+    public void addStringToChangesInLifePointsToBeGivenToClient(String string, String token) {
+        DuelStarter.getGameManager().addStringToChangesInLifePointsToBeGivenToClient(string, token);
     }
 
-    public void clearChangesInLifePointsToBeGivenToClient() {
-        DuelStarter.getGameManager().clearChangesInLifePointsToBeGivenToClient();
-    }
+
 
     public String getSuperAlmightyChangesString() {
         return superAlmightyChangesString;
@@ -64,16 +62,16 @@ public class DuelController {
         superAlmightyChangesString = "";
     }
 
-    public String getAvailableCardLocationForUseForClient() {
-        return DuelStarter.getGameManager().getAvailableCardLocationForUseForClient();
+    public String getAvailableCardLocationForUseForClient(String token) {
+        return DuelStarter.getGameManager().getAvailableCardLocationForUseForClient(token);
     }
 
-    public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
-        DuelStarter.getGameManager().addStringToAvailableCardLocationForUseForClient(string);
+    public void addStringToAvailableCardLocationForUseForClient(CardLocation string, String token) {
+        DuelStarter.getGameManager().addStringToAvailableCardLocationForUseForClient(string, token);
     }
 
-    public void clearAvailableCardLocationForUseForClient() {
-        DuelStarter.getGameManager().clearAvailableCardLocationForUseForClient();
+    public void clearAvailableCardLocationForUseForClient(String token) {
+        DuelStarter.getGameManager().clearAvailableCardLocationForUseForClient(token);
     }
 
     private String whatUsersSay;
@@ -86,19 +84,14 @@ public class DuelController {
         whatUsersSay = "";
     }
 
-    public void addStringToWhatUsersSay(String string) {
-        DuelStarter.getGameManager().addStringToWhatUsersSay(string);
+    public void addStringToWhatUsersSay(String string, String token) {
+        DuelStarter.getGameManager().addStringToWhatUsersSay(string, token);
     }
 
     private String wholeReportToClient = "";
 
-    public String getWholeReportToClient() {
-        return DuelStarter.getGameManager().getWholeReportToClient();
-    }
 
-    public void clearWholeReportToClient() {
-        DuelStarter.getGameManager().clearWholeReportToClient();
-    }
+
 
     public DuelController(String firstUser, String secondUser, int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
@@ -557,8 +550,8 @@ public class DuelController {
         GameManager.getDuelBoardByIndex(token).shuffleMainDecks(token);
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
-        DuelStarter.getGameManager().clearWholeReportToClient();
-        DuelStarter.getGameManager().clearWhatUsersSay();
+        DuelStarter.getGameManager().clearWholeReportToClient(token);
+        DuelStarter.getGameManager().clearWhatUsersSay(token);
         //firstTimeStarting = true;
     }
 
@@ -587,7 +580,7 @@ public class DuelController {
         GameManager.removeClassesWhenGameIsOver(token);
         isGameOver = true;
         String output = winnerUser.getName() + " won the whole match with score: " + numberOfRounds * 1000;
-        DuelStarter.getGameManager().addStringToWholeReportToClient(output);
+        DuelStarter.getGameManager().addStringToWholeReportToClient(output, token);
         return output;
     }
 
@@ -605,7 +598,7 @@ public class DuelController {
         currentRound += 1;
         GameManager.clearAllVariablesOfThisIndex(token);
         String output = winnerUser.getName() + " won the game and the score is: 1000";
-        DuelStarter.getGameManager().addStringToWholeReportToClient(output);
+        DuelStarter.getGameManager().addStringToWholeReportToClient(output, token);
         return output;
     }
 
@@ -818,9 +811,9 @@ public class DuelController {
         this.aiTurn = aiTurn;
     }
 
-    public void increaseLifePoints(int lifePoints, int turn) {
+    public void increaseLifePoints(int lifePoints, int turn, String token) {
         addStringToChangesInLifePointsToBeGivenToClient(
-            "user with turn " + turn + " is increasing in health by " + lifePoints);
+            "user with turn " + turn + " is increasing in health by " + lifePoints, token);
         this.lifePoints.set(turn - 1, this.lifePoints.get(turn - 1) + lifePoints);
     }
 
