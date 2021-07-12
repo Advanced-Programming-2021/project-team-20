@@ -1,11 +1,10 @@
 package project.server.controller.non_duel.loginMenu;
 
 import com.google.gson.JsonObject;
-import project.server.controller.non_duel.profile.Profile;
-import project.server.controller.non_duel.storage.Storage;
 import project.model.User;
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformation;
+import project.server.controller.non_duel.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,13 +67,13 @@ public class LoginMenu {
         return false;
     }
 
-    private String loginUser(String command) {
+    private static String loginUser(String command) {
         String username = LoginMenuPatterns.findUsernameLoginUser(command);
         //   Profile.setOnlineUser(Storage.getUserByName(username));
         return "user logged in successfully!";
     }
 
-    private boolean doesPasswordAndUsernameMatch(String command) {
+    private static boolean doesPasswordAndUsernameMatch(String command) {
         String username = LoginMenuPatterns.findUsernameLoginUser(command);
         String password = LoginMenuPatterns.findPasswordLoginUser(command);
         User user = Storage.getUserByName(username);
@@ -105,7 +104,24 @@ public class LoginMenu {
     }
 
     public static synchronized String loginUser(JsonObject details) {
-        return null;
+        String username = "";
+        String password = "";
+        try {
+            username = details.get("username").getAsString();
+            password = details.get("password").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+
+        if (!doesUserWithThisUsernameAlreadyExistsLoginMenu(username)) {
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "invalid username or password");
+        }
+        String commandForCheckPassword = "user login -u " + username + " -p" + password;
+        if (!doesPasswordAndUsernameMatch(commandForCheckPassword)) {
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "invalid username or password");
+        }
+        String commandForLogin = "user login -u " + username + " -p " + password;
+        return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Successful", loginUser(commandForLogin));
     }
 
     private static String chooseRandomImageForUser() {
