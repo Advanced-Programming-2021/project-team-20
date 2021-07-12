@@ -2,8 +2,8 @@ package project.client.view.pooyaviewpackage;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.Utility.Utility;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.General.RowOfCardLocation;

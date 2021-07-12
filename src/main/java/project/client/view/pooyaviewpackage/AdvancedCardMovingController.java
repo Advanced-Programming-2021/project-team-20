@@ -184,17 +184,17 @@ public class AdvancedCardMovingController {
             int sideOfFinalDestination = (subCommands[9].equals("zone") ? 0 : Integer.parseInt(subCommands[9]));
             if (subCommands[1].equals("UNKNOWN")) {
                 int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
-                if (turn == 1){
+                if (turn == 1) {
                     DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() +
                         DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7);
                     DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY() +
                         DuelView.getBattleFieldView().getHeight() - 2 * CardView.getCardHeight() + 20);
                 } else {
-                    DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX()+40);
-                    DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY()+108);
+                    DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() + 40);
+                    DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY() + 108);
                 }
-                System.out.println("cheating card name is "+newlyAddedCard.getCardName()+" going to sideOfFInalDestination = "+sideOfFinalDestination+
-                    " right now turn = "+JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
+                System.out.println("cheating card name is " + newlyAddedCard.getCardName() + " going to sideOfFInalDestination = " + sideOfFinalDestination +
+                    " right now turn = " + JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
                 CardView cardView = new CardView(newlyAddedCard, true,
                     (turn == 1 ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE), duelView);
                 DuelView.getAllCards().getChildren().add(cardView);

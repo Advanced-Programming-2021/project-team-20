@@ -17,7 +17,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.modelsforview.CardView;
 
 import java.util.ArrayList;
@@ -98,7 +98,9 @@ public class GraveyardScene extends Application {
                                 if (isClassWaitingForUserToChooseCardFromGraveyard) {
                                     String miniString = (DuelView.isIsAllySeeingGraveyard() ? "" : "--opponent ");
                                     String token =DuelView.getToken();
-                                    String output = GameManager.getDuelControllerByIndex(token).getInput("select " + miniString + "--graveyard " + (indexOfChosenCardInGraveyard + 1), true, token);
+                                    JsonCreator.setFirstAdditionalString(miniString);
+                                    JsonCreator.setIntegerString((indexOfChosenCardInGraveyard+1)+"");
+                                    String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + miniString + \"--graveyard \" + (indexOfChosenCardInGraveyard + 1), true, token)");
                                     System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
                                     if (output.contains("this card cannot be") || output.contains("this is not a")
                                         || output.contains("this monster is not") || output.contains("please try")) {
@@ -116,7 +118,7 @@ public class GraveyardScene extends Application {
                                         alert.setContentText(output);
                                         ButtonType result = alert.showAndWait().orElse(attackingButton);
                                         if (result.equals(attackingButton)) {
-                                            output = GameManager.getDuelControllerByIndex(token).getInput("attacking", true, token);
+                                            output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"attacking\", true, token)");
                                             Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
                                             newAlert.setTitle("Information Dialog");
                                             newAlert.setHeaderText("Result Message");
@@ -126,7 +128,7 @@ public class GraveyardScene extends Application {
                                             stage.close();
                                             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
                                         } else if (result.equals(defensiveButton)) {
-                                            output = GameManager.getDuelControllerByIndex(token).getInput("defensive", true, token);
+                                            output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"defensive\", true, token)");
                                             Alert newAlert = new Alert(Alert.AlertType.INFORMATION);
                                             newAlert.setTitle("Information Dialog");
                                             newAlert.setHeaderText("Result Message");
