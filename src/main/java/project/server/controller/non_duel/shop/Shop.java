@@ -1,8 +1,7 @@
 package project.server.controller.non_duel.shop;
 
-import project.server.controller.duel.Utility.Utility;
-import project.server.controller.non_duel.profile.Profile;
-import project.server.controller.non_duel.storage.Storage;
+import com.google.gson.JsonObject;
+import project.client.view.LoginController;
 import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;
@@ -10,13 +9,20 @@ import project.model.cardData.General.CardType;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
-import project.client.view.LoginController;
+import project.server.ServerController;
+import project.server.ToGsonFormatForSendInformation;
+import project.server.controller.duel.Utility.Utility;
+import project.server.controller.non_duel.storage.Storage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Shop {
 
-    public String findCommand(String command) {
+    private static User user;
+    public static String findCommand(String command) {
 
         if (ShopPatterns.isItBuyPattern(command)) {
             String cardName = ShopPatterns.getBoughtCardName(command);
@@ -44,7 +50,7 @@ public class Shop {
         return "invalid command!";
     }
 
-    private String showAllCards() {
+    private static String showAllCards() {
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
         ArrayList<String> allCards = new ArrayList<>();
@@ -64,7 +70,7 @@ public class Shop {
         return returnString;
     }
 
-    private String showCard(String cardName) {
+    private static String showCard(String cardName) {
         if (!Storage.doesCardExist(cardName)) {
             return "card with name " + cardName + " does not exist";
         }
@@ -98,7 +104,7 @@ public class Shop {
         return shownCardStringBuilder.toString();
     }
 
-    private Card getCardWithName(String cardName) {
+    private static Card getCardWithName(String cardName) {
         String cardname = Utility.giveCardNameRemovingRedundancy(cardName);
         HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
         HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
@@ -109,8 +115,47 @@ public class Shop {
         return null;
     }
 
-    private boolean isItInvalidCardName(String cardName) {
+    private static boolean isItInvalidCardName(String cardName) {
         return (Storage.doesCardExist(cardName));
+    }
+
+
+    public static String buyRequestFromClient(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+
+
+        user = Shop.getUserWithTokenFromHashMap(token);
+        if (user == null) {
+            return "invalid token!";
+        }
+        return buyCard(cardName);
+    }
+
+    private static String buyCard(String cardName) {
+        int userAmount = user.getMoney();
+        if (!isItInvalidCardName(cardName)) {
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "there is no card with this name");
+        }
+        Card card = getCardWithName(cardName);
+        int cardAmount = card.getCardPrice();
+        if (cardAmount > userAmount) {
+            return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "not enough money");
+        }
+        user.setMoney(userAmount - cardAmount);
+        user.addCardToAllUselessCards(cardName);
+        return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "successful buy");
+    }
+
+    private static User getUserWithTokenFromHashMap(String token) {
+        //TODO
+        return null;
     }
 
     public HashMap<String, Integer> getNumberOfCards(String cardName) {
