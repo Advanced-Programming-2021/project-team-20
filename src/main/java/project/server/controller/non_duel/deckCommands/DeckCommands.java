@@ -177,71 +177,130 @@ public class DeckCommands {
     // return showAllDecks.toString();
     // }
 
-    public void deleteCardFromMainOrSideDeck(String deckname, String cardname, boolean isDeleteFromMainDeck,
-            String playerName) {
-        User user = Storage.getUserByName(playerName);
-        HashMap<String, Deck> allDecksOfUser = user.getDecks();
-        if (isDeleteFromMainDeck) {
-            allDecksOfUser.get(deckname).deleteCardFromMainDeck((cardname));
-        } else {
-            allDecksOfUser.get(deckname).deleteCardFromSideDeck((cardname));
+    public static String deleteCardFromMainOrSideDeck(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        String deckName = "";
+        boolean isCardDeletedFromMainDeck;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+            deckName = details.get("deckName").getAsString();
+            isCardDeletedFromMainDeck = details.get("isMainDeck").getAsBoolean();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        if (isCardDeletedFromMainDeck) {
+            allDecksOfUser.get(deckName).deleteCardFromMainDeck((cardName));
+        } else {
+            allDecksOfUser.get(deckName).deleteCardFromSideDeck((cardName));
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Deleted From " + (isCardDeletedFromMainDeck ? "MainDeck " : "SideDeck ") + "Successfully!");
     }
 
-    public void addCardToMainOrSideDeck(String deckname, String cardname, boolean isCardAddedToMainDeck,
-            String playerName) {
-        User user = Storage.getUserByName(playerName);
+    public static String addCardToMainOrSideDeck(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        String deckName = "";
+        boolean isCardAddedToMainDeck;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+            deckName = details.get("deckName").getAsString();
+            isCardAddedToMainDeck = details.get("isMainDeck").getAsBoolean();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isCardAddedToMainDeck) {
-            allDecksOfUser.get(deckname).addCardToMainDeck((cardname));
+            allDecksOfUser.get(deckName).addCardToMainDeck((cardName));
         } else {
-            allDecksOfUser.get(deckname).addCardToSideDeck((cardname));
+            allDecksOfUser.get(deckName).addCardToSideDeck((cardName));
         }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Added To " + (isCardAddedToMainDeck ? "MainDeck " : "SideDeck ") + "Successfully!");
     }
 
-    public void deleteCardFromAllUselessCards(String cardname, String playerName) {
-        User user = Storage.getUserByName(playerName);
-        user.deleteCardFromAllUselessCards(cardname);
-    }
-
-    public void addCardToAllUselessCards(String cardname, String playerName) {
-        User user = Storage.getUserByName(playerName);
-        user.addCardToAllUselessCards(cardname);
-    }
-
-    public boolean canAddCardToDeck(String deckname, String cardname, String playerName) {
-
-        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
-        int numberOfCardsInDeck = allDecksOfUser.get(deckname).numberOfCardsInDeck(cardname);
-        int numberOfAllowedUsages = 0;
-        if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
-            numberOfAllowedUsages = allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(cardname))
-                    .getNumberOfAllowedUsages();
-        } else if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
-            numberOfAllowedUsages = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardname))
-                    .getNumberOfAllowedUsages();
+    public static String deleteCardFromAllUselessCards(JsonObject details) {
+        String cardName = "";
+        String token = "";
+        try {
+            cardName = details.get("cardName").getAsString();
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
-        if (numberOfCardsInDeck == numberOfAllowedUsages) {
-            return false;
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
         }
-        return true;
+
+        user.deleteCardFromAllUselessCards(cardName);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Deleted From Useless Cards Successfully!");
     }
 
-    public String activateDeck(String deckname, String playerName) {
-        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
-        for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
-            entry.getValue().setDeckActive(false);
+    public static String addCardToAllUselessCards(JsonObject details) {
+        String cardName = "";
+        String token = "";
+        try {
+            cardName = details.get("cardName").getAsString();
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
-        allDecksOfUser.get(deckname).setDeckActive(true);
-        return "deck activated successfully!";
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        user.addCardToAllUselessCards(cardName);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Added To Useless Cards Successfully!");
     }
 
-    public static String deleteDeck(JsonObject detailes) {
+    public static String activateDeck(JsonObject details) {
         String token = "";
         String deckName = "";
         try {
-            token = detailes.get("token").getAsString();
-            deckName = detailes.get("deckName").getAsString();
+            token = details.get("token").getAsString();
+            deckName = details.get("deckName").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
+            entry.getValue().setDeckActive(false);
+        }
+        allDecksOfUser.get(deckName).setDeckActive(true);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Deck Activated Successfully!");
+    }
+
+    public static String deleteDeck(JsonObject details) {
+        String token = "";
+        String deckName = "";
+        try {
+            token = details.get("token").getAsString();
+            deckName = details.get("deckName").getAsString();
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
@@ -267,13 +326,13 @@ public class DeckCommands {
         if (user == null) {
             return ServerController.getUserNotLogined();
         }
-        String playerName = user.getName();
-        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
+
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (allDecksOfUser != null && allDecksOfUser.containsKey(deckName)) {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
                     "Deck Already Exists!");
         }
-        Storage.getUserByName(playerName).addDeckToAllDecks(deckName, new Deck(deckName));
+        user.addDeckToAllDecks(deckName, new Deck(deckName));
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
                 "Deck Created Successfully!");
     }
