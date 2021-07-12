@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import project.client.CardsStorage;
 import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
@@ -344,7 +345,7 @@ public class WholeDeckPageMenuController implements Initializable {
         sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
         sizeOfEachPart.put("sideDeckSize", deck.getSizeOfSideDeck());
         for (int i = 0; i < mainDeckCards.size(); i++) {
-            Card card = Storage.getCardByName(mainDeckCards.get(i));
+            Card card = CardsStorage.getCardByName(mainDeckCards.get(i));
             if (card.getCardType().equals(CardType.MONSTER)) {
                 numberOfMonsterCards++;
             } else {

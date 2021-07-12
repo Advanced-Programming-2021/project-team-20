@@ -89,7 +89,6 @@ public class DeserializeInformationFromServer {
         return information;
     }
 
-    
 
     public static String getError() {
         return error;

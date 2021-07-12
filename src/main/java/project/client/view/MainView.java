@@ -35,6 +35,7 @@ public class MainView extends Application {
         ServerConnection.initializeNetwork();
         CardsStorage storage = new CardsStorage();
         storage.startProgram();
+        UIStorage.createPreliminaryToStartProgram();
         launch(args);
         String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
         ServerConnection.sendDataToServerAndRecieveResult(logout);
@@ -45,18 +46,6 @@ public class MainView extends Application {
         root = FXMLLoader.load(getClass().getResource(fxml));
         stage.getScene().setRoot(root);
         createFadeTransition(root);
-        // FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
-        // fadeTransition.setNode(root);
-        // fadeTransition.setFromValue(0);
-        // fadeTransition.setToValue(1);
-        // fadeTransition.play();
-        // root.translateYProperty().set(root.getHeight());
-        // Timeline timeline = new Timeline();
-        // KeyValue keyValue = new KeyValue(root.translateYProperty(), 0,
-        // Interpolator.EASE_IN);
-        // KeyFrame keyFrame = new KeyFrame(Duration.millis(1000), keyValue);
-        // timeline.getKeyFrames().add(keyFrame );
-        // timeline.play();
     }
 
     private static void createFadeTransition(Parent root) {

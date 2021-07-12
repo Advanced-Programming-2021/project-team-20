@@ -46,12 +46,13 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatAddOrRemoveCardFromMainOrSideDeck(String type, String cardName,
+    public static String toGsonFormatAddOrRemoveCardFromMainOrSideDeck(String type, String cardName,String deckName,
             boolean isMainDeck) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", type);
+        jsonObject.addProperty("deckName", deckName);
         jsonObject.addProperty("cardName", cardName);
-        jsonObject.addProperty("isCardAddToMainDeck", isMainDeck);
+        jsonObject.addProperty("isMainDeck", isMainDeck);
         jsonObject.addProperty("token", LoginController.getToken());
         return jsonObject.toString();
     }
