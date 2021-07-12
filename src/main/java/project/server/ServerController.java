@@ -6,6 +6,9 @@ import com.google.gson.JsonParser;
 import project.model.User;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
+import project.server.controller.non_duel.profile.Profile;
+import project.server.controller.non_duel.deckCommands.DeckCommands;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,7 +18,8 @@ import java.net.Socket;
 import java.util.HashMap;
 
 public class ServerController {
-    private static String badRequestFormat = "Bad request format";
+    private static String badRequestFormat = "{\"type\":\"Error\",\"message\":\"Bad request format\"}";
+    private static String userNotLogined = "{\"type\":\"Error\",\"message\":\"User Not Logined\"}";
     private static String error = "Error";
     private static String successful = "Successful";
     private static HashMap<String, User> loginedUsers = new HashMap<>();
@@ -57,9 +61,11 @@ public class ServerController {
             throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
+            System.out.println(input);
             String result = process(input);
             if (result.equals(""))
                 break;
+            System.out.println(result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
         }
@@ -90,9 +96,37 @@ public class ServerController {
                 return LoginMenu.loginUser(details);
             case "scoreboard":
                 return Scoreboard.findCommands("scoreboard show");
+            case "deleteDeck":
+                return DeckCommands.deleteDeck(details);
+            case "changePassword":
+                return Profile.changePassword(details);
+            case "changeNickName":
+                return Profile.changeNickname(details);
+            case "logout":
+                return logoutUser(details);
             default:
                 return badRequestFormat;
         }
+    }
+
+    private static String logoutUser(JsonObject details) {
+        String token = "";
+        try {
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            System.out.println("Exception in logoutUser");
+        }
+        if (loginedUsers.containsKey(token)) {
+            loginedUsers.remove(token);
+        }
+        return "null";
+    }
+
+    public static User getUserByToken(String token) {
+        if (loginedUsers.containsKey(token)) {
+            return loginedUsers.get(token);
+        }
+        return null;
     }
 
     public static String getBadRequestFormat() {
@@ -107,7 +141,15 @@ public class ServerController {
         return successful;
     }
 
+    public static HashMap<String, User> getLoginedUsers() {
+        return loginedUsers;
+    }
+
+    public static String getUserNotLogined() {
+        return userNotLogined;
+    }
+
     public static void setLoginedUser(String string, User user) {
         loginedUsers.put(string, user);
-    }
+    } 
 }
