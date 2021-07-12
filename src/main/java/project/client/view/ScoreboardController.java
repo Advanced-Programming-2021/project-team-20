@@ -2,18 +2,15 @@ package project.client.view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
-import project.server.controller.non_duel.scoreboard.Scoreboard;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.Components.Person;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ScoreboardController {
@@ -34,7 +31,9 @@ public class ScoreboardController {
 
     public void fillLabel() {
 
-        String allPeople = new Scoreboard().findCommands("scoreboard show");
+//        String allPeople = new Scoreboard().findCommands("scoreboard show");
+        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
+        String allPeople = ServerConnection.sendDataToServerAndRecieveResult(message);
         String[] allPeopleSplited = allPeople.split(",");
         Person[] person = new Person[allPeopleSplited.length/3];
         for (int i = 0; i < person.length; i++) {

@@ -1,10 +1,5 @@
 package project.client.view;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,6 +17,11 @@ import javafx.scene.text.FontWeight;
 import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 
 public class ProfileController implements Initializable {

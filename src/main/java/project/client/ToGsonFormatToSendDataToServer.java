@@ -56,4 +56,10 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
+    public static String toGsonFormatGetScoreboardInformation() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "scoreboard");
+        return jsonObject.toString();
+    }
+
 }

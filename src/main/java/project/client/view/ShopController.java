@@ -20,7 +20,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import project.client.ServerConnection;
 import project.model.User;
 import project.model.cardData.General.Card;
 import project.server.controller.non_duel.shop.Shop;
