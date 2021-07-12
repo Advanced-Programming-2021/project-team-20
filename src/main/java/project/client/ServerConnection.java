@@ -1,4 +1,4 @@
-package project.client;
+package project;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,17 +18,5 @@ public class ServerConnection {
         } catch (IOException x) {
             x.printStackTrace();
         }
-    }
-
-    public static String sendDataToServerAndRecieveResult(String data) {
-        try {
-            dataOutputStream.writeUTF(data);
-            dataOutputStream.flush();
-            return dataInputStream.readUTF();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "exception";
-        }
-
     }
 }
