@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import project.model.User;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
-import project.server.controller.non_duel.shop.Shop;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -80,6 +79,7 @@ public class ServerController {
         } catch (Exception e) {
             return badRequestFormat;
         }
+
     }
 
     private static String findCommand(String type, JsonObject details) {
@@ -90,8 +90,6 @@ public class ServerController {
                 return LoginMenu.loginUser(details);
             case "scoreboard":
                 return Scoreboard.findCommands("scoreboard show");
-            case "shopBuy":
-                return Shop.buyRequestFromClient(details);
             default:
                 return badRequestFormat;
         }

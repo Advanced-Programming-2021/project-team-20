@@ -1,5 +1,8 @@
 package project.client.view;
 
+import java.io.IOException;
+import java.net.URL;
+
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,10 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import project.ServerConnection;
 import project.server.controller.non_duel.storage.Storage;
-
-import java.io.IOException;
-import java.net.URL;
 
 public class MainView extends Application {
     private static Stage stage;

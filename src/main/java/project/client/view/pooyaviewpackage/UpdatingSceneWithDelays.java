@@ -1,4 +1,4 @@
-package project.view.pooyaviewpackage;
+package project.client.view.pooyaviewpackage;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
