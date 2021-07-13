@@ -89,8 +89,8 @@ public class RockPaperScissorController implements Initializable {
             System.out.println(secondPlayerName);
         } catch (Exception e) {
             System.out.println("exception \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nn");
-            firstPlayerName = DuelStarter.getFirstPlayer();
-            secondPlayerName = DuelStarter.getSecondPlayer();
+            // firstPlayerName = DuelStarter.getFirstPlayer();
+            // secondPlayerName = DuelStarter.getSecondPlayer();
         }
     }
 
@@ -215,7 +215,7 @@ public class RockPaperScissorController implements Initializable {
                 setTurn(1, token);
                 System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } catch (Exception e) {
-                new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer(), "", "");
+                // new DuelStarter().createNewGame(DuelStarter.getFirstPlayer(), DuelStarter.getSecondPlayer(), "", "");
                 // System.out.println("Exception 1 ");
                 // e.printStackTrace();
             }
@@ -228,7 +228,7 @@ public class RockPaperScissorController implements Initializable {
                 setTurn(2, token);
                 System.out.println(secondPlayerName + "   when player 2 \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } catch (Exception e) {
-                new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer(), "", "");
+                // new DuelStarter().createNewGame(DuelStarter.getSecondPlayer(), DuelStarter.getFirstPlayer(), "", "");
                 // System.out.println("Exception 2 ");
                 // e.printStackTrace();
             }

@@ -116,9 +116,11 @@ public class ServerController {
             case "changeNickName":
                 return Profile.changeNickname(details);
             case "requestDuel":
-                 return DuelStarter.requestGame(details);
+                return DuelStarter.requestGame(details);
+            case "setTurnOfDuel":
+                return DuelStarter.setTurnOfGame(details);
             case "sendTweet":
-                      
+
             case "logout":
                 return logoutUser(details);
             default:
