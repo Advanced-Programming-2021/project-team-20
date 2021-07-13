@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -150,13 +151,19 @@ public class RockPaperScissorController implements Initializable {
                     "userSelection", selection + "");
             String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
             deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+            System.out.println("Message from servers is: "+messageFromServer);
             if (deserializeResult.get("type").equals("Error")) {
                 System.out.println("error in starting duel");
                 // showAlert(deserializeResult.get("message"), "Error");
                 return;
             }
-            startDuel();
-        });
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    startDuel();
+                }
+            });
+        }).start();
     }
         // if (!canSecondPlayerSelect) {
         // player1Selection = selection;
