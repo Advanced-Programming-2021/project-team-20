@@ -4,23 +4,14 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
-import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Transition {

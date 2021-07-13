@@ -33,7 +33,7 @@ import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.cardData.General.Card;

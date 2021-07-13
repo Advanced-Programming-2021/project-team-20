@@ -1,4 +1,4 @@
-package project.model.modelsforview;
+package project.client.modelsforview;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

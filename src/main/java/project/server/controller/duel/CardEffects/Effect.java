@@ -2,6 +2,7 @@ package project.server.controller.duel.CardEffects;
 
 import java.util.ArrayList;
 
+import javafx.animation.Timeline;
 import project.model.MonsterEffectEnums.BeingAttackedEffect;
 import project.model.MonsterEffectEnums.SummoningRequirement;
 import project.model.SpellEffectEnums.*;
@@ -396,6 +397,11 @@ public class Effect {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
                 }
             }
+            if (logicalActivationRequirements.contains(LogicalActivationRequirement.OWNER_MUST_HAVE_LEVEL_5_OR_HIGHER_NORMAL_MONSTER_IN_HAND)) {
+                if (!logicalActivationRequirementSpellOwnerMustHaveLevel5OrHigherNormalMonsterInHand(token, fakeTurn)) {
+                    return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_NOT_COMPLETE;
+                }
+            }
             return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_SPELL_ARE_COMPLETE;
         } else if (Card.isCardATrap(card)) {
             if (continuousMonsterEffectController.areContinuousMonsterCardEffectsPreventingUserFromActivatingTrap(cardLocation, token)) {
@@ -433,11 +439,43 @@ public class Effect {
                     return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
                 }
             }
+            if (logicalActivationRequirements.contains(project.model.TrapEffectEnums.LogicalActivationRequirement.ALL_CARDS_IN_SAME_COLUMN_AS_THIS_CARD_MUST_BE_OCCUPIED)) {
+                if (!logicalActivationRequirementAllCardsInSameColumnAsThisCardMustBeOccupied(token, cardLocation)) {
+                    return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_NOT_COMPLETE;
+                }
+            }
             return MessagesFromEffectToControllers.PREPARATIONS_FOR_ACTIVATION_OF_THIS_TRAP_ARE_COMPLETE;
         }
         return null;
     }
 
+    private static boolean logicalActivationRequirementAllCardsInSameColumnAsThisCardMustBeOccupied(String token, CardLocation cardLocation) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        int index = cardLocation.getIndex();
+        CardLocation allySpellCardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, index);
+        CardLocation allyMonsterCardLocation = new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, index);
+        CardLocation opponentSpellCardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, index);
+        CardLocation opponentMonsterCardLocation = new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, index);
+        Card allySpell = duelBoard.getCardByCardLocation(allySpellCardLocation);
+        Card allyMonster = duelBoard.getCardByCardLocation(allyMonsterCardLocation);
+        Card opponentSpell = duelBoard.getCardByCardLocation(opponentSpellCardLocation);
+        Card opponentMonster = duelBoard.getCardByCardLocation(opponentMonsterCardLocation);
+        return !(allySpell == null || allyMonster == null || opponentSpell == null || opponentMonster == null);
+    }
+
+    private static boolean logicalActivationRequirementSpellOwnerMustHaveLevel5OrHigherNormalMonsterInHand(String token, int fakeTurn) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        ArrayList<Card> cardsInHand = (fakeTurn == 1 ? duelBoard.getAllyCardsInHand() : duelBoard.getOpponentCardsInHand());
+        for (int i = 0; i < cardsInHand.size(); i++) {
+            if (Card.isCardAMonster(cardsInHand.get(i))) {
+                MonsterCard monsterCard = (MonsterCard) cardsInHand.get(i);
+                if (monsterCard.getLevel() >= 5 && monsterCard.getMonsterCardValue().equals(MonsterCardValue.NORMAL)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public static boolean logicalActivationRequirementSpellMustExistAtLeastOneSpellInField(DuelBoard duelBoard, int fakeTurn) {
         ArrayList<Card> allySpellCards = duelBoard.getAllySpellCards();
@@ -747,10 +785,17 @@ public class Effect {
             if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_EITHER_GY)) {
                 output.add("show graveyard\nplease choose one monster from either graveyard\nSimply enter select command");
             }
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_FACE_UP_MONSTER)) {
+                output.add("please choose a face up monster on the field.\nSimply enter select command");
+            }
+            if (userReplyForActivations.contains(UserReplyForActivation.CHOOSE_ONE_LEVEL_5_OR_HIGHER_NORMAL_MONSTER_FROM_HAND)) {
+                output.add("please choose a level 5 or higher normal monster from your hand.\nSimply enter select command");
+            }
             if (output.size() == 0) {
                 output.add("nothing needed");
                 return output;
             }
+
             return output;
         } else if (Card.isCardATrap(card)) {
             TrapCard trapCard = (TrapCard) card;

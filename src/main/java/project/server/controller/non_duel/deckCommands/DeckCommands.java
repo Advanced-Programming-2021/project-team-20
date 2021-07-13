@@ -1,18 +1,15 @@
 package project.server.controller.non_duel.deckCommands;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
 
 import project.client.view.LoginController;
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformationToClient;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.User;

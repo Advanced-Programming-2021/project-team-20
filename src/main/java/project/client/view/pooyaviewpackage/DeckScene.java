@@ -16,9 +16,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 //import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
-import java.lang.reflect.AccessibleObject;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

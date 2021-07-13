@@ -1,6 +1,7 @@
 package project.server.controller.duel.GamePackage.ActionConductors;
 
 import project.model.SpellEffectEnums.ContinuousSpellCardEffect;
+import project.model.cardData.MonsterCardData.MonsterCard;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.GamePhaseControllers.PhaseController;
@@ -50,7 +51,6 @@ public class SendCardToGraveyardConductor {
             duelBoard.refreshCharacteristicsOfACardSentToGraveyard(removedCard);
         }
     }
-
     public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, String token) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> spellCards;

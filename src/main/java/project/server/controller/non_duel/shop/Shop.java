@@ -10,7 +10,7 @@ import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.server.ServerController;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 
 import java.util.ArrayList;

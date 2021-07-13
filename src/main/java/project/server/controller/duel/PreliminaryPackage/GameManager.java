@@ -19,33 +19,6 @@ import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 
 public class GameManager {
-//    public static ArrayList<DuelController> duelControllerList = new ArrayList<>();
-//    public static ArrayList<DuelBoard> duelBoardList = new ArrayList<>();
-//    public static ArrayList<ActivateSpellTrapController> activateSpellTrapControllers = new ArrayList<>();
-//    public static ArrayList<ActivateMonsterController> activateMonsterControllers = new ArrayList<>();
-//    public static ArrayList<AttackMonsterToMonsterController> attackMonsterToMonsterControllers = new ArrayList<>();
-//    public static ArrayList<AttackMonsterToMonsterConductor> attackMonsterToMonsterConductors = new ArrayList<>();
-//    public static ArrayList<BattlePhaseController> battlePhaseControllers = new ArrayList<>();
-//    public static ArrayList<ChainController> chainControllers = new ArrayList<>();
-//    public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
-//    public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
-//    public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
-//    // public static ArrayList<MainPhaseController> mainPhaseControllers = new
-//    // ArrayList<>();
-//    public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
-//    public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
-//    public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
-//    public static ArrayList<TributeSummonController> tributeSummonControllers = new ArrayList<>();
-//    public static ArrayList<PhaseController> phaseControllers = new ArrayList<>();
-//    public static ArrayList<SelectCardController> selectCardControllers = new ArrayList<>();
-//    public static ArrayList<SetCardController> setCardControllers = new ArrayList<>();
-//    public static ArrayList<SummonSetCommonClass> summonSetCommonClasses = new ArrayList<>();
-//    public static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
-//    private static ArrayList<SetTurnForGame> setTurnForGames = new ArrayList<>();
-//    private static ArrayList<ChangeCardsBetweenTwoRounds> changeCardsBetweenTwoRounds = new ArrayList<>();
-//    public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
-//    public static ArrayList<AI> ais = new ArrayList<>();
-
 
     private static HashMap<DoubleToken, DuelController> duelControllerHashMap = new HashMap<>();
     private static HashMap<DoubleToken, DuelBoard> duelBoardHashMap = new HashMap<>();
@@ -76,32 +49,6 @@ public class GameManager {
                             ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
                             ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
                             int numberOfRounds, String firstUserToken, String secondUserToken) {
-//        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));
-//        duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
-//        activateSpellTrapControllers.add(new ActivateSpellTrapController());
-//        activateMonsterControllers.add(new ActivateMonsterController());
-//        attackMonsterToMonsterControllers.add(new AttackMonsterToMonsterController());
-//        attackMonsterToMonsterConductors.add(new AttackMonsterToMonsterConductor());
-//        battlePhaseControllers.add(new BattlePhaseController());
-//        chainControllers.add(new ChainController());
-//        changeCardPositionControllers.add(new ChangeCardPositionController());
-//        directAttackControllers.add(new DirectAttackController());
-//        continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
-//        // mainPhaseControllers.add(new MainPhaseController());
-//        normalSummonControllers.add(new NormalSummonController());
-//        flipSummonControllers.add(new FlipSummonController());
-//        specialSummonControllers.add(new SpecialSummonController());
-//        tributeSummonControllers.add(new TributeSummonController());
-//        selectCardControllers.add(new SelectCardController());
-//        setCardControllers.add(new SetCardController());
-//        summonSetCommonClasses.add(new SummonSetCommonClass());
-//        phaseControllers.add(new PhaseController());
-//        actions.add(new ArrayList<>());
-//        uninterruptedActions.add(new ArrayList<>());
-//        changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
-//        setTurnForGames.add(new SetTurnForGame());
-//        ais.add(new AI());
-
         DoubleToken doubleToken = new DoubleToken(firstUserToken, secondUserToken);
 
         duelControllerHashMap.put(doubleToken, new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));

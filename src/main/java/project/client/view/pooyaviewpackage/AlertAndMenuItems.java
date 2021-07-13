@@ -8,7 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 
@@ -52,7 +52,7 @@ public class AlertAndMenuItems {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
                 if (cardLocationSelecting != null) {
-                    DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardView, cardLocationSelecting, duelView);
+                    DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardView);
                 }
                 //label.setText("Select Menu Item 1");
             }

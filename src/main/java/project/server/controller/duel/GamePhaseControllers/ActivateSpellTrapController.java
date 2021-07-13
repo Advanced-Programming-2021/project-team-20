@@ -11,7 +11,7 @@ import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
@@ -264,7 +264,8 @@ public class ActivateSpellTrapController extends ChainController {
         String canChainingOccur = "";
         String output = "";
         String message = messagesSentToUser.get(messagesSentToUser.size() - 1);
-        if (message.startsWith("please choose one ")) {
+        if (message.startsWith("please choose one ") && !message.startsWith("please choose one of your opponent's monsters")
+            && !message.startsWith("please choose one spell") && !message.startsWith("please choose one card")) {
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                 return "invalid selection\nplease try again";
             } else if (fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
@@ -276,12 +277,12 @@ public class ActivateSpellTrapController extends ChainController {
                 Pattern pattern = Pattern.compile(regexString);
                 Matcher matcher = pattern.matcher(message);
                 boolean ok = false;
-                while (matcher.find()){
-                    if (matcher.group(1).equals(((MonsterCard) card).getMonsterCardFamily().toString().toLowerCase())){
+                while (matcher.find()) {
+                    if (matcher.group(1).equals(((MonsterCard) card).getMonsterCardFamily().toString().toLowerCase())) {
                         ok = true;
                     }
                 }
-                if (!ok){
+                if (!ok) {
                     return "invalid selection\nplease try again";
                 } else {
                     cardsToBeChosenToApplyEquipSpellTo.add(cardLocation);
@@ -513,6 +514,45 @@ public class ActivateSpellTrapController extends ChainController {
                         output = Action.conductUninterruptedAction(token);
                         canChainingOccur = canChainingOccur(token);
                     }
+                }
+            }
+        } else if (message.startsWith("please choose up a face up monster")) {
+            if (!cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)
+                && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
+                return "this card is not in the monster zone\nplease try again";
+            } else if (card == null) {
+                return "there is no card here\nplease try again";
+            } else if (!(card).getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) &&
+                !(card).getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
+                return "this card is not face up.\nplease try again";
+            } else {
+                cardsToBeTargeted.add(cardLocation);
+                boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(token);
+                if (isMoreInputNeeded) {
+                    return messagesSentToUser.get(messagesSentToUser.size() - 1);
+                } else {
+                    output = Action.conductUninterruptedAction(token);
+                    canChainingOccur = canChainingOccur(token);
+                }
+            }
+        } else if (message.startsWith("please choose a level 5 or higher normal monster from")) {
+            if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)
+                || fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
+                return "invalid selection\nplease try again";
+            } else if (Card.isCardAMonster(card)) {
+                return "this is not a monster card.\nplease try again";
+            } else if (!((MonsterCard) card).getMonsterCardValue().equals(MonsterCardValue.NORMAL)) {
+                return "this is not a normal monster.\nplease try again.";
+            } else if (((MonsterCard) card).getLevel() < 5) {
+                return "level of this card is less than 5.\nplease try again";
+            } else {
+                cardsToBeSpecialSummoned.add(cardLocation);
+                boolean isMoreInputNeeded = isMoreInputNeededWhenOneInputIsGivenCorrectly(token);
+                if (isMoreInputNeeded) {
+                    return messagesSentToUser.get(messagesSentToUser.size() - 1);
+                } else {
+                    output = Action.conductUninterruptedAction(token);
+                    canChainingOccur = canChainingOccur(token);
                 }
             }
         }

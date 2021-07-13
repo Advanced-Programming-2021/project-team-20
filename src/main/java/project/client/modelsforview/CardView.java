@@ -1,4 +1,4 @@
-package project.model.modelsforview;
+package project.client.modelsforview;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -9,8 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import project.client.view.pooyaviewpackage.JsonCreator;
 import project.model.PhaseInGame;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.*;
 import project.client.view.pooyaviewpackage.DuelView;
 
@@ -214,10 +215,8 @@ public class CardView extends Rectangle {
                 item9.setVisible(false);
                 item10.setVisible(false);
                 if (DuelView.isShouldDuelViewClickingAbilitiesWork()) {
-                    int turn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn();
-                    PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(DuelView.getToken()).getPhaseInGame();
-                    int fakeTurn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getFakeTurn();
-                    int belongingTurn = 2;
+                    int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
+                    PhaseInGame phaseInGame = PhaseInGame.valueOf(JsonCreator.getResult("GameManager.getPhaseControllerByIndex(token).getPhaseInGame()"));                    int belongingTurn = 2;
                     double meanY = (bounds.getMinY() + bounds.getMaxY()) / 2;
                     System.out.println("PREPARE FOR THE ALMIGHTY JIGEN with meanY = " + meanY);
                     if (meanY >= 500) {

@@ -1,4 +1,4 @@
-package project.model.modelsforview;
+package project.client.modelsforview;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;

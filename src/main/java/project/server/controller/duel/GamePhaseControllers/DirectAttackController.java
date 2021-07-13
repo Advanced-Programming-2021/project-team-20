@@ -1,7 +1,7 @@
 package project.server.controller.duel.GamePhaseControllers;
 
 import project.server.controller.duel.GamePackage.Action;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.PreliminaryPackage.GameManager;

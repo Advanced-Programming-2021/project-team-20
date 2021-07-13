@@ -13,7 +13,7 @@ import project.server.controller.duel.GamePhaseControllers.ChainController;
 import project.server.controller.duel.GamePhaseControllers.SelectCardController;
 import project.server.controller.duel.GamePhaseControllers.SpecialSummonController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;

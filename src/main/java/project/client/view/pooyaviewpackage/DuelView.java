@@ -19,14 +19,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.model.PhaseInGame;
-//import project.server.controller.duel.PreliminaryPackage.GameManager;
+import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.server.controller.duel.cheat.Cheat;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.cardData.General.*;
 import project.model.cardData.General.Card;
-import project.model.cardData.SpellCardData.SpellCard;
-import project.model.cardData.SpellCardData.SpellCardValue;
-import project.model.modelsforview.*;
+import project.client.modelsforview.*;
 import project.client.view.CustomDialog;
 
 import java.net.URL;
@@ -49,7 +47,7 @@ public class DuelView {
     private static double xHelperForCardViewConstructor;
     private static double yHelperForCardViewConstructor;
     private static MouseEvent previousMouseEvent;
-    private static project.model.modelsforview.CardView draggingObject;
+    private static project.client.modelsforview.CardView draggingObject;
     private static double draggingObjectX;
     private static double draggingObjectY;
     private static RowOfCardLocation rowOfCardLocationOfFinalDraggedPoint;
@@ -551,7 +549,7 @@ public class DuelView {
         return yHelperForCardViewConstructor;
     }
 
-    public static void setDraggingObject(project.model.modelsforview.CardView draggingObject) {
+    public static void setDraggingObject(project.client.modelsforview.CardView draggingObject) {
         DuelView.draggingObject = draggingObject;
     }
 
@@ -1013,7 +1011,7 @@ public class DuelView {
 //    }
 //
 //    private void takeCareOfDraggingAction(CardLocation initialCardLocation, CardLocation finalCardLocation,
-//                                          project.model.modelsforview.CardView cardViewBeingDragged, TwoDimensionalPoint finalTwoDimensionalPoint) {
+//                                          project.client.modelsforview.CardView cardViewBeingDragged, TwoDimensionalPoint finalTwoDimensionalPoint) {
 //        int turn = GameManager.getDuelControllerByIndex(token).getTurn();
 //        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(token).getPhaseInGame();
 //        boolean allySummonSetActivateCardPhase = phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1)
@@ -1409,41 +1407,41 @@ public class DuelView {
     public static void printChildrenInGroups() {
         // System.out.println("ALLY CARDS IN DECK GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).size(); i++) {
-            // System.out.println(((project.model.modelsforview.CardView) controllerForView
+            // System.out.println(((project.client.modelsforview.CardView) controllerForView
                 // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).get(i)).getCard().getCardName());
          }
 
         // System.out.println("ALLY CARDS IN HAND GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).size(); i++) {
-            // System.out.println(((project.model.modelsforview.CardView) controllerForView
+            // System.out.println(((project.client.modelsforview.CardView) controllerForView
                 // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).get(i)).getCard().getCardName());
         }
 
         // System.out.println("ALLY CARDS IN GRAVEYARD GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)
             .size(); i++) {
-            // System.out.println(((project.model.modelsforview.CardView) controllerForView
+            // System.out.println(((project.client.modelsforview.CardView) controllerForView
                 // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE).get(i)).getCard().getCardName());
         }
 
         // System.out.println("OPPONENT CARDS IN DECK GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE)
             .size(); i++) {
-            // System.out.println(((project.model.modelsforview.CardView) controllerForView
+            // System.out.println(((project.client.modelsforview.CardView) controllerForView
             //     .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE).get(i)).getCard().getCardName());
         }
 
         System.out.println("OPPONENT CARDS IN HAND GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE)
             .size(); i++) {
-            // System.out.println(((project.model.modelsforview.CardView) controllerForView
+            // System.out.println(((project.client.modelsforview.CardView) controllerForView
             //     .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE).get(i)).getCard().getCardName());
         }
 
         // System.out.println("OPPONENT CARDS IN GRAVEYARD GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE)
             .size(); i++) {
-            // System.out.println(((project.model.modelsforview.CardView) controllerForView
+            // System.out.println(((project.client.modelsforview.CardView) controllerForView
             //     .giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE).get(i)).getCard()
             //     .getCardName());
         }

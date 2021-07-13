@@ -15,9 +15,9 @@ import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
-import project.model.modelsforview.CardView;
-import project.model.modelsforview.TwoDimensionalPoint;
-import project.model.modelsforview.ViewLittleInformation;
+import project.client.modelsforview.CardView;
+import project.client.modelsforview.TwoDimensionalPoint;
+import project.client.modelsforview.ViewLittleInformation;
 
 import java.util.ArrayList;
 

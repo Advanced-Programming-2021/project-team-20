@@ -9,12 +9,11 @@ import project.server.controller.duel.GamePackage.ai.AI;
 import project.server.controller.duel.GamePhaseControllers.*;
 import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.duel.cheat.Cheat;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.User;
 import project.model.cardData.General.CardLocation;
-import project.client.view.pooyaviewpackage.DuelView;
 import project.model.PhaseInGame;
 
 public class DuelController {

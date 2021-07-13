@@ -14,8 +14,8 @@ import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
-import project.model.modelsforview.BattleFieldView;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.BattleFieldView;
+import project.client.modelsforview.CardView;
 
 import java.util.ArrayList;
 import java.util.Arrays;

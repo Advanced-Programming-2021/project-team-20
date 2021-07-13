@@ -51,6 +51,8 @@ public class MonsterCard extends Card {
     private ArrayList<FieldSpellEffect> fieldSpellEffects;
     private ArrayList<EquipSpellExtendedEffect> equipSpellExtendedEffects;
     private ArrayList<FieldSpellExtendedEffect> fieldSpellExtendedEffects;
+    private boolean shouldATKBeIncreasedOnlyThisTurn;
+    private boolean shouldATKBeHalvedOnlyThisTurn;
 
     public void addEquipSpellExtendedEffects(EquipSpellExtendedEffect equipSpellExtendedEffect) {
         this.equipSpellExtendedEffects.add(equipSpellExtendedEffect);
@@ -77,6 +79,8 @@ public class MonsterCard extends Card {
         this.oncePerTurnCardEffectUsed = false;
         this.cardPositionChanged = false;
         this.hasCardAlreadyAttacked = false;
+        this.shouldATKBeHalvedOnlyThisTurn = false;
+        this.shouldATKBeIncreasedOnlyThisTurn = false;
         this.monsterCardAttribute = attribute;
         this.monsterCardFamily = monsterCardFamily;
         this.monsterCardValue = monsterCardValue;
@@ -254,6 +258,14 @@ public class MonsterCard extends Card {
         return hasCardAlreadyAttacked;
     }
 
+    public boolean isShouldATKBeIncreasedOnlyThisTurn() {
+        return shouldATKBeIncreasedOnlyThisTurn;
+    }
+
+    public boolean isShouldATKBeHalvedOnlyThisTurn() {
+        return shouldATKBeHalvedOnlyThisTurn;
+    }
+
     public void setCardPositionChanged(boolean cardPositionChanged) {
         this.cardPositionChanged = cardPositionChanged;
     }
@@ -264,6 +276,14 @@ public class MonsterCard extends Card {
 
     public void setHasCardAlreadyAttacked(boolean hasCardAlreadyAttacked) {
         this.hasCardAlreadyAttacked = hasCardAlreadyAttacked;
+    }
+
+    public void setShouldATKBeIncreasedOnlyThisTurn(boolean shouldATKBeIncreasedOnlyThisTurn) {
+        this.shouldATKBeIncreasedOnlyThisTurn = shouldATKBeIncreasedOnlyThisTurn;
+    }
+
+    public void setShouldATKBeHalvedOnlyThisTurn(boolean shouldATKBeHalvedOnlyThisTurn) {
+        this.shouldATKBeHalvedOnlyThisTurn = shouldATKBeHalvedOnlyThisTurn;
     }
 
     public ArrayList<SummoningRequirement> getSummoningRequirements() {
@@ -453,6 +473,12 @@ public class MonsterCard extends Card {
         finalAttackPower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("attack", cardLocation, token);
         finalDefensePower += giveChangesInATKDEFConsideringOtherContinuousMonsterEffects("defense", cardLocation,
             token);
+        if (monsterCard.shouldATKBeIncreasedOnlyThisTurn) {
+            finalAttackPower += 700;
+        }
+        if (monsterCard.shouldATKBeHalvedOnlyThisTurn) {
+            finalAttackPower = finalAttackPower / 2;
+        }
         if (string.equals("attack")) {
             return finalAttackPower;
         }

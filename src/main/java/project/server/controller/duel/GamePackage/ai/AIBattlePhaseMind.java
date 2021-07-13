@@ -7,7 +7,7 @@ import project.server.controller.duel.GamePackage.Action;
 import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.aidata.AIFurtherActivationInput;
 import project.model.aidata.AISpellTrapSelections;
 import project.model.cardData.General.Card;

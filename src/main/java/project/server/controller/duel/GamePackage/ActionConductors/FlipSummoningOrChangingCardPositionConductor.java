@@ -3,7 +3,6 @@ package project.server.controller.duel.GamePackage.ActionConductors;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import project.model.MonsterEffectEnums.BeingAttackedEffect;
 import project.model.MonsterEffectEnums.FlipEffect;
 import project.server.controller.duel.GamePackage.Action;
 import project.model.ActionType;
@@ -11,7 +10,7 @@ import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.GamePhaseControllers.SelectCardController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;

@@ -7,7 +7,7 @@ import project.model.ActionType;
 import project.server.controller.duel.CardEffects.*;
 import project.server.controller.duel.GamePackage.*;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;

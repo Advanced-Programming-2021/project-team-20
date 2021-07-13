@@ -12,7 +12,7 @@ import java.util.Scanner;
 import com.google.gson.*;
 import com.opencsv.CSVReader;
 
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;

@@ -2,7 +2,6 @@ package project.server.controller.non_duel.storage;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +19,7 @@ import javax.imageio.*;
 
 import java.awt.image.*;
 import javafx.scene.image.Image;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;

@@ -6,7 +6,7 @@ import project.model.SpellEffectEnums.*;
 import project.model.TrapEffectEnums.*;
 import project.server.controller.duel.GamePackage.*;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.aidata.AIFurtherActivationInput;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;

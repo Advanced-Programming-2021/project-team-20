@@ -1,16 +1,13 @@
-package project.server.controller.duel.Utility;
+package project.model.Utility;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import project.model.SpellEffectEnums.QuickSpellEffect;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.GamePhaseControllers.PhaseController;
 import project.server.controller.duel.GamePhaseControllers.SelectCardController;
 import project.server.controller.duel.GamePhaseControllers.SummonSetCommonClass;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.model.cardData.General.Card;
 import project.model.cardData.General.RowOfCardLocation;
 
 public class Utility {

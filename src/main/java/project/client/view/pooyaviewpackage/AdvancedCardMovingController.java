@@ -3,22 +3,17 @@ package project.client.view.pooyaviewpackage;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
-import project.model.modelsforview.CardView;
-import project.model.modelsforview.GamePhaseButton;
+import project.client.modelsforview.CardView;
+import project.client.modelsforview.GamePhaseButton;
 
-import java.awt.*;
-import java.awt.image.PixelInterleavedSampleModel;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -121,14 +116,7 @@ public class AdvancedCardMovingController {
                             allChangeConductorsObjects.add(new ChangeConductor(changeConductorsInStringForm.get(i).get(j), helpIndex));
                             helpIndex++;
                         }
-//            ArrayList<Object> giveMeObjects = improveForwardBattleFieldItShouldGiveArrayListOfAllElements(changeConductorsInStringForm.get(i));
-//            for (int j = 0; j < giveMeObjects.size(); j++) {
-//                allChangeConductorsObjects.add(new ChangeConductor(giveMeObjects.get(j)));
-//            }
                     }
-//        for (int i = 0; i < allChangeConductorsObjects.size() - 1; i++) {
-//            allChangeConductorsObjects.get(i).chainThisChangeConductorToYourself(allChangeConductorsObjects.get(i + 1));
-//        }
                     allChangeConductorsObjects.get(0).conductChange();
                     JsonCreator.getResult("DuelStarter.getGameManager().clearWholeReportToClient()");
                 }

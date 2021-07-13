@@ -2,7 +2,7 @@ package project.client.view.pooyaviewpackage.unused;
 
 import javafx.animation.Transition;
 import javafx.util.Duration;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
 public class CardMovingTransition extends Transition {
     private CardView cardView;

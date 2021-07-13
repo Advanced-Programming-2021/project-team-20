@@ -1,4 +1,4 @@
-package project.model.modelsforview;
+package project.client.modelsforview;
 
 public class TwoDimensionalPoint {
     private double x;

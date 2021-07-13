@@ -1,4 +1,4 @@
-package project.model.modelsforview;
+package project.client.modelsforview;
 
 import project.model.cardData.General.RowOfCardLocation;
 

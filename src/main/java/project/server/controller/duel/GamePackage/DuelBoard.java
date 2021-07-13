@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import project.model.SpellEffectEnums.EquipSpellEffect;
 import project.model.SpellEffectEnums.EquipSpellExtendedEffect;
-import project.model.SpellEffectEnums.FieldSpellEffect;
 import project.server.controller.duel.GamePackage.ActionConductors.SendCardToGraveyardConductor;
 import project.server.controller.duel.GamePhaseControllers.SelectCardController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.User;
 import project.model.cardData.General.*;

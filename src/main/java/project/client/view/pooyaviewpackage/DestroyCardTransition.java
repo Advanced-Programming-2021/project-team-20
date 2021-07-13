@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
 import javafx.animation.Transition;
 
