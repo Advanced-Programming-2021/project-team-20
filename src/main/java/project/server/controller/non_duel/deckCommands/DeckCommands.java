@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
-import project.client.view.LoginController;
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformationToClient;
 import project.model.Utility.Utility;
@@ -14,7 +13,6 @@ import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;
-import project.model.cardData.General.CardType;
 
 public class DeckCommands {
 
@@ -64,167 +62,242 @@ public class DeckCommands {
     // }
 
     // private String showAllCards() {
-    //     HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
-    //     List<String> allCards = new ArrayList<>();
-    //     for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
-    //         allCards.addAll(entry.getValue().getMainDeck());
-    //         allCards.addAll(entry.getValue().getSideDeck());
-    //     }
-    //     allCards.addAll(LoginController.getOnlineUser().getAllUselessCards());
+    // HashMap<String, Deck> allDecksOfUser =
+    // LoginController.getOnlineUser().getDecks();
+    // List<String> allCards = new ArrayList<>();
+    // for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
+    // allCards.addAll(entry.getValue().getMainDeck());
+    // allCards.addAll(entry.getValue().getSideDeck());
+    // }
+    // allCards.addAll(LoginController.getOnlineUser().getAllUselessCards());
 
-    //     allCards = allCards.stream().distinct().collect(Collectors.toList());
-    //     Collections.sort(allCards);
+    // allCards = allCards.stream().distinct().collect(Collectors.toList());
+    // Collections.sort(allCards);
 
-    //     StringBuilder showCardsBuilder = new StringBuilder();
-    //     for (int i = 0; i < allCards.size(); i++) {
-    //         if (i > 0) {
-    //             showCardsBuilder.append("\n");
-    //         }
-    //         if (allMonsterCards.containsKey(allCards.get(i))) {
-    //             showCardsBuilder
-    //                     .append(allCards.get(i) + ": " + allMonsterCards.get(allCards.get(i)).getCardDescription());
-    //         } else {
-    //             showCardsBuilder
-    //                     .append(allCards.get(i) + ": " + allSpellAndTrapCard.get(allCards.get(i)).getCardDescription());
-    //         }
-    //     }
-    //     return showCardsBuilder.toString();
+    // StringBuilder showCardsBuilder = new StringBuilder();
+    // for (int i = 0; i < allCards.size(); i++) {
+    // if (i > 0) {
+    // showCardsBuilder.append("\n");
+    // }
+    // if (allMonsterCards.containsKey(allCards.get(i))) {
+    // showCardsBuilder
+    // .append(allCards.get(i) + ": " +
+    // allMonsterCards.get(allCards.get(i)).getCardDescription());
+    // } else {
+    // showCardsBuilder
+    // .append(allCards.get(i) + ": " +
+    // allSpellAndTrapCard.get(allCards.get(i)).getCardDescription());
+    // }
+    // }
+    // return showCardsBuilder.toString();
     // }
 
     // private String showOneDeck(HashMap<String, String> foundCommands) {
 
-    //     HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
-    //     if (allDecksOfUser == null || !allDecksOfUser.containsKey(foundCommands.get("show deck with name"))) {
-    //         return "deck with name " + foundCommands.get("show deck with name") + " does not exist";
-    //     }
+    // HashMap<String, Deck> allDecksOfUser =
+    // LoginController.getOnlineUser().getDecks();
+    // if (allDecksOfUser == null ||
+    // !allDecksOfUser.containsKey(foundCommands.get("show deck with name"))) {
+    // return "deck with name " + foundCommands.get("show deck with name") + " does
+    // not exist";
+    // }
 
-    //     StringBuilder showDeck = new StringBuilder();
-    //     showDeck.append("Deck: " + foundCommands.get("show deck with name") + "\n");
+    // StringBuilder showDeck = new StringBuilder();
+    // showDeck.append("Deck: " + foundCommands.get("show deck with name") + "\n");
 
-    //     if (foundCommands.get("side").contains("-s")) {
-    //         showDeck.append("Side Deck:\nMonsters:");
-    //         showDeck.append(showCardsInMainOrSideDeck(
-    //                 allDecksOfUser.get(foundCommands.get("show deck with name")).getSideDeck()));
-    //     } else {
-    //         showDeck.append("Main Deck:\nMonsters:");
-    //         showDeck.append(showCardsInMainOrSideDeck(
-    //                 allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
-    //     }
-    //     return showDeck.toString();
+    // if (foundCommands.get("side").contains("-s")) {
+    // showDeck.append("Side Deck:\nMonsters:");
+    // showDeck.append(showCardsInMainOrSideDeck(
+    // allDecksOfUser.get(foundCommands.get("show deck with name")).getSideDeck()));
+    // } else {
+    // showDeck.append("Main Deck:\nMonsters:");
+    // showDeck.append(showCardsInMainOrSideDeck(
+    // allDecksOfUser.get(foundCommands.get("show deck with name")).getMainDeck()));
+    // }
+    // return showDeck.toString();
     // }
 
     // private String showCardsInMainOrSideDeck(List<String> cardsInDeck) {
 
-    //     Collections.sort(cardsInDeck);
+    // Collections.sort(cardsInDeck);
 
-    //     StringBuilder monsterCardsBuilder = new StringBuilder();
-    //     StringBuilder spellAndTrapCardsBuilder = new StringBuilder();
+    // StringBuilder monsterCardsBuilder = new StringBuilder();
+    // StringBuilder spellAndTrapCardsBuilder = new StringBuilder();
 
-    //     for (int i = 0; i < cardsInDeck.size(); i++) {
-    //         if (allMonsterCards.containsKey(cardsInDeck.get(i))) {
-    //             monsterCardsBuilder.append("\n" + cardsInDeck.get(i) + ": "
-    //                     + allMonsterCards.get(cardsInDeck.get(i)).getCardDescription());
-    //         } else {
-    //             spellAndTrapCardsBuilder.append("\n" + cardsInDeck.get(i) + ": "
-    //                     + allSpellAndTrapCard.get(cardsInDeck.get(i)).getCardDescription());
-    //         }
-    //     }
-    //     return monsterCardsBuilder.toString() + "\nSpell and Traps:" + spellAndTrapCardsBuilder.toString();
+    // for (int i = 0; i < cardsInDeck.size(); i++) {
+    // if (allMonsterCards.containsKey(cardsInDeck.get(i))) {
+    // monsterCardsBuilder.append("\n" + cardsInDeck.get(i) + ": "
+    // + allMonsterCards.get(cardsInDeck.get(i)).getCardDescription());
+    // } else {
+    // spellAndTrapCardsBuilder.append("\n" + cardsInDeck.get(i) + ": "
+    // + allSpellAndTrapCard.get(cardsInDeck.get(i)).getCardDescription());
+    // }
+    // }
+    // return monsterCardsBuilder.toString() + "\nSpell and Traps:" +
+    // spellAndTrapCardsBuilder.toString();
     // }
 
     // private String showAllDecks() {
-    //     HashMap<String, Deck> allDecksOfUser = LoginController.getOnlineUser().getDecks();
-    //     StringBuilder showAllDecks = new StringBuilder();
-    //     showAllDecks.append("Decks:\nActive deck:\n");
-    //     if (allDecksOfUser == null) {
-    //         showAllDecks.append("Other Decks:");
-    //         return showAllCards();
-    //     }
-
-    //     StringBuilder showOtherDecks = new StringBuilder();
-    //     for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
-    //         if (allDecksOfUser.get(entry.getKey()).getIsDeckActive()) {
-    //             showAllDecks
-    //                     .append(entry.getKey() + ": main deck " + allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck()
-    //                             + ", side deck " + allDecksOfUser.get(entry.getKey()).getSizeOfSideDeck() + ", ");
-    //             showAllDecks
-    //                     .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ? "valid\n" : "invalid\n");
-    //         } else {
-
-    //             showOtherDecks.append(
-    //                     "\n" + entry.getKey() + ": main deck " + allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck()
-    //                             + ", side deck " + allDecksOfUser.get(entry.getKey()).getSizeOfSideDeck() + ", ");
-    //             showOtherDecks
-    //                     .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ? "valid" : "invalid");
-    //         }
-    //     }
-    //     showAllDecks.append("Other Decks:" + showOtherDecks.toString());
-    //     return showAllDecks.toString();
+    // HashMap<String, Deck> allDecksOfUser =
+    // LoginController.getOnlineUser().getDecks();
+    // StringBuilder showAllDecks = new StringBuilder();
+    // showAllDecks.append("Decks:\nActive deck:\n");
+    // if (allDecksOfUser == null) {
+    // showAllDecks.append("Other Decks:");
+    // return showAllCards();
     // }
 
-    public void deleteCardFromMainOrSideDeck(String deckname, String cardname, boolean isDeleteFromMainDeck,
-            String playerName) {
-        User user = Storage.getUserByName(playerName);
-        HashMap<String, Deck> allDecksOfUser = user.getDecks();
-        if (isDeleteFromMainDeck) {
-            allDecksOfUser.get(deckname).deleteCardFromMainDeck((cardname));
-        } else {
-            allDecksOfUser.get(deckname).deleteCardFromSideDeck((cardname));
+    // StringBuilder showOtherDecks = new StringBuilder();
+    // for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
+    // if (allDecksOfUser.get(entry.getKey()).getIsDeckActive()) {
+    // showAllDecks
+    // .append(entry.getKey() + ": main deck " +
+    // allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck()
+    // + ", side deck " + allDecksOfUser.get(entry.getKey()).getSizeOfSideDeck() +
+    // ", ");
+    // showAllDecks
+    // .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ?
+    // "valid\n" : "invalid\n");
+    // } else {
+
+    // showOtherDecks.append(
+    // "\n" + entry.getKey() + ": main deck " +
+    // allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck()
+    // + ", side deck " + allDecksOfUser.get(entry.getKey()).getSizeOfSideDeck() +
+    // ", ");
+    // showOtherDecks
+    // .append(allDecksOfUser.get(entry.getKey()).getSizeOfMainDeck() >= 40 ?
+    // "valid" : "invalid");
+    // }
+    // }
+    // showAllDecks.append("Other Decks:" + showOtherDecks.toString());
+    // return showAllDecks.toString();
+    // }
+
+    public static String deleteCardFromMainOrSideDeck(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        String deckName = "";
+        boolean isCardDeletedFromMainDeck;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+            deckName = details.get("deckName").getAsString();
+            isCardDeletedFromMainDeck = details.get("isMainDeck").getAsBoolean();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        if (isCardDeletedFromMainDeck) {
+            allDecksOfUser.get(deckName).deleteCardFromMainDeck((cardName));
+        } else {
+            allDecksOfUser.get(deckName).deleteCardFromSideDeck((cardName));
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Deleted From " + (isCardDeletedFromMainDeck ? "MainDeck " : "SideDeck ") + "Successfully!");
     }
 
-    public void addCardToMainOrSideDeck(String deckname, String cardname, boolean isCardAddedToMainDeck,
-            String playerName) {
-        User user = Storage.getUserByName(playerName);
+    public static String addCardToMainOrSideDeck(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        String deckName = "";
+        boolean isCardAddedToMainDeck;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+            deckName = details.get("deckName").getAsString();
+            isCardAddedToMainDeck = details.get("isMainDeck").getAsBoolean();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isCardAddedToMainDeck) {
-            allDecksOfUser.get(deckname).addCardToMainDeck((cardname));
+            allDecksOfUser.get(deckName).addCardToMainDeck((cardName));
         } else {
-            allDecksOfUser.get(deckname).addCardToSideDeck((cardname));
+            allDecksOfUser.get(deckName).addCardToSideDeck((cardName));
         }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Added To " + (isCardAddedToMainDeck ? "MainDeck " : "SideDeck ") + "Successfully!");
     }
 
-    public void deleteCardFromAllUselessCards(String cardname, String playerName) {
-        User user = Storage.getUserByName(playerName);
-        user.deleteCardFromAllUselessCards(cardname);
-    }
-
-    public void addCardToAllUselessCards(String cardname, String playerName) {
-        User user = Storage.getUserByName(playerName);
-        user.addCardToAllUselessCards(cardname);
-    }
-
-    public boolean canAddCardToDeck(String deckname, String cardname, String playerName) {
-
-        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
-        int numberOfCardsInDeck = allDecksOfUser.get(deckname).numberOfCardsInDeck(cardname);
-        int numberOfAllowedUsages = 0;
-        if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
-            numberOfAllowedUsages = allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(cardname)).getNumberOfAllowedUsages();
-        } else if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(cardname))) {
-            numberOfAllowedUsages = allMonsterCards.get(Utility.giveCardNameRemovingRedundancy(cardname)).getNumberOfAllowedUsages();
+    public static String deleteCardFromAllUselessCards(JsonObject details) {
+        String cardName = "";
+        String token = "";
+        try {
+            cardName = details.get("cardName").getAsString();
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
-        if (numberOfCardsInDeck == numberOfAllowedUsages) {
-            return false;
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
         }
-        return true;
+
+        user.deleteCardFromAllUselessCards(cardName);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Deleted From Useless Cards Successfully!");
     }
 
-    public String activateDeck(String deckname, String playerName) {
-        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
-        for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
-            entry.getValue().setDeckActive(false);
+    public static String addCardToAllUselessCards(JsonObject details) {
+        String cardName = "";
+        String token = "";
+        try {
+            cardName = details.get("cardName").getAsString();
+            token = details.get("token").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
-        allDecksOfUser.get(deckname).setDeckActive(true);
-        return "deck activated successfully!";
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        user.addCardToAllUselessCards(cardName);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Card Added To Useless Cards Successfully!");
     }
 
-    public static String deleteDeck(JsonObject detailes) {
+    public static String activateDeck(JsonObject details) {
         String token = "";
         String deckName = "";
         try {
-            token = detailes.get("token").getAsString();
-            deckName = detailes.get("deckName").getAsString();
+            token = details.get("token").getAsString();
+            deckName = details.get("deckName").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        for (Map.Entry<String, Deck> entry : allDecksOfUser.entrySet()) {
+            entry.getValue().setDeckActive(false);
+        }
+        allDecksOfUser.get(deckName).setDeckActive(true);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Deck Activated Successfully!");
+    }
+
+    public static String deleteDeck(JsonObject details) {
+        String token = "";
+        String deckName = "";
+        try {
+            token = details.get("token").getAsString();
+            deckName = details.get("deckName").getAsString();
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
@@ -237,39 +310,27 @@ public class DeckCommands {
                 "Deck Deleted Successfully!");
     }
 
-    public String createDeck(String deckname, String playerName) {
-        HashMap<String, Deck> allDecksOfUser = Storage.getUserByName(playerName).getDecks();
-        if (allDecksOfUser != null && allDecksOfUser.containsKey(deckname)) {
-            return "deck already exists";
+    public static String createDeck(JsonObject detailes) {
+        String deckName = "";
+        String token = "";
+        try {
+            deckName = detailes.get("deckName").getAsString();
+            token = detailes.get("token").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
         }
-        Storage.getUserByName(playerName).addDeckToAllDecks(deckname, new Deck(deckname));
-        return "deck created successfully!";
-    }
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
 
-    public HashMap<String, Integer> getNumberOfEachTypeOfCardsInDeck(String deckname, String playerName) {
-        int numberOfMonsterCards = 0;
-        int numberOfSpellCards = 0;
-        int numberOfTrapCards = 0;
-        List<String> mainDeckCards = Storage.getUserByName(playerName).getDecks().get(deckname).getMainDeck();
-        HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
-        sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
-        sizeOfEachPart.put("sideDeckSize",
-                LoginController.getOnlineUser().getDecks().get(deckname).getSizeOfSideDeck());
-        for (int i = 0; i < mainDeckCards.size(); i++) {
-            if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
-                numberOfMonsterCards++;
-            } else {
-                if (allSpellAndTrapCard.get(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i))).getCardType()
-                        .equals(CardType.SPELL)) {
-                    numberOfSpellCards++;
-                } else {
-                    numberOfTrapCards++;
-                }
-            }
+        HashMap<String, Deck> allDecksOfUser = user.getDecks();
+        if (allDecksOfUser != null && allDecksOfUser.containsKey(deckName)) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
+                    "Deck Already Exists!");
         }
-        sizeOfEachPart.put("monstersSize", numberOfMonsterCards);
-        sizeOfEachPart.put("spellsSize", numberOfSpellCards);
-        sizeOfEachPart.put("trapsSize", numberOfTrapCards);
-        return sizeOfEachPart;
+        user.addDeckToAllDecks(deckName, new Deck(deckName));
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Deck Created Successfully!");
     }
 }

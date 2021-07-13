@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import project.server.controller.non_duel.storage.Storage;
+import project.client.CardsStorage;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardType;
 import javafx.geometry.Pos;
@@ -87,8 +88,8 @@ public class UIStorage {
 
     private static void createAllTypeOfCards() {
         allTypeOfCards = new HashMap<>();
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        HashMap<String, Card> allSpellAndTrapCards = Storage.getAllSpellAndTrapCards();
+        HashMap<String, Card> allMonsterCards = CardsStorage.getAllMonsterCards();
+        HashMap<String, Card> allSpellAndTrapCards = CardsStorage.getAllSpellAndTrapCards();
         List<Card> allCardsInList = new ArrayList<>();
         List<Card> allMonsterCardsInList = new ArrayList<>();
 
@@ -167,7 +168,7 @@ public class UIStorage {
             allSideDeckRectangle.add(rectangle);
         }
 
-        int sizeOfWholeCards = Storage.getAllMonsterCards().size() + Storage.getAllSpellAndTrapCards().size();
+        int sizeOfWholeCards = CardsStorage.getAllMonsterCards().size() + CardsStorage.getAllSpellAndTrapCards().size();
 
         for (int i = 0; i < sizeOfWholeCards; i++) {
             Rectangle rectangle = new Rectangle(45, 55);

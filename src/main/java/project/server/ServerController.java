@@ -8,6 +8,7 @@ import project.server.controller.duel.PreliminaryPackage.ClientMessageReceiver;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.profile.Profile;
+import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.non_duel.deckCommands.DeckCommands;
 
 import java.io.DataInputStream;
@@ -61,11 +62,12 @@ public class ServerController {
             throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
-            System.out.println(input);
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
             String result = process(input);
             if (result.equals(""))
                 break;
-            System.out.println(result);
+            System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
         }
@@ -98,10 +100,28 @@ public class ServerController {
                 return Scoreboard.findCommands("scoreboard show");
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
+            case "createDeck":
+                return DeckCommands.createDeck(details);
+            case "addCardToUselessCards":
+                return DeckCommands.addCardToAllUselessCards(details);
+            case "deleteCardFromMainOrSideDeck":
+                return DeckCommands.deleteCardFromMainOrSideDeck(details);
+            case "deleteCardFromUselessCards":
+                return DeckCommands.deleteCardFromAllUselessCards(details);
+            case "addCardToMainOrSideDeck":
+                return DeckCommands.addCardToMainOrSideDeck(details);
+            case "activeDeck":
+                return DeckCommands.activateDeck(details);
             case "changePassword":
                 return Profile.changePassword(details);
             case "changeNickName":
                 return Profile.changeNickname(details);
+            case "requestDuel":
+                return DuelStarter.requestGame(details);
+            case "setTurnOfDuel":
+                return DuelStarter.setTurnOfGame(details);
+            case "sendTweet":
+
             case "logout":
                 return logoutUser(details);
             case "duel":

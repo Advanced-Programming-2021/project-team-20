@@ -87,4 +87,9 @@ public class ToGsonFormatForSendInformationToClient {
         return jsonObject.toString();
     }
 
+    public static String toGsonFormatForAcceptPlaying(String message){
+
+        return null;
+    }
+
 }

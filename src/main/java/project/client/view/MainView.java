@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import project.client.CardsStorage;
 import project.client.ServerConnection;
 import project.server.controller.non_duel.storage.Storage;
 
@@ -29,16 +30,13 @@ public class MainView extends Application {
         stage.setScene(scene);
         stage.show();
 
-
     }
 
     public static void main(String[] args) throws Exception {
-         ServerConnection.initializeNetwork();
-        // Storage storage = new Storage();
-        // storage.startProgram();
-        // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
+        ServerConnection.initializeNetwork();
+        CardsStorage storage = new CardsStorage();
+        storage.startProgram();
         UIStorage.createPreliminaryToStartProgram();
-        // LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
         String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
         ServerConnection.sendDataToServerAndRecieveResult(logout);
@@ -49,18 +47,6 @@ public class MainView extends Application {
         root = FXMLLoader.load(getClass().getResource(fxml));
         stage.getScene().setRoot(root);
         createFadeTransition(root);
-        // FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
-        // fadeTransition.setNode(root);
-        // fadeTransition.setFromValue(0);
-        // fadeTransition.setToValue(1);
-        // fadeTransition.play();
-        // root.translateYProperty().set(root.getHeight());
-        // Timeline timeline = new Timeline();
-        // KeyValue keyValue = new KeyValue(root.translateYProperty(), 0,
-        // Interpolator.EASE_IN);
-        // KeyFrame keyFrame = new KeyFrame(Duration.millis(1000), keyValue);
-        // timeline.getKeyFrames().add(keyFrame );
-        // timeline.play();
     }
 
     private static void createFadeTransition(Parent root) {
