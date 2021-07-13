@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import project.client.DeserializeInformationFromServer;
@@ -37,6 +36,7 @@ public class startDuelController implements Initializable {
     private String chosenPlayerForPlaying;
     private boolean isPlayWithComputer;
     private boolean isMatchGame;
+    private HashMap<String, String> deserializeResult;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -95,20 +95,18 @@ public class startDuelController implements Initializable {
     }
 
     private void sendRequestToServer() {
-        int numberOfRounds = isMatchGame ? 3 : 1;
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
-                "numberOfRounds", numberOfRounds + "");
-        String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
-        System.out.println(messageFromServer);
-        // new Thread(() -> {
-        // HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-        // .deserializeForOnlyTypeAndMessage(messageFromServer);
-        // if (deserializeResult.get("type").equals("Error")) {
-        // showAlert(deserializeResult.get("message"), "Error");
-        // return;
-        // }
-        // startGame();
-        // }).start();
+        new Thread(() -> {
+            int numberOfRounds = isMatchGame ? 3 : 1;
+            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
+                    "numberOfRounds", numberOfRounds + "");
+            String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
+            deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+            if (deserializeResult.get("type").equals("Error")) {  
+                // showAlert(deserializeResult.get("message"), "Error");
+                return;
+            }
+            startGame();
+        }).start();
     }
 
     private void startGame() {
