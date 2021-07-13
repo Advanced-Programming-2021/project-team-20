@@ -14,7 +14,6 @@ import project.client.ServerConnection;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 
-
 public class MainMenuController implements Initializable {
 
     @FXML
@@ -31,6 +30,9 @@ public class MainMenuController implements Initializable {
     Button deckbtn;
     @FXML
     Button duelbtn;
+    @FXML
+    Button chatRoombtn;
+
     public static MediaPlayer backgroundMusic;
     public MediaView mediaView;
 
@@ -76,6 +78,14 @@ public class MainMenuController implements Initializable {
             e.printStackTrace();
         }
         new ImportAndExportController().createSceneAndCardPictures(pane);
+    }
+
+    public void goToChatRoomPage() {
+        try {
+            new MainView().changeView("/project/fxml/chatRoomPage.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void backToLoginPage() {

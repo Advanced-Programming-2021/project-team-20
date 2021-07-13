@@ -2,13 +2,20 @@ package project.client.view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import project.server.controller.duel.PreliminaryPackage.DuelStarter;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
+import project.model.Deck;
+import project.model.User;
 
 public class startDuelController implements Initializable {
 
@@ -31,8 +38,6 @@ public class startDuelController implements Initializable {
     private boolean isPlayWithComputer;
     private boolean isMatchGame;
 
-    private DuelStarter duelStarter = new DuelStarter();
-
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         SongPlayer.getInstance().pauseMusic();
@@ -42,59 +47,68 @@ public class startDuelController implements Initializable {
     public void singleDuelWithComputer() {
         isPlayWithComputer = true;
         isMatchGame = false;
-        if (checkConditionsOfPlayers("AI")) {
-            startGame();
-        }
+        // if (checkConditionsOfPlayers("AI")) {
+        // startGame();
+        // }
     }
 
     public void matchDuleWithComputer() {
         isPlayWithComputer = true;
         isMatchGame = false;
-        if (checkConditionsOfPlayers("AI")) {
-            startGame();
-        }
+        // if (checkConditionsOfPlayers("AI")) {
+        // startGame();
+        // }
     }
 
     public void singleDuelWithUser() {
-        String userName = secondPlayerSingleDuelField.getText();
-        isMatchGame = false;
-        if (userName.equals("")) {
-            showAlert("FILL FIELDS", "ERROR");
+        String condition = checkConditionOfPlayer();
+        if (!condition.equals("Wait Until Another Player Wants To Play")) {
+            showAlert(condition, "Error");
             return;
         }
-        if (checkConditionsOfPlayers(userName)) {
-            startGame();
-        } else {
-            secondPlayerSingleDuelField.setText("");
-        }
+        isMatchGame = false;
+        sendRequestToServer();
+        // if (userName.equals("")) {
+        // showAlert("FILL FIELDS", "ERROR");
+        // return;
+        // }
+        // if (checkConditionsOfPlayers(userName)) {
+        // startGame();
+        // } else {
+        // secondPlayerSingleDuelField.setText("");
+        // }
     }
 
     public void matchDuelWithUser() {
-        String userName = secondPlayerMatchDuelField.getText();
-        isMatchGame = true;
-        if (userName.equals("")) {
-            showAlert("FILL FIELDS", "ERROR");
+        String condition = checkConditionOfPlayer();
+        if (!condition.equals("Wait Until Another Player Wants To Play")) {
+            showAlert(condition, "Error");
             return;
         }
-        if (checkConditionsOfPlayers(userName)) {
-            startGame();
-        } else {
-            secondPlayerMatchDuelField.setText("");
-        }
+        isMatchGame = true;
+        sendRequestToServer();
+        // if (checkConditionsOfPlayers(userName)) {
+        // startGame();
+        // } else {
+        // secondPlayerMatchDuelField.setText("");
+        // }
     }
 
-    private boolean checkConditionsOfPlayers(String secondPlayer) {
-        if(secondPlayer.equals(LoginController.getOnlineUser().getName())){
-             showAlert("You Cant Play With Yourself", "ERROR");
-             return false;
-        }
+    private void sendRequestToServer() {
         int numberOfRounds = isMatchGame ? 3 : 1;
-        String result = duelStarter.checkConditionsOfPlayers(LoginController.getOnlineUser().getName(), secondPlayer, numberOfRounds);
-        if (!result.equals("game started")) {
-            showAlert(result.toUpperCase(), "ERROR");
-            return false;
-        }
-        return true;
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
+                "numberOfRounds", numberOfRounds + "");
+        String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
+        System.out.println(messageFromServer);
+        // new Thread(() -> {
+        // HashMap<String, String> deserializeResult = DeserializeInformationFromServer
+        // .deserializeForOnlyTypeAndMessage(messageFromServer);
+        // if (deserializeResult.get("type").equals("Error")) {
+        // showAlert(deserializeResult.get("message"), "Error");
+        // return;
+        // }
+        // startGame();
+        // }).start();
     }
 
     private void startGame() {
@@ -116,5 +130,37 @@ public class startDuelController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String checkConditionOfPlayer() {
+        Deck activeDeck = getActiveDeck(LoginController.getOnlineUser());
+
+        if (activeDeck == null) {
+            return "You Have No Active Deck";
+        }
+
+        if (!isThisDeckValid(activeDeck)) {
+            return "Your Active Deck is Not Valid!";
+        }
+
+        if (!isPlayWithComputer) {
+            return "Wait Until Another Player Wants To Play";
+        }
+        return "null";
+    }
+
+    private Deck getActiveDeck(User user) {
+        HashMap<String, Deck> allDecks = user.getDecks();
+        for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
+            if (allDecks.get(entry.getKey()).getIsDeckActive())
+                return allDecks.get(entry.getKey());
+        }
+        return null;
+    }
+
+    private boolean isThisDeckValid(Deck deck) {
+        if (deck.getSizeOfMainDeck() >= 40 && deck.getSizeOfMainDeck() <= 60)
+            return true;
+        return false;
     }
 }
