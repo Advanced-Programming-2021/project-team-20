@@ -7,6 +7,7 @@ import project.model.User;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.profile.Profile;
+import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.non_duel.deckCommands.DeckCommands;
 
 import java.io.DataInputStream;
@@ -109,11 +110,15 @@ public class ServerController {
             case "addCardToMainOrSideDeck":
                 return DeckCommands.addCardToMainOrSideDeck(details);
             case "activeDeck":
-                return DeckCommands.activateDeck(details);    
+                return DeckCommands.activateDeck(details);
             case "changePassword":
                 return Profile.changePassword(details);
             case "changeNickName":
                 return Profile.changeNickname(details);
+            case "requestDuel":
+                 return DuelStarter.requestGame(details);
+            case "sendTweet":
+                      
             case "logout":
                 return logoutUser(details);
             default:

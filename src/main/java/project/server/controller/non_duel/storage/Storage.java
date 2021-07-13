@@ -90,7 +90,6 @@ public class Storage {
     }
 
     public static void saveNewImageOfUsers(User user, String imagePath) {
-        // for (Map.Entry<User, String> entry : newImagesThatChanges.entrySet()) {
         BufferedImage bImage = null;
         try {
             File initialImage = new File(imagePath);
@@ -103,7 +102,6 @@ public class Storage {
         } catch (Exception e) {
             System.out.println("Exception occured :" + e.getMessage());
         }
-        // }
     }
 
     public static void saveNewImagesOfCardsInFile(Card card, String imagePath) {
