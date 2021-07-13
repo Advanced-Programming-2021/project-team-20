@@ -1,13 +1,16 @@
 package project.server.controller.duel.PreliminaryPackage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
+
 import project.client.view.LoginController;
+import project.server.ServerController;
+import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.duel.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
@@ -23,43 +26,48 @@ public class DuelStarter {
     private static int numberOfRounds;
     private static String firstPlayer;
     private static String secondPlayer;
-    public String findCommand(String command, String token) {
+    private static HashMap<String, Integer> listOfTypeOfGameThatSuggest = new HashMap<>();
+    // public String findCommand(String command, String token) {
 
-        if (isDuelStarted) {
-            return GameManager.getDuelControllerByIndex(token).getInput(command, true, token);
-        }
+    // // if (isDuelStarted) {
+    // // return GameManager.getDuelControllerByIndex(token).getInput(command, true,
+    // token);
+    // // }
 
-        StartDuelPatterns startDuelPatterns = new StartDuelPatterns();
-        HashMap<String, String> foundCommands = startDuelPatterns.findCommand(command);
-        if (foundCommands == null) {
-            return "invalid command!";
-        }
+    // // StartDuelPatterns startDuelPatterns = new StartDuelPatterns();
+    // // HashMap<String, String> foundCommands =
+    // startDuelPatterns.findCommand(command);
+    // // if (foundCommands == null) {
+    // // return "invalid command!";
+    // // }
 
-        if (!doesThisUserNameExist(foundCommands.get("secondPlayer"))) {
-            return "there is no player with this username";
-        }
-        User secondUser = Storage.getUserByName(foundCommands.get("secondPlayer"));
-        User firstUser = LoginController.getOnlineUser();
-        int numberOfRounds = Integer.parseInt(foundCommands.get("rounds"));
-        if (getActiveDeck(firstUser) == null) {
-            return firstUser.getName() + " has no active deck";
-        }
-        if (getActiveDeck(secondUser) == null) {
-            return secondUser.getName() + " has no active deck";
-        }
-        // if (!isThisDeckValid(firstUser)) {
-        // return firstUser.getName() + "’s deck is invalid";
-        // }
-        // if (!isThisDeckValid(secondUser)) {
-        // return secondUser.getName() + "’s deck is invalid";
-        // }
-        if (!isItsRoundNumberCorrect(numberOfRounds)) {
-            return "number of rounds is not supported";
-        }
+    // // if (!doesThisUserNameExist(foundCommands.get("secondPlayer"))) {
+    // // return "there is no player with this username";
+    // // }
+    // // User secondUser =
+    // Storage.getUserByName(foundCommands.get("secondPlayer"));
+    // // User firstUser = LoginController.getOnlineUser();
+    // // int numberOfRounds = Integer.parseInt(foundCommands.get("rounds"));
+    // // if (getActiveDeck(firstUser) == null) {
+    // // return firstUser.getName() + " has no active deck";
+    // // }
+    // // if (getActiveDeck(secondUser) == null) {
+    // // return secondUser.getName() + " has no active deck";
+    // // }
+    // // // if (!isThisDeckValid(firstUser)) {
+    // // // return firstUser.getName() + "’s deck is invalid";
+    // // // }
+    // // // if (!isThisDeckValid(secondUser)) {
+    // // // return secondUser.getName() + "’s deck is invalid";
+    // // // }
+    // // if (!isItsRoundNumberCorrect(numberOfRounds)) {
+    // // return "number of rounds is not supported";
+    // // }
 
-        isDuelStarted = true;
-        return "duel successfully started!\n" + firstUser.getName() + " must choose\n1.stone\n2.hand\n3.snips";
-    }
+    // // isDuelStarted = true;
+    // // return "duel successfully started!\n" + firstUser.getName() + " must
+    // choose\n1.stone\n2.hand\n3.snips";
+    // }
 
     public String checkConditionsOfPlayers(String firstUserName, String secondUserName, int numberOfRounds) {
         if (!doesThisUserNameExist(firstUserName)) {
@@ -89,19 +97,22 @@ public class DuelStarter {
         if (!isThisDeckValid(secondUserActiveDeck)) {
             return secondUserName + " has not valid deck";
         }
-       DuelStarter.numberOfRounds = numberOfRounds;
-       DuelStarter.firstPlayer = firstUserName;
-       DuelStarter.secondPlayer = secondUserName;
+        DuelStarter.numberOfRounds = numberOfRounds;
+        DuelStarter.firstPlayer = firstUserName;
+        DuelStarter.secondPlayer = secondUserName;
         return "game started";
     }
 
-    public void createNewGame(String firstUserName, String secondUserName, String firstUserToken, String secondUserToken) {
+    public void createNewGame(String firstUserName, String secondUserName, String firstUserToken,
+            String secondUserToken) {
         User firstUser = Storage.getUserByName(firstUserName);
         User secondUser = Storage.getUserByName(secondUserName);
         Deck firstUserActiveDeck = getActiveDeck(firstUser);
         Deck secondUserActiveDeck = getActiveDeck(secondUser);
-        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck, firstUserToken, secondUserToken);
+        startNewGame(firstUser, secondUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck, firstUserToken,
+                secondUserToken);
     }
+
     private static GameManager gameManager;
 
     public static GameManager getGameManager() {
@@ -109,7 +120,7 @@ public class DuelStarter {
     }
 
     private void startNewGame(User firstUser, User secondUser, int roundsNumber, Deck firstUserActiveDeck,
-                              Deck secondUserActiveDeck, String firstUserToken, String secondUserToken) {
+            Deck secondUserActiveDeck, String firstUserToken, String secondUserToken) {
 
         ArrayList<Card> firstUserMainDeck = getMainOrSideDeckCards(firstUserActiveDeck, true);
         ArrayList<Card> firstUserSideDeck = getMainOrSideDeckCards(firstUserActiveDeck, false);
@@ -119,9 +130,47 @@ public class DuelStarter {
         Collections.shuffle(secondUserMainDeck);
         gameManager = new GameManager();
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
-                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber, firstUserToken, secondUserToken);
+                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber,
+                firstUserToken, secondUserToken);
         GameManager.getDuelControllerByIndex(firstUserToken).setPlayersChangedDecks(true);
         GameManager.getDuelControllerByIndex(firstUserToken).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+    }
+
+    public static String requestGame(JsonObject details) {
+        String token = "";
+        int numberOfRounds;
+        try {
+            token = details.get("token").getAsString();
+            numberOfRounds = details.get("numberOfRounds").getAsInt();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        listOfTypeOfGameThatSuggest.put(token, numberOfRounds);
+        outer: while (true) {
+            if (listOfTypeOfGameThatSuggest.size() > 1) {
+                for (Map.Entry<String, Integer> entry : listOfTypeOfGameThatSuggest.entrySet()) {
+                    if (!entry.getKey().equals(token) && entry.getValue() == numberOfRounds) {
+                        startGame(token, entry.getKey());
+                        break outer;
+                    }
+                }
+            }
+            try {
+                Thread.sleep(200);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                "Duel Started Successfully!");
+    }
+
+    private static synchronized void startGame(String firstPlayerToken, String secondPlayerToken) {
+          System.out.println("salam");
     }
 
     public static ArrayList<Card> getMainOrSideDeckCards(Deck activeDeck, boolean isCardsInMainDeck) {

@@ -8,6 +8,8 @@ module PhaseOneProject {
     requires java.desktop;
 
 
+    opens project.server to javafx.fxml;
+    exports project.server;
     opens project.client.view to javafx.fxml;
     exports project.client.view;
     opens project.client.view.pooyaviewpackage to javafx.fxml;
