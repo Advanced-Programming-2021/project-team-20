@@ -37,6 +37,12 @@ import java.util.regex.Pattern;
 
 public class DuelView {
     // launch the application
+    private static volatile boolean isMyTurn;
+
+    public static boolean isIsMyTurn() {
+        return isMyTurn;
+    }
+
     private static Stage stage;
     private static double stageWidth;
     private static double stageHeight;
@@ -468,6 +474,7 @@ public class DuelView {
     }
 
     public static void callStage() {
+        System.out.println("I am newing DuelStage");
         new DuelStage();
     }
 

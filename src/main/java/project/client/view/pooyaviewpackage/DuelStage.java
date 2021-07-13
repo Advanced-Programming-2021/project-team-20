@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 public class DuelStage extends Stage {
     private DuelView duelView;
     private boolean shiftKeyOn = false;
+    private static Thread notMyTurnThread;
 
     DuelStage(){
         duelView = new DuelView();
@@ -22,6 +23,11 @@ public class DuelStage extends Stage {
         });
         this.setScene(scene);
         this.show();
+        notMyTurnThread = new Thread(()->{
+            if (!DuelView.isIsMyTurn()){
+                //do operations
+            }
+        });
     }
 
     public boolean isShiftKeyOn() {

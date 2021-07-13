@@ -151,6 +151,7 @@ public class RockPaperScissorController implements Initializable {
             String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
             deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
             if (deserializeResult.get("type").equals("Error")) {
+                System.out.println("error in starting duel");
                 // showAlert(deserializeResult.get("message"), "Error");
                 return;
             }

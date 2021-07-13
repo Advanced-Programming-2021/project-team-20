@@ -15,7 +15,7 @@ import project.model.cardData.General.*;
 import project.model.cardData.MonsterCardData.*;
 import project.model.cardData.SpellCardData.*;
 import project.model.cardData.TrapCardData.*;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 
 public class CardsStorage {
     private static HashMap<String, Card> allMonsterCards = new HashMap<>();
@@ -23,7 +23,7 @@ public class CardsStorage {
     private static Card unknownCard;
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     private String addressOfStorage = "Resourses\\";
-    
+
     public void startProgram() throws Exception {
 
         addMonsterCards();
@@ -34,7 +34,7 @@ public class CardsStorage {
         unknownCard.setImage(createImageOfCards("Unknown"));
 
     }
-    
+
     private void saveNewCardsInFile() throws IOException {
         CSVWriter csvWriter = null;
         for (Map.Entry<String, Card> entry : newCardsCreated.entrySet()) {

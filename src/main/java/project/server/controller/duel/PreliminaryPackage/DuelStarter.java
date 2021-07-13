@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.duel.GamePackage.SetTurnForGame;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.User;

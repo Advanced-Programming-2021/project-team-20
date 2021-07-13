@@ -25,7 +25,8 @@ public class AI {
         return token;
     }
 
-    public AI() {
+    public AI(String token) {
+        this.token = token;
         aiBoardUnderstander = new AIBoardUnderstander();
         aiQueryUnderstander = new AIQueryUnderstander();
         aiMainPhaseMind = new AIMainPhaseMind();
