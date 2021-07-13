@@ -29,12 +29,12 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
-import project.server.controller.duel.GamePackage.DuelBoard;
-import project.server.controller.duel.PreliminaryPackage.DuelStarter;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
-import project.server.controller.non_duel.storage.Storage;
+// import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
+// import project.server.controller.duel.GamePackage.DuelBoard;
+// import project.server.controller.duel.PreliminaryPackage.DuelStarter;
+// import project.server.controller.duel.PreliminaryPackage.GameManager;
+// import project.server.controller.duel.Utility.Utility;
+// import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.cardData.General.Card;
 import project.client.view.pooyaviewpackage.DuelView;
@@ -54,7 +54,6 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     private static AnchorPane anchorPane;
 
     private static List<Label> allCardDiscriptionLabels;
-    private ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds;
     private static Label sizeOfMainDeckLabel;
     private static Label sizeOfAllMonsterCardsLabel;
     private static Label sizeOfAllSpellCardsLabel;
@@ -91,7 +90,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         if (!isAddedNecessaryThingsForTheFirstTime) {
             initializeLabesForShowSizeOfDeck();
         }
-        changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
+        // changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
         equalDeckNameLabel.setText(deckname);
         equalShowPlayerNameLabel.setText("PLAYER TURN: " + playerName);
         getRectanglesFromUIUtilityForPanes();
@@ -99,33 +98,33 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         createSideDeck();
         showNmberOfCardsInLabels();
         addDragAndDropEffect();
-        equalShownRectangle.setFill(new ImagePattern(Storage.getUnknownCard().getImage()));
+        // equalShownRectangle.setFill(new ImagePattern(CardsStorage.getUnknownCard().getImage()));
         MainView.changeScene(pane);
     }
 
     private void initializePlayersAndDecks(String token) {
-        allyPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
-        opponentPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1);
-        if (currentPlayerWhoChangesDeck.equals(allyPlayerName)) {
-            mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getMainDeck();
-            sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getSideDeck();
-        } else {
-            mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getMainDeck();
-            sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getSideDeck();
-        }
+        // allyPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
+        // opponentPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1);
+        // if (currentPlayerWhoChangesDeck.equals(allyPlayerName)) {
+        //     mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getMainDeck();
+        //     sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck().getSideDeck();
+        // } else {
+        //     mainDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getMainDeck();
+        //     sideDeckCards = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck().getSideDeck();
+        // }
     }
 
     public void confirmChanges(String token) {
         if (currentPlayerWhoChangesDeck.equals(opponentPlayerName) || opponentPlayerName.equals("AI")) {
-            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
-            ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager
-                    .getChangeCardsBetweenTwoRoundsByIndex(token);
-            Deck firstPlayerActiveDeck = changeCardsBetweenTwoRounds.getAllyPlayerDeck();
-            Deck secondPlayerActiveDeck = changeCardsBetweenTwoRounds.getOpponentPlayerDeck();
-            duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
-                    DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
-            GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
-            GameManager.getDuelControllerByIndex(token).startDuel(token);
+            // DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+            // ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager
+            //         .getChangeCardsBetweenTwoRoundsByIndex(token);
+            // Deck firstPlayerActiveDeck = changeCardsBetweenTwoRounds.getAllyPlayerDeck();
+            // Deck secondPlayerActiveDeck = changeCardsBetweenTwoRounds.getOpponentPlayerDeck();
+            // duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
+            //         DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
+            // GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            // GameManager.getDuelControllerByIndex(token).startDuel(token);
             SongPlayer.getInstance().pauseMusic();
             DuelView.callStage();
         } else {
@@ -136,9 +135,9 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck();
-            new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
-                    activeDeck.getDeckname(), "");
+            // Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getOpponentPlayerDeck();
+            // new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
+            //         activeDeck.getDeckname(), "");
         }
     }
 
@@ -217,19 +216,19 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         int numberOfMonsterCards = 0;
         int numberOfSpellCards = 0;
         int numberOfTrapCards = 0;
-        HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
-        HashMap<String, Card> allSpellAndTrapCard = Storage.getAllSpellAndTrapCards();
-        for (int i = 0; i < mainDeckCards.size(); i++) {
-            if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
-                numberOfMonsterCards++;
-            } else {
-                if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
-                    numberOfSpellCards++;
-                } else {
-                    numberOfTrapCards++;
-                }
-            }
-        }
+        // HashMap<String, Card> allMonsterCards = Storage.getAllMonsterCards();
+        // HashMap<String, Card> allSpellAndTrapCard = Storage.getAllSpellAndTrapCards();
+        // for (int i = 0; i < mainDeckCards.size(); i++) {
+        //     if (allMonsterCards.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
+        //         numberOfMonsterCards++;
+        //     } else {
+        //         if (allSpellAndTrapCard.containsKey(Utility.giveCardNameRemovingRedundancy(mainDeckCards.get(i)))) {
+        //             numberOfSpellCards++;
+        //         } else {
+        //             numberOfTrapCards++;
+        //         }
+        //     }
+        // }
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
         sizeOfEachPart.put("monstersSize", numberOfMonsterCards);
         sizeOfEachPart.put("spellsSize", numberOfSpellCards);
@@ -238,49 +237,49 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void createSideDeck() {
-        List<String> allCardsInMainDeck = Storage.getUserByName(currentPlayerWhoChangesDeck).getDecks().get(deckname)
-                .getSideDeck();
-        List<Card> sideDeckCards = getListOfCards(allCardsInMainDeck);
-        Pane sideDeckPane = (Pane) anchorPane.getChildren().get(1);
-        outer: for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (i * 10 + j == sideDeckCards.size()) {
-                    break outer;
-                }
-                Rectangle rectangle = allSideDeckRectangle.get(i * 10 + j);
-                rectangle.setFill(new ImagePattern(sideDeckCards.get(i * 10 + j).getImage()));
-                rectangle.setId(sideDeckCards.get(i * 10 + j).getCardName());
-                addOnDragDetectedEffectForCard(rectangle);
-                addOnMouseEnteredEffectForCard(rectangle);
-                sideDeckPane.getChildren().add(rectangle);
-            }
-        }
+        // List<String> allCardsInMainDeck = Storage.getUserByName(currentPlayerWhoChangesDeck).getDecks().get(deckname)
+        //         .getSideDeck();
+        // List<Card> sideDeckCards = getListOfCards(allCardsInMainDeck);
+        // Pane sideDeckPane = (Pane) anchorPane.getChildren().get(1);
+        // outer: for (int i = 0; i < 2; i++) {
+        //     for (int j = 0; j < 10; j++) {
+        //         if (i * 10 + j == sideDeckCards.size()) {
+        //             break outer;
+        //         }
+        //         Rectangle rectangle = allSideDeckRectangle.get(i * 10 + j);
+        //         rectangle.setFill(new ImagePattern(sideDeckCards.get(i * 10 + j).getImage()));
+        //         rectangle.setId(sideDeckCards.get(i * 10 + j).getCardName());
+        //         addOnDragDetectedEffectForCard(rectangle);
+        //         addOnMouseEnteredEffectForCard(rectangle);
+        //         sideDeckPane.getChildren().add(rectangle);
+        //     }
+        // }
     }
 
     private void createMainDeck() {
-        List<String> allCardsInMainDeck = Storage.getUserByName(currentPlayerWhoChangesDeck).getDecks().get(deckname)
-                .getMainDeck();
-        List<Card> mainDeckCards = getListOfCards(allCardsInMainDeck);
-        Pane mainDeckPane = (Pane) anchorPane.getChildren().get(0);
-        outer: for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (i * 10 + j == mainDeckCards.size()) {
-                    break outer;
-                }
-                Rectangle rectangle = allMainDeckRectangle.get(i * 10 + j);
-                rectangle.setFill(new ImagePattern(mainDeckCards.get(i * 10 + j).getImage()));
-                rectangle.setId(mainDeckCards.get(i * 10 + j).getCardName());
-                addOnDragDetectedEffectForCard(rectangle);
-                addOnMouseEnteredEffectForCard(rectangle);
-                mainDeckPane.getChildren().add(rectangle);
-            }
-        }
+        // List<String> allCardsInMainDeck = Storage.getUserByName(currentPlayerWhoChangesDeck).getDecks().get(deckname)
+        //         .getMainDeck();
+        // List<Card> mainDeckCards = getListOfCards(allCardsInMainDeck);
+        // Pane mainDeckPane = (Pane) anchorPane.getChildren().get(0);
+        // outer: for (int i = 0; i < 6; i++) {
+        //     for (int j = 0; j < 10; j++) {
+        //         if (i * 10 + j == mainDeckCards.size()) {
+        //             break outer;
+        //         }
+        //         Rectangle rectangle = allMainDeckRectangle.get(i * 10 + j);
+        //         rectangle.setFill(new ImagePattern(mainDeckCards.get(i * 10 + j).getImage()));
+        //         rectangle.setId(mainDeckCards.get(i * 10 + j).getCardName());
+        //         addOnDragDetectedEffectForCard(rectangle);
+        //         addOnMouseEnteredEffectForCard(rectangle);
+        //         mainDeckPane.getChildren().add(rectangle);
+        //     }
+        // }
     }
 
     private List<Card> getListOfCards(List<String> stringFormatCardInputs) {
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < stringFormatCardInputs.size(); i++) {
-            cards.add(Storage.getCardByName(stringFormatCardInputs.get(i)));
+            // cards.add(Storage.getCardByName(stringFormatCardInputs.get(i)));
         }
         return cards;
     }
@@ -323,41 +322,41 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void addCardDescription(String cardName) {
-        Card card = Storage.getCardByName(cardName);
-        String cardDiscription = card.getCardDescription();
-        ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(4);
-        Pane pane;
-        if (scrollPane.getContent() == null) {
-            pane = new Pane();
-        } else {
-            pane = (Pane) scrollPane.getContent();
-        }
-        pane.getChildren().clear();
-        Label label = allCardDiscriptionLabels.get(0);
-        label.setText("  " + cardName);
-        label.setTextFill(Color.BLUE);
-        pane.getChildren().add(label);
-        List<String> shortCardDescription = new ArrayList<>();
-        shortCardDescription = Arrays.asList(cardDiscription.split(" "));
-        StringBuilder sentencesForEachLabel = new StringBuilder();
-        int numberOfLabelUsed = 1;
-        for (int i = 0; i < shortCardDescription.size(); i++) {
-            label = allCardDiscriptionLabels.get(numberOfLabelUsed);
-            sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
-            if (sentencesForEachLabel.length() >= 15) {
-                addEffectToLabel(label, sentencesForEachLabel.toString());
-                sentencesForEachLabel.setLength(0);
-                label.setLayoutY(20 * (numberOfLabelUsed));
-                pane.getChildren().add(label);
-                numberOfLabelUsed++;
-            } else if (i + 1 == shortCardDescription.size()) {
-                addEffectToLabel(label, sentencesForEachLabel.toString());
-                label.setLayoutY(20 * (numberOfLabelUsed));
-                pane.getChildren().add(label);
-            }
-        }
+        // Card card = Storage.getCardByName(cardName);
+        // String cardDiscription = card.getCardDescription();
+        // ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(4);
+        // Pane pane;
+        // if (scrollPane.getContent() == null) {
+        //     pane = new Pane();
+        // } else {
+        //     pane = (Pane) scrollPane.getContent();
+        // }
+        // pane.getChildren().clear();
+        // Label label = allCardDiscriptionLabels.get(0);
+        // label.setText("  " + cardName);
+        // label.setTextFill(Color.BLUE);
+        // pane.getChildren().add(label);
+        // List<String> shortCardDescription = new ArrayList<>();
+        // shortCardDescription = Arrays.asList(cardDiscription.split(" "));
+        // StringBuilder sentencesForEachLabel = new StringBuilder();
+        // int numberOfLabelUsed = 1;
+        // for (int i = 0; i < shortCardDescription.size(); i++) {
+        //     label = allCardDiscriptionLabels.get(numberOfLabelUsed);
+        //     sentencesForEachLabel.append(shortCardDescription.get(i) + " ");
+        //     if (sentencesForEachLabel.length() >= 15) {
+        //         addEffectToLabel(label, sentencesForEachLabel.toString());
+        //         sentencesForEachLabel.setLength(0);
+        //         label.setLayoutY(20 * (numberOfLabelUsed));
+        //         pane.getChildren().add(label);
+        //         numberOfLabelUsed++;
+        //     } else if (i + 1 == shortCardDescription.size()) {
+        //         addEffectToLabel(label, sentencesForEachLabel.toString());
+        //         label.setLayoutY(20 * (numberOfLabelUsed));
+        //         pane.getChildren().add(label);
+        //     }
+        // }
 
-        scrollPane.setContent(pane);
+        // scrollPane.setContent(pane);
     }
 
     private void addEffectToLabel(Label label, String text) {
@@ -399,8 +398,8 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
         copyPropertyToTransferredCard(transfferdRectangle, addedRectangle);
         pane.getChildren().add(addedRectangle);
-        changeCardsBetweenTwoRounds.addCardToMianOrSideDeck(transfferdRectangle.getId(), isTransferToMainDeck,
-                currentPlayerWhoChangesDeck, "");
+        // changeCardsBetweenTwoRounds.addCardToMianOrSideDeck(transfferdRectangle.getId(), isTransferToMainDeck,
+        //         currentPlayerWhoChangesDeck, "");
         deleteDraggedCard(transfferdRectangle);
     }
 
