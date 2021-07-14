@@ -36,7 +36,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DuelView {
-    // launch the application
     private static volatile boolean isMyTurn;
 
     public static boolean isIsMyTurn() {
