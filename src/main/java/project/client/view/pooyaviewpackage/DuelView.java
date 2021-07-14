@@ -43,6 +43,10 @@ public class DuelView {
         return isMyTurn;
     }
 
+    public static void setIsMyTurn(boolean isMyTurn) {
+        DuelView.isMyTurn = isMyTurn;
+    }
+
     private static Stage stage;
     private static double stageWidth;
     private static double stageHeight;
