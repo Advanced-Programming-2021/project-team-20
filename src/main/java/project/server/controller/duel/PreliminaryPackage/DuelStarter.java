@@ -134,8 +134,9 @@ public class DuelStarter {
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
             secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber,
             firstUserToken, secondUserToken);
-//        GameManager.getDuelControllerByIndex(firstUserToken).setPlayersChangedDecks(true);
-//        GameManager.getDuelControllerByIndex(firstUserToken).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+        GameManager.getDuelControllerByIndex(firstUserToken).setPlayersChangedDecks(true);
+        GameManager.getDuelControllerByIndex(firstUserToken).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+        GameManager.getDuelControllerByIndex(firstUserToken).startDuel(firstUserToken);
     }
 
     public static String requestGame(JsonObject details) {

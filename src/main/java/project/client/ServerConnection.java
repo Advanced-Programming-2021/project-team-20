@@ -20,7 +20,7 @@ public class ServerConnection {
         }
     }
 
-    public static String sendDataToServerAndRecieveResult(String data) {
+    public static String sendDataToServerAndReceiveResult(String data) {
         try {
             dataOutputStream.writeUTF(data);
             dataOutputStream.flush();

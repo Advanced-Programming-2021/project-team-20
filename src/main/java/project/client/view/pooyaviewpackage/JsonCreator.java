@@ -13,7 +13,7 @@ public class JsonCreator {
         jsonObject.addProperty("firstAdditionalString", firstAdditionalString);
         jsonObject.addProperty("integerString", integerString);
         jsonObject.addProperty("request", string);
-        return ServerConnection.sendDataToServerAndRecieveResult(jsonObject.toString());
+        return ServerConnection.sendDataToServerAndReceiveResult(jsonObject.toString());
     }
 
     public static String getFirstAdditionalString() {

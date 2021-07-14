@@ -99,9 +99,9 @@ public class startDuelController implements Initializable {
             int numberOfRounds = isMatchGame ? 3 : 1;
             String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
                     "numberOfRounds", numberOfRounds + "");
-            String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
+            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
             deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-            if (deserializeResult.get("type").equals("Error")) {  
+            if (deserializeResult.get("type").equals("Error")) {
                 // showAlert(deserializeResult.get("message"), "Error");
                 return;
             }

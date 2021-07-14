@@ -23,7 +23,6 @@ import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.pooyaviewpackage.DuelView;
 import project.client.view.transitions.RockPaperScissorTransition;
-import project.model.Deck;
 import project.client.DeserializeInformationFromServer;
 
 public class RockPaperScissorController implements Initializable {
@@ -148,7 +147,7 @@ public class RockPaperScissorController implements Initializable {
 //        new Thread(() -> {
             String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
                     "userSelection", selection + "");
-            String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
+            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
             deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
             System.out.println("Message from servers is: "+messageFromServer);
             if (deserializeResult.get("type").equals("Error")) {

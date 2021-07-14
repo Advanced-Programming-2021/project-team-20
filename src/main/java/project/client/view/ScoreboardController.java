@@ -33,7 +33,7 @@ public class ScoreboardController {
 
 //        String allPeople = new Scoreboard().findCommands("scoreboard show");
         String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
-        String allPeople = ServerConnection.sendDataToServerAndRecieveResult(message);
+        String allPeople = ServerConnection.sendDataToServerAndReceiveResult(message);
         String[] allPeopleSplited = allPeople.split(",");
         Person[] person = new Person[allPeopleSplited.length/3];
         for (int i = 0; i < person.length; i++) {
