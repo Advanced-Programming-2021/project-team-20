@@ -27,11 +27,15 @@ public class ServerController {
 
     public static void runServer() {
         Socket socket = null;
+        Socket secondSocket = null;
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
+            ServerSocket secondServerSocket = new ServerSocket(12346);
             while (true) {
                 socket = serverSocket.accept();
                 startNewThread(serverSocket, socket);
+                secondSocket = secondServerSocket.accept();
+                startNewThread(secondServerSocket, secondSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,6 +45,7 @@ public class ServerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private static void startNewThread(ServerSocket serverSocket, Socket socket) {
@@ -57,6 +62,36 @@ public class ServerController {
             }
         }).start();
     }
+//
+//    private static void secondStartNewThread(ServerSocket serverSocket, Socket socket) {
+//        new Thread(() -> {
+//            try {
+//                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+//                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                giveInputAndProcess(dataInputStream, dataOutputStream);
+//                dataInputStream.close();
+//                socket.close();
+//                serverSocket.close();
+//            } catch (IOException e) {
+//                System.out.println("Connection reset");
+//            }
+//        }).start();
+//    }
+//
+//    private static void giveInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+//        throws IOException {
+//        while (true) {
+//            String input = dataInputStream.readUTF();
+//            System.out.println("=============================================");
+//            System.out.println("message from client: " + input);
+//            String result = process(input);
+//            if (result.equals(""))
+//                break;
+//            System.out.println("message send to client: " + result);
+//            dataOutputStream.writeUTF(result);
+//            dataOutputStream.flush();
+//        }
+//    }
 
     private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
         throws IOException {
@@ -119,7 +154,7 @@ public class ServerController {
             case "requestDuel":
                 return DuelStarter.requestGame(details);
             case "setTurnOfDuel":
-               return DuelStarter.setTurnOfGame(details);
+                return DuelStarter.setTurnOfGame(details);
             case "sendTweet":
 
             case "logout":

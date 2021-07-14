@@ -23,7 +23,6 @@ import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.pooyaviewpackage.DuelView;
 import project.client.view.transitions.RockPaperScissorTransition;
-import project.model.Deck;
 import project.client.DeserializeInformationFromServer;
 
 public class RockPaperScissorController implements Initializable {
@@ -146,45 +145,46 @@ public class RockPaperScissorController implements Initializable {
             selection = 3;
         }
 //        new Thread(() -> {
-            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
-                    "userSelection", selection + "");
-            String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
-            deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-            System.out.println("Message from servers is: "+messageFromServer);
-            if (deserializeResult.get("type").equals("Error")) {
-                System.out.println("error in starting duel");
-                // showAlert(deserializeResult.get("message"), "Error");
-                return;
-            }
-            startDuel();
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
+            "userSelection", selection + "");
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+        System.out.println("Message from servers is: " + messageFromServer);
+        if (deserializeResult.get("type").equals("Error")) {
+            System.out.println("error in starting duel");
+            // showAlert(deserializeResult.get("message"), "Error");
+            return;
+        }
+        DuelView.setToken(LoginController.getToken());
+        startDuel();
 //        }).start();
     }
-        // if (!canSecondPlayerSelect) {
-        // player1Selection = selection;
-        // canSecondPlayerSelect = true;
-        // if (secondPlayerName.equals("AI")) {
-        // handleAIPlayerSelection();
-        // } else {
-        // CustomDialog customDialog = new CustomDialog("CONFIRMATION",
-        // "Now " + secondPlayerName + " Must choose");
-        // customDialog.openDialog();
-        // backRectanglesToFirstPlace();
-        // }
+    // if (!canSecondPlayerSelect) {
+    // player1Selection = selection;
+    // canSecondPlayerSelect = true;
+    // if (secondPlayerName.equals("AI")) {
+    // handleAIPlayerSelection();
+    // } else {
+    // CustomDialog customDialog = new CustomDialog("CONFIRMATION",
+    // "Now " + secondPlayerName + " Must choose");
+    // customDialog.openDialog();
+    // backRectanglesToFirstPlace();
+    // }
 
-        // backRectanglesToFirstPlace();
-        // attackChosenRectangles();
-        // if (player1Selection == player2Selection) {
-        //     showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION", false);
-        //     player1Selection = 0;
-        //     player2Selection = 0;
-        //     didPlayer2Select = false;
-        //     canSecondPlayerSelect = false;
-        //     didAnyOneWin = false;
-        // } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
-        //         || (player1Selection == 3 && player2Selection == 2)) {
-        //     try { // if game created before
-        //         setTurn(1, token);
-        //         System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    // backRectanglesToFirstPlace();
+    // attackChosenRectangles();
+    // if (player1Selection == player2Selection) {
+    //     showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION", false);
+    //     player1Selection = 0;
+    //     player2Selection = 0;
+    //     didPlayer2Select = false;
+    //     canSecondPlayerSelect = false;
+    //     didAnyOneWin = false;
+    // } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
+    //         || (player1Selection == 3 && player2Selection == 2)) {
+    //     try { // if game created before
+    //         setTurn(1, token);
+    //         System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     // didPlayer2Select = true;
     // pauseTransition();
     // handleResult();

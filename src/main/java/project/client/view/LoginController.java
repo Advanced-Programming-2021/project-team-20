@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
+import project.client.view.pooyaviewpackage.DuelView;
 import project.model.Deck;
 import project.model.User;
 
@@ -43,7 +44,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         SongPlayer.getInstance().pauseMusic();
-        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
+     //   SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
     }
 
     public void loginUser() {
@@ -54,13 +55,14 @@ public class LoginController implements Initializable {
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatLogin(usernameField.getText(),
                 passwordField.getText());
-        String result = ServerConnection.sendDataToServerAndRecieveResult(data);
+        String result = ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeLogin(result);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
             return;
         }
         token = deserializeResult.get("token");
+        DuelView.setToken(token);
         createUser(deserializeResult);
         try {
             new MainView().changeView("/project/fxml/mainMenu.fxml");
@@ -82,7 +84,7 @@ public class LoginController implements Initializable {
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatRegister(usernameFieldForRegister.getText(),
                 nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
-        String result = ServerConnection.sendDataToServerAndRecieveResult(data);
+        String result = ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeRegister(result);
         if (deserializeResult.get(DeserializeInformationFromServer.getType())
                 .equals(DeserializeInformationFromServer.getError())) {

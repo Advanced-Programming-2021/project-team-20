@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
@@ -27,7 +27,7 @@ public class MoreCardInfoSection {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                int fakeTurn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getFakeTurn();
+                int fakeTurn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getFakeTurn()"));
                 CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
                 boolean isForAlly = cardLocation.getRowOfCardLocation().toString().startsWith("ALLY") && (fakeTurn == 1) ||
                     cardLocation.getRowOfCardLocation().toString().startsWith("OPPO") && (fakeTurn == 2);

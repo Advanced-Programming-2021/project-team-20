@@ -26,7 +26,6 @@ import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 import project.model.Deck;
 import project.model.cardData.General.CardType;
-import project.server.controller.non_duel.storage.Storage;
 
 public class WholeDeckPageMenuController implements Initializable {
 
@@ -136,7 +135,7 @@ public class WholeDeckPageMenuController implements Initializable {
     public void deleteDeck() {
         String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("deleteDeck", "deckName",
                 chosenDeck);
-        String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(sendDataToServer);
+        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
@@ -195,7 +194,7 @@ public class WholeDeckPageMenuController implements Initializable {
         String createdDeckName = createdDeckNameField.getText();
         String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName",
                 createdDeckName);
-        String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(sendDataToServer);
+        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
@@ -340,7 +339,7 @@ public class WholeDeckPageMenuController implements Initializable {
         int numberOfSpellCards = 0;
         int numberOfTrapCards = 0;
         List<String> mainDeckCards = deck.getMainDeck();
-      
+
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
         sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
         sizeOfEachPart.put("sideDeckSize", deck.getSizeOfSideDeck());

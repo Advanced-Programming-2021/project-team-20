@@ -1,13 +1,8 @@
 package project.client.view;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
-import com.google.gson.JsonObject;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +39,7 @@ public class ChatRoomController implements Initializable {
         textArea.setText("");
 
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("sendTweet", "message", message);
-        String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserilizeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
 
     }

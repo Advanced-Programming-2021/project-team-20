@@ -25,50 +25,29 @@ public class SendingRequestsToServer {
         //  DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"normal summon\", true, token)");
         System.out.println("***Normal Summoning Message from server received is : " + output);
-        if (output.contains("successfully")) {
-
-
-            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-            conductSwitchingTurnsForSummoningBeingCarefulForAI(output);
-
-
-        } else {
-            DuelView.setCardLocationToSendCardTo(null);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Normal Summoning Message");
-            alert.setContentText(output);
-            alert.showAndWait();
-
-        }
+        conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Normal Summoning");
     }
 
-    public void conductSwitchingTurnsForSummoningBeingCarefulForAI(String output) {
-        if (output.contains("do you") && !DuelView.isAreWePlayingWithAI()) {
-            String doYouWantToActivate = "(o you want to activate your monster card's effect?)";
-            Pattern doYouWantToActivatePattern = Pattern.compile(doYouWantToActivate);
-            Matcher matcherForDoYouWantToActivate = doYouWantToActivatePattern.matcher(output);
-            String nowItWillBeString = "now it will be (\\S+)'s turn";
-            Pattern nowItWillBePattern = Pattern.compile(nowItWillBeString);
-            Matcher match = nowItWillBePattern.matcher(output);
-            String nowItWillBeTurn = "";
-            System.out.println("WHOUUUUUUU");
-            boolean isTrue = false;
-            if (match.find()) {
-                nowItWillBeTurn = output.substring(match.start(), match.end());
-                DuelView.getShowOptionsToUser().doYouWantToAlert(nowItWillBeTurn + "\nDo you want to activate your trap or spell?");
-                isTrue = true;
-                // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
-            }
-            if (!match.find() && isTrue) {
-                System.out.println("&*&*&*&*&* YOU MUST SCATTER IF YOU SEE THIS MESSAGE");
-            }
-            if (matcherForDoYouWantToActivate.find() && !match.find()) {
-                String stringShownToUser = matcherForDoYouWantToActivate.group(1);
-                DuelView.getShowOptionsToUser().doYouWantToAlert("D" + stringShownToUser);
+    public void conductSwitchingTurnsForSummoningBeingCarefulForAI(String output, String typeOfErrorMessage) {
+        if (output.startsWith("please wait until")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Processing Message");
+            alert.setContentText(output);
+            alert.showAndWait();
+        } else {
+            if (!output.contains("successfully") && typeOfErrorMessage.contains("ummon") ||
+                typeOfErrorMessage.contains("irect") && (output.contains("this card already attack") || output.contains("you can't")) ||
+                typeOfErrorMessage.contains("ttack") && typeOfErrorMessage.contains("onster") && (output.contains("this card already attack") || output.contains("there is no card") || output.contains("you can't"))) {
 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText(typeOfErrorMessage + " Message");
+                alert.setContentText(output);
+                alert.showAndWait();
+            } else {
+                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
             }
-            System.out.println(nowItWillBeTurn + "p");
         }
     }
 
@@ -81,24 +60,7 @@ public class SendingRequestsToServer {
         System.out.println("&" + output);
         //    DuelView.getControllerForView().getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"tribute summon\", true, token)");
-        if (output.contains("successfully")) {
-
-
-            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-
-            conductSwitchingTurnsForSummoningBeingCarefulForAI(output);
-            //        DuelView.getTransition().applyTransitionForSummoningMonsterCard(cardView).play();
-            //alone
-
-
-        } else {
-            DuelView.setCardLocationToSendCardTo(null);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Tribute Summoning Message");
-            alert.setContentText(output);
-            alert.showAndWait();
-        }
+        conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Tribute Summoning");
     }
 
     public void sendSpecialSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
@@ -109,17 +71,7 @@ public class SendingRequestsToServer {
         System.out.println("&" + output);
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"special summon\", true, token)");
         System.out.println("*" + output);
-        if (output.contains("successfully")) {
-            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-            conductSwitchingTurnsForSummoningBeingCarefulForAI(output);
-        } else {
-            DuelView.setCardLocationToSendCardTo(null);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Special Summoning Message");
-            alert.setContentText(output);
-            alert.showAndWait();
-        }
+        conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Special Summoning");
     }
 
     public void sendShowGraveyardRequestToServer(CardView cardView) {
@@ -142,7 +94,6 @@ public class SendingRequestsToServer {
         if (output.contains("successfully")) {
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
         } else {
-            DuelView.setCardLocationToSendCardTo(null);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Setting Card Message");
@@ -162,7 +113,6 @@ public class SendingRequestsToServer {
         if (output.contains("activated")) {
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
         } else {
-            DuelView.setCardLocationToSendCardTo(null);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Activate Effect Message");
@@ -263,10 +213,11 @@ public class SendingRequestsToServer {
         int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
         CardView beingAttackedCardView = DuelView.getControllerForView().getCardViewByCardLocation(finalCardLocation);
         CardView attackerCardView = DuelView.getControllerForView().getCardViewByCardLocation(cardLocationSelecting);
-        JsonCreator.setIntegerString(yugiohOpponentMonsterIndex+"");
+        JsonCreator.setIntegerString(yugiohOpponentMonsterIndex + "");
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"attack \" + yugiohOpponentMonsterIndex, true, token)");
         System.out.println("*" + output);
-        conductSwitchingInAttackingMonster(output);
+        conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Attack Monster");
+     //   conductSwitchingInAttackingMonster(output);
     }
 
 
@@ -311,7 +262,8 @@ public class SendingRequestsToServer {
         //controllerForView.getFinalCardLocationOfCurrentCardBeforeServer(cardView);
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"attack direct\", true, token)");
         System.out.println("*" + output);
-        conductSwitchingTurnsInDirectAttacking(output);
+        conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Direct Attack");
+        //conductSwitchingTurnsInDirectAttacking(output);
     }
 
     public void sendFlipSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
@@ -323,19 +275,20 @@ public class SendingRequestsToServer {
         System.out.println("&&&&" + output);
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(DuelView.getToken()).getInput(\"flip-summon\", true, token)");
         System.out.println("*" + output);
-        if (!output.equals("")) {
-            if (output.contains("successfully")) {
-                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-
-            } else {
-                DuelView.setCardLocationToSendCardTo(null);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Dialog");
-                alert.setHeaderText("Flip Summoning Message");
-                alert.setContentText(output);
-                alert.showAndWait();
-            }
-        }
+        conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Flip Summoning");
+//        if (!output.equals("")) {
+//            if (output.contains("successfully")) {
+//                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+//
+//            } else {
+//                //  DuelView.setCardLocationToSendCardTo(null);
+//                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                alert.setTitle("Information Dialog");
+//                alert.setHeaderText("Flip Summoning Message");
+//                alert.setContentText(output);
+//                alert.showAndWait();
+//            }
+//        }
     }
 
     public void sendChangingCardPositionRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
@@ -358,7 +311,7 @@ public class SendingRequestsToServer {
             if (output.contains("successfully")) {
                 DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
             } else {
-                DuelView.setCardLocationToSendCardTo(null);
+                //DuelView.setCardLocationToSendCardTo(null);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText("Change Card Position Message");

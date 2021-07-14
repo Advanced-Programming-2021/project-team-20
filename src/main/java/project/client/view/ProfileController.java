@@ -98,7 +98,7 @@ public class ProfileController implements Initializable {
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatChangePassword(currentPasswordField.getText(),
                 newPasswordField.getText());
-        String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(data);
+        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
@@ -119,7 +119,7 @@ public class ProfileController implements Initializable {
         }
 
         String data = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeNickName", "newNickName",newNicknameField.getText());
-        String resultOfServer = ServerConnection.sendDataToServerAndRecieveResult(data);
+        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
 

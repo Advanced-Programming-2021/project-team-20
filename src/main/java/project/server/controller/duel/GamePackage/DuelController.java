@@ -1,6 +1,7 @@
 package project.server.controller.duel.GamePackage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import project.server.controller.duel.GamePackage.ActionConductors.AttackMonsterToMonsterConductor;
 import project.server.controller.duel.GamePackage.ActionConductors.FlipSummoningOrChangingCardPositionConductor;
@@ -48,13 +49,12 @@ public class DuelController {
     }
 
 
-
     public String getSuperAlmightyChangesString() {
         return superAlmightyChangesString;
     }
 
-    public void addStringToSuperAlmightyString(String string) {
-        DuelStarter.getGameManager().addStringToSuperAlmightyString(string);
+    public void addStringToSuperAlmightyString(String string, String token) {
+        DuelStarter.getGameManager().addStringToSuperAlmightyString(string, token);
     }
 
     public void clearSuperAlmightyString() {
@@ -90,9 +90,17 @@ public class DuelController {
     private String wholeReportToClient = "";
 
 
+    private HashMap<String, UserAndTurn> tokenToUser = new HashMap<>();
 
+    public int getTurnByToken(String token) {
+        return tokenToUser.get(token).getTurn();
+    }
 
-    public DuelController(String firstUser, String secondUser, int numberOfRounds) {
+    public DuelController(String firstUser, String secondUser, int numberOfRounds, String firstUserToken, String secondUsedToken) {
+        fakeTurn = turn = 1;
+        GameManager.getPhaseControllerByIndex(firstUserToken).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
+        tokenToUser.put(firstUserToken, new UserAndTurn(firstUser, 1));
+        tokenToUser.put(secondUsedToken, new UserAndTurn(secondUser, 2));
         this.numberOfRounds = numberOfRounds;
         currentRound = 1;
         clearAllVariablesOfThisClass();
@@ -129,7 +137,8 @@ public class DuelController {
         }
         // totalTurnsUntilNow = 1;
     }
-//private boolean firstTimeStarting;
+
+    //private boolean firstTimeStarting;
     public String getInput(String string, boolean needToMediate, String token) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         allInputs.add(string);
@@ -417,7 +426,7 @@ public class DuelController {
             return mediateOutputBeforeSendingToGameManager(
                 normalSummonController.normalSummonInputAnalysis(string, "normal summon", token), needToMediate, token);
         } else if (string.startsWith("tribute")) {
-            return mediateOutputBeforeSendingToGameManager(tributeSummonController.tributeSummonInputAnalysis(string,token),
+            return mediateOutputBeforeSendingToGameManager(tributeSummonController.tributeSummonInputAnalysis(string, token),
                 needToMediate, token);
         } else if (string.startsWith("special")) {
             return mediateOutputBeforeSendingToGameManager(specialSummonController.specialSummonInputAnalysis(string, token),
@@ -876,5 +885,22 @@ public class DuelController {
         // isAIPlaying = true;
         // }
         totalTurnsUntilNow = 1;
+    }
+}
+
+class UserAndTurn {
+    String username;
+    int turn;
+    public UserAndTurn(String user, int turn){
+        this.username = user;
+        this.turn = turn;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getTurn() {
+        return turn;
     }
 }

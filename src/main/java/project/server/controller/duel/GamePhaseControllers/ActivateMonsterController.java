@@ -252,7 +252,7 @@ public class ActivateMonsterController extends ChainController {
                     Card cardToBeAddedToHand = removeCardAndGetRemovedCard(cardLocation, token);
                     duelBoard.addCardToHand(cardToBeAddedToHand, activateMonsterTurn);
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                        + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE");
+                        + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE", token);
 
                     isClassWaitingForUserToChooseMonsterFromGraveyard = false;
                     MonsterCard mainMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(mainMonsterCardLocation);
@@ -280,7 +280,7 @@ public class ActivateMonsterController extends ChainController {
                 Card cardToBeAddedToHand = removeCardAndGetRemovedCard(cardLocation, token);
                 duelBoard.addCardToHand(cardToBeAddedToHand, activateMonsterTurn);
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                    + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE");
+                    + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE", token);
 
                 isClassWaitingForUserToChooseMonsterFromOpponentGraveyard = false;
                 MonsterCard mainMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(mainMonsterCardLocation);
@@ -337,7 +337,7 @@ public class ActivateMonsterController extends ChainController {
             duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
 
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
-                + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+                + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
 
 
 

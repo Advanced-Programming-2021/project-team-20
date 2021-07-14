@@ -463,7 +463,7 @@ public class DuelBoard {
                     .addStringToSuperAlmightyString("mainCardLocation "
                         + cardLocations.get(i).getRowOfCardLocation() + " " + cardLocations.get(i).getIndex()
                         + " is being added to graveyard zone " + 1
-                        + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+                        + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
 
             } else {
                 opponentCardsInGraveyard.add(cards.get(i));
@@ -471,7 +471,7 @@ public class DuelBoard {
                     .addStringToSuperAlmightyString("mainCardLocation "
                         + cardLocations.get(i).getRowOfCardLocation() + " " + cardLocations.get(i).getIndex()
                         + " is being added to graveyard zone " + 2
-                        + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+                        + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
 
             }
         }

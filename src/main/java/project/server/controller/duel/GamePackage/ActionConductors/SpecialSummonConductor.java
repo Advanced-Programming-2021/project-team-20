@@ -52,7 +52,7 @@ public class SpecialSummonConductor {
         duelBoard.addCardToMonsterZone(mainCard, turn, token);
 
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + correctCardLocationOfMonster.getRowOfCardLocation()
-            + " " + correctCardLocationOfMonster.getIndex() + " is being added to monster zone " + turn + " and should finally be " + uninterruptedAction.getCardPositionOfMainCard());
+            + " " + correctCardLocationOfMonster.getIndex() + " is being added to monster zone " + turn + " and should finally be " + uninterruptedAction.getCardPositionOfMainCard(), token);
 
         mainCard.setCardPosition(uninterruptedAction.getCardPositionOfMainCard());
         MonsterCard monsterCard = (MonsterCard) mainCard;

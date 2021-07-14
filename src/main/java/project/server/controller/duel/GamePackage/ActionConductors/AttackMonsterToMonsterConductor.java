@@ -123,7 +123,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) {
                 //System.out.println("FFFFFFF");
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + defendingMonsterCardLocation.getRowOfCardLocation()
-                    + " " + defendingMonsterCardLocation.getIndex() + " is being added to monster zone " + (3-actionTurn) + " and should finally be FACE_UP_DEFENSE_POSITION");
+                    + " " + defendingMonsterCardLocation.getIndex() + " is being added to monster zone " + (3 - actionTurn) + " and should finally be FACE_UP_DEFENSE_POSITION", token);
 
                 defendingMonsterCard.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);
                 isBeingAttackedMonsterFlipped = true;
@@ -147,7 +147,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             }
             return conductBattle(token);
         } else {
-            if (attackingMonsterCard != null){
+            if (attackingMonsterCard != null) {
                 attackingMonsterCard.setHasCardAlreadyAttacked(true);
             }
         }

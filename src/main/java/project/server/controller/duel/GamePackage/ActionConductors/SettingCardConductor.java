@@ -85,7 +85,7 @@ public class SettingCardConductor {
             duelBoard.removeCardByCardLocation(uninterruptedAction.getSpendingCards().get(i));
             duelBoard.addCardToGraveyard(cardsToBeTributed.get(i), turn);
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getSpendingCards().get(i).getRowOfCardLocation()
-                + " " + uninterruptedAction.getSpendingCards().get(i).getIndex() + " is being added to graveyard zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+                + " " + uninterruptedAction.getSpendingCards().get(i).getIndex() + " is being added to graveyard zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
 
         }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
@@ -97,7 +97,7 @@ public class SettingCardConductor {
             || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
             duelBoard.addCardToMonsterZone(mainCard, turn, token);
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_DOWN_MONSTER_SET_POSITION");
+                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_DOWN_MONSTER_SET_POSITION", token);
 
             mainCard.setCardPosition(CardPosition.FACE_DOWN_MONSTER_SET_POSITION);
             GameManager.getDuelControllerByIndex(token).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
@@ -105,7 +105,7 @@ public class SettingCardConductor {
             || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
             duelBoard.addCardToSpellZone(mainCard, turn, token);
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to spell zone " + turn + " and should finally be FACE_DOWN_SPELL_SET_POSITION");
+                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to spell zone " + turn + " and should finally be FACE_DOWN_SPELL_SET_POSITION", token);
             mainCard.setCardPosition(CardPosition.FACE_DOWN_SPELL_SET_POSITION);
         }
         return "set successfully";

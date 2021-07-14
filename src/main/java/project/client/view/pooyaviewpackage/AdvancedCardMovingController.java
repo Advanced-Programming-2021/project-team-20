@@ -446,6 +446,7 @@ class PredefinedActionWithParallelTransition {
     public void play() {
         //predefined
         GamePhaseButton.updateAllGamePhaseButtonsOnce();
+        // i think i should put if here that goes through end phase draw phase ... as well
         parallelTransition.play();
     }
 

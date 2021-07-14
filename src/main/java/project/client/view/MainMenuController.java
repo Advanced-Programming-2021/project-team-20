@@ -90,7 +90,7 @@ public class MainMenuController implements Initializable {
 
     public void backToLoginPage() {
         String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
-        ServerConnection.sendDataToServerAndRecieveResult(logout);
+        ServerConnection.sendDataToServerAndReceiveResult(logout);
         try {
             new MainView().changeView("/project/fxml/loginPage.fxml");
         } catch (IOException e) {
