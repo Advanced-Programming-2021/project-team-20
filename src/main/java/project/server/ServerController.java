@@ -59,7 +59,7 @@ public class ServerController {
     }
 
     private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
-            throws IOException {
+        throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
             System.out.println("=============================================");
@@ -119,7 +119,7 @@ public class ServerController {
             case "requestDuel":
                 return DuelStarter.requestGame(details);
             case "setTurnOfDuel":
-                return DuelStarter.setTurnOfGame(details);
+               return DuelStarter.setTurnOfGame(details);
             case "sendTweet":
 
             case "logout":

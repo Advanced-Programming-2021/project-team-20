@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -146,7 +145,7 @@ public class RockPaperScissorController implements Initializable {
         } else {
             selection = 3;
         }
-        new Thread(() -> {
+//        new Thread(() -> {
             String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
                     "userSelection", selection + "");
             String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
@@ -157,13 +156,8 @@ public class RockPaperScissorController implements Initializable {
                 // showAlert(deserializeResult.get("message"), "Error");
                 return;
             }
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    startDuel();
-                }
-            });
-        }).start();
+            startDuel();
+//        }).start();
     }
         // if (!canSecondPlayerSelect) {
         // player1Selection = selection;
