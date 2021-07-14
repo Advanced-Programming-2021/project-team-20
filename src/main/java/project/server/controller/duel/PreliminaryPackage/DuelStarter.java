@@ -274,6 +274,7 @@ public class DuelStarter {
                 continue;
             }
             if (result.equals("equal")) {
+                i = 0;
                 setTurnForGame.setPlayer1Selection(0);
                 setTurnForGame.setPlayer2Selection(0);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
