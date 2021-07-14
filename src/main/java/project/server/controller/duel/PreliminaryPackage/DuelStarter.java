@@ -115,14 +115,14 @@ public class DuelStarter {
     // // secondUserToken);
     // }
 
-    private static GameManager gameManager;
+    private static GameManager gameManager = gameManager = new GameManager();
 
     public static GameManager getGameManager() {
         return gameManager;
     }
 
     private static void startNewGame(User firstUser, User secondUser, int roundsNumber, Deck firstUserActiveDeck,
-            Deck secondUserActiveDeck, String firstUserToken, String secondUserToken) {
+                                     Deck secondUserActiveDeck, String firstUserToken, String secondUserToken) {
 
         ArrayList<Card> firstUserMainDeck = getMainOrSideDeckCards(firstUserActiveDeck, true);
         ArrayList<Card> firstUserSideDeck = getMainOrSideDeckCards(firstUserActiveDeck, false);
@@ -130,12 +130,11 @@ public class DuelStarter {
         ArrayList<Card> secondUserSideDeck = getMainOrSideDeckCards(secondUserActiveDeck, false);
         Collections.shuffle(firstUserMainDeck);
         Collections.shuffle(secondUserMainDeck);
-        gameManager = new GameManager();
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
-                secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber,
-                firstUserToken, secondUserToken);
-        GameManager.getDuelControllerByIndex(firstUserToken).setPlayersChangedDecks(true);
-        GameManager.getDuelControllerByIndex(firstUserToken).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
+            secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber,
+            firstUserToken, secondUserToken);
+//        GameManager.getDuelControllerByIndex(firstUserToken).setPlayersChangedDecks(true);
+//        GameManager.getDuelControllerByIndex(firstUserToken).setTurnSetedBetweenTwoPlayerWhenRoundBegin(false);
     }
 
     public static String requestGame(JsonObject details) {
@@ -158,7 +157,7 @@ public class DuelStarter {
                     if (!entry.getKey().equals(token) && entry.getValue() == numberOfRounds) {
                         addANewSetTurnForGame(token, entry.getKey());
                         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
-                                "Duel Started Successfully!");
+                            "Duel Started Successfully!");
                     }
                 }
             }
@@ -194,7 +193,7 @@ public class DuelStarter {
         for (Map.Entry<String, Integer> entry : listOfTypeOfGameThatSuggest.entrySet()) {
             if (entry.getKey().equals(firstPlayerToken) || entry.getKey().equals(secondPlayerToken)) {
                 startNewGame(firstUser, secondUser, entry.getValue(), firstUserActiveDeck, secondUserActiveDeck,
-                        firstPlayerToken, secondPlayerToken);
+                    firstPlayerToken, secondPlayerToken);
                 listOfTypeOfGameThatSuggest.remove(firstPlayerToken);
                 listOfTypeOfGameThatSuggest.remove(secondPlayerToken);
                 break;
@@ -278,10 +277,10 @@ public class DuelStarter {
                 setTurnForGame.setPlayer1Selection(0);
                 setTurnForGame.setPlayer2Selection(0);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
-                        "Players Must Repeat Game");
+                    "Players Must Repeat Game");
             } else if (result.equals("Players Must Repeat Game")) {
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
-                        "Players Must Repeat Game");
+                    "Players Must Repeat Game");
             } else {
                 String secondPlayerToken = "";
                 if (result.equals(setTurnForGame.getPlayer1Token())) {
@@ -292,7 +291,7 @@ public class DuelStarter {
                 startGame(result, secondPlayerToken);
                 user = ServerController.getUserByToken(result);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("CONFIRMATION",
-                        "Player " + user.getName() + " Must Start Game");
+                    "Player " + user.getName() + " Must Start Game");
             }
         }
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Game interrupted");

@@ -145,7 +145,7 @@ public class RockPaperScissorController implements Initializable {
         } else {
             selection = 3;
         }
-        new Thread(() -> {
+//        new Thread(() -> {
             String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
                     "userSelection", selection + "");
             String messageFromServer = ServerConnection.sendDataToServerAndRecieveResult(dataSendToServer);
@@ -155,7 +155,7 @@ public class RockPaperScissorController implements Initializable {
                 return;
             }
             startDuel();
-        });
+//        }).start();
     }
         // if (!canSecondPlayerSelect) {
         // player1Selection = selection;
