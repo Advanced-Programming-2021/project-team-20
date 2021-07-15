@@ -19,7 +19,7 @@ public class ClientMessageReceiver {
         indirectMessages.put(doubleToken, "");
     }
 
-    public static String findCommands(JsonObject details) {
+    public synchronized static String findCommands(JsonObject details) {
         String token = details.get("token").getAsString();
         String request = details.get("request").getAsString();
         String firstAdditionalString = details.get("firstAdditionalString").getAsString();
