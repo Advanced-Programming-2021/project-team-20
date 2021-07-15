@@ -51,6 +51,8 @@ public class GameManager {
                             int numberOfRounds, String firstUserToken, String secondUserToken) {
         DoubleToken doubleToken = new DoubleToken(firstUserToken, secondUserToken);
 
+//        new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds, firstUserToken, secondUserToken);
+
         duelControllerHashMap.put(doubleToken, new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds, firstUserToken, secondUserToken));
         // duelControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(firstUserToken)).startDuel(firstUserToken);
         duelBoardHashMap.put(doubleToken, new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
@@ -75,7 +77,7 @@ public class GameManager {
         uninterruptedActionsHashMap.put(doubleToken, new ArrayList<>());
         changeCardsBetweenTwoRoundsHashMap.put(doubleToken, new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
         // setTurnForGameHashMap.put(doubleToken, new SetTurnForGame());
-        aiHashMap.put(doubleToken, new AI(firstUserToken));
+//        aiHashMap.put(doubleToken, new AI(firstUserToken));
 
     }
 

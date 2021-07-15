@@ -116,7 +116,7 @@ public class DuelStarter {
     // // secondUserToken);
     // }
 
-    private static GameManager gameManager = gameManager = new GameManager();
+    private static GameManager gameManager = new GameManager();
 
     public static GameManager getGameManager() {
         return gameManager;
