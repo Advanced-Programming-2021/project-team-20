@@ -134,4 +134,12 @@ public class ScoreboardController {
             };
         });
     }
+
+    public void goToTelevision(ActionEvent actionEvent) {
+        try {
+            new MainView().changeView("/project/fxml/television.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
