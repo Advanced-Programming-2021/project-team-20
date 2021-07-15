@@ -11,6 +11,7 @@ import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.server.ServerController;
 import project.model.Utility.Utility;
+import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.non_duel.storage.Storage;
 
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class Shop {
         }
 
 
-        user = Shop.getUserWithTokenFromHashMap(token);
+        User user = ServerController.getUserByToken(token);
         if (user == null) {
             return "invalid token!";
         }
@@ -140,23 +141,18 @@ public class Shop {
     private static String buyCard(String cardName) {
         int userAmount = user.getMoney();
         if (!isItInvalidCardName(cardName)) {
-            // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "there is no card with this name");
+             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "there is no card with this name");
         }
         Card card = getCardWithName(cardName);
         int cardAmount = card.getCardPrice();
         if (cardAmount > userAmount) {
-            // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "not enough money");
+             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "not enough money");
         }
         user.setMoney(userAmount - cardAmount);
         user.addCardToAllUselessCards(cardName);
-        return "null";
-        // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "successful buy");
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", String.valueOf(user.getMoney()));
     }
 
-    private static User getUserWithTokenFromHashMap(String token) {
-        //TODO
-        return null;
-    }
 
     public HashMap<String, Integer> getNumberOfCards(String cardName) {
         HashMap<String, Integer> numberOfCards = new HashMap<>();

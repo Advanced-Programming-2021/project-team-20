@@ -1,11 +1,10 @@
 package project.server.controller.non_duel.scoreboard;
 
 import project.model.User;
+import project.server.ServerController;
 import project.server.controller.non_duel.storage.Storage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Scoreboard {
@@ -20,8 +19,27 @@ public class Scoreboard {
         if (command.equals("scoreboard show")) {
             return sortUsers();
         }
+        if (command.equals("scoreboardOnline")) {
+            return OnlineUsers();
+        }
 
         return "invalid command!";
+    }
+
+    private static String OnlineUsers() {
+        String answer = "";
+        HashMap<String, User> loginnedUsers = ServerController.getLoginedUsers();
+        Collection<User> allOnlineUsers = new ArrayList<>();
+        allOnlineUsers = loginnedUsers.values();
+        int counter = 0;
+        for (User allOnlineUser : allOnlineUsers) {
+            answer += allOnlineUser.getNickname();
+            if (counter != allOnlineUsers.size()) {
+                answer+= ",";
+            }
+            counter++;
+        }
+        return answer;
     }
 
 
