@@ -9,7 +9,6 @@ import project.server.controller.non_duel.storage.TweetStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class TweetController {
     public synchronized static String sendTweet(JsonObject details) {
@@ -39,7 +38,7 @@ public class TweetController {
     private static ArrayList<String> getLastTweets(int lastIdOfTweetReceived) {
         ArrayList<String> newMessages = new ArrayList<>();
         for (int i = lastIdOfTweetReceived; i < TweetStorage.getAllTweets().size(); i++) {
-            newMessages.add(TweetStorage.getAllTweets().get(i));
+            newMessages.add(TweetStorage.getAllTweets().get(i).toGsonString());
         }
         return newMessages;
     }

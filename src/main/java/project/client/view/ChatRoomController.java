@@ -35,14 +35,15 @@ public class ChatRoomController implements Initializable {
     }
 
     private void showMessages(String messageFromServer) {
-//        JsonParser jsonParser = new JsonParser();
-//        JsonElement jsonElement = jsonParser.parse(messageFromServer);
-//        JsonObject details = jsonElement.getAsJsonObject();
-//        JsonArray newTweets = details.getAsJsonArray("newTweets");
-//        for (int i = 0; i < newTweets.size(); i++) {
-//            JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
-//            System.out.println(jsonObject.get("message") + " " + jsonObject.get("id").getAsInt());
-//        }
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(messageFromServer);
+        JsonObject details = jsonElement.getAsJsonObject();
+        JsonArray newTweets = details.getAsJsonArray("newTweets");
+        for (int i = 0; i < newTweets.size(); i++) {
+            System.out.println(newTweets.get(i));
+            JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
+            System.out.println(jsonObject.get("message") + " " + jsonObject.get("id").getAsInt() + " " + jsonObject.get("author").getAsString());
+        }
         System.out.println(messageFromServer);
     }
 

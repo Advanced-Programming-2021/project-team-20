@@ -39,7 +39,6 @@ public class MainView extends Application {
         launch(args);
         String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
         ServerConnection.sendDataToServerAndReceiveResult(logout);
-        // storage.endProgram();
     }
 
     public void changeView(String fxml) throws IOException {
