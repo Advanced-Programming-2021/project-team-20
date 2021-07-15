@@ -61,7 +61,7 @@ public class NormalSummonConductor {
         //GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
         duelBoard.addCardToMonsterZone(mainCard, turn, token);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-            + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION");
+            + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION", token);
         mainCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
         MonsterCard monsterCard = (MonsterCard) mainCard;
         monsterCard.setCardPositionChanged(true);
@@ -169,7 +169,7 @@ public class NormalSummonConductor {
             duelBoard.addCardToMonsterZone(cardToBeSpecialSummoned, actionTurn, token);
 
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                + " " + cardLocation.getIndex() + " is being added to monster zone " + actionTurn + " and should finally be FACE_UP_DEFENSE_POSITION");
+                + " " + cardLocation.getIndex() + " is being added to monster zone " + actionTurn + " and should finally be FACE_UP_DEFENSE_POSITION", token);
 
 
             cardToBeSpecialSummoned.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);

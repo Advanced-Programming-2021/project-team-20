@@ -27,11 +27,15 @@ public class ServerController {
 
     public static void runServer() {
         Socket socket = null;
+        Socket secondSocket = null;
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
+            ServerSocket secondServerSocket = new ServerSocket(12346);
             while (true) {
                 socket = serverSocket.accept();
                 startNewThread(serverSocket, socket);
+                secondSocket = secondServerSocket.accept();
+                startNewDuelThread(secondServerSocket, secondSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,6 +45,7 @@ public class ServerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private static void startNewThread(ServerSocket serverSocket, Socket socket) {
@@ -57,6 +62,89 @@ public class ServerController {
             }
         }).start();
     }
+
+    private static void startNewDuelThread(ServerSocket serverSocket, Socket socket) {
+        new Thread(() -> {
+            try {
+                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                getDuelInputAndProcess(dataInputStream, dataOutputStream);
+                dataInputStream.close();
+                socket.close();
+                serverSocket.close();
+            } catch (IOException e) {
+                System.out.println("Connection reset");
+            }
+        }).start();
+    }
+
+    private static void getDuelInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+        throws IOException {
+        while (true) {
+            String input = dataInputStream.readUTF();
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
+            String result = processDuel(input);
+          //  if (result.equals(""))
+          //      break;
+            System.out.println("message send to client: " + result);
+            dataOutputStream.writeUTF(result);
+            dataOutputStream.flush();
+        }
+    }
+
+    private static String processDuel(String input) {
+        JsonParser parser = new JsonParser();
+        String[] inputs = input.split("\n");
+        String output = "";
+        for (int i = 0; i < inputs.length; i++) {
+            JsonElement rootNode = parser.parse(inputs[i]);
+            try {
+                if (rootNode.isJsonObject()) {
+                    JsonObject details = rootNode.getAsJsonObject();
+                    String type = details.get("type").getAsString();
+                    output += findCommand(type, details);
+                } else {
+                    output += badRequestFormat;
+                }
+                output += "\n";
+            } catch (Exception e) {
+                output += badRequestFormat;
+                output += "\n";
+            }
+        }
+        return output;
+    }
+//
+//    private static void secondStartNewThread(ServerSocket serverSocket, Socket socket) {
+//        new Thread(() -> {
+//            try {
+//                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+//                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                giveInputAndProcess(dataInputStream, dataOutputStream);
+//                dataInputStream.close();
+//                socket.close();
+//                serverSocket.close();
+//            } catch (IOException e) {
+//                System.out.println("Connection reset");
+//            }
+//        }).start();
+//    }
+//
+//    private static void giveInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+//        throws IOException {
+//        while (true) {
+//            String input = dataInputStream.readUTF();
+//            System.out.println("=============================================");
+//            System.out.println("message from client: " + input);
+//            String result = process(input);
+//            if (result.equals(""))
+//                break;
+//            System.out.println("message send to client: " + result);
+//            dataOutputStream.writeUTF(result);
+//            dataOutputStream.flush();
+//        }
+//    }
 
     private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
         throws IOException {
@@ -87,7 +175,6 @@ public class ServerController {
         } catch (Exception e) {
             return badRequestFormat;
         }
-
     }
 
     private static String findCommand(String type, JsonObject details) {

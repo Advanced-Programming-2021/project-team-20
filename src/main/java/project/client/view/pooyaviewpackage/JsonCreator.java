@@ -9,6 +9,7 @@ public class JsonCreator {
 
     public static String getResult(String string){
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "duel");
         jsonObject.addProperty("token", DuelView.getToken());
         jsonObject.addProperty("firstAdditionalString", firstAdditionalString);
         jsonObject.addProperty("integerString", integerString);

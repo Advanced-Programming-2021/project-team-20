@@ -51,7 +51,8 @@ public class GameManager {
                             int numberOfRounds, String firstUserToken, String secondUserToken) {
         DoubleToken doubleToken = new DoubleToken(firstUserToken, secondUserToken);
 
-        duelControllerHashMap.put(doubleToken, new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));
+        duelControllerHashMap.put(doubleToken, new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds, firstUserToken, secondUserToken));
+        // duelControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(firstUserToken)).startDuel(firstUserToken);
         duelBoardHashMap.put(doubleToken, new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllerHashMap.put(doubleToken, new ActivateSpellTrapController());
         activateMonsterControllerHashMap.put(doubleToken, new ActivateMonsterController());
@@ -230,62 +231,56 @@ public class GameManager {
         //setTurnForGames.add(new SetTurnForGame());
     }
 
+
     private HashMap<DoubleToken, String> superAlmightyChangesStringHashMap = new HashMap<>();
     private HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
     private HashMap<DoubleToken, String> changesInLifePointsToBeGivenToClientHashMap = new HashMap<>();
-    private String superAlmightyChangesString = "";
-   // private String availableCardLocationForUseForClient = "";
-    private String changesInLifePointsToBeGivenToClient = "";
+    // private String superAlmightyChangesString = "";
+    // private String availableCardLocationForUseForClient = "";
+    // private String changesInLifePointsToBeGivenToClient = "";
+    private String whatUsersSay = "";
+    private HashMap<DoubleToken, String> whatUsersSayHashMap = new HashMap<>();
+    private HashMap<DoubleToken, String> wholeReportToClientHashMap = new HashMap<>();
 
-
-    public String getChangesInLifePointsToBeGivenToClient() {
-        return changesInLifePointsToBeGivenToClient;
-    }
 
     public void addStringToChangesInLifePointsToBeGivenToClient(String string, String token) {
         String currentString = changesInLifePointsToBeGivenToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         currentString += string;
         currentString += "\n";
         changesInLifePointsToBeGivenToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
-        //changesInLifePointsToBeGivenToClient += string;
-        //changesInLifePointsToBeGivenToClient += "\n";
         System.out.println("If you will allow me changesInLifePoints is adding\n" + string + "\nto wholeReport");
         currentString = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         currentString += "&";
         currentString += string;
         currentString += "\n";
-        wholeReportToClientHashMap.put(DoubleToken.getDoubleTokenByOneToken(token), currentString);
-        //wholeReportToClient += "&";
-        //wholeReportToClient += string;
-        //wholeReportToClient += "\n";
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
     }
 
-    public void clearChangesInLifePointsToBeGivenToClient(String token) {
-        changesInLifePointsToBeGivenToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
-        //changesInLifePointsToBeGivenToClient = "";
-    }
 
-    public String getSuperAlmightyChangesString() {
-        return superAlmightyChangesString;
-    }
-
-    public void addStringToSuperAlmightyString(String string) {
+    public void addStringToSuperAlmightyString(String string, String token) {
+        String superAlmightyChangesString = superAlmightyChangesStringHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         superAlmightyChangesString += string;
         superAlmightyChangesString += "\n";
+        superAlmightyChangesStringHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), superAlmightyChangesString);
         System.out.println("If you will allow me superAlmightyString is adding\n" + string + "\nto wholeReport");
+        String wholeReportToClient = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         wholeReportToClient += string;
         wholeReportToClient += "\n";
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), wholeReportToClient);
     }
 
-    public void clearSuperAlmightyString(String token) {
-        superAlmightyChangesStringHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
-        //superAlmightyChangesString = "";
-    }
 
-   // private HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
+    // private HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
 
     public String getAvailableCardLocationForUseForClient(String token) {
-        return availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        String[] lines = availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n");
+        int linesRead = DoubleToken.getDoubleTokenByOneToken(token).getLinesReadByToken(token);
+        String output = "";
+        output += lines[linesRead];
+        output += "\n";
+        output += lines[linesRead + 1];
+        output += "\n";
+        return output;
     }
 
     public void addStringToAvailableCardLocationForUseForClient(CardLocation string, String token) {
@@ -302,69 +297,67 @@ public class GameManager {
     }
 
     public void clearAvailableCardLocationForUseForClient(String token) {
-        int timesSeenNextLine = 0;
-        while (timesSeenNextLine < 2) {
-            if (availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).charAt(0) == '\n') {
-                timesSeenNextLine++;
-            }
-            availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).replace(
-                availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)),
-                availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).substring(1));
-        }
-
-        // availableCardLocationForUseForClient = "";
+        DoubleToken doubleToken = DoubleToken.getDoubleTokenByOneToken(token);
+        doubleToken.setLinesReadByToken(token, doubleToken.getLinesReadByToken(token) + 2);
     }
 
-
-    private String whatUsersSay = "";
-    private HashMap<DoubleToken, String> whatUsersSayHashMap = new HashMap<>();
-    private HashMap<DoubleToken, String> wholeReportToClientHashMap = new HashMap<>();
 
     public void addStringToWhatUsersSay(String string, String token) {
         String currentString = whatUsersSayHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         currentString += string;
         currentString += "\n";
-        whatUsersSayHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
-        whatUsersSayHashMap.put(DoubleToken.getDoubleTokenByOneToken(token), currentString);
+        //whatUsersSayHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+        whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
         System.out.println("If you will allow me whatUsersSay is adding\n" + string + "\nto wholeReport");
         currentString = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         currentString += string;
         currentString += "\n";
-        wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
-        wholeReportToClientHashMap.put(DoubleToken.getDoubleTokenByOneToken(token), currentString);
+        //wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
         //wholeReportToClient += string;
         //wholeReportToClient += "\n";
     }
 
-    public void clearWhatUsersSay(String token) {
-        whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
-        //whatUsersSay = "";
-    }
-
-    private String wholeReportToClient = "";
 
     public String getWholeReportToClient(String token) {
-        return wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        String[] lines = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n");
+        int linesRead = DoubleToken.getDoubleTokenByOneToken(token).getLinesReadFromWholeReportToClientByToken(token);
+        String output = "";
+        // int newLinesReading = 0;
+        for (int i = 0; i < lines.length - linesRead; i++) {
+            output += lines[linesRead + i];
+            output += "\n";
+        }
+        return output;
     }
 
     public void addStringToWholeReportToClient(String string, String token) {
         String currentString = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         currentString += string;
         currentString += "\n";
-        wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
-        wholeReportToClientHashMap.put(DoubleToken.getDoubleTokenByOneToken(token), currentString);
+        //wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
+    }
 
-//        wholeReportToClient += string;
-//        wholeReportToClient += "\n";
+    public void clearChangesInLifePointsToBeGivenToClient(String token) {
+        changesInLifePointsToBeGivenToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+        //changesInLifePointsToBeGivenToClient = "";
+    }
+
+    public void clearSuperAlmightyString(String token) {
+        superAlmightyChangesStringHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+    }
+
+    public void clearWhatUsersSay(String token) {
+        whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
     }
 
     public void clearWholeReportToClient(String token) {
         // maybe first method should be cleared sooner, in its original function
-        // clearAvailableCardLocationForUseForClient();
         clearChangesInLifePointsToBeGivenToClient(token);
         clearSuperAlmightyString(token);
-        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
-        //wholeReportToClient ="";
+        DoubleToken doubleToken = DoubleToken.getDoubleTokenByOneToken(token);
+        doubleToken.setLinesReadFromWholeReportToClientByToken(token, wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n").length);
     }
 
 
@@ -374,12 +367,54 @@ public class GameManager {
 class DoubleToken {
     private String firstPlayerToken;
     private String secondPlayerToken;
+    private int firstLinesRead;
+    private int secondLinesRead;
     private static ArrayList<DoubleToken> doubleTokens = new ArrayList<>();
+    private int firstLinesReadFromWholeReportToClient;
+    private int secondLinesReadFromWholeReportToClient;
+    //actually minus one
 
     public DoubleToken(String firstPlayerToken, String secondPlayerToken) {
         this.firstPlayerToken = firstPlayerToken;
         this.secondPlayerToken = secondPlayerToken;
+        this.firstLinesRead = 0;
+        this.secondLinesRead = 0;
+        this.firstLinesReadFromWholeReportToClient = 0;
+        this.secondLinesReadFromWholeReportToClient = 0;
         doubleTokens.add(this);
+        ClientMessageReceiver.addDoubleTokenToIndirectMessages(this);
+    }
+
+    public int getLinesReadByToken(String token) {
+        if (firstPlayerToken.equals(token)) {
+            return firstLinesRead;
+        } else {
+            return secondLinesRead;
+        }
+    }
+
+    public void setLinesReadByToken(String token, int linesRead) {
+        if (firstPlayerToken.equals(token)) {
+            this.firstLinesRead = linesRead;
+        } else {
+            this.secondLinesRead = linesRead;
+        }
+    }
+
+    public int getLinesReadFromWholeReportToClientByToken(String token) {
+        if (firstPlayerToken.equals(token)) {
+            return firstLinesReadFromWholeReportToClient;
+        } else {
+            return secondLinesReadFromWholeReportToClient;
+        }
+    }
+
+    public void setLinesReadFromWholeReportToClientByToken(String token, int linesRead) {
+        if (firstPlayerToken.equals(token)) {
+            this.firstLinesReadFromWholeReportToClient = linesRead;
+        } else {
+            this.secondLinesReadFromWholeReportToClient = linesRead;
+        }
     }
 
     public String getFirstPlayerToken() {

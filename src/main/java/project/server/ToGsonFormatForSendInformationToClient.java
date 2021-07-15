@@ -1,14 +1,12 @@
 package project.server;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.util.*;
+
+import com.google.gson.*;
+
 import project.model.Deck;
 import project.model.User;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import project.server.controller.non_duel.storage.TweetStorage;
 
 public class ToGsonFormatForSendInformationToClient {
     private static String successful = "Successful";
@@ -43,7 +41,7 @@ public class ToGsonFormatForSendInformationToClient {
         return jsonObject.toString();
     }
 
-    private static String toGsonFormatUserInformation(User user){
+    private static String toGsonFormatUserInformation(User user) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", user.getName());
         jsonObject.addProperty("nickname", user.getNickname());
@@ -90,9 +88,22 @@ public class ToGsonFormatForSendInformationToClient {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatForAcceptPlaying(String message){
+    public static String toGsonFormatForAcceptPlaying(String message) {
 
         return null;
     }
 
+    public static String toGsonFormatForSendTweetsToClient(ArrayList<String> newTweets) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "Successful");
+        jsonObject.addProperty("message", "Tweet Sent Successfully!");
+        jsonObject.add("newTweets", new Gson().toJsonTree(newTweets).getAsJsonArray());
+        return jsonObject.toString();
+    }
+
+    public static String toGsonFormatForSentLastTweetsToClient(ArrayList<String> newTweets) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("newTweets", new Gson().toJsonTree(newTweets).getAsJsonArray());
+        return jsonObject.toString();
+    }
 }

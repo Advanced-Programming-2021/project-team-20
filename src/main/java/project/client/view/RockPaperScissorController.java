@@ -158,32 +158,32 @@ public class RockPaperScissorController implements Initializable {
             startDuel();
 //        }).start();
     }
-        // if (!canSecondPlayerSelect) {
-        // player1Selection = selection;
-        // canSecondPlayerSelect = true;
-        // if (secondPlayerName.equals("AI")) {
-        // handleAIPlayerSelection();
-        // } else {
-        // CustomDialog customDialog = new CustomDialog("CONFIRMATION",
-        // "Now " + secondPlayerName + " Must choose");
-        // customDialog.openDialog();
-        // backRectanglesToFirstPlace();
-        // }
+    // if (!canSecondPlayerSelect) {
+    // player1Selection = selection;
+    // canSecondPlayerSelect = true;
+    // if (secondPlayerName.equals("AI")) {
+    // handleAIPlayerSelection();
+    // } else {
+    // CustomDialog customDialog = new CustomDialog("CONFIRMATION",
+    // "Now " + secondPlayerName + " Must choose");
+    // customDialog.openDialog();
+    // backRectanglesToFirstPlace();
+    // }
 
-        // backRectanglesToFirstPlace();
-        // attackChosenRectangles();
-        // if (player1Selection == player2Selection) {
-        //     showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION", false);
-        //     player1Selection = 0;
-        //     player2Selection = 0;
-        //     didPlayer2Select = false;
-        //     canSecondPlayerSelect = false;
-        //     didAnyOneWin = false;
-        // } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
-        //         || (player1Selection == 3 && player2Selection == 2)) {
-        //     try { // if game created before
-        //         setTurn(1, token);
-        //         System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    // backRectanglesToFirstPlace();
+    // attackChosenRectangles();
+    // if (player1Selection == player2Selection) {
+    //     showAlert("BOTH PLAYERS ARE EQUAL, REPEAT THIS GAME AGAIN", "CONFIRMATION", false);
+    //     player1Selection = 0;
+    //     player2Selection = 0;
+    //     didPlayer2Select = false;
+    //     canSecondPlayerSelect = false;
+    //     didAnyOneWin = false;
+    // } else if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
+    //         || (player1Selection == 3 && player2Selection == 2)) {
+    //     try { // if game created before
+    //         setTurn(1, token);
+    //         System.out.println(firstPlayerName + "   when player 1\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     // didPlayer2Select = true;
     // pauseTransition();
     // handleResult();

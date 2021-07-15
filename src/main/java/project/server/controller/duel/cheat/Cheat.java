@@ -78,7 +78,7 @@ public class Cheat {
                 GameManager.getDuelBoardByIndex(token).addCardToHand(cardsInGraveYard.get(i), turn);
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " +
                     (turn == 1 ? "ALLY_GRAVEYARD_ZONE" : "OPPONENT_GRAVEYARD_ZONE")
-                    + " " + (i + 1) + " is being added to hand zone " + turn + " and should finally be NO_CHANGE");
+                    + " " + (i + 1) + " is being added to hand zone " + turn + " and should finally be NO_CHANGE", token);
 
                 cardsInGraveYard.remove(i);
                 return cardname + " added to hand successfully!";
@@ -135,7 +135,7 @@ public class Cheat {
             GameManager.getDuelBoardByIndex(token).addCardToHand((MonsterCard) monster.clone(), turn);
             AdvancedCardMovingController.setNewlyAddedCard((MonsterCard) monster.clone());
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
-                + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
+                + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname, token);
 
             return cardname + " added to hand successfully!";
         }
@@ -147,13 +147,13 @@ public class Cheat {
                 GameManager.getDuelBoardByIndex(token).addCardToHand((SpellCard) spellCard.clone(), turn);
                 AdvancedCardMovingController.setNewlyAddedCard((SpellCard) spellCard.clone());
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
-                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
+                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname, token);
             } else {
                 TrapCard trapCard = (TrapCard) allSpellAndTrapCards.get(cardName);
                 GameManager.getDuelBoardByIndex(token).addCardToHand((TrapCard) trapCard.clone(), turn);
                 AdvancedCardMovingController.setNewlyAddedCard((TrapCard) trapCard.clone());
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + "UNKNOWN"
-                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname);
+                    + " " + "UNKNOWN" + " is being added to hand zone " + turn + " and should finally be NO_CHANGE " + "cardName is " + cardname, token);
             }
             return cardname + " added to hand successfully!";
         }

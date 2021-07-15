@@ -247,7 +247,7 @@ public class PhaseController {
         duelBoard.removeCardByCardLocation(cardLocation);
         duelBoard.addCardToHand(card, turn);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-            + " " + cardLocation.getIndex() + " is being added to hand zone " + turn + " and should finally be NO_CHANGE");
+            + " " + cardLocation.getIndex() + " is being added to hand zone " + turn + " and should finally be NO_CHANGE", token);
 
         return "card with name " + card.getCardName() + " is added to hand\n";
     }
@@ -293,7 +293,7 @@ public class PhaseController {
             duelBoard.removeCardByCardLocation(cardLocation);
             duelBoard.addCardToHand(card, 3 - turn);
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                + " " + cardLocation.getIndex() + " is being added to hand zone " + (3 - turn) + " and should finally be NO_CHANGE");
+                + " " + cardLocation.getIndex() + " is being added to hand zone " + (3 - turn) + " and should finally be NO_CHANGE", token);
 
             drawingCardSuccessful = true;
         } else {
@@ -341,13 +341,13 @@ public class PhaseController {
                     duelBoard.addCardToMonsterZone(card, 1, token);
 
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 1 + " and should finally be NO_CHANGE");
+                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 1 + " and should finally be NO_CHANGE", token);
 
                 } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
                     duelBoard.addCardToMonsterZone(card, 2, token);
 
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 2 + " and should finally be NO_CHANGE");
+                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 2 + " and should finally be NO_CHANGE", token);
 
                 }
             }

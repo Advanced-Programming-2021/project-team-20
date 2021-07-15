@@ -42,7 +42,7 @@ public class TributeSummonConductor {
         duelBoard.addCardToMonsterZone(mainCard, turn, token);
 
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-            + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION");
+            + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION", token);
 
         mainCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
         MonsterCard monsterCard = (MonsterCard) mainCard;

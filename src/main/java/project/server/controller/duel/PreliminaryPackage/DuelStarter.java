@@ -239,8 +239,10 @@ public class DuelStarter {
         int userSelection;
         try {
             token = details.get("token").getAsString();
-            userSelection = details.get("userSelection").getAsInt();
+            userSelection = Integer.parseInt(details.get("userSelection").getAsString());
         } catch (Exception e) {
+            System.out.println("token is null " + (details.get("token") == null));
+            System.out.println("userSelection is null " + (details.get("userSelection") == null));
             return ServerController.getBadRequestFormat();
         }
 

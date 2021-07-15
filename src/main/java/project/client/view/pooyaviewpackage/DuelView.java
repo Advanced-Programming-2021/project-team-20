@@ -18,8 +18,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import project.client.CardsStorage;
+import project.client.view.LoginController;
 import project.model.PhaseInGame;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.server.controller.duel.cheat.Cheat;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.cardData.General.*;
@@ -46,6 +48,10 @@ public class DuelView {
         DuelView.isMyTurn = isMyTurn;
     }
 
+    public static void setToken(String token) {
+        DuelView.token = token;
+    }
+
     private static Stage stage;
     private static double stageWidth;
     private static double stageHeight;
@@ -69,7 +75,7 @@ public class DuelView {
     private static CardLocation cardLocationSelecting;
     private static boolean isWaitingForRightClickOptionListHit;
     private static Group allCards;
-    private static CardLocation cardLocationToSendCardTo;
+   // private static CardLocation cardLocationToSendCardTo;
     //private static NextPhaseButton nextPhaseButton;
     private static Transition transition;
     private static ControllerForView controllerForView;
@@ -141,7 +147,7 @@ public class DuelView {
 
     private static boolean areWePlayingWithAI;
 
-    private static String token;
+    private static volatile String token = "nothing";
 
     public static String getToken() {
         return token;
@@ -604,6 +610,11 @@ public class DuelView {
 
     }
 
+    private static String myOwnUsername;
+    private static String myOwnNickname;
+    private static String myOpponentUsername;
+    private static String myOpponentNickname;
+
     public void checkCheatCommands(KeyEvent keyEvent) {
         Long currentTimeKeyPressed = System.currentTimeMillis();
         if (currentTimeKeyPressed - lastTimeKeyPressed > 20000) {
@@ -638,9 +649,32 @@ public class DuelView {
         }
         // System.out.println(keyEvent.getText());
     }
-    public static MediaPlayer getBackgroundMusic(){
+
+    public static MediaPlayer getBackgroundMusic() {
         return backgroundMusic;
     }
+
+    private static ArrayList<Card> allyCardsInHand;
+    private static ArrayList<Card> allyCardsInDeck;
+    private static ArrayList<Card> opponentCardsInHand;
+    private static ArrayList<Card> opponentCardsInDeck;
+
+    public static ArrayList<Card> getAllyCardsInHand() {
+        return allyCardsInHand;
+    }
+
+    public static ArrayList<Card> getAllyCardsInDeck() {
+        return allyCardsInDeck;
+    }
+
+    public static ArrayList<Card> getOpponentCardsInHand() {
+        return opponentCardsInHand;
+    }
+
+    public static ArrayList<Card> getOpponentCardsInDeck() {
+        return opponentCardsInDeck;
+    }
+
     private void prepareObjectsForWorking() {
         battleFieldView = new BattleFieldView();
         URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
@@ -833,8 +867,30 @@ public class DuelView {
 
         // System.out.println(" what upper left x  we see is " + battleFieldView.getUpperLeftX());
         // System.out.println("what height we see is " + battleFieldView.getHeight());
-        ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(token).getAllyCardsInHand();
-        ArrayList<Card> allyCardsInDeck = GameManager.getDuelBoardByIndex(token).getAllyCardsInDeck();
+        allyCardsInHand = new ArrayList<>();
+        allyCardsInDeck = new ArrayList<>();
+        String cardsInMyHand = JsonCreator.getResult("give cards in my hand at the beginning of game");
+        System.out.println("cardsInMyHand =\n"+cardsInMyHand);
+        String cardsInOpponentHand = JsonCreator.getResult("give cards in my opponent hand at the beginning of game");
+        System.out.println("cardsInOpponentHand =\n"+cardsInOpponentHand);
+        String cardsInMyDeck = JsonCreator.getResult("give cards in my deck at the beginning of game");
+        System.out.println("cardsInMyDeck =\n"+cardsInMyDeck);
+        String cardsInOpponentDeck = JsonCreator.getResult("give cards in my opponent deck at the beginning of game");
+        System.out.println("cardsInMyOpponentDeck =\n"+cardsInOpponentDeck);
+        String stringForCardReceiver = "(\\*([^!]+)\\*)";
+        Pattern pattern = Pattern.compile(stringForCardReceiver);
+        Matcher matcher = pattern.matcher(cardsInMyHand);
+        while (matcher.find()) {
+            System.out.println("matcher.group(2) = "+matcher.group(2));
+            allyCardsInHand.add(CardsStorage.getCardByName(matcher.group(2)));
+        }
+        matcher = pattern.matcher(cardsInMyDeck);
+        while (matcher.find()){
+            System.out.println("matcher.group(2) = "+matcher.group(2));
+            allyCardsInDeck.add(CardsStorage.getCardByName(matcher.group(2)));
+        }
+        //ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(token).getAllyCardsInHand();
+        //ArrayList<Card> allyCardsInDeck = GameManager.getDuelBoardByIndex(token).getAllyCardsInDeck();
         for (int i = 0; i < allyCardsInDeck.size() + allyCardsInHand.size(); i++) {
             boolean inHand = false;
             if (i < allyCardsInHand.size()) {
@@ -858,12 +914,12 @@ public class DuelView {
         }
 
 
-        String firstUsername = GameManager.getDuelControllerByIndex(token).getPlayingUsernameByTurn(1);
-        String secondUsername = GameManager.getDuelControllerByIndex(token).getPlayingUsernameByTurn(2);
-        String firstNickname = Storage.getUserByName(firstUsername).getNickname();
-        String secondNickname = Storage.getUserByName(secondUsername).getNickname();
-        Image firstPlayerImage = Storage.getUserByName(firstUsername).getImage();
-        Image secondPlayerImage = Storage.getUserByName(secondUsername).getImage();
+        String firstUsername = LoginController.getOnlineUser().getName();
+        String secondUsername = JsonCreator.getResult("give my opponent username");
+        String firstNickname = LoginController.getOnlineUser().getNickname();
+        String secondNickname = JsonCreator.getResult("give my opponent nickname");
+        Image firstPlayerImage = LoginController.getOnlineUser().getImage();
+        Image secondPlayerImage = CardsStorage.getCardByName("Mirror Force").getImage();
 
 
         firstPlayerUsernameLabel = new Label("Username: " + firstUsername);
@@ -896,9 +952,20 @@ public class DuelView {
             secondPlayerAvatar.setFill(new ImagePattern(secondPlayerImage));
         }
 
-
-        ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(token).getOpponentCardsInHand();
-        ArrayList<Card> opponentCardsInDeck = GameManager.getDuelBoardByIndex(token).getOpponentCardsInDeck();
+        opponentCardsInHand = new ArrayList<>();
+        opponentCardsInDeck = new ArrayList<>();
+        matcher = pattern.matcher(cardsInOpponentHand);
+        while (matcher.find()) {
+            System.out.println("matcher.group(2) = "+matcher.group(2));
+            opponentCardsInHand.add(CardsStorage.getCardByName(matcher.group(2)));
+        }
+        matcher = pattern.matcher(cardsInOpponentDeck);
+        while (matcher.find()){
+            System.out.println("matcher.group(2) = "+matcher.group(2));
+            opponentCardsInDeck.add(CardsStorage.getCardByName(matcher.group(2)));
+        }
+        // ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(token).getOpponentCardsInHand();
+        // ArrayList<Card> opponentCardsInDeck = GameManager.getDuelBoardByIndex(token).getOpponentCardsInDeck();
         for (int i = 0; i < opponentCardsInDeck.size() + opponentCardsInHand.size(); i++) {
             if (i < opponentCardsInHand.size()) {
                 currentCardForView = opponentCardsInHand.get(i);
@@ -1234,9 +1301,9 @@ public class DuelView {
         return allCards;
     }
 
-    public static CardLocation getCardLocationToSendCardTo() {
-        return cardLocationToSendCardTo;
-    }
+//    public static CardLocation getCardLocationToSendCardTo() {
+//        return cardLocationToSendCardTo;
+//    }
 
 //    public static NextPhaseButton getNextPhaseButton() {
 //        return nextPhaseButton;
@@ -1392,9 +1459,9 @@ public class DuelView {
         DuelView.allCards = allCards;
     }
 
-    public static void setCardLocationToSendCardTo(CardLocation cardLocationToSendCardTo) {
-        DuelView.cardLocationToSendCardTo = cardLocationToSendCardTo;
-    }
+//    public static void setCardLocationToSendCardTo(CardLocation cardLocationToSendCardTo) {
+//        DuelView.cardLocationToSendCardTo = cardLocationToSendCardTo;
+//    }
 
     public static CardLocation getCardLocationBeingDragged() {
         return cardLocationBeingDragged;
@@ -1418,20 +1485,20 @@ public class DuelView {
         // System.out.println("ALLY CARDS IN DECK GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).size(); i++) {
             // System.out.println(((project.client.modelsforview.CardView) controllerForView
-                // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).get(i)).getCard().getCardName());
-         }
+            // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).get(i)).getCard().getCardName());
+        }
 
         // System.out.println("ALLY CARDS IN HAND GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).size(); i++) {
             // System.out.println(((project.client.modelsforview.CardView) controllerForView
-                // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).get(i)).getCard().getCardName());
+            // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).get(i)).getCard().getCardName());
         }
 
         // System.out.println("ALLY CARDS IN GRAVEYARD GROUP:");
         for (int i = 0; i < controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE)
             .size(); i++) {
             // System.out.println(((project.client.modelsforview.CardView) controllerForView
-                // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE).get(i)).getCard().getCardName());
+            // .giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE).get(i)).getCard().getCardName());
         }
 
         // System.out.println("OPPONENT CARDS IN DECK GROUP:");
