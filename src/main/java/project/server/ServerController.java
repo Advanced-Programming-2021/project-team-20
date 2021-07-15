@@ -10,6 +10,7 @@ import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.profile.Profile;
 import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.non_duel.deckCommands.DeckCommands;
+import project.server.controller.non_duel.tweets.TweetController;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -207,8 +208,12 @@ public class ServerController {
                 return DuelStarter.requestGame(details);
             case "setTurnOfDuel":
                 return DuelStarter.setTurnOfGame(details);
-            case "sendTweet":
+            case "changeCardsBetweenTwoRounds":
 
+            case "sendTweet":
+                return TweetController.sendTweet(details);
+            case "getLastTweets":
+                return TweetController.getLastTweets(details);
             case "logout":
                 return logoutUser(details);
             case "duel":
@@ -223,7 +228,7 @@ public class ServerController {
         try {
             token = details.get("token").getAsString();
         } catch (Exception e) {
-            System.out.println("Exception in logoutUser");
+            System.out.println("Exception in logout User");
         }
         if (loginedUsers.containsKey(token)) {
             loginedUsers.remove(token);
@@ -258,7 +263,4 @@ public class ServerController {
         return userNotLogined;
     }
 
-    public static void setLoginedUser(String string, User user) {
-        loginedUsers.put(string, user);
-    }
 }

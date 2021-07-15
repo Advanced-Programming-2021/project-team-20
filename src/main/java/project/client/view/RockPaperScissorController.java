@@ -145,18 +145,17 @@ public class RockPaperScissorController implements Initializable {
             selection = 3;
         }
 //        new Thread(() -> {
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
-            "userSelection", selection + "");
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
-        deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-        System.out.println("Message from servers is: " + messageFromServer);
-        if (deserializeResult.get("type").equals("Error")) {
-            System.out.println("error in starting duel");
-            // showAlert(deserializeResult.get("message"), "Error");
-            return;
-        }
-        DuelView.setToken(LoginController.getToken());
-        startDuel();
+            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
+                    "userSelection", selection + "");
+            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+            deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+            System.out.println("Message from servers is: "+messageFromServer);
+            if (deserializeResult.get("type").equals("Error")) {
+                System.out.println("error in starting duel");
+                // showAlert(deserializeResult.get("message"), "Error");
+                return;
+            }
+            startDuel();
 //        }).start();
     }
     // if (!canSecondPlayerSelect) {

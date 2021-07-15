@@ -357,9 +357,7 @@ public class Storage {
 
         ArrayList<String> filenames = new ArrayList<>();
         File directory = new File(addressOfStorage + "Users\\");
-        System.out.println(directory.exists());
         File[] contents = directory.listFiles();
-       // System.out.println(contents.length);
         for (File f : contents) {
             filenames.add(f.getName() + "\\");
         }
@@ -491,10 +489,6 @@ public class Storage {
     public static void addCardToNewCardsCrated(Card newCard) {
         newCardsCreated.put(newCard.getCardName(), newCard);
     }
-
-    // public static HashMap<User, String> getNewImagesThatChanges() {
-    // return newImagesThatChanges;
-    // }
 
     public static Card getUnknownCard() {
         return unknownCard;
