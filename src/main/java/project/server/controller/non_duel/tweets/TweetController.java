@@ -1,15 +1,12 @@
 package project.server.controller.non_duel.tweets;
 
-import com.google.gson.*;
-
+import com.google.gson.JsonObject;
 import project.model.User;
 import project.server.ServerController;
-import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.non_duel.storage.TweetStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class TweetController {
     public synchronized static String sendTweet(JsonObject details) {
@@ -33,13 +30,14 @@ public class TweetController {
         hashMapTweet.put("message", message);
         TweetStorage.sendTweet(hashMapTweet);
 
-        return ToGsonFormatForSendInformationToClient.toGsonFormatForSendTweetsToClient(getLastTweets(lastIdOfTweetReceived));
+//        return ToGsonFormatForSendInformationToClient.toGsonFormatForSendTweetsToClient(getLastTweets(lastIdOfTweetReceived));
+        return null;
     }
 
     private static ArrayList<String> getLastTweets(int lastIdOfTweetReceived) {
         ArrayList<String> newMessages = new ArrayList<>();
         for (int i = lastIdOfTweetReceived; i < TweetStorage.getAllTweets().size(); i++) {
-            newMessages.add(TweetStorage.getAllTweets().get(i));
+//            newMessages.add(TweetStorage.getAllTweets().get(i));
         }
         return newMessages;
     }
@@ -57,6 +55,7 @@ public class TweetController {
         if (user == null) {
             return ServerController.getUserNotLogined();
         }
-        return ToGsonFormatForSendInformationToClient.toGsonFormatForSentLastTweetsToClient(getLastTweets(lastIdOfTweets));
+//        return ToGsonFormatForSendInformationToClient.toGsonFormatForSentLastTweetsToClient(getLastTweets(lastIdOfTweets));
+        return null;
     }
 }

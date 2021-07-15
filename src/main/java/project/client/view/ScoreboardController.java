@@ -9,12 +9,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.Components.Person;
+import project.client.view.Components.PersonForOnlineUsers;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 public class ScoreboardController {
 
+    @FXML
+    private TableView tableViewForOnlineUsers;
     @FXML
     private Button fillButton;
     @FXML
@@ -72,6 +75,33 @@ public class ScoreboardController {
 
         String userNickname = LoginController.getOnlineUser().getNickname();
         customiseFactory((TableColumn<Person, String>) tableView.getColumns().get(1), userNickname);
+
+
+        //Show OnlineUsers
+        String messageForOnlineUsers = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers();
+        String allPeoplemessageForOnlineUsers = ServerConnection.sendDataToServerAndReceiveResult(messageForOnlineUsers);
+        String[] allPeopleSplitedmessageForOnlineUsers = allPeoplemessageForOnlineUsers.split(",");
+        PersonForOnlineUsers[] personmessageForOnlineUsers = new PersonForOnlineUsers[allPeopleSplitedmessageForOnlineUsers.length];
+        for (int i = 0; i < personmessageForOnlineUsers.length; i++) {
+            String nickname = allPeopleSplitedmessageForOnlineUsers[i];
+            personmessageForOnlineUsers[i] = new PersonForOnlineUsers(nickname);
+        }
+
+        final ObservableList<PersonForOnlineUsers> datamessageForOnlineUsers = FXCollections.observableArrayList(
+            personmessageForOnlineUsers
+        );
+
+
+        TableColumn<Person, String> usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
+        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        usernameColumnmessageForOnlineUsers.setStyle( "-fx-alignment: CENTER;");
+        usernameColumnmessageForOnlineUsers.setMinWidth(600);
+
+        ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
+
+        tableViewForOnlineUsers.setItems(datamessageForOnlineUsers);
+        tableViewForOnlineUsers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableViewForOnlineUsers.getColumns().addAll(usernameColumnmessageForOnlineUsers);
     }
     public void returnToMainMenu(ActionEvent actionEvent) {
         try {

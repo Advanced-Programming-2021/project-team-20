@@ -17,17 +17,17 @@ public class TweetStorage {
 
     public static void startProgram() {
 
-        File directory = new File(tweetsFolderPath);
-        File[] contents = directory.listFiles();
-        numberOfTweetsSavedInFile = contents.length;
-        for (File f : contents) {
-            try {
-                Scanner scanner = new Scanner(f);
-//                allTweets.add(scanner.nextLine());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        File directory = new File(tweetsFolderPath);
+//        File[] contents = directory.listFiles();
+//        numberOfTweetsSavedInFile = contents.length;
+//        for (File f : contents) {
+//            try {
+//                Scanner scanner = new Scanner(f);
+////                allTweets.add(scanner.nextLine());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public static void sendTweet(HashMap<String, String> tweet) {

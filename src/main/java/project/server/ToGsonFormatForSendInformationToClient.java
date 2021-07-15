@@ -1,12 +1,14 @@
 package project.server;
 
-import java.util.*;
-
-import com.google.gson.*;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import project.model.Deck;
 import project.model.User;
-import project.server.controller.non_duel.storage.TweetStorage;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ToGsonFormatForSendInformationToClient {
     private static String successful = "Successful";
@@ -41,7 +43,7 @@ public class ToGsonFormatForSendInformationToClient {
         return jsonObject.toString();
     }
 
-    private static String toGsonFormatUserInformation(User user) {
+    private static String toGsonFormatUserInformation(User user){
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", user.getName());
         jsonObject.addProperty("nickname", user.getNickname());
@@ -88,30 +90,9 @@ public class ToGsonFormatForSendInformationToClient {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatForAcceptPlaying(String message) {
+    public static String toGsonFormatForAcceptPlaying(String message){
 
         return null;
     }
 
-    public static String toGsonFormatForSendTweetsToClient(ArrayList<String> newTweets) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "Successful");
-        jsonObject.addProperty("message", "Tweet Sent Successfully!");
-        jsonObject.addProperty("newTweets", new Gson().toJsonTree(newTweets).getAsJsonArray().toString());
-        return jsonObject.toString();
-    }
-
-    private static String getLastTweetsById(int lastIdOfTweets) {
-        List<String> newMessages = new ArrayList<>();
-        for (int i = lastIdOfTweets; i < TweetStorage.getAllTweets().size(); i++) {
-            newMessages.add(TweetStorage.getAllTweets().get(i));
-        }
-        return new Gson().toJsonTree(newMessages).getAsJsonArray().toString();
-    }
-
-    public static String toGsonFormatForSentLastTweetsToClient(ArrayList<String> newTweets) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("newTweets", new Gson().toJsonTree(newTweets).getAsJsonArray().toString());
-        return jsonObject.toString();
-    }
 }

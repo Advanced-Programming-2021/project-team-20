@@ -1,11 +1,7 @@
 package project.client;
 
-import com.google.gson.*;
-
+import com.google.gson.JsonObject;
 import project.client.view.LoginController;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ToGsonFormatToSendDataToServer {
     public static String toGsonFormatRegister(String userName, String nickName, String password) {
@@ -90,4 +86,9 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
+    public static String toGsonFormatGetScoreboardInformationOfONlineUsers() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "scoreboardOnline");
+        return jsonObject.toString();
+    }
 }
