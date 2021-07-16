@@ -70,9 +70,7 @@ public class ShopController implements Initializable {
         SongPlayer.getInstance().pauseMusic();
         SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/Shop.mp3");
 
-        //TODO: get user from server with token
         user = LoginController.getOnlineUser();
-//        user = ShopController.getUserFromServerWithToken();
 
         if (rectanglesToShowCards == null) {
             rectanglesToShowCards = UIStorage.getAllShopRectangles();
