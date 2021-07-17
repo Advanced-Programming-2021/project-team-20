@@ -24,7 +24,11 @@ public class TweetStorage {
         for (File f : contents) {
             try {
                 Scanner scanner = new Scanner(f);
-                addTweetToAllTweets(scanner.nextLine());
+                StringBuilder fileInformation = new StringBuilder();
+                while (scanner.hasNextLine()) {
+                    fileInformation.append(scanner.nextLine());
+                }
+                addTweetToAllTweets(fileInformation.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -33,7 +37,6 @@ public class TweetStorage {
 
     private static void addTweetToAllTweets(String gsonInformation) {
         JsonParser jsonParser = new JsonParser();
-        System.out.println(gsonInformation);
         JsonElement jsonElement = jsonParser.parse(gsonInformation);
         JsonObject details = jsonElement.getAsJsonObject();
         Tweet tweet = new Tweet(details.get("id").getAsInt(), details.get("author").getAsString(), details.get("message").getAsString());
@@ -43,7 +46,6 @@ public class TweetStorage {
     public static void sendTweet(HashMap<String, String> tweet) {
 
         tweet.put("id", allTweets.size() + "");
-        System.out.println(tweet.toString());
         addTweetToAllTweets(new Gson().toJson(tweet));
         if (System.currentTimeMillis() - lastTimeTweetsSavedInFile > 120000) {
             lastTimeTweetsSavedInFile = System.currentTimeMillis();

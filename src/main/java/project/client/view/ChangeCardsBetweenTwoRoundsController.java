@@ -38,8 +38,6 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     @FXML
     private Rectangle shownCardRectangle;
     @FXML
-    private Label showPlayerNameLabel;
-    @FXML
     private Label deckNameLabel;
     private static List<Rectangle> allMainDeckRectangle;
     private static List<Rectangle> allSideDeckRectangle;
@@ -53,13 +51,11 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     private static boolean isAddedNecessaryThingsForTheFirstTime = false;
     private static Rectangle equalShownRectangle;
     private static Button equalConfirmbtn;
-    private static Label equalShowPlayerNameLabel;
     private static Label equalDeckNameLabel;
-    private static String currentPlayerWhoChangesDeck;
     private int cardsAddedToMainDeck;
     private static List<String> mainDeckCards;
     private static List<String> sideDeckCards;
-    private String deckname;
+    private String deckName;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -67,38 +63,43 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/DeckMenu.mp3");
         equalShownRectangle = shownCardRectangle;
         equalConfirmbtn = confirmbtn;
-        equalShowPlayerNameLabel = showPlayerNameLabel;
         equalDeckNameLabel = deckNameLabel;
     }
 
-    public void showPage(AnchorPane pane, String playerName, String deckname, String token) {
+    public void showPage(AnchorPane pane, String playerName, String deckName, String token) {
         setAnchorPane(pane);
-        this.deckname = deckname;
+        this.deckName = deckName;
         initializePlayersAndDecks(token);
         allCardDiscriptionLabels = UIStorage.getAllCardDiscriptionLabels1();
         if (!isAddedNecessaryThingsForTheFirstTime) {
-            initializeLabesForShowSizeOfDeck();
+            initializeLabelsForShowSizeOfDeck();
         }
-        // changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
-        equalDeckNameLabel.setText(deckname);
-        equalShowPlayerNameLabel.setText("PLAYER TURN: " + playerName);
+        equalDeckNameLabel.setText(deckName);
         getRectanglesFromUIStorageForPanes();
         createMainDeck();
         createSideDeck();
         showNumberOfCardsInLabels();
         addDragAndDropEffect();
-        // equalShownRectangle.setFill(new ImagePattern(CardsStorage.getUnknownCard().getImage()));
+        equalShownRectangle.setFill(new ImagePattern(CardsStorage.getUnknownCard().getImage()));
         MainView.changeScene(pane);
     }
 
     private void initializePlayersAndDecks(String token) {
-        mainDeckCards = LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
-        sideDeckCards = LoginController.getOnlineUser().getDecks().get(deckname).getSideDeck();
+        mainDeckCards = LoginController.getOnlineUser().getDecks().get(deckName).getMainDeck();
+        sideDeckCards = LoginController.getOnlineUser().getDecks().get(deckName).getSideDeck();
     }
 
     public void confirmChanges(String token) {
-        SongPlayer.getInstance().pauseMusic();
-        DuelView.callStage();
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeCardsBetweenTwoRounds", "ConfirmChanges", "ConfirmChanges");
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+        if (deserializeResult.get("type").equals("Error")) {
+            CustomDialog customDialog = new CustomDialog("Error", "Game interrupted", "mainMenu");
+            customDialog.openDialog();
+        } else {
+            SongPlayer.getInstance().pauseMusic();
+            DuelView.callStage();
+        }
     }
 
     private void setEffectsOfConfirmButton() {
@@ -161,7 +162,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
     private void showNumberOfCardsInLabels() {
 
-        HashMap<String, Integer> sizeOfEachPart = WholeDeckPageMenuController.getNumberOfEachTypeOfCardsInDeck(LoginController.getOnlineUser().getDecks().get(deckname));
+        HashMap<String, Integer> sizeOfEachPart = WholeDeckPageMenuController.getNumberOfEachTypeOfCardsInDeck(LoginController.getOnlineUser().getDecks().get(deckName));
         if (mainDeckCards.size() < 40) {
             sizeOfMainDeckLabel.setTextFill(Color.RED);
         } else {
@@ -174,7 +175,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void createSideDeck() {
-        List<String> allCardsInMainDeck = LoginController.getOnlineUser().getDecks().get(deckname)
+        List<String> allCardsInMainDeck = LoginController.getOnlineUser().getDecks().get(deckName)
             .getSideDeck();
         List<Card> sideDeckCards = getListOfCards(allCardsInMainDeck);
         Pane sideDeckPane = (Pane) anchorPane.getChildren().get(1);
@@ -195,7 +196,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void createMainDeck() {
-        List<String> allCardsInMainDeck = LoginController.getOnlineUser().getDecks().get(deckname)
+        List<String> allCardsInMainDeck = LoginController.getOnlineUser().getDecks().get(deckName)
             .getMainDeck();
         List<Card> mainDeckCards = getListOfCards(allCardsInMainDeck);
         Pane mainDeckPane = (Pane) anchorPane.getChildren().get(0);
@@ -223,7 +224,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         return cards;
     }
 
-    private void initializeLabesForShowSizeOfDeck() {
+    private void initializeLabelsForShowSizeOfDeck() {
         sizeOfMainDeckLabel = UIStorage.getNumberOfCardslabels().get(0);
         sizeOfAllMonsterCardsLabel = UIStorage.getNumberOfCardslabels().get(1);
         sizeOfAllSpellCardsLabel = UIStorage.getNumberOfCardslabels().get(2);
@@ -264,7 +265,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         Card card = CardsStorage.getCardByName(cardName);
         String cardDescription = card.getCardDescription();
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(4);
-        Pane pane;
+        Pane pane = null;
         if (scrollPane.getContent() == null) {
             pane = new Pane();
         } else {
@@ -294,7 +295,6 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
                 pane.getChildren().add(label);
             }
         }
-
         scrollPane.setContent(pane);
     }
 
@@ -304,6 +304,17 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatForChangeCardsBetweenTowRounds(transfferdRectangle.getId(), isDeleteFromMainDeck, false);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+        if (deserializeResult.get("type").equals("Error")) {
+            showAlert(deserializeResult.get("type"), "Error");
+            return;
+        }
+
+        Deck deck = LoginController.getOnlineUser().getDecks().get(deckName);
+        List<String> mainOrSideDeck = isDeleteFromMainDeck ? deck.getMainDeck() : deck.getSideDeck();
+        mainOrSideDeck.remove(transfferdRectangle.getId());
 
         int indexOfRemovedRectanlge = pane.getChildren().indexOf(transfferdRectangle);
         for (int i = indexOfRemovedRectanlge; i < pane.getChildren().size() - 1; i++) {
@@ -316,25 +327,25 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void flipRectangle(Rectangle rectangle) {
-        RotateTransition rotator = new RotateTransition(Duration.millis(1000), rectangle);
-        rotator.setAxis(Rotate.Y_AXIS);
-        rotator.setFromAngle(180);
-        rotator.setToAngle(0);
-        rotator.setInterpolator(Interpolator.LINEAR);
-        rotator.setCycleCount(1);
-        rotator.play();
+        RotateTransition rotatorRectangle = new RotateTransition(Duration.millis(999), rectangle);
+        rotatorRectangle.setAxis(Rotate.Y_AXIS);
+        rotatorRectangle.setFromAngle(180);
+        rotatorRectangle.setToAngle(0);
+        rotatorRectangle.setInterpolator(Interpolator.LINEAR);
+        rotatorRectangle.setCycleCount(1);
+        rotatorRectangle.play();
     }
 
     private void transferCardToMainOrSideDeck(DragEvent e, Pane pane, boolean isTransferToMainDeck) {
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck("changeCardsBetweenTwoRounds", "cardsName", transfferdRectangle.getId(), isTransferToMainDeck);
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatForChangeCardsBetweenTowRounds(transfferdRectangle.getId(), isTransferToMainDeck, true);
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
-             showAlert(deserializeResult.get("message"),"Error");
-             return;
+            showAlert(deserializeResult.get("message"), "Error");
+            return;
         }
-        Deck deck = LoginController.getOnlineUser().getDecks().get(deckname);
+        Deck deck = LoginController.getOnlineUser().getDecks().get(deckName);
         List<String> mainOrSideDeck = isTransferToMainDeck ? deck.getMainDeck() : deck.getSideDeck();
         mainOrSideDeck.add(transfferdRectangle.getId());
 
@@ -353,6 +364,7 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     }
 
     private void deleteDraggedCard(Rectangle transfferdRectangle) {
+
         Pane mainDeckPane = (Pane) anchorPane.getChildren().get(0);
         if (mainDeckPane.getChildren().contains(transfferdRectangle)) {
             deleteCardFromMianOrSideDeck(transfferdRectangle, mainDeckPane, true);

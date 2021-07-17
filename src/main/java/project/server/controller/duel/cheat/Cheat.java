@@ -64,7 +64,7 @@ public class Cheat {
         return "invalid command!";
     }
 
-    private String getCardFromGraveyard(String cardname, String token) {
+    private String getCardFromGraveyard(String cardName, String token) {
         int turn = GameManager.getDuelControllerByIndex(token).getTurn();
         ArrayList<Card> cardsInGraveYard;
         if (turn == 1) {
@@ -74,17 +74,17 @@ public class Cheat {
         }
 
         for (int i = 0; i < cardsInGraveYard.size(); i++) {
-            if (cardsInGraveYard.get(i).getCardName().equals(cardname)) {
+            if (cardsInGraveYard.get(i).getCardName().equals(cardName)) {
                 GameManager.getDuelBoardByIndex(token).addCardToHand(cardsInGraveYard.get(i), turn);
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " +
                     (turn == 1 ? "ALLY_GRAVEYARD_ZONE" : "OPPONENT_GRAVEYARD_ZONE")
                     + " " + (i + 1) + " is being added to hand zone " + turn + " and should finally be NO_CHANGE", token);
 
                 cardsInGraveYard.remove(i);
-                return cardname + " added to hand successfully!";
+                return cardName + " added to hand successfully!";
             }
         }
-        return cardname + " does not found!";
+        return cardName + " does not found!";
     }
 
     private String increaseDefensePower(int amount, String token) {
@@ -180,7 +180,6 @@ public class Cheat {
         }
 
         return "player with this nickname is not playing!";
-
     }
 
     private String increaseLifePoints(int amount, String token) {

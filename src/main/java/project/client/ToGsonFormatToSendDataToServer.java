@@ -56,10 +56,13 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatForChangeCardsBetweentTowRounds() {
+    public static String toGsonFormatForChangeCardsBetweenTowRounds(String cardName, boolean isMainOrSideDeck, boolean isAddCard) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", "changeCardsBetweenTwoRounds");
-        jsonObject.addProperty("", "");
+        jsonObject.addProperty("isAddCard", isAddCard);
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("isMainDeck", isMainOrSideDeck);
+        jsonObject.addProperty("token", LoginController.getToken());
         return jsonObject.toString();
     }
 

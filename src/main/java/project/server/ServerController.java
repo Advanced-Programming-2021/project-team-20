@@ -4,12 +4,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import project.model.User;
+import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.server.controller.duel.PreliminaryPackage.ClientMessageReceiver;
+import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.profile.Profile;
 import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.non_duel.deckCommands.DeckCommands;
+import project.server.controller.non_duel.tweets.TweetController;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -85,8 +88,8 @@ public class ServerController {
             System.out.println("=============================================");
             System.out.println("message from client: " + input);
             String result = processDuel(input);
-          //  if (result.equals(""))
-          //      break;
+            //  if (result.equals(""))
+            //      break;
             System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
@@ -208,9 +211,14 @@ public class ServerController {
             case "requestDuel":
                 return DuelStarter.requestGame(details);
             case "setTurnOfDuel":
-               return DuelStarter.setTurnOfGame(details);
+                return DuelStarter.setTurnOfGame(details);
             case "sendTweet":
-
+                return TweetController.sendTweet(details);
+            case "getLastTweets":
+                return TweetController.getLastTweets(details);
+            case "changeCardsBetweenTwoRounds":
+                return ChangeCardsBetweenTwoRounds.getInputFromClientAndProcessIt(details);
+            case "cheat":
             case "logout":
                 return logoutUser(details);
             case "duel":
@@ -260,7 +268,4 @@ public class ServerController {
         return userNotLogined;
     }
 
-    public static void setLoginedUser(String string, User user) {
-        loginedUsers.put(string, user);
-    }
 }

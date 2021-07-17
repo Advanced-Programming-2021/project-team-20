@@ -97,13 +97,22 @@ public class ToGsonFormatForSendInformationToClient {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", "Successful");
         jsonObject.addProperty("message", "Tweet Sent Successfully!");
-        jsonObject.add("newTweets", new Gson().toJsonTree(newTweets).getAsJsonArray());
+        jsonObject.add("newTweets", toJsonArrayTweets(newTweets));
         return jsonObject.toString();
+    }
+
+    private static JsonArray toJsonArrayTweets(ArrayList<String> newTweets) {
+        JsonArray jsonArray = new JsonArray();
+        for (int i = 0; i < newTweets.size(); i++) {
+            JsonParser jsonParser = new JsonParser();
+            jsonArray.add(jsonParser.parse(newTweets.get(i)).getAsJsonObject());
+        }
+        return jsonArray;
     }
 
     public static String toGsonFormatForSentLastTweetsToClient(ArrayList<String> newTweets) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("newTweets", new Gson().toJsonTree(newTweets).getAsJsonArray());
+        jsonObject.add("newTweets", toJsonArrayTweets(newTweets));
         return jsonObject.toString();
     }
 }

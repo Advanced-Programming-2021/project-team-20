@@ -271,7 +271,7 @@ public class DuelStarter {
             String result = setTurnForGame.setWinnerUserAndSendItsToken();
             if (result == null) {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

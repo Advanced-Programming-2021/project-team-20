@@ -2,6 +2,10 @@ package project.server.controller.duel.GamePackage;
 
 import java.util.List;
 
+import com.google.gson.JsonObject;
+import project.model.User;
+import project.server.ServerController;
+import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.Deck;
 
@@ -11,12 +15,18 @@ public class ChangeCardsBetweenTwoRounds {
     private Deck opponentPlayerDeck;
     private List<String> mainDeckCards;
     private List<String> sideDeckCards;
-    private int turn;
+    private String allyPlayerToken;
+    private String opponentPlayerToken;
+    private boolean isAllyPlayerConfirmChanges = false;
+    private boolean isOpponentPlayerConfirmChanges = false;
+    private boolean isAllyPlayerChangingHisDeck;
+    private boolean isOpponentPlayerChangingHisDeck;
 
-    public ChangeCardsBetweenTwoRounds(Deck allyPlayerDeck, Deck opponentPlayerDeck) {
+    public ChangeCardsBetweenTwoRounds(String allyPlayerToken, Deck allyPlayerDeck, String opponentPlayerToken, Deck opponentPlayerDeck) {
+        this.allyPlayerToken = allyPlayerToken;
         this.allyPlayerDeck = allyPlayerDeck;
+        this.opponentPlayerToken = opponentPlayerToken;
         this.opponentPlayerDeck = opponentPlayerDeck;
-        this.turn = 1;
     }
 
     public String changeCardsBetweenTwoRounds(String input, int index) {
@@ -92,53 +102,97 @@ public class ChangeCardsBetweenTwoRounds {
     // return "cards moved successfully!";
     // }
 
+
+    public boolean addOrRemoveCardFromMainOrSideDeck(String cardName, boolean isAddCard, boolean isMainDeck, String token) {
+
+        if (token.equals(allyPlayerToken)) {
+            mainDeckCards = allyPlayerDeck.getMainDeck();
+            sideDeckCards = allyPlayerDeck.getSideDeck();
+            isAllyPlayerChangingHisDeck = true;
+        } else if (token.equals(opponentPlayerToken)) {
+            mainDeckCards = opponentPlayerDeck.getMainDeck();
+            sideDeckCards = opponentPlayerDeck.getSideDeck();
+            isOpponentPlayerChangingHisDeck = true;
+        }
+
+        if (isMainDeck && isAddCard) {
+            return mainDeckCards.add((cardName));
+        } else if (isMainDeck) {
+            return mainDeckCards.remove(cardName);
+        } else if (isAddCard) {
+            return sideDeckCards.add(cardName);
+        } else {
+            return sideDeckCards.remove(cardName);
+        }
+    }
+
+    public static String getInputFromClientAndProcessIt(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        boolean isAddCard = false;
+        boolean isMainDeck = false;
+        boolean isConfirmedChanges = false;
+        try {
+            token = details.get("token").getAsString();
+            if (details.has("ConfirmChanges")) {
+                isConfirmedChanges = true;
+            } else {
+                cardName = details.get("cardName").getAsString();
+                isAddCard = details.get("isAddCard").getAsBoolean();
+                isMainDeck = details.get("isMainDeck").getAsBoolean();
+            }
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+        ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
+
+        if (isConfirmedChanges) {
+            return changeCardsBetweenTwoRounds.ConfirmChanges(token);
+        }
+        if (changeCardsBetweenTwoRounds.addOrRemoveCardFromMainOrSideDeck(cardName, isAddCard, isMainDeck, token)) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Card Moved Successfully!");
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Card Does Not Exit!");
+    }
+
+    public String ConfirmChanges(String token) {
+        if (token.equals(allyPlayerToken)) {
+            isAllyPlayerConfirmChanges = true;
+        } else {
+            isOpponentPlayerConfirmChanges = true;
+        }
+
+        for (int i = 0; i < 30; i++) {
+            if (isOpponentPlayerConfirmChanges && isAllyPlayerConfirmChanges) {
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Next Round Started Successfully!");
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+            if (isAllyPlayerChangingHisDeck) {
+                i = 0;
+                isAllyPlayerChangingHisDeck = false;
+            }
+            if (isOpponentPlayerChangingHisDeck) {
+                i = 0;
+                isOpponentPlayerChangingHisDeck = false;
+            }
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Game interrupted");
+    }
+
     public Deck getAllyPlayerDeck() {
         return allyPlayerDeck;
     }
 
     public Deck getOpponentPlayerDeck() {
         return opponentPlayerDeck;
-    }
-
-    public void addCardToMianOrSideDeck(String cardName, boolean isMainDeck, String playerName, String token) {
-        String allyPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
-        String opponentPlayerName = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1);
-        if (playerName.equals(allyPlayerName)) {
-            mainDeckCards = allyPlayerDeck.getMainDeck();
-            sideDeckCards = allyPlayerDeck.getSideDeck();
-        } else if (playerName.equals(opponentPlayerName)) {
-            mainDeckCards = opponentPlayerDeck.getMainDeck();
-            sideDeckCards = opponentPlayerDeck.getSideDeck();
-        }
-
-        if (isMainDeck) {
-            removeCardFromSideDeck(cardName);
-            mainDeckCards.add((cardName));
-        } else {
-            removeCardFromMainDeck(cardName);
-            sideDeckCards.add((cardName));
-        }
-        // transferCardsBetweenSideAndMainDeck(0);
-        // ChangeCardsBetweenTwoRoundsController.setMainDeckCards(mainDeckCards);
-        // ChangeCardsBetweenTwoRoundsController.setSideDeckCards(sideDeckCards);
-    }
-
-    private void removeCardFromSideDeck(String cardName) {
-        for (int i = 0; i < sideDeckCards.size(); i++) {
-            if (sideDeckCards.get(i).equals(cardName)) {
-                sideDeckCards.remove(i);
-                break;
-            }
-        }
-    }
-
-    private void removeCardFromMainDeck(String cardName) {
-        for (int i = 0; i < mainDeckCards.size(); i++) {
-            if (mainDeckCards.get(i).equals(cardName)) {
-                mainDeckCards.remove(i);
-                break;
-            }
-        }
     }
 
 }
