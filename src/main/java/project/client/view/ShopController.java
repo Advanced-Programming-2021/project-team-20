@@ -70,9 +70,7 @@ public class ShopController implements Initializable {
         SongPlayer.getInstance().pauseMusic();
         SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/Shop.mp3");
 
-        //TODO: get user from server with token
-        user = null;
-//        user = ShopController.getUserFromServerWithToken();
+        user = LoginController.getOnlineUser();
 
         if (rectanglesToShowCards == null) {
             rectanglesToShowCards = UIStorage.getAllShopRectangles();
@@ -296,19 +294,19 @@ public class ShopController implements Initializable {
     public void buyCard() {
         SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3");
 
-        String jsonString = "{\"token\":" + token + ", \"cardName\":" + cardNameForBuy + "}";
-
-        // String answerOfShop = ServerConnection.sendDataToServerAndRecieveResult(ToGsonFormatForSendInformation.ToGsonFormatForRegister("shopBuy", jsonString));
-        // equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-        // int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
-        // //TODO: get User from server again
-        // int userAmount = LoginController.getOnlineUser().getMoney();
-        // if (cardAmount > userAmount) {
-        //     buybtn.setDisable(true);
-        // }
-        // else {
-        //     buybtn.setDisable(false);
-        // }
+//        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
+//
+//         String answerOfShop = ServerConnection.sendDataToServerAndRecieveResult(dataToSend);
+//         if (answerOfShop)
+//         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+         int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+         int userAmount = LoginController.getOnlineUser().getMoney();
+         if (cardAmount > userAmount) {
+             buybtn.setDisable(true);
+         }
+         else {
+             buybtn.setDisable(false);
+         }
 
     }
 

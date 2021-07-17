@@ -19,10 +19,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.client.CardsStorage;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.LoginController;
 import project.model.PhaseInGame;
 //import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.cheat.Cheat;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.cardData.General.*;
 import project.model.cardData.General.Card;
@@ -31,6 +33,7 @@ import project.client.view.CustomDialog;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -75,7 +78,7 @@ public class DuelView {
     private static CardLocation cardLocationSelecting;
     private static boolean isWaitingForRightClickOptionListHit;
     private static Group allCards;
-   // private static CardLocation cardLocationToSendCardTo;
+    // private static CardLocation cardLocationToSendCardTo;
     //private static NextPhaseButton nextPhaseButton;
     private static Transition transition;
     private static ControllerForView controllerForView;
@@ -142,7 +145,6 @@ public class DuelView {
     private static HealthBarAndHealthPoints allyHealthStatus;
     private static HealthBarAndHealthPoints opponentHealthStatus;
     private static Long lastTimeKeyPressed = 0l;
-    private static Cheat cheat = new Cheat();
     private static StringBuilder cheatCodes = new StringBuilder();
 
     private static boolean areWePlayingWithAI;
@@ -632,11 +634,13 @@ public class DuelView {
             duelStage.setShiftKeyOn(true);
         } else if (keyEvent.getCode().getName().equals("Enter")) {
             System.out.println(cheatCodes);
-            String string = cheat.findCheatCommand(cheatCodes.toString(), token);
+            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("cheat", "cheatCommand", cheatCodes.toString());
+            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+            HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Cheat Message");
-            alert.setContentText(string);
+            alert.setContentText(deserializeResult.get("message"));
             alert.showAndWait();
             advancedCardMovingController.advanceForwardBattleField();
             cheatCodes.setLength(0);
@@ -873,23 +877,23 @@ public class DuelView {
         allyCardsInHand = new ArrayList<>();
         allyCardsInDeck = new ArrayList<>();
         String cardsInMyHand = JsonCreator.getResult("give cards in my hand at the beginning of game");
-        System.out.println("cardsInMyHand =\n"+cardsInMyHand);
+        System.out.println("cardsInMyHand =\n" + cardsInMyHand);
         String cardsInOpponentHand = JsonCreator.getResult("give cards in my opponent hand at the beginning of game");
-        System.out.println("cardsInOpponentHand =\n"+cardsInOpponentHand);
+        System.out.println("cardsInOpponentHand =\n" + cardsInOpponentHand);
         String cardsInMyDeck = JsonCreator.getResult("give cards in my deck at the beginning of game");
-        System.out.println("cardsInMyDeck =\n"+cardsInMyDeck);
+        System.out.println("cardsInMyDeck =\n" + cardsInMyDeck);
         String cardsInOpponentDeck = JsonCreator.getResult("give cards in my opponent deck at the beginning of game");
-        System.out.println("cardsInMyOpponentDeck =\n"+cardsInOpponentDeck);
+        System.out.println("cardsInMyOpponentDeck =\n" + cardsInOpponentDeck);
         String stringForCardReceiver = "(\\*([^!]+)\\*)";
         Pattern pattern = Pattern.compile(stringForCardReceiver);
         Matcher matcher = pattern.matcher(cardsInMyHand);
         while (matcher.find()) {
-            System.out.println("matcher.group(2) = "+matcher.group(2));
+            System.out.println("matcher.group(2) = " + matcher.group(2));
             allyCardsInHand.add(CardsStorage.getCardByName(matcher.group(2)));
         }
         matcher = pattern.matcher(cardsInMyDeck);
-        while (matcher.find()){
-            System.out.println("matcher.group(2) = "+matcher.group(2));
+        while (matcher.find()) {
+            System.out.println("matcher.group(2) = " + matcher.group(2));
             allyCardsInDeck.add(CardsStorage.getCardByName(matcher.group(2)));
         }
         //ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(token).getAllyCardsInHand();
@@ -959,12 +963,12 @@ public class DuelView {
         opponentCardsInDeck = new ArrayList<>();
         matcher = pattern.matcher(cardsInOpponentHand);
         while (matcher.find()) {
-            System.out.println("matcher.group(2) = "+matcher.group(2));
+            System.out.println("matcher.group(2) = " + matcher.group(2));
             opponentCardsInHand.add(CardsStorage.getCardByName(matcher.group(2)));
         }
         matcher = pattern.matcher(cardsInOpponentDeck);
-        while (matcher.find()){
-            System.out.println("matcher.group(2) = "+matcher.group(2));
+        while (matcher.find()) {
+            System.out.println("matcher.group(2) = " + matcher.group(2));
             opponentCardsInDeck.add(CardsStorage.getCardByName(matcher.group(2)));
         }
         // ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(token).getOpponentCardsInHand();

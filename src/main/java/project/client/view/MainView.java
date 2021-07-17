@@ -1,8 +1,5 @@
 package project.client.view;
 
-import java.io.IOException;
-import java.net.URL;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +10,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import project.client.CardsStorage;
 import project.client.ServerConnection;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MainView extends Application {
     private static Stage stage;
@@ -28,7 +28,6 @@ public class MainView extends Application {
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.show();
-
     }
 
     public static void main(String[] args) throws Exception {

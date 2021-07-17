@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import project.model.User;
+import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.server.controller.duel.PreliminaryPackage.ClientMessageReceiver;
+import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.profile.Profile;
@@ -86,8 +88,8 @@ public class ServerController {
             System.out.println("=============================================");
             System.out.println("message from client: " + input);
             String result = processDuel(input);
-          //  if (result.equals(""))
-          //      break;
+            //  if (result.equals(""))
+            //      break;
             System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
@@ -187,6 +189,8 @@ public class ServerController {
                 return LoginMenu.loginUser(details);
             case "scoreboard":
                 return Scoreboard.findCommands("scoreboard show");
+            case "scoreboardOnline":
+                return Scoreboard.findCommands("scoreboardOnline");
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":
@@ -209,12 +213,13 @@ public class ServerController {
                 return DuelStarter.requestGame(details);
             case "setTurnOfDuel":
                 return DuelStarter.setTurnOfGame(details);
-            case "changeCardsBetweenTwoRounds":
-
             case "sendTweet":
                 return TweetController.sendTweet(details);
             case "getLastTweets":
                 return TweetController.getLastTweets(details);
+            case "changeCardsBetweenTwoRounds":
+                return ChangeCardsBetweenTwoRounds.getInputFromClientAndProcessIt(details);
+            case "cheat":
             case "logout":
                 return logoutUser(details);
             case "duel":
@@ -229,7 +234,7 @@ public class ServerController {
         try {
             token = details.get("token").getAsString();
         } catch (Exception e) {
-            System.out.println("Exception in logout User");
+            System.out.println("Exception in logoutUser");
         }
         if (loginedUsers.containsKey(token)) {
             loginedUsers.remove(token);

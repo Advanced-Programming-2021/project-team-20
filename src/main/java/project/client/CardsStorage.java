@@ -113,6 +113,7 @@ public class CardsStorage {
             System.exit(0);
         }
     }
+
     private ArrayList<MonsterCardFamily> addMonsterCardFamilyToSpellCards(String columnValues) {
         ArrayList<MonsterCardFamily> monsterCardFamilies = new ArrayList<>();
         String[] values = new String[columnValues.split("#").length];

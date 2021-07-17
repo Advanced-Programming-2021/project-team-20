@@ -1,11 +1,7 @@
 package project.client;
 
-import com.google.gson.*;
-
+import com.google.gson.JsonObject;
 import project.client.view.LoginController;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ToGsonFormatToSendDataToServer {
     public static String toGsonFormatRegister(String userName, String nickName, String password) {
@@ -60,10 +56,13 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatForChangeCardsBetweentTowRounds() {
+    public static String toGsonFormatForChangeCardsBetweenTowRounds(String cardName, boolean isMainOrSideDeck, boolean isAddCard) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", "changeCardsBetweenTwoRounds");
-        jsonObject.addProperty("", "");
+        jsonObject.addProperty("isAddCard", isAddCard);
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("isMainDeck", isMainOrSideDeck);
+        jsonObject.addProperty("token", LoginController.getToken());
         return jsonObject.toString();
     }
 
@@ -90,4 +89,9 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
+    public static String toGsonFormatGetScoreboardInformationOfONlineUsers() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "scoreboardOnline");
+        return jsonObject.toString();
+    }
 }

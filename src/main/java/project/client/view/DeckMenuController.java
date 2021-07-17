@@ -520,7 +520,6 @@ public class DeckMenuController implements Initializable {
                 pane.getChildren().add(label);
             }
         }
-
         scrollPane.setContent(pane);
     }
 

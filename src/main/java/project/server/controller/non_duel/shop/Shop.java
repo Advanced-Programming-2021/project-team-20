@@ -11,6 +11,7 @@ import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
 import project.server.ServerController;
 import project.model.Utility.Utility;
+import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.non_duel.storage.Storage;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class Shop {
         if (ShopPatterns.isItBuyPattern(command)) {
             String cardName = ShopPatterns.getBoughtCardName(command);
             int userAmount = LoginController.getOnlineUser().getMoney();
-            if (!isItInvalidCardName(cardName)) {
+            if (!isItValidCardName(cardName)) {
                 return "there is no card with this name";
             }
             Card card = getCardWithName(cardName);
@@ -114,7 +115,7 @@ public class Shop {
         return null;
     }
 
-    private static boolean isItInvalidCardName(String cardName) {
+    private static boolean isItValidCardName(String cardName) {
         return (Storage.doesCardExist(cardName));
     }
 
@@ -130,33 +131,42 @@ public class Shop {
         }
 
 
-        user = Shop.getUserWithTokenFromHashMap(token);
+        user = ServerController.getUserByToken(token);
         if (user == null) {
-            return "invalid token!";
+            return "{\"type\":\"Error\",\"message\":\"invalid token!\"}";
         }
         return buyCard(cardName);
     }
 
     private static String buyCard(String cardName) {
         int userAmount = user.getMoney();
-        if (!isItInvalidCardName(cardName)) {
-            // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "there is no card with this name");
+        if (!isItValidCardName(cardName)) {
+             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "there is no card with this name");
         }
         Card card = getCardWithName(cardName);
         int cardAmount = card.getCardPrice();
         if (cardAmount > userAmount) {
-            // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "not enough money");
+             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "not enough money");
         }
         user.setMoney(userAmount - cardAmount);
         user.addCardToAllUselessCards(cardName);
-        return "null";
-        // return ToGsonFormatForSendInformation.ToGsonFormatForRegister("Error", "successful buy");
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", String.valueOf(user.getMoney()));
     }
 
-    private static User getUserWithTokenFromHashMap(String token) {
-        //TODO
-        return null;
+    public static String getMoneyOfUserRequestFromServer(JsonObject details) {
+        String token = "";
+        try {
+            token = details.get("token").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return "{\"type\":\"Error\",\"message\":\"invalid token!\"}";
+        }
+        return String.valueOf(user.getMoney());
     }
+
 
     public HashMap<String, Integer> getNumberOfCards(String cardName) {
         HashMap<String, Integer> numberOfCards = new HashMap<>();

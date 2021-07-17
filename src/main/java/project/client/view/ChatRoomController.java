@@ -1,8 +1,7 @@
 package project.client.view;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,12 +9,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
-import project.client.DeserializeInformationFromServer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
+import project.client.view.Components.PackageForShowTweet;
 
 public class ChatRoomController implements Initializable {
 
@@ -24,27 +29,112 @@ public class ChatRoomController implements Initializable {
     @FXML
     private TextArea textArea;
     private int lastIdOfTweetReceived = 0;
+    private int lastIdOfTweetFixItsImage = 0;
+    private double YMoveOfScrollPane = 0;
+    private List<PackageForShowTweet> packageForShowTweets = new ArrayList<>();
+    private Pane pane;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        Pane pane = new Pane();
+
+        pane = new Pane();
         messageHolderScrollPane.setContent(pane);
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
-        showMessages(messageFromServer);
+        refreshTweets();
     }
 
-    private void showMessages(String messageFromServer) {
+    private void deserializeMessageAndShowIt(String messageFromServer) {
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(messageFromServer);
         JsonObject details = jsonElement.getAsJsonObject();
         JsonArray newTweets = details.getAsJsonArray("newTweets");
         for (int i = 0; i < newTweets.size(); i++) {
-            System.out.println(newTweets.get(i));
             JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
-            System.out.println(jsonObject.get("message") + " " + jsonObject.get("id").getAsInt() + " " + jsonObject.get("author").getAsString());
+            showTweet(jsonObject);
         }
-        System.out.println(messageFromServer);
+        pane.setPrefHeight(YMoveOfScrollPane);
+        fixImageOfRepeatedTweetsWithTheSameAuthor();
+    }
+
+    private void showTweet(JsonObject jsonObject) {
+
+        lastIdOfTweetReceived = jsonObject.get("id").getAsInt();
+        PackageForShowTweet packageForShowTweet = new PackageForShowTweet(jsonObject.get("message").getAsString(), jsonObject.get("author").getAsString(), YMoveOfScrollPane);
+        pane.getChildren().add(packageForShowTweet);
+        addMessageToPackageForShowTweet(packageForShowTweet, jsonObject.get("message").getAsString());
+        YMoveOfScrollPane += 20;
+        packageForShowTweets.add(packageForShowTweet);
+    }
+
+    private void fixImageOfRepeatedTweetsWithTheSameAuthor() {
+        for (int i = lastIdOfTweetFixItsImage; i < packageForShowTweets.size() - 1; i++) {
+            if (packageForShowTweets.get(i).getShowUserNameLabel().getText().equals(packageForShowTweets.get(i + 1).getShowUserNameLabel().getText())) {
+                packageForShowTweets.get(i).getUserImageCircle().setFill(null);
+            }
+        }
+        lastIdOfTweetFixItsImage = packageForShowTweets.size() - 1;
+    }
+
+    private void addMessageToPackageForShowTweet(PackageForShowTweet packageForShowTweet, String message) {
+        Label label = createLabelForMessage(message, packageForShowTweet);
+        packageForShowTweet.getChildren().add(label);
+        List<String> splitMessageByEnter = new ArrayList<>();
+        splitMessageByEnter = Arrays.asList(message.split("\n"));
+        double YMoveBeforeMessage = YMoveOfScrollPane;
+        YMoveOfScrollPane += splitMessageByEnter.size() * 15;
+        for (int i = 0; i < splitMessageByEnter.size(); i++) {
+            YMoveOfScrollPane += (splitMessageByEnter.get(i).length() / 37) * 15;
+        }
+        if (packageForShowTweet.isMessageFromOnlineUser()) {
+            YMoveBeforeMessage -= 10;
+        } else {
+            YMoveBeforeMessage -= 25 ;
+        }
+        packageForShowTweet.getBackGroundRectangle().setHeight(YMoveOfScrollPane - YMoveBeforeMessage);
+//        for (int i = 0; i < splitMessageByEnter.size(); i++) {
+//            List<String> shortWords = Arrays.asList(splitMessageByEnter.get(i).split(" "));
+//            StringBuilder appendShortWords = new StringBuilder();
+//            int numberOfLabelUsed = 1;
+//            for (int j = 0; j < shortWords.size(); j++) {
+//                appendShortWords.append(shortWords.get(j) + " ");
+//                if (appendShortWords.length() > 100) {
+//                    numberOfLabelUsed++;
+//                    appendShortWords.setLength(0);
+//                    addLabelToPackageForShowTweet(appendShortWords.toString(), packageForShowTweet, i + numberOfLabelUsed);
+//                } else if (j + 1 == shortWords.size()) {
+//                    addLabelToPackageForShowTweet(appendShortWords.toString(), packageForShowTweet, i + numberOfLabelUsed);
+//                }
+//            }
+//        }
+    }
+
+    private void addLabelToPackageForShowTweet(String text, PackageForShowTweet packageForShowTweet, int row) {
+        Label label = createLabelForMessage(text, packageForShowTweet);
+        label.setLayoutY(packageForShowTweet.getLayoutY() + (row) * 20);
+        packageForShowTweet.getChildren().add(label);
+        packageForShowTweet.addOneToNumberOfLabelForShowMessages();
+        packageForShowTweet.getBackGroundRectangle().setHeight(30 + packageForShowTweet.getNumberOfLabelForShowMessages() * 20);
+        YMoveOfScrollPane += 20;
+    }
+
+    private Label createLabelForMessage(String text, PackageForShowTweet packageForShowTweet) {
+        Label label = new Label();
+        if (packageForShowTweet.isMessageFromOnlineUser()) {
+            label.setTextFill(Color.BLACK);
+        } else {
+            label.setTextFill(Color.BLUE);
+        }
+        label.setMaxWidth(300);
+        label.setWrapText(true);
+        if (!packageForShowTweet.isMessageFromOnlineUser()) {
+            label.setLayoutY(20);
+            YMoveOfScrollPane += 20;
+        } else {
+            label.setLayoutY(5);
+        }
+        label.setLayoutX(60);
+        label.setText(text);
+        label.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+        return label;
     }
 
     public void backToMainMenu() {
@@ -59,9 +149,23 @@ public class ChatRoomController implements Initializable {
         String message = textArea.getText();
         textArea.setText("");
 
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived);
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived + 1);
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
-        HashMap<String, String> deserilizeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+        deserializeMessageAndShowIt(messageFromServer);
+    }
 
+    public void refreshTweets() {
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        deserializeMessageAndShowIt(messageFromServer);
+    }
+
+    public void fixLengthOfMessage() {
+        List<String> textInEachLine = new ArrayList<>();
+        textInEachLine = Arrays.asList(textArea.getText().split("\n"));
+        for (int i = 0; i < textInEachLine.size(); i++) {
+
+//            if()
+        }
     }
 }

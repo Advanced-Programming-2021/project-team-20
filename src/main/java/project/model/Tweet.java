@@ -1,5 +1,7 @@
 package project.model;
 
+import com.google.gson.JsonObject;
+
 public class Tweet {
     private int id;
     private String author;
@@ -36,6 +38,10 @@ public class Tweet {
     }
 
     public String toGsonString() {
-        return "{\"id\":\"" + id + "\",\"author\":\"" + author + "\",\"message\":\"" + message + "\"}";
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id + "");
+        jsonObject.addProperty("author", author);
+        jsonObject.addProperty("message", message);
+        return jsonObject.toString();
     }
 }
