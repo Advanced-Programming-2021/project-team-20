@@ -214,14 +214,14 @@ public class CardView extends Rectangle {
                 item8.setVisible(false);
                 item9.setVisible(false);
                 item10.setVisible(false);
-                if (DuelView.isShouldDuelViewClickingAbilitiesWork()) {
+                System.out.println("Token is : " + DuelView.getToken() + " and is it my turn? " + DuelView.isIsMyTurn());
+                System.out.println("this card view name is " + cardName);
+                if (DuelView.isShouldDuelViewClickingAbilitiesWork() && DuelView.isIsMyTurn()) {
                     int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
-                    PhaseInGame phaseInGame = PhaseInGame.valueOf(JsonCreator.getResult("GameManager.getPhaseControllerByIndex(token).getPhaseInGame()"));                    int belongingTurn = 2;
+                    PhaseInGame phaseInGame = PhaseInGame.valueOf(JsonCreator.getResult("GameManager.getPhaseControllerByIndex(token).getPhaseInGame()"));
+                    int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
                     double meanY = (bounds.getMinY() + bounds.getMaxY()) / 2;
                     System.out.println("PREPARE FOR THE ALMIGHTY JIGEN with meanY = " + meanY);
-                    if (meanY >= 500) {
-                        belongingTurn = 1;
-                    }
                     boolean mainPhases = phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)
                         || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2);
                     boolean battlePhases = phaseInGame.equals(PhaseInGame.ALLY_BATTLE_PHASE) || phaseInGame.equals(PhaseInGame.OPPONENT_BATTLE_PHASE);

@@ -29,6 +29,7 @@ public class PhaseController {
     private boolean gameIsOver;
 
     public PhaseController() {
+        phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
         playersProhibitedToDrawCardNextTurn = new ArrayList<>();
         playersProhibitedToDrawCardNextTurn.add(false);
         playersProhibitedToDrawCardNextTurn.add(false);

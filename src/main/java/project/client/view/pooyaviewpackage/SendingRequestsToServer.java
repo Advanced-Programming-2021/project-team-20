@@ -36,7 +36,9 @@ public class SendingRequestsToServer {
             alert.setContentText(output);
             alert.showAndWait();
         } else {
-            if (!output.contains("successfully") && typeOfErrorMessage.contains("ummon") ||
+            if (output.contains("successfully")) {
+                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+            } else if (!output.contains("successfully") && typeOfErrorMessage.contains("ummon") ||
                 typeOfErrorMessage.contains("irect") && (output.contains("this card already attack") || output.contains("you can't")) ||
                 typeOfErrorMessage.contains("ttack") && typeOfErrorMessage.contains("onster") && (output.contains("this card already attack") || output.contains("there is no card") || output.contains("you can't"))) {
 
@@ -53,6 +55,7 @@ public class SendingRequestsToServer {
 
     public void sendTributeSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
         String token = DuelView.getToken();
+        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         JsonCreator.setFirstAdditionalString(giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
 
@@ -65,6 +68,7 @@ public class SendingRequestsToServer {
 
     public void sendSpecialSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
         String token = DuelView.getToken();
+        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         JsonCreator.setFirstAdditionalString(giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
 
@@ -86,6 +90,7 @@ public class SendingRequestsToServer {
 
     public void sendSettingRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String token = DuelView.getToken();
+        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         JsonCreator.setFirstAdditionalString(giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
         System.out.println("&&&&" + output);
@@ -104,6 +109,7 @@ public class SendingRequestsToServer {
 
     public void sendActivateEffectRequestToServer(CardView cardView, CardLocation cardLocationSelecting) {
         String token = DuelView.getToken();
+        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         JsonCreator.setFirstAdditionalString(giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
 
@@ -193,6 +199,7 @@ public class SendingRequestsToServer {
     public void sendAttackMonsterToMonsterRequestToServer(CardLocation cardLocationSelecting, CardLocation finalCardLocation, int yugiohIndex) {
         System.out.println("ZENOS IS ATTACKING MONSTER TO MONSTER :select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String token = DuelView.getToken();
+        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         JsonCreator.setFirstAdditionalString(giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
 
@@ -217,7 +224,7 @@ public class SendingRequestsToServer {
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"attack \" + yugiohOpponentMonsterIndex, true, token)");
         System.out.println("*" + output);
         conductSwitchingTurnsForSummoningBeingCarefulForAI(output, "Attack Monster");
-     //   conductSwitchingInAttackingMonster(output);
+        //   conductSwitchingInAttackingMonster(output);
     }
 
 
@@ -351,8 +358,9 @@ public class SendingRequestsToServer {
     }
 
     public static String giveStringToGiveToServerByCardLocation(CardLocation cardLocation) {
-        JsonCreator.setFirstAdditionalString(DuelView.getToken());
-        int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getFakeTurn()"));
+        int fakeTurn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getFakeTurn()"));
+        int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
+        int turn = (fakeTurn == belongingTurn ? 1 : 2);
         if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_SPELL_ZONE)) {
             if (turn == 1) {
                 return "--spell " + changeArrayIndexFromOneToFiveToYuGiOhIndex(cardLocation.getIndex(), cardLocation.getRowOfCardLocation());

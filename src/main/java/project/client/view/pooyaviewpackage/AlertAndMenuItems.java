@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.client.modelsforview.CardView;
 
@@ -271,7 +271,7 @@ public class AlertAndMenuItems {
         ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
         String token = DuelView.getToken();
         if (result.equals(ButtonType.YES)) {
-            String output = GameManager.getDuelControllerByIndex(token).getInput("yes", true, token);
+            String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"yes\", true, token)");
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");
@@ -300,7 +300,7 @@ public class AlertAndMenuItems {
                 DuelView.getDeckScene().start(new Stage());
             }
         } else if (result.equals(ButtonType.NO)){
-            String output = GameManager.getDuelControllerByIndex(token).getInput("no", true, token);
+            String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"no\", true, token)");
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");

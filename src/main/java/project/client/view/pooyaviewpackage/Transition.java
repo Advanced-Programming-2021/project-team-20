@@ -6,7 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
 import project.model.cardData.General.RowOfCardLocation;
@@ -53,9 +53,10 @@ public class Transition {
             parallelTransition.getChildren().add(translate);
         }
         String token = DuelView.getToken();
-        int currentTurn = GameManager.getDuelControllerByIndex(token).getTurn();
-        System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
-        if (turn == currentTurn || GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(1).equals("AI")){
+        int currentTurn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
+        System.out.println("I want to add card to hand and turn = " + turn + " currentTurn = " + currentTurn);
+
+        if (turn == 1) {
             cardView.setCanBeSeen(true);
         } else {
             cardView.setCanBeSeen(false);
@@ -131,6 +132,7 @@ public class Transition {
             DuelView.getControllerForView().changeLabelOfCardForSendingSpellToSpellZone(cardView);
             TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToSpellZone(cardView, sideOfFinalDestination);
             parallelTransition.getChildren().add(translateTransition);
+            cardView.setCanBeSeen(true);
             ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(initialSide);
             for (int i = 0; i < translateTransitions.size(); i++) {
                 parallelTransition.getChildren().add(translateTransitions.get(i));

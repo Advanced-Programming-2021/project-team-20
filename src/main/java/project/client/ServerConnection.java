@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import project.client.view.pooyaviewpackage.AlertAndMenuItems;
 import project.client.view.pooyaviewpackage.DuelView;
 import project.client.view.pooyaviewpackage.JsonCreator;
 
@@ -61,8 +62,9 @@ public class ServerConnection {
             try {
                 long time = System.currentTimeMillis();
                 while (true) {
-                    if (System.currentTimeMillis() - time > 7000) {
+                    if (System.currentTimeMillis() - time > 1000) {
                         time = System.currentTimeMillis();
+                        //      System.out.println("what second thread client is sending to server: "+whatToWrite);
                         secondDataOutputStream.writeUTF(getResultSecondTime(whatToWrite) + "\n");
                         secondDataOutputStream.flush();
                     }
@@ -76,26 +78,43 @@ public class ServerConnection {
             try {
                 while (true) {
                     String whatServerGave = secondDataInputStream.readUTF();
-                    if (!whatServerGave.isBlank() && !whatServerGave.startsWith("you haven't")) {
-                        DuelView.setIsMyTurn(Boolean.parseBoolean(whatServerGave));
+                    // System.out.println("what server gave to second thread: *" + whatServerGave+"*");
+                    if (whatServerGave.contains("do you want to ")||whatServerGave.contains("now it will be")) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getShowOptionsToUser().doYouWantToAlert(whatServerGave);
+                            }
+                        });
+                    } else if (whatServerGave.startsWith("adva") || whatServerGave.startsWith("call you")) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                            }
+                        });
+                    } else if (!whatServerGave.isBlank() && !whatServerGave.startsWith("you haven't")) {
+                        //   System.out.println("This is parsing "+Boolean.parseBoolean(whatServerGave)+" please don't care");
+                        if (!DuelView.isIsMyTurn() && whatServerGave.startsWith("true")) {
+                            DuelView.setIsMyTurn(true);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+                                }
+                            });
+                        } else if (DuelView.isIsMyTurn() && whatServerGave.startsWith("true")) {
+                            DuelView.setIsMyTurn(true);
+                        } else if (whatServerGave.startsWith("false")) {
+                            DuelView.setIsMyTurn(false);
+                        }
                         if (!DuelView.isIsMyTurn()) {
                             setWhatToWrite("it's not my turn");
-                            //  secondDataOutputStream.writeUTF(getResultSecondTime("it's not my turn"));
-                            //  secondDataOutputStream.flush();
-                            //   String secondSocketInput = secondDataInputStream.readUTF();
-                            //   System.out.println("secondSocketInput = " + secondSocketInput);
-                            if (whatServerGave.startsWith("adva")) {
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                                    }
-                                });
-                            }
-
                         } else {
                             setWhatToWrite("Is it my turn?");
                         }
+                    } else {
+                        setWhatToWrite("Is it my turn?");
                     }
                 }
             } catch (IOException e) {
@@ -106,47 +125,47 @@ public class ServerConnection {
         readingSecondThread.setDaemon(true);
         writingSecondThread.start();
         readingSecondThread.start();
-        Thread secondThread = new Thread(() -> {
-            long time = System.currentTimeMillis();
-            while (true) {
-                if (System.currentTimeMillis() - time > 2000) {
-                    time = System.currentTimeMillis();
-                    String output = "Is it my turn?";
-                    System.out.println(output);
-                    String whatServerGave = "";
-                    try {
-                        secondDataOutputStream.writeUTF(getResultSecondTime(output));
-                        secondDataOutputStream.flush();
-                        whatServerGave = secondDataInputStream.readUTF();
-                        System.out.println("whatServerGave = " + whatServerGave);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (!whatServerGave.isBlank() && !whatServerGave.startsWith("you haven't")) {
-                        DuelView.setIsMyTurn(Boolean.parseBoolean(whatServerGave));
-                        if (!DuelView.isIsMyTurn()) {
-                            try {
-                                secondDataOutputStream.writeUTF(getResultSecondTime("it's not my turn"));
-                                secondDataOutputStream.flush();
-                                String secondSocketInput = secondDataInputStream.readUTF();
-                                System.out.println("secondSocketInput = " + secondSocketInput);
-                                if (secondSocketInput.startsWith("adva")) {
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                                        }
-                                    });
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        secondThread.setDaemon(true);
+//        Thread secondThread = new Thread(() -> {
+//            long time = System.currentTimeMillis();
+//            while (true) {
+//                if (System.currentTimeMillis() - time > 2000) {
+//                    time = System.currentTimeMillis();
+//                    String output = "Is it my turn?";
+//                    System.out.println(output);
+//                    String whatServerGave = "";
+//                    try {
+//                        secondDataOutputStream.writeUTF(getResultSecondTime(output));
+//                        secondDataOutputStream.flush();
+//                        whatServerGave = secondDataInputStream.readUTF();
+//                        System.out.println("whatServerGave = " + whatServerGave);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (!whatServerGave.isBlank() && !whatServerGave.startsWith("you haven't")) {
+//                        DuelView.setIsMyTurn(Boolean.parseBoolean(whatServerGave));
+//                        if (!DuelView.isIsMyTurn()) {
+//                            try {
+//                                secondDataOutputStream.writeUTF(getResultSecondTime("it's not my turn"));
+//                                secondDataOutputStream.flush();
+//                                String secondSocketInput = secondDataInputStream.readUTF();
+//                                System.out.println("secondSocketInput = " + secondSocketInput);
+//                                if (secondSocketInput.startsWith("adva")) {
+//                                    Platform.runLater(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+//                                        }
+//                                    });
+//                                }
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//        secondThread.setDaemon(true);
         // secondThread.start();
     }
 

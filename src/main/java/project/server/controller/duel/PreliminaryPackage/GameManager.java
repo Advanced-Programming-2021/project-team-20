@@ -154,7 +154,7 @@ public class GameManager {
     }
 
     public static ContinuousMonsterEffectController getContinuousMonsterEffectControllersByIndex(String token) {
-        return continuousMonsterEffectControllerHashMap.get(token);
+        return continuousMonsterEffectControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
     public static NormalSummonController getNormalSummonControllerByIndex(String token) {
@@ -274,12 +274,20 @@ public class GameManager {
 
     public String getAvailableCardLocationForUseForClient(String token) {
         String[] lines = availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n");
+        System.out.println("giveAvailableCardLocationForUseToClient: ");
+        System.out.println("String[] lines");
+        for (int i = 0; i < lines.length; i++) {
+            System.out.println("lines[" + i + "]= " + lines[i]);
+        }
         int linesRead = DoubleToken.getDoubleTokenByOneToken(token).getLinesReadByToken(token);
+        System.out.println("linesRead = " + linesRead);
         String output = "";
         output += lines[linesRead];
+        System.out.println("output is now= " + output);
         output += "\n";
         output += lines[linesRead + 1];
         output += "\n";
+        System.out.println("output is finally= " + output);
         return output;
     }
 
@@ -321,10 +329,17 @@ public class GameManager {
 
     public String getWholeReportToClient(String token) {
         String[] lines = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n");
+        System.out.println("getWholeReportToClient: ");
+        System.out.println("String[] lines");
+        for (int i = 0; i < lines.length; i++) {
+            System.out.println("lines[" + i + "]= " + lines[i]);
+        }
         int linesRead = DoubleToken.getDoubleTokenByOneToken(token).getLinesReadFromWholeReportToClientByToken(token);
+        System.out.println("linesRead = " + linesRead);
         String output = "";
         // int newLinesReading = 0;
         for (int i = 0; i < lines.length - linesRead; i++) {
+            System.out.println("Adding Line!: " + lines[linesRead + i]);
             output += lines[linesRead + i];
             output += "\n";
         }
@@ -352,15 +367,37 @@ public class GameManager {
         whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
     }
 
-    public void clearWholeReportToClient(String token) {
+    public void clearWholeReportToClient(String token, boolean isBeingCalledAtTheRunningTime) {
         // maybe first method should be cleared sooner, in its original function
         clearChangesInLifePointsToBeGivenToClient(token);
         clearSuperAlmightyString(token);
         DoubleToken doubleToken = DoubleToken.getDoubleTokenByOneToken(token);
-        doubleToken.setLinesReadFromWholeReportToClientByToken(token, wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n").length);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nclearing whole report from client " +
+            (wholeReportToClientHashMap.get(doubleToken).split("\n").length));
+        if (!isBeingCalledAtTheRunningTime) {
+            doubleToken.setLinesReadFromWholeReportToClientByToken(token, wholeReportToClientHashMap.get(doubleToken).split("\n").length);
+        }
     }
 
+    public void addDoubleTokenToSuperAlmightyChangesStringHashMap(DoubleToken doubleToken) {
+        superAlmightyChangesStringHashMap.put(doubleToken, "");
+    }
 
+    public void addDoubleTokenToAvailableCardLocationForUseForClientHashMap(DoubleToken doubleToken) {
+        availableCardLocationForUseForClientHashMap.put(doubleToken, "");
+    }
+
+    public void addDoubleTokenToChangesInLifePointsToBeGivenToClientHashMap(DoubleToken doubleToken) {
+        changesInLifePointsToBeGivenToClientHashMap.put(doubleToken, "");
+    }
+
+    public void addDoubleTokenToWhatUsersSayHashMap(DoubleToken doubleToken) {
+        whatUsersSayHashMap.put(doubleToken, "");
+    }
+
+    public void addDoubleTokenToWholeReportToClientHashMap(DoubleToken doubleToken) {
+        wholeReportToClientHashMap.put(doubleToken, "");
+    }
 }
 
 
@@ -383,6 +420,11 @@ class DoubleToken {
         this.secondLinesReadFromWholeReportToClient = 0;
         doubleTokens.add(this);
         ClientMessageReceiver.addDoubleTokenToIndirectMessages(this);
+        DuelStarter.getGameManager().addDoubleTokenToSuperAlmightyChangesStringHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToAvailableCardLocationForUseForClientHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToChangesInLifePointsToBeGivenToClientHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToWhatUsersSayHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToWholeReportToClientHashMap(this);
     }
 
     public int getLinesReadByToken(String token) {

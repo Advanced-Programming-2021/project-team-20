@@ -446,6 +446,7 @@ public class MonsterCard extends Card {
 
     public static int giveATKDEFConsideringEffects(String string, CardLocation cardLocation, String token) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        System.out.println("monster card more info: cardLocation is: "+cardLocation.getRowOfCardLocation()+" "+cardLocation.getIndex());
         MonsterCard monsterCard = (MonsterCard) duelBoard.getCardByCardLocation(cardLocation);
         int finalAttackPower = monsterCard.getAttackPower();
         int finalDefensePower = monsterCard.getDefensePower();

@@ -98,7 +98,7 @@ public class DuelController {
 
     public DuelController(String firstUser, String secondUser, int numberOfRounds, String firstUserToken, String secondUsedToken) {
         fakeTurn = turn = 1;
-        GameManager.getPhaseControllerByIndex(firstUserToken).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
+        //GameManager.getPhaseControllerByIndex(firstUserToken).setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_1);
         tokenToUser.put(firstUserToken, new UserAndTurn(firstUser, 1));
         tokenToUser.put(secondUsedToken, new UserAndTurn(secondUser, 2));
         this.numberOfRounds = numberOfRounds;
@@ -178,11 +178,11 @@ public class DuelController {
             return endGame(-turn + 3, token);
         }
 
-        if (!isPlayersChangedDecks) {
-            // return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(string, 0);
-        } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
-            return setTurnForGame.setTurnBetweenTwoPlayer(string, token);
-        }
+//        if (!isPlayersChangedDecks) {
+//            // return changeCardsBetweenTwoRounds.changeCardsBetweenTwoRounds(string, 0);
+//        } else if (!isTurnSetedBetweenTwoPlayerWhenRoundBegin) {
+//            return setTurnForGame.setTurnBetweenTwoPlayer(string, token);
+//        }
 
         // System.out.println("normalSummonController.isAreWeLookingForMonstersToBeTributed()"
         // + normalSummonController.isAreWeLookingForMonstersToBeTributed());
@@ -558,7 +558,7 @@ public class DuelController {
         GameManager.getDuelBoardByIndex(token).shuffleMainDecks(token);
         lifePoints.set(0, 8000);
         lifePoints.set(1, 8000);
-        DuelStarter.getGameManager().clearWholeReportToClient(token);
+        DuelStarter.getGameManager().clearWholeReportToClient(token, true);
         DuelStarter.getGameManager().clearWhatUsersSay(token);
         //firstTimeStarting = true;
     }

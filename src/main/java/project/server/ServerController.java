@@ -154,8 +154,8 @@ public class ServerController {
             System.out.println("=============================================");
             System.out.println("message from client: " + input);
             String result = process(input);
-            if (result.equals(""))
-                break;
+//            if (result.equals(""))
+//                break;
             System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
@@ -174,6 +174,7 @@ public class ServerController {
                 return badRequestFormat;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return badRequestFormat;
         }
     }

@@ -90,10 +90,10 @@ public class DeckScene extends Application {
                             indexOfChosenCardInDeck = i;
                             if (isClassWaitingForUserToChooseCardFromDeck) {
                                 String token = DuelView.getToken();
-                                String miniString = (Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getFakeTurn()")) == 1 ? "" : "--opponent ");
-                                System.out.println("sending to server "+"select " + miniString + "--deck " + indexOfChosenCardInDeck);
+                                String miniString = "";
+                                System.out.println("sending to server " + "select " + miniString + "--deck " + indexOfChosenCardInDeck);
                                 JsonCreator.setFirstAdditionalString(miniString);
-                                JsonCreator.setIntegerString((indexOfChosenCardInDeck+1)+"");
+                                JsonCreator.setIntegerString((indexOfChosenCardInDeck + 1) + "");
                                 String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + miniString + \"--deck \" + (indexOfChosenCardInDeck+1), true, token)");
                                 System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
                                 if (output.contains("this card cannot be") || output.contains("this is not a")
