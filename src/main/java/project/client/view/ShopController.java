@@ -27,7 +27,6 @@ import project.model.User;
 import project.model.cardData.General.Card;
 import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.non_duel.shop.Shop;
-import project.server.controller.non_duel.storage.Storage;
 
 import java.net.URL;
 import java.util.*;
@@ -166,6 +165,7 @@ public class ShopController implements Initializable {
 
     private void showNumberOfBoughtCards(String cardName) {
         System.out.println("show");
+        //TODO : get it from shop controller
         HashMap<String, Integer> numberOfCards = shop.getNumberOfCards(cardName);
         equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
         equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
@@ -344,7 +344,11 @@ public class ShopController implements Initializable {
         }
         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
 
-        int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+
+
+        String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
+        String answerOfShop2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        int cardAmount = Integer.parseInt(answerOfShop2);
         int userAmount = LoginController.getOnlineUser().getMoney();
         buybtn.setDisable(cardAmount > userAmount);
 
