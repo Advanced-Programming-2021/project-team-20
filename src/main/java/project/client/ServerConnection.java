@@ -71,9 +71,9 @@ public class ServerConnection {
                     if (System.currentTimeMillis() - time > 1000) {
                         time = System.currentTimeMillis();
                         thirdDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation());
-//                        fourthDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers());
                         thirdDataOutputStream.flush();
-//                        fourthDataOutputStream.flush();
+                        fourthDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers());
+                        fourthDataOutputStream.flush();
                     }
                 }
             } catch (IOException e) {
@@ -84,10 +84,10 @@ public class ServerConnection {
             try {
                 while (true) {
                     String whatServerGave = thirdDataInputStream.readUTF();
-//                    String whatServerGave2 = fourthDataInputStream.readUTF();
+                    String whatServerGave2 = fourthDataInputStream.readUTF();
                     System.out.println(whatServerGave);
-//                    System.out.println(whatServerGave2);
-                    scoreboardController.fillLabelAutomatically(whatServerGave);
+                    System.out.println(whatServerGave2);
+                    scoreboardController.fillLabelAutomatically(whatServerGave, whatServerGave2);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

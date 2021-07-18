@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.client.ServerConnection;
 import project.client.view.Components.Person;
+import project.client.view.Components.PersonForOnlineUsers;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,10 +36,10 @@ public class ScoreboardController {
         ServerConnection.scoreboardAutoRefresh(this);
     }
 
-    public void fillLabelAutomatically(String answer1) {
+    public void fillLabelAutomatically(String answer1, String answer2) {
 //        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
-        tableView.getColumns().removeAll();
-        tableViewForOnlineUsers.getColumns().removeAll();
+//        tableView.getColumns().removeAll();
+//        tableViewForOnlineUsers.getColumns().removeAll();
         String allPeople = answer1;
         System.out.println(answer1);
         String[] allPeopleSplited = allPeople.split(",");
@@ -83,30 +84,30 @@ public class ScoreboardController {
 
         //Show OnlineUsers
 //        String messageForOnlineUsers = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers();
-//        String allPeoplemessageForOnlineUsers = answer2;
-//        System.out.println(answer2);
-//        String[] allPeopleSplitedmessageForOnlineUsers = allPeoplemessageForOnlineUsers.split(",");
-//        PersonForOnlineUsers[] personmessageForOnlineUsers = new PersonForOnlineUsers[allPeopleSplitedmessageForOnlineUsers.length];
-//        for (int i = 0; i < personmessageForOnlineUsers.length; i++) {
-//            String nickname = allPeopleSplitedmessageForOnlineUsers[i];
-//            personmessageForOnlineUsers[i] = new PersonForOnlineUsers(nickname);
-//        }
-//
-//        final ObservableList<PersonForOnlineUsers> datamessageForOnlineUsers = FXCollections.observableArrayList(
-//            personmessageForOnlineUsers
-//        );
-//
-//
-//        TableColumn<Person, String> usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
-//        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-//        usernameColumnmessageForOnlineUsers.setStyle( "-fx-alignment: CENTER;");
-//        usernameColumnmessageForOnlineUsers.setMinWidth(600);
-//
-//        ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
-//
-//        tableViewForOnlineUsers.setItems(datamessageForOnlineUsers);
-//        tableViewForOnlineUsers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-//        tableViewForOnlineUsers.getColumns().addAll(usernameColumnmessageForOnlineUsers);
+        String allPeoplemessageForOnlineUsers = answer2;
+        System.out.println(answer2);
+        String[] allPeopleSplitedmessageForOnlineUsers = allPeoplemessageForOnlineUsers.split(",");
+        PersonForOnlineUsers[] personmessageForOnlineUsers = new PersonForOnlineUsers[allPeopleSplitedmessageForOnlineUsers.length];
+        for (int i = 0; i < personmessageForOnlineUsers.length; i++) {
+            String nickname = allPeopleSplitedmessageForOnlineUsers[i];
+            personmessageForOnlineUsers[i] = new PersonForOnlineUsers(nickname);
+        }
+
+        final ObservableList<PersonForOnlineUsers> datamessageForOnlineUsers = FXCollections.observableArrayList(
+            personmessageForOnlineUsers
+        );
+
+
+        TableColumn<Person, String> usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
+        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        usernameColumnmessageForOnlineUsers.setStyle( "-fx-alignment: CENTER;");
+        usernameColumnmessageForOnlineUsers.setMinWidth(600);
+
+        ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
+
+        tableViewForOnlineUsers.setItems(datamessageForOnlineUsers);
+        tableViewForOnlineUsers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableViewForOnlineUsers.getColumns().addAll(usernameColumnmessageForOnlineUsers);
     }
 
     public void returnToMainMenu(ActionEvent actionEvent) {

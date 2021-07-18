@@ -124,12 +124,12 @@ public class ServerController {
     }
 
 
-    private static void startNewDuelThread1(ServerSocket serverSocket, Socket socket) {
+    private static synchronized void startNewDuelThread1(ServerSocket serverSocket, Socket socket) {
         new Thread(() -> {
             try {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-//                getDuelInputAndProcess(dataInputStream, dataOutputStream);
+                getDuelInputAndProcess1(dataInputStream, dataOutputStream);
                 dataInputStream.close();
                 socket.close();
                 serverSocket.close();
@@ -137,6 +137,41 @@ public class ServerController {
                 System.out.println("Connection reset");
             }
         }).start();
+    }
+
+    private static synchronized void getDuelInputAndProcess1(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+        throws IOException {
+        while (true) {
+            String input = dataInputStream.readUTF();
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
+
+            String result = null;
+
+            JsonParser parser = new JsonParser();
+            JsonElement rootNode = parser.parse(input);
+            try {
+                if (rootNode.isJsonObject()) {
+                    JsonObject details = rootNode.getAsJsonObject();
+                    String type = details.get("type").getAsString();
+                    if (type.equals("scoreboard")) {
+                        result = Scoreboard.findCommands("scoreboard show");
+                    }
+                    else if (type.equals("scoreboardOnline")){
+                        result = Scoreboard.findCommands("scoreboardOnline");
+                    }
+                } else {
+                    result = "ERROR";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                result = "ERROR";
+            }
+
+            System.out.println("message send to client: " + result);
+            dataOutputStream.writeUTF(result);
+            dataOutputStream.flush();
+        }
     }
 //
 //    private static void secondStartNewThread(ServerSocket serverSocket, Socket socket) {
