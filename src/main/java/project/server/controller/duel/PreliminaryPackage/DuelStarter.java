@@ -24,9 +24,7 @@ import project.model.cardData.TrapCardData.TrapCard;
 public class DuelStarter {
 
     private static HashMap<String, Integer> listOfTypeOfGameThatSuggest = new HashMap<>();
-    //    private static HashMap<String, Integer> listOfGamesThatMustSetItsTurn = new HashMap<>();
     private static List<SetTurnForGame> newGamesThatShouldSetItsTurn = new ArrayList<>();
-
     private static GameManager gameManager = new GameManager();
 
     public static GameManager getGameManager() {
@@ -97,6 +95,37 @@ public class DuelStarter {
         newGamesThatShouldSetItsTurn.add(setTurnForGame);
     }
 
+    public static String playWithComputer(JsonObject details) {
+        String token = "";
+        String computerToken = "";
+        int numberOfRounds;
+        try {
+            token = details.get("token").getAsString();
+            computerToken = details.get("computerToken").getAsString();
+            numberOfRounds = details.get("numberOfRounds").getAsInt();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+
+        User user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getUserNotLogined();
+        }
+
+//        Deck firstUserActiveDeck = getActiveDeck(user);
+//        User aiUser = Storage.getUserByName("AI");
+//        Deck secondUserActiveDeck = getActiveDeck(aiUser);
+
+//        startNewGame(user, aiUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck, token, computerToken);
+
+        SetTurnForGame setTurnForGame = new SetTurnForGame(token, computerToken, numberOfRounds);
+        setTurnForGame.setPlayer2Selection(-1);
+        newGamesThatShouldSetItsTurn.add(setTurnForGame);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+            "Duel Started Successfully!");
+
+    }
+
 
     public static String setTurnOfGame(JsonObject details) {
         String token = "";
@@ -157,7 +186,8 @@ public class DuelStarter {
                 } else {
                     secondPlayerToken = setTurnForGame.getPlayer1Token();
                 }
-                startGame(result, secondPlayerToken);
+                boolean isPlayingWithComputer = setTurnForGame.getPlayer2Selection() == -1;
+                startGame(result, secondPlayerToken, isPlayingWithComputer);
                 user = ServerController.getUserByToken(result);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("CONFIRMATION",
                     "Player " + user.getName() + " Must Start Game");
@@ -187,18 +217,21 @@ public class DuelStarter {
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "You Have not Requested For Duel");
     }
 
-    private static synchronized void startGame(String firstPlayerToken, String secondPlayerToken) {
+    private static synchronized void startGame(String firstPlayerToken, String secondPlayerToken, boolean isPlayingWithComputer) {
         User firstUser = ServerController.getUserByToken(firstPlayerToken);
         Deck firstUserActiveDeck = getActiveDeck(firstUser);
-        User secondUser = ServerController.getUserByToken(secondPlayerToken);
+        User secondUser = null;
+        if (isPlayingWithComputer) {
+            secondUser = Storage.getUserByName("AI");
+        } else {
+            secondUser = ServerController.getUserByToken(secondPlayerToken);
+        }
         Deck secondUserActiveDeck = getActiveDeck(secondUser);
         for (int i = 0; i < newGamesThatShouldSetItsTurn.size(); i++) {
             if (newGamesThatShouldSetItsTurn.get(i).getPlayer1Token().equals(firstPlayerToken) || newGamesThatShouldSetItsTurn.get(i).getPlayer2Token().equals(secondPlayerToken)) {
                 startNewGame(firstUser, secondUser, newGamesThatShouldSetItsTurn.get(i).getNumberOfRounds(), firstUserActiveDeck, secondUserActiveDeck,
                     firstPlayerToken, secondPlayerToken);
                 newGamesThatShouldSetItsTurn.remove(i);
-//                listOfGamesThatMustSetItsTurn.remove(firstPlayerToken);
-//                listOfGamesThatMustSetItsTurn.remove(secondPlayerToken);
                 break;
             }
         }

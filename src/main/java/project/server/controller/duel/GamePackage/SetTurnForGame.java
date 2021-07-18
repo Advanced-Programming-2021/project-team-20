@@ -100,6 +100,9 @@ public class SetTurnForGame {
     }
 
     public String setWinnerUserAndSendItsToken() {
+        if (player2Selection == -1) {
+            return player1Token;
+        }
         if (player1Selection == 0 && player2Selection == 0) {
             return "Players Must Repeat Game";
         }
@@ -134,6 +137,10 @@ public class SetTurnForGame {
 
     public void setPlayer2Selection(int player2Selection) {
         this.player2Selection = player2Selection;
+    }
+
+    public int getPlayer2Selection() {
+        return player2Selection;
     }
 
     public int getNumberOfRounds() {
