@@ -31,14 +31,18 @@ public class ServerController {
     public static void runServer() {
         Socket socket = null;
         Socket secondSocket = null;
+        Socket thirdSocket = null;
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             ServerSocket secondServerSocket = new ServerSocket(12346);
+            ServerSocket thirdServerSocket = new ServerSocket(12356);
             while (true) {
                 socket = serverSocket.accept();
                 startNewThread(serverSocket, socket);
                 secondSocket = secondServerSocket.accept();
                 startNewDuelThread(secondServerSocket, secondSocket);
+                thirdSocket = thirdServerSocket.accept();
+                startNewDuelThread1(thirdServerSocket, thirdSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,6 +121,22 @@ public class ServerController {
             }
         }
         return output;
+    }
+
+
+    private static void startNewDuelThread1(ServerSocket serverSocket, Socket socket) {
+        new Thread(() -> {
+            try {
+                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                getDuelInputAndProcess(dataInputStream, dataOutputStream);
+                dataInputStream.close();
+                socket.close();
+                serverSocket.close();
+            } catch (IOException e) {
+                System.out.println("Connection reset");
+            }
+        }).start();
     }
 //
 //    private static void secondStartNewThread(ServerSocket serverSocket, Socket socket) {

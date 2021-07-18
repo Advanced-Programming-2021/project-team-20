@@ -1,16 +1,10 @@
 package project.client;
 
 import com.google.gson.JsonObject;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.util.Duration;
-import project.client.view.pooyaviewpackage.AlertAndMenuItems;
+import project.client.view.ScoreboardController;
 import project.client.view.pooyaviewpackage.DuelView;
-import project.client.view.pooyaviewpackage.JsonCreator;
 
-import javax.swing.text.PlainDocument;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,6 +17,13 @@ public class ServerConnection {
     private static Socket secondSocket;
     private static DataInputStream secondDataInputStream;
     private static DataOutputStream secondDataOutputStream;
+    private static Socket thirdSocket;
+    private static DataInputStream thirdDataInputStream;
+    private static DataOutputStream thirdDataOutputStream;
+    private static DataInputStream fourthDataInputStream;
+    private static DataOutputStream fourthDataOutputStream;
+    private static Thread readingThirdThread;
+    private static Thread writingThirdThread;
 
     public static void initializeNetwork() {
         try {
@@ -32,6 +33,11 @@ public class ServerConnection {
             secondSocket = new Socket("localhost", 12346);
             secondDataInputStream = new DataInputStream(secondSocket.getInputStream());
             secondDataOutputStream = new DataOutputStream(secondSocket.getOutputStream());
+            thirdSocket = new Socket("localhost", 12356);
+            thirdDataInputStream = new DataInputStream(thirdSocket.getInputStream());
+            thirdDataOutputStream = new DataOutputStream(thirdSocket.getOutputStream());
+            fourthDataInputStream = new DataInputStream(thirdSocket.getInputStream());
+            fourthDataOutputStream = new DataOutputStream(thirdSocket.getOutputStream());
             receiveDataFromServerAndGiveResults();
         } catch (IOException x) {
             x.printStackTrace();
@@ -56,6 +62,57 @@ public class ServerConnection {
         whatToWrite = string;
     }
 
+
+    public static void scoreboardAutoRefresh(ScoreboardController scoreboardController) {
+        writingThirdThread = new Thread(() -> {
+            try {
+                long time = System.currentTimeMillis();
+                while (true) {
+                    if (System.currentTimeMillis() - time > 1000) {
+                        time = System.currentTimeMillis();
+                        thirdDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation());
+//                        fourthDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers());
+                        thirdDataOutputStream.flush();
+//                        fourthDataOutputStream.flush();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        readingThirdThread = new Thread(() -> {
+            try {
+                while (true) {
+                    String whatServerGave = thirdDataInputStream.readUTF();
+//                    String whatServerGave2 = fourthDataInputStream.readUTF();
+                    System.out.println(whatServerGave);
+//                    System.out.println(whatServerGave2);
+                    scoreboardController.fillLabelAutomatically(whatServerGave);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        writingThirdThread.setDaemon(true);
+        readingThirdThread.setDaemon(true);
+        writingThirdThread.start();
+        readingThirdThread.start();
+    }
+
+    public static void stopScoreboard(){
+        writingThirdThread.setDaemon(false);
+        readingThirdThread.setDaemon(false);
+    }
+
+    public static String getResultSecondTime(String string) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "duel");
+        jsonObject.addProperty("token", DuelView.getToken());
+        jsonObject.addProperty("firstAdditionalString", "");
+        jsonObject.addProperty("integerString", "");
+        jsonObject.addProperty("request", string);
+        return jsonObject.toString();
+    }
 
     public static void receiveDataFromServerAndGiveResults() {
         Thread writingSecondThread = new Thread(() -> {
@@ -125,58 +182,7 @@ public class ServerConnection {
         readingSecondThread.setDaemon(true);
         writingSecondThread.start();
         readingSecondThread.start();
-//        Thread secondThread = new Thread(() -> {
-//            long time = System.currentTimeMillis();
-//            while (true) {
-//                if (System.currentTimeMillis() - time > 2000) {
-//                    time = System.currentTimeMillis();
-//                    String output = "Is it my turn?";
-//                    System.out.println(output);
-//                    String whatServerGave = "";
-//                    try {
-//                        secondDataOutputStream.writeUTF(getResultSecondTime(output));
-//                        secondDataOutputStream.flush();
-//                        whatServerGave = secondDataInputStream.readUTF();
-//                        System.out.println("whatServerGave = " + whatServerGave);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    if (!whatServerGave.isBlank() && !whatServerGave.startsWith("you haven't")) {
-//                        DuelView.setIsMyTurn(Boolean.parseBoolean(whatServerGave));
-//                        if (!DuelView.isIsMyTurn()) {
-//                            try {
-//                                secondDataOutputStream.writeUTF(getResultSecondTime("it's not my turn"));
-//                                secondDataOutputStream.flush();
-//                                String secondSocketInput = secondDataInputStream.readUTF();
-//                                System.out.println("secondSocketInput = " + secondSocketInput);
-//                                if (secondSocketInput.startsWith("adva")) {
-//                                    Platform.runLater(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-//                                        }
-//                                    });
-//                                }
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//        secondThread.setDaemon(true);
-        // secondThread.start();
-    }
 
-    public static String getResultSecondTime(String string) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "duel");
-        jsonObject.addProperty("token", DuelView.getToken());
-        jsonObject.addProperty("firstAdditionalString", "");
-        jsonObject.addProperty("integerString", "");
-        jsonObject.addProperty("request", string);
-        return jsonObject.toString();
     }
 
 }

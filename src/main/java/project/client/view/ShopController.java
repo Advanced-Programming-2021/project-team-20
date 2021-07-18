@@ -298,6 +298,8 @@ public class ShopController implements Initializable {
     public void buyCard() {
         SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3");
 
+        token = LoginController.getToken();
+
         String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
 
         String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);

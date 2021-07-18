@@ -7,9 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.client.ServerConnection;
-import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.Components.Person;
-import project.client.view.Components.PersonForOnlineUsers;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,11 +30,17 @@ public class ScoreboardController {
     private TableColumn<Person, Integer> scoreColumn;
     private TableColumn<Integer, String> calltypel;
 
-    public void fillLabel() {
 
-//        String allPeople = new Scoreboard().findCommands("scoreboard show");
-        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
-        String allPeople = ServerConnection.sendDataToServerAndReceiveResult(message);
+    public void fillLabel() {
+        ServerConnection.scoreboardAutoRefresh(this);
+    }
+
+    public void fillLabelAutomatically(String answer1) {
+//        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
+        tableView.getColumns().removeAll();
+        tableViewForOnlineUsers.getColumns().removeAll();
+        String allPeople = answer1;
+        System.out.println(answer1);
         String[] allPeopleSplited = allPeople.split(",");
         Person[] person = new Person[allPeopleSplited.length/3];
         for (int i = 0; i < person.length; i++) {
@@ -78,32 +82,35 @@ public class ScoreboardController {
 
 
         //Show OnlineUsers
-        String messageForOnlineUsers = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers();
-        String allPeoplemessageForOnlineUsers = ServerConnection.sendDataToServerAndReceiveResult(messageForOnlineUsers);
-        String[] allPeopleSplitedmessageForOnlineUsers = allPeoplemessageForOnlineUsers.split(",");
-        PersonForOnlineUsers[] personmessageForOnlineUsers = new PersonForOnlineUsers[allPeopleSplitedmessageForOnlineUsers.length];
-        for (int i = 0; i < personmessageForOnlineUsers.length; i++) {
-            String nickname = allPeopleSplitedmessageForOnlineUsers[i];
-            personmessageForOnlineUsers[i] = new PersonForOnlineUsers(nickname);
-        }
-
-        final ObservableList<PersonForOnlineUsers> datamessageForOnlineUsers = FXCollections.observableArrayList(
-            personmessageForOnlineUsers
-        );
-
-
-        TableColumn<Person, String> usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
-        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-        usernameColumnmessageForOnlineUsers.setStyle( "-fx-alignment: CENTER;");
-        usernameColumnmessageForOnlineUsers.setMinWidth(600);
-
-        ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
-
-        tableViewForOnlineUsers.setItems(datamessageForOnlineUsers);
-        tableViewForOnlineUsers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableViewForOnlineUsers.getColumns().addAll(usernameColumnmessageForOnlineUsers);
+//        String messageForOnlineUsers = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers();
+//        String allPeoplemessageForOnlineUsers = answer2;
+//        System.out.println(answer2);
+//        String[] allPeopleSplitedmessageForOnlineUsers = allPeoplemessageForOnlineUsers.split(",");
+//        PersonForOnlineUsers[] personmessageForOnlineUsers = new PersonForOnlineUsers[allPeopleSplitedmessageForOnlineUsers.length];
+//        for (int i = 0; i < personmessageForOnlineUsers.length; i++) {
+//            String nickname = allPeopleSplitedmessageForOnlineUsers[i];
+//            personmessageForOnlineUsers[i] = new PersonForOnlineUsers(nickname);
+//        }
+//
+//        final ObservableList<PersonForOnlineUsers> datamessageForOnlineUsers = FXCollections.observableArrayList(
+//            personmessageForOnlineUsers
+//        );
+//
+//
+//        TableColumn<Person, String> usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
+//        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+//        usernameColumnmessageForOnlineUsers.setStyle( "-fx-alignment: CENTER;");
+//        usernameColumnmessageForOnlineUsers.setMinWidth(600);
+//
+//        ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
+//
+//        tableViewForOnlineUsers.setItems(datamessageForOnlineUsers);
+//        tableViewForOnlineUsers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        tableViewForOnlineUsers.getColumns().addAll(usernameColumnmessageForOnlineUsers);
     }
+
     public void returnToMainMenu(ActionEvent actionEvent) {
+        ServerConnection.stopScoreboard();
         try {
             new MainView().changeView("/project/fxml/mainMenu.fxml");
         } catch (IOException e) {
@@ -111,7 +118,7 @@ public class ScoreboardController {
         }
     }
 
-    private void customiseFactory(TableColumn<Person, String> calltypel, String nickname) {
+    private static void customiseFactory(TableColumn<Person, String> calltypel, String nickname) {
         calltypel.setCellFactory(column -> {
             return new TableCell<Person, String>() {
                 @Override
