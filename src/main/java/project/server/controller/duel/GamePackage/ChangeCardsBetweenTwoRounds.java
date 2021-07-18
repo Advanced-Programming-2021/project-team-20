@@ -21,12 +21,15 @@ public class ChangeCardsBetweenTwoRounds {
     private boolean isOpponentPlayerConfirmChanges = false;
     private boolean isAllyPlayerChangingHisDeck;
     private boolean isOpponentPlayerChangingHisDeck;
+    private boolean isPlayingWithComputer;
 
-    public ChangeCardsBetweenTwoRounds(String allyPlayerToken, Deck allyPlayerDeck, String opponentPlayerToken, Deck opponentPlayerDeck) {
+    public ChangeCardsBetweenTwoRounds(String allyPlayerToken, Deck allyPlayerDeck, String opponentPlayerToken, Deck opponentPlayerDeck,boolean isPlayingWithComputer) {
         this.allyPlayerToken = allyPlayerToken;
         this.allyPlayerDeck = allyPlayerDeck;
         this.opponentPlayerToken = opponentPlayerToken;
         this.opponentPlayerDeck = opponentPlayerDeck;
+        this.isPlayingWithComputer = isPlayingWithComputer;
+        isOpponentPlayerConfirmChanges = isPlayingWithComputer;
     }
 
     public String changeCardsBetweenTwoRounds(String input, int index) {

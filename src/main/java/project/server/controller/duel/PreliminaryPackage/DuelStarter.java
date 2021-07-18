@@ -220,15 +220,18 @@ public class DuelStarter {
     private static synchronized void startGame(String firstPlayerToken, String secondPlayerToken, boolean isPlayingWithComputer) {
         User firstUser = ServerController.getUserByToken(firstPlayerToken);
         Deck firstUserActiveDeck = getActiveDeck(firstUser);
-        User secondUser = null;
+//        System.out.println(firstUserActiveDeck.getMainDeck().size());
+        User secondUser;
         if (isPlayingWithComputer) {
             secondUser = Storage.getUserByName("AI");
         } else {
             secondUser = ServerController.getUserByToken(secondPlayerToken);
         }
+        System.out.println(secondUser.getName()); // what does it mean ?????????? :///
         Deck secondUserActiveDeck = getActiveDeck(secondUser);
+//        System.out.println(secondUserActiveDeck.getMainDeck().size());
         for (int i = 0; i < newGamesThatShouldSetItsTurn.size(); i++) {
-            if (newGamesThatShouldSetItsTurn.get(i).getPlayer1Token().equals(firstPlayerToken) || newGamesThatShouldSetItsTurn.get(i).getPlayer2Token().equals(secondPlayerToken)) {
+            if (newGamesThatShouldSetItsTurn.get(i).getPlayer1Token().equals(firstPlayerToken) || newGamesThatShouldSetItsTurn.get(i).getPlayer1Token().equals(secondPlayerToken)) {
                 startNewGame(firstUser, secondUser, newGamesThatShouldSetItsTurn.get(i).getNumberOfRounds(), firstUserActiveDeck, secondUserActiveDeck,
                     firstPlayerToken, secondPlayerToken);
                 newGamesThatShouldSetItsTurn.remove(i);
@@ -246,6 +249,8 @@ public class DuelStarter {
         ArrayList<Card> secondUserSideDeck = getMainOrSideDeckCards(secondUserActiveDeck, false);
         Collections.shuffle(firstUserMainDeck);
         Collections.shuffle(secondUserMainDeck);
+        System.out.println("first user main deck: " + firstUserMainDeck.size() + "     " + "secondUser Main Deck: " + secondUserMainDeck.size());
+        System.out.println("first user name:" + firstUser.getName() + "      " + "second User name: " + secondUser.getName());
         gameManager.addANewGame(firstUserActiveDeck, firstUserMainDeck, firstUserSideDeck, secondUserActiveDeck,
             secondUserMainDeck, secondUserSideDeck, firstUser.getName(), secondUser.getName(), roundsNumber,
             firstUserToken, secondUserToken);

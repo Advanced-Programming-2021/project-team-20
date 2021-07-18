@@ -154,16 +154,7 @@ public class startDuelController implements Initializable {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("cancelDuel", "", "");
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult2(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-//        showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (deserializeResult.get("type").equals("Successful")) {
-//                    isRequestForGameSend = false;
-//                    setEffectOfCancelGameButton();
-//                }
-//            }
-//        });
+
     }
 
     public void setComputerOpponent() {
@@ -299,7 +290,7 @@ public class startDuelController implements Initializable {
         }
 
 //        if (!isPlayWithComputer) {
-            return "Wait Until Another Player Wants To Play";
+        return "Wait Until Another Player Wants To Play";
 //        }
     }
 
@@ -336,5 +327,18 @@ public class startDuelController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+}
+
+class SendDuelRequestToServer implements Runnable {
+
+    private boolean exit;
+    @Override
+    public void run() {
+
+    }
+
+    public void stop() {
+        exit = true;
     }
 }

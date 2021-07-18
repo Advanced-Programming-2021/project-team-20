@@ -169,11 +169,12 @@ public class RockPaperScissorController implements Initializable {
                         customDialog.openDialog();
                     }
                 } else {
+                    didAnyOneWin = true;
                     backRectanglesToFirstPlace();
                     setPlayer2SelectionAccordingToServerMessage(deserializeResult.get("message"));
                     attackChosenRectangles();
                     showAlert(deserializeResult.get("message"), "CONFIRMATION", true);
-                    startDuel();
+//                    startDuel();
                 }
             }
         });
