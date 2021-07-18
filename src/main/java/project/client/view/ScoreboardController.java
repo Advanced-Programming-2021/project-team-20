@@ -3,6 +3,7 @@ package project.client.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -11,15 +12,22 @@ import project.client.view.Components.Person;
 import project.client.view.Components.PersonForOnlineUsers;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
-public class ScoreboardController {
+public class ScoreboardController implements Initializable {
 
     public AnchorPane anchor1;
     public TableView tableViewForOnlineUsers2;
     public TableView tableView2;
 //    private TableView tableView;
 //    private TableView tableViewForOnlineUsers;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        fillLabel();
+    }
 
     public void fillLabel() {
         ServerConnection.scoreboardAutoRefresh(this);
@@ -150,4 +158,6 @@ public class ScoreboardController {
             e.printStackTrace();
         }
     }
+
+
 }
