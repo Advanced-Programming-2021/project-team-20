@@ -142,4 +142,12 @@ public class ToGsonFormatForSendInformationToClient {
         jsonObject.addProperty("cardName", cardNameForBuy);
         return jsonObject.toString();
     }
+
+    public static String toGsonFormatForGetNumberOfBoughtCardsByCardName(String token, String cardNameForBuy) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "getNumberOfBoughtCardsByCardName");
+        jsonObject.addProperty("token", token);
+        jsonObject.addProperty("cardName", cardNameForBuy);
+        return jsonObject.toString();
+    }
 }

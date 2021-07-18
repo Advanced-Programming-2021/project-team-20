@@ -254,6 +254,8 @@ public class ServerController {
                 return String.valueOf(Storage.getCardByName(details.get("cardName").getAsString()).getCardPrice());
             case "getCardDescriptionByCardName":
                 return Storage.getCardByName(details.get("cardName").getAsString()).getCardDescription();
+            case "getNumberOfBoughtCardsByCardName":
+                return Shop.getNumberOfBoughtCardsByCardName(details);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":
