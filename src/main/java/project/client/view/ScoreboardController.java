@@ -3,9 +3,9 @@ package project.client.view;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import project.client.ServerConnection;
 import project.client.view.Components.Person;
 import project.client.view.Components.PersonForOnlineUsers;
@@ -15,22 +15,11 @@ import java.util.Arrays;
 
 public class ScoreboardController {
 
-    @FXML
-    private TableView tableViewForOnlineUsers;
-    @FXML
-    private Button fillButton;
-    @FXML
-    private Button returnButton;
-    @FXML
-    private TableView<Person> tableView;
-    @FXML
-    private TableColumn<Person, Integer> rankingColumn;
-    @FXML
-    private TableColumn<Person, String> usernameColumn;
-    @FXML
-    private TableColumn<Person, Integer> scoreColumn;
-    private TableColumn<Integer, String> calltypel;
-
+    public AnchorPane anchor1;
+    public TableView tableViewForOnlineUsers2;
+    public TableView tableView2;
+//    private TableView tableView;
+//    private TableView tableViewForOnlineUsers;
 
     public void fillLabel() {
         ServerConnection.scoreboardAutoRefresh(this);
@@ -38,8 +27,16 @@ public class ScoreboardController {
 
     public void fillLabelAutomatically(String answer1, String answer2) {
 //        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
-//        tableView.getColumns().removeAll();
-//        tableViewForOnlineUsers.getColumns().removeAll();
+//        anchor1.getChildren().removeAll(tableView2, tableViewForOnlineUsers2);
+
+        tableView2.getColumns().clear();
+        tableViewForOnlineUsers2.getColumns().clear();
+//        tableView2.getItems().clear();
+//        tableViewForOnlineUsers2.getItems().clear();
+
+//        tableViewForOnlineUsers2 = new TableView();
+//        tableView2 = new TableView<>();
+
         String allPeople = answer1;
         System.out.println(answer1);
         String[] allPeopleSplited = allPeople.split(",");
@@ -74,12 +71,12 @@ public class ScoreboardController {
         scoreColumn.setMinWidth(100);
         ObservableList<String> list = FXCollections.observableArrayList();
 
-        tableView.setItems(data);
-        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableView.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
+        tableView2.setItems(data);
+        tableView2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableView2.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
 
         String userNickname = LoginController.getOnlineUser().getNickname();
-        customiseFactory((TableColumn<Person, String>) tableView.getColumns().get(1), userNickname);
+        customiseFactory((TableColumn<Person, String>) tableView2.getColumns().get(1), userNickname);
 
 
         //Show OnlineUsers
@@ -105,9 +102,12 @@ public class ScoreboardController {
 
         ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
 
-        tableViewForOnlineUsers.setItems(datamessageForOnlineUsers);
-        tableViewForOnlineUsers.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableViewForOnlineUsers.getColumns().addAll(usernameColumnmessageForOnlineUsers);
+        tableViewForOnlineUsers2.setItems(datamessageForOnlineUsers);
+        tableViewForOnlineUsers2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableViewForOnlineUsers2.getColumns().addAll(usernameColumnmessageForOnlineUsers);
+
+//        anchor1.getChildren().add(tableView2);
+//        anchor1.getChildren().add(tableViewForOnlineUsers2);
     }
 
     public void returnToMainMenu(ActionEvent actionEvent) {

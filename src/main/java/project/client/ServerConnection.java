@@ -24,6 +24,7 @@ public class ServerConnection {
     private static DataOutputStream fourthDataOutputStream;
     private static Thread readingThirdThread;
     private static Thread writingThirdThread;
+    private static boolean shouldContinueScoreboard = true;
 
     public static void initializeNetwork() {
         try {
@@ -67,7 +68,7 @@ public class ServerConnection {
         writingThirdThread = new Thread(() -> {
             try {
                 long time = System.currentTimeMillis();
-                while (true) {
+                while (shouldContinueScoreboard) {
                     if (System.currentTimeMillis() - time > 1000) {
                         time = System.currentTimeMillis();
                         thirdDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation());
@@ -82,7 +83,7 @@ public class ServerConnection {
         });
         readingThirdThread = new Thread(() -> {
             try {
-                while (true) {
+                while (shouldContinueScoreboard) {
                     String whatServerGave = thirdDataInputStream.readUTF();
                     String whatServerGave2 = fourthDataInputStream.readUTF();
                     System.out.println(whatServerGave);
@@ -93,15 +94,14 @@ public class ServerConnection {
                 e.printStackTrace();
             }
         });
-        writingThirdThread.setDaemon(true);
-        readingThirdThread.setDaemon(true);
+        writingThirdThread.setDaemon(shouldContinueScoreboard);
+        readingThirdThread.setDaemon(shouldContinueScoreboard);
         writingThirdThread.start();
         readingThirdThread.start();
     }
 
     public static void stopScoreboard(){
-        writingThirdThread.setDaemon(false);
-        readingThirdThread.setDaemon(false);
+        shouldContinueScoreboard = false;
     }
 
     public static String getResultSecondTime(String string) {

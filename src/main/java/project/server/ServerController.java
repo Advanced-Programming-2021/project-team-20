@@ -124,7 +124,7 @@ public class ServerController {
     }
 
 
-    private static synchronized void startNewDuelThread1(ServerSocket serverSocket, Socket socket) {
+    private static void startNewDuelThread1(ServerSocket serverSocket, Socket socket) {
         new Thread(() -> {
             try {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
@@ -139,7 +139,7 @@ public class ServerController {
         }).start();
     }
 
-    private static synchronized void getDuelInputAndProcess1(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+    private static void getDuelInputAndProcess1(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
         throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
