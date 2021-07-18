@@ -37,6 +37,23 @@ public class PackageForShowTweet extends Group {
         this.getChildren().add(createImageCircle());
     }
 
+    public PackageForShowTweet(String userName, double translateY){
+        isMessageFromOnlineUser = userName.equals(LoginController.getOnlineUser().getName());
+        double translateX = 0;
+        if (isMessageFromOnlineUser) {
+            translateX = 300;
+        }
+        setTranslateY(translateY + 5);
+        setTranslateX(translateX);
+        this.backGroundRectangle = createRectangle();
+        this.backGroundRectangle.setWidth(270);
+        this.showUserNameLabel = createLabel(userName);
+        this.getChildren().add(backGroundRectangle);
+        this.getChildren().add(showUserNameLabel);
+        this.getChildren().add(createImageCircle());
+        userImageCircle.setCenterX(userImageCircle.getCenterX() * 1.02);
+    }
+
     private Circle createImageCircle() {
         userImageCircle.setFill(new ImagePattern(LoginController.getOnlineUser().getImage()));
         userImageCircle.setCenterX(this.getTranslateX() * 1.07 + 22);

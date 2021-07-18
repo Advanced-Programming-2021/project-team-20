@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -144,19 +147,53 @@ public class RockPaperScissorController implements Initializable {
         } else {
             selection = 3;
         }
-//        new Thread(() -> {
-            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
+        player1Selection = selection;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                pauseTransition();
+                String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
                     "userSelection", selection + "");
-            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
-            deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-            System.out.println("Message from servers is: "+messageFromServer);
-            if (deserializeResult.get("type").equals("Error")) {
-                System.out.println("error in starting duel");
-                // showAlert(deserializeResult.get("message"), "Error");
-                return;
+                String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+                deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+                System.out.println("Message from servers is: " + messageFromServer);
+                if (deserializeResult.get("type").equals("Error")) {
+                    if (deserializeResult.get("message").equals("Players Must Repeat Game")) {
+                        backRectanglesToFirstPlace();
+                        showAlert("Players Must Repeat Game", "CONFIRMATION", false);
+                        player2Selection = player1Selection;
+                        attackChosenRectangles();
+                        return;
+                    } else {
+                        CustomDialog customDialog = new CustomDialog("Error", "Game interrupted", "mainMenu");
+                        customDialog.openDialog();
+                    }
+                } else {
+                    backRectanglesToFirstPlace();
+                    setPlayer2SelectionAccordingToServerMessage(deserializeResult.get("message"));
+                    attackChosenRectangles();
+                    showAlert(deserializeResult.get("message"), "CONFIRMATION", true);
+                    startDuel();
+                }
             }
-            startDuel();
-//        }).start();
+        });
+
+    }
+
+    private void setPlayer2SelectionAccordingToServerMessage(String message) {
+        Pattern pattern = Pattern.compile("Player (.+) Must Start Game");
+        Matcher matcher = pattern.matcher(message);
+        String winnerUser = "";
+        if (matcher.find()) {
+            winnerUser = matcher.group(1);
+        }
+
+        if (!winnerUser.equals(LoginController.getOnlineUser().getName())) {
+            player2Selection = (player1Selection == 1 || player1Selection == 2) ? player1Selection + 1 : 1;
+        } else {
+            player2Selection = (player1Selection == 2 || player1Selection == 3) ? player1Selection - 1 : 3;
+        }
+
     }
     // if (!canSecondPlayerSelect) {
     // player1Selection = selection;

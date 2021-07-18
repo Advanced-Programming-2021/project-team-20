@@ -15,6 +15,7 @@ import project.server.controller.non_duel.shop.Shop;
 import project.server.controller.non_duel.storage.Storage;
 import project.server.controller.non_duel.tweets.TweetController;
 
+import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -273,6 +274,8 @@ public class ServerController {
                 return Profile.changeNickname(details);
             case "requestDuel":
                 return DuelStarter.requestGame(details);
+            case "cancelDuel":
+                return DuelStarter.cancelDuel(details);
             case "setTurnOfDuel":
                 return DuelStarter.setTurnOfGame(details);
             case "sendTweet":
@@ -282,6 +285,7 @@ public class ServerController {
             case "changeCardsBetweenTwoRounds":
                 return ChangeCardsBetweenTwoRounds.getInputFromClientAndProcessIt(details);
             case "cheat":
+
             case "logout":
                 return logoutUser(details);
             case "duel":

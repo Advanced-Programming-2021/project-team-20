@@ -6,17 +6,21 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="context-menu" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.ChatRoomController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.ChatRoomController">
    <children>
-      <TextArea fx:id="textArea" layoutX="107.0" layoutY="518.0" onKeyPressed="#fixLengthOfMessage" prefHeight="161.0" prefWidth="389.0" wrapText="true" />
-      <Button fx:id="sendTweetbtn" layoutX="637.0" layoutY="583.0" mnemonicParsing="false" onAction="#sendTweet" text="send tweet" />
-      <Button fx:id="backbtn" layoutX="780.0" layoutY="599.0" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
+      <TextArea fx:id="textArea" layoutX="568.0" layoutY="499.0" onKeyPressed="#fixLengthOfMessage" prefHeight="93.0" prefWidth="389.0" wrapText="true" />
+      <Button fx:id="sendTweetbtn" layoutX="446.0" layoutY="499.0" mnemonicParsing="false" onAction="#sendTweet" text="send tweet" />
+      <Button fx:id="backbtn" layoutX="53.0" layoutY="646.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="31.0" prefWidth="109.0" text="back" />
       <ScrollPane fx:id="messageHolderScrollPane" layoutX="107.0" layoutY="18.0" prefHeight="472.0" prefWidth="850.0">
          <styleClass>
             <String fx:value="chart-plot-background4" />
             <String fx:value="scroll-bar" />
          </styleClass>
       </ScrollPane>
-      <Button fx:id="refreshTweets" layoutX="637.0" layoutY="626.0" mnemonicParsing="false" onAction="#sendTweet" prefHeight="31.0" prefWidth="109.0" text="refresh" />
+      <Button fx:id="refreshTweets" layoutX="446.0" layoutY="561.0" mnemonicParsing="false" onAction="#refreshTweets" prefHeight="31.0" prefWidth="109.0" text="refresh" />
    </children>
+   <styleClass>
+      <String fx:value="context-menu" />
+      <String fx:value="chart-plot-background16" />
+   </styleClass>
 </AnchorPane>

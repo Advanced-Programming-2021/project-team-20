@@ -114,7 +114,7 @@ public class DeckMenuController implements Initializable {
     private void showNmberOfCardsInLabels() {
         HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
         sizeOfEachPart = WholeDeckPageMenuController
-                .getNumberOfEachTypeOfCardsInDeck(LoginController.getOnlineUser().getDecks().get(deckname));
+            .getNumberOfEachTypeOfCardsInDeck(LoginController.getOnlineUser().getDecks().get(deckname));
         if (sizeOfEachPart.get("mainDeckSize") < 40) {
             sizeOfMainDeckLabel.setTextFill(Color.RED);
         } else {
@@ -172,10 +172,10 @@ public class DeckMenuController implements Initializable {
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
 
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("addCardToUselessCards",
-                "cardName", transfferdRectangle.getId());
+            "cardName", transfferdRectangle.getId());
         String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(resultOfServer);
+            .deserializeForOnlyTypeAndMessage(resultOfServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
             return;
@@ -212,10 +212,10 @@ public class DeckMenuController implements Initializable {
         }
 
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck(
-                "addCardToMainOrSideDeck", nameOfAddedCard, deckname, isTransferToMainDeck);
+            "addCardToMainOrSideDeck", nameOfAddedCard, deckname, isTransferToMainDeck);
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(messageFromServer);
+            .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
             return;
@@ -254,7 +254,7 @@ public class DeckMenuController implements Initializable {
     }
 
     private void copyPropertyToTransferredCard(Rectangle teransfferdRectangle, Rectangle addedRectangle,
-            String cardName) {
+                                               String cardName) {
         addedRectangle.setFill(teransfferdRectangle.getFill());
         addedRectangle.setId(cardName);
         addOnDragDetectedEffectForCard(addedRectangle);
@@ -297,7 +297,8 @@ public class DeckMenuController implements Initializable {
         List<String> allCardsInMainDeck = LoginController.getOnlineUser().getDecks().get(deckname).getMainDeck();
         List<Card> mainDeckCards = getListOfCards(allCardsInMainDeck);
         Pane mainDeckPane = (Pane) anchorPane.getChildren().get(3);
-        outer: for (int i = 0; i < 6; i++) {
+        outer:
+        for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 10; j++) {
                 if (i * 10 + j == mainDeckCards.size()) {
                     break outer;
@@ -325,7 +326,8 @@ public class DeckMenuController implements Initializable {
         List<Card> sideDeckCards = getListOfCards(allCardsInSideDeck);
         Pane sideDeckPane = (Pane) anchorPane.getChildren().get(4);
 
-        outer: for (int i = 0; i < 2; i++) {
+        outer:
+        for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 10; j++) {
                 if (i * 10 + j == sideDeckCards.size()) {
                     break outer;
@@ -387,16 +389,16 @@ public class DeckMenuController implements Initializable {
 
     private void deleteCardFromScrollBar(Rectangle transfferdRectangle) {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest(
-                "deleteCardFromUselessCards", "cardName", transfferdRectangle.getId().replace("scrollBar", ""));
+            "deleteCardFromUselessCards", "cardName", transfferdRectangle.getId().replace("scrollBar", ""));
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(messageFromServer);
+            .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
             return;
         }
         LoginController.getOnlineUser().getAllUselessCards()
-                .remove(transfferdRectangle.getId().replace("scrollBar", ""));
+            .remove(transfferdRectangle.getId().replace("scrollBar", ""));
 
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(2);
         Pane pane = (Pane) scrollPane.getContent();
@@ -464,10 +466,10 @@ public class DeckMenuController implements Initializable {
 
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck(
-                "deleteCardFromMainOrSideDeck", transfferdRectangle.getId(), deckname, isDeleteFromMainDeck);
+            "deleteCardFromMainOrSideDeck", transfferdRectangle.getId(), deckname, isDeleteFromMainDeck);
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(messageFromServer);
+            .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
             return;
@@ -542,10 +544,10 @@ public class DeckMenuController implements Initializable {
 
     public void activeDeck() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("activeDeck", "deckName",
-                deckname);
+            deckname);
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(messageFromServer);
+            .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
             return;

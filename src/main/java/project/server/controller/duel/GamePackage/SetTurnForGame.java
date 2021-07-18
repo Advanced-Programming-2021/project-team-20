@@ -4,6 +4,7 @@ import project.server.controller.duel.PreliminaryPackage.GameManager;
 
 public class SetTurnForGame {
 
+    private int numberOfRounds;
     private boolean canFirstPlayerSelect = true;
     private boolean canSecondPlayerSelect = false;
     private int player1Selection;
@@ -11,9 +12,10 @@ public class SetTurnForGame {
     private String player1Token;
     private String player2Token;
 
-    public SetTurnForGame(String player1Token, String player2Token) {
+    public SetTurnForGame(String player1Token, String player2Token, int numberOfRounds) {
         this.player1Token = player1Token;
         this.player2Token = player2Token;
+        this.numberOfRounds = numberOfRounds;
     }
 
     public String setTurnBetweenTwoPlayer(String input, String token) {
@@ -55,11 +57,11 @@ public class SetTurnForGame {
             canFirstPlayerSelect = true;
             canSecondPlayerSelect = false;
             return "both player select similar choice\ndo this action again\n" + allyPlayerName
-                    + " must choose\n1.stone\n2.hand\n3.snips";
+                + " must choose\n1.stone\n2.hand\n3.snips";
         }
 
         if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
-                || (player1Selection == 3 && player2Selection == 2)) {
+            || (player1Selection == 3 && player2Selection == 2)) {
             GameManager.getDuelControllerByIndex(token).setTurn(1);
             if (opponentPlayerName.equals("AI")) {
                 GameManager.getDuelControllerByIndex(token).setAiTurn(2);
@@ -69,7 +71,7 @@ public class SetTurnForGame {
             if (GameManager.getDuelControllerByIndex(token).getCurrentRound() >= 2) {
                 DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
                 duelBoard.initializeCardsInDuelBoard(duelBoard.getAllyCardsInDeck(),
-                        duelBoard.getOpponentCardsInDeck());
+                    duelBoard.getOpponentCardsInDeck());
             }
             setFieldsOfClassLikeForNextRound();
             return allyPlayerName + " must start game";
@@ -102,19 +104,19 @@ public class SetTurnForGame {
             return "Players Must Repeat Game";
         }
 
-        if(player1Selection == 0 || player2Selection == 0){
+        if (player1Selection == 0 || player2Selection == 0) {
             return null;
         }
-        
+
         if (player1Selection == player2Selection) {
             return "equal";
         }
 
         if ((player1Selection == 1 && player2Selection == 3) || (player1Selection == 2 && player2Selection == 1)
-                || (player1Selection == 3 && player2Selection == 2)) {
+            || (player1Selection == 3 && player2Selection == 2)) {
             return player1Token;
         } else {
-            return player2Token; 
+            return player2Token;
         }
     }
 
@@ -132,5 +134,9 @@ public class SetTurnForGame {
 
     public void setPlayer2Selection(int player2Selection) {
         this.player2Selection = player2Selection;
+    }
+
+    public int getNumberOfRounds() {
+        return numberOfRounds;
     }
 }

@@ -41,7 +41,7 @@ public class Storage {
     private static HashMap<String, Card> allMonsterCards = new HashMap<>();
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private static Card unknownCard;
-    private String addressOfStorage = "Resourses\\";
+    private String addressOfStorage = "Resourses\\Server\\";
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
     private static HashMap<String, Image> newImageOfNewCards = new HashMap<>();
@@ -318,13 +318,6 @@ public class Storage {
                 return new Image(stream);
             } catch (Exception ee) {
                 ee.printStackTrace();
-                // try {
-                // stream = new FileInputStream(
-                // "src\\main\\resources\\project\\cards\\spelltraps\\" + cardname + ".png");
-                // return new Image(stream);
-                // } catch (Exception eee) {
-                // eee.printStackTrace();
-                // }
             }
         }
         return new Image(stream);

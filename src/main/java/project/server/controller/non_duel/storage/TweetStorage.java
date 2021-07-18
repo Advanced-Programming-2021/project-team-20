@@ -11,7 +11,7 @@ import java.util.*;
 
 public class TweetStorage {
 
-    private static String tweetsFolderPath = "Resourses\\Tweets";
+    private static String tweetsFolderPath = "Resourses\\Server\\Tweets";
     private static List<Tweet> allTweets = new ArrayList<>();
     private static long lastTimeTweetsSavedInFile = 0l;
     private static int numberOfTweetsSavedInFile;

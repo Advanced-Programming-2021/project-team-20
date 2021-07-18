@@ -22,7 +22,7 @@ public class CardsStorage {
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private static Card unknownCard;
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
-    private String addressOfStorage = "Resourses\\";
+    private String addressOfStorage = "Resourses\\Client\\";
 
     public void startProgram() throws Exception {
 
@@ -73,10 +73,10 @@ public class CardsStorage {
                 if (nextRecord[1].equals("Trap")) {
                     String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
                     allSpellAndTrapCards.put(correctCardName,
-                            new TrapCard(nextRecord[0], nextRecord[3],
-                                    TrapCardValue.valueOf(nextRecord[2].toUpperCase()), null,
-                                    nextRecord[4].equals("Unlimited") ? 3 : 1, 120, Integer.parseInt(nextRecord[5]),
-                                    addEffectsTrapCards(nextRecord), createImageOfCards(nextRecord[0])));
+                        new TrapCard(nextRecord[0], nextRecord[3],
+                            TrapCardValue.valueOf(nextRecord[2].toUpperCase()), null,
+                            nextRecord[4].equals("Unlimited") ? 3 : 1, 120, Integer.parseInt(nextRecord[5]),
+                            addEffectsTrapCards(nextRecord), createImageOfCards(nextRecord[0])));
                 }
             }
             csvReader.close();
@@ -85,6 +85,7 @@ public class CardsStorage {
             System.exit(0);
         }
     }
+
     private void addSpellCards() {
 
         try {
@@ -99,12 +100,12 @@ public class CardsStorage {
                     }
                     String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
                     allSpellAndTrapCards.put(correctCardName,
-                            new SpellCard(nextRecord[0], nextRecord[3],
-                                    SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
-                                    nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
-                                    Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
-                                    createImageOfCards(nextRecord[0]), addMonsterCardFamilyToSpellCards(nextRecord[16]),
-                                    addArrayListOfIntegerToSpellCard(nextRecord[15])));
+                        new SpellCard(nextRecord[0], nextRecord[3],
+                            SpellCardValue.valueOf(formatterStringToEnum(nextRecord[2])), null,
+                            nextRecord[4].equals("Unlimited") ? 3 : 1, numberOfTurnsOfActivation,
+                            Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
+                            createImageOfCards(nextRecord[0]), addMonsterCardFamilyToSpellCards(nextRecord[16]),
+                            addArrayListOfIntegerToSpellCard(nextRecord[15])));
                 }
             }
             csvReader.close();
@@ -171,12 +172,12 @@ public class CardsStorage {
                 if (firstRow > 0) {
                     String correctCardName = Utility.giveCardNameRemovingRedundancy(nextRecord[0]);
                     allMonsterCards.put(correctCardName,
-                            new MonsterCard(Integer.parseInt(nextRecord[5]), Integer.parseInt(nextRecord[6]),
-                                    Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
-                                    MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
-                                    MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
-                                    null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord),
-                                    createImageOfCards(nextRecord[0])));
+                        new MonsterCard(Integer.parseInt(nextRecord[5]), Integer.parseInt(nextRecord[6]),
+                            Integer.parseInt(nextRecord[1]), MonsterCardAttribute.valueOf(nextRecord[2]),
+                            MonsterCardFamily.valueOf(formatterStringToEnum(nextRecord[3])),
+                            MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
+                            null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord),
+                            createImageOfCards(nextRecord[0])));
                 }
                 firstRow++;
             }
@@ -214,11 +215,11 @@ public class CardsStorage {
     private Image createImageOfCards(String cardname) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("src\\main\\resources\\project\\cards\\monsters\\" + cardname + ".jpg");
+            stream = new FileInputStream("src\\main\\resources\\project\\clientCards\\cards\\monsters\\" + cardname + ".jpg");
             return new Image(stream);
         } catch (Exception e) {
             try {
-                stream = new FileInputStream("src\\main\\resources\\project\\cards\\spelltraps\\" + cardname + ".jpg");
+                stream = new FileInputStream("src\\main\\resources\\project\\clientCards\\cards\\spelltraps\\" + cardname + ".jpg");
                 return new Image(stream);
             } catch (Exception ee) {
                 ee.printStackTrace();
@@ -234,6 +235,7 @@ public class CardsStorage {
     public static HashMap<String, Card> getAllSpellAndTrapCards() {
         return allSpellAndTrapCards;
     }
+
     public static boolean doesCardExist(String cardName) {
         String correctCardName = Utility.giveCardNameRemovingRedundancy(cardName);
         return allMonsterCards.containsKey(correctCardName) || allSpellAndTrapCards.containsKey(correctCardName);
@@ -257,6 +259,5 @@ public class CardsStorage {
     public static Card getUnknownCard() {
         return unknownCard;
     }
-
 
 }

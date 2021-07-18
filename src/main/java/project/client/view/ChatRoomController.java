@@ -1,5 +1,7 @@
 package project.client.view;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -9,11 +11,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -38,8 +42,24 @@ public class ChatRoomController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
 
         pane = new Pane();
+//        pane.setMaxWidth(messageHolderScrollPane.getMaxWidth());
+//        BackgroundFill background_fill = new BackgroundFill(Color.PINK,
+//            CornerRadii.EMPTY, Insets.EMPTY);
+//        Background background = new Background(background_fill);
+//        pane.setBackground(background);
+
         messageHolderScrollPane.setContent(pane);
         refreshTweets();
+    }
+
+    private Image createImage() {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream("src\\main\\resources\\project\\images\\chatRoom.jpg");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Image(stream);
     }
 
     private void deserializeMessageAndShowIt(String messageFromServer) {
@@ -58,6 +78,7 @@ public class ChatRoomController implements Initializable {
     private void showTweet(JsonObject jsonObject) {
 
         lastIdOfTweetReceived = jsonObject.get("id").getAsInt();
+        System.out.println(lastIdOfTweetReceived);
         PackageForShowTweet packageForShowTweet = new PackageForShowTweet(jsonObject.get("message").getAsString(), jsonObject.get("author").getAsString(), YMoveOfScrollPane);
         pane.getChildren().add(packageForShowTweet);
         addMessageToPackageForShowTweet(packageForShowTweet, jsonObject.get("message").getAsString());
@@ -87,24 +108,9 @@ public class ChatRoomController implements Initializable {
         if (packageForShowTweet.isMessageFromOnlineUser()) {
             YMoveBeforeMessage -= 10;
         } else {
-            YMoveBeforeMessage -= 25 ;
+            YMoveBeforeMessage -= 25;
         }
         packageForShowTweet.getBackGroundRectangle().setHeight(YMoveOfScrollPane - YMoveBeforeMessage);
-//        for (int i = 0; i < splitMessageByEnter.size(); i++) {
-//            List<String> shortWords = Arrays.asList(splitMessageByEnter.get(i).split(" "));
-//            StringBuilder appendShortWords = new StringBuilder();
-//            int numberOfLabelUsed = 1;
-//            for (int j = 0; j < shortWords.size(); j++) {
-//                appendShortWords.append(shortWords.get(j) + " ");
-//                if (appendShortWords.length() > 100) {
-//                    numberOfLabelUsed++;
-//                    appendShortWords.setLength(0);
-//                    addLabelToPackageForShowTweet(appendShortWords.toString(), packageForShowTweet, i + numberOfLabelUsed);
-//                } else if (j + 1 == shortWords.size()) {
-//                    addLabelToPackageForShowTweet(appendShortWords.toString(), packageForShowTweet, i + numberOfLabelUsed);
-//                }
-//            }
-//        }
     }
 
     private void addLabelToPackageForShowTweet(String text, PackageForShowTweet packageForShowTweet, int row) {
@@ -146,6 +152,9 @@ public class ChatRoomController implements Initializable {
     }
 
     public void sendTweet() {
+        if (textArea.getText().matches("^\\s*$")) {
+            return;
+        }
         String message = textArea.getText();
         textArea.setText("");
 
@@ -155,7 +164,7 @@ public class ChatRoomController implements Initializable {
     }
 
     public void refreshTweets() {
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived);
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived + 1);
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
