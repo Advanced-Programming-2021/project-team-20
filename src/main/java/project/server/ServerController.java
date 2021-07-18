@@ -91,12 +91,12 @@ public class ServerController {
         throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
-            System.out.println("=============================================");
-            System.out.println("message from client: " + input);
+//            System.out.println("=============================================");
+//            System.out.println("message from client: " + input);
             String result = processDuel(input);
             //  if (result.equals(""))
             //      break;
-            System.out.println("message send to client: " + result);
+//            System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
         }
@@ -158,8 +158,7 @@ public class ServerController {
                     String type = details.get("type").getAsString();
                     if (type.equals("scoreboard")) {
                         result = Scoreboard.findCommands("scoreboard show");
-                    }
-                    else if (type.equals("scoreboardOnline")){
+                    } else if (type.equals("scoreboardOnline")) {
                         result = Scoreboard.findCommands("scoreboardOnline");
                     }
                 } else {
@@ -274,6 +273,8 @@ public class ServerController {
                 return Profile.changeNickname(details);
             case "requestDuel":
                 return DuelStarter.requestGame(details);
+            case "playWithComputer":
+                return DuelStarter.playWithComputer(details);
             case "cancelDuel":
                 return DuelStarter.cancelDuel(details);
             case "setTurnOfDuel":
