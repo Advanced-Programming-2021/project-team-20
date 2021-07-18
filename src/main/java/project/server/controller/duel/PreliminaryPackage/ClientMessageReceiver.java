@@ -28,6 +28,7 @@ public class ClientMessageReceiver {
         String firstAdditionalString = details.get("firstAdditionalString").getAsString();
         String integerString = details.get("integerString").getAsString();
         String outputFromServer = "";
+        System.out.println(DuelStarter.getGameManager().getWholeReportToClient(token));
         if (token.startsWith("nothin")) {
             return "you haven't logged in";
         }
@@ -44,14 +45,18 @@ public class ClientMessageReceiver {
             if (doubleToken == null) {
                 return "you haven't started battle";
             }
-            DuelController duelController = GameManager.getDuelControllerByIndex(token);
-            int fakeTurn = duelController.getFakeTurn();
-            int turnForPlayer = duelController.getTurnByToken(token);
-            System.out.println("token is " + token + " and fakeTurn = " + fakeTurn + " and turnForPlayer = " + turnForPlayer);
-            if (fakeTurn == turnForPlayer) {
-                return "true";
+            try {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                int fakeTurn = duelController.getFakeTurn();
+                int turnForPlayer = duelController.getTurnByToken(token);
+                System.out.println("token is " + token + " and fakeTurn = " + fakeTurn + " and turnForPlayer = " + turnForPlayer);
+                if (fakeTurn == turnForPlayer) {
+                    return "true";
+                }
+                return "false";
+            } catch (Exception e) {
+                return "you haven't started battle";
             }
-            return "false";
         }
         if (request.startsWith("it's not my turn")) {
             StringBuilder output = new StringBuilder();

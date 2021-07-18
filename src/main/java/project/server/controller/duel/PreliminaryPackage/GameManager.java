@@ -77,7 +77,7 @@ public class GameManager {
         uninterruptedActionsHashMap.put(doubleToken, new ArrayList<>());
         changeCardsBetweenTwoRoundsHashMap.put(doubleToken, new ChangeCardsBetweenTwoRounds(firstUserToken, firstPlayerActiveDeck, secondUserToken, secondPlayerActiveDeck));
         // setTurnForGameHashMap.put(doubleToken, new SetTurnForGame());
-//        aiHashMap.put(doubleToken, new AI(firstUserToken));
+       aiHashMap.put(doubleToken, new AI(secondUserToken));
 
     }
 
