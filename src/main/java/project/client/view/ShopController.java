@@ -2,7 +2,6 @@ package project.client.view;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,10 +31,12 @@ import java.net.URL;
 import java.util.*;
 
 public class ShopController implements Initializable {
+//    @FXML
+//    private Button auctionBtn;
     @FXML
     private Button buybtn;
-    @FXML
-    private Button sellbtn;
+//    @FXML
+//    private Button sellbtn;
     @FXML
     private Button backbtn;
     @FXML
@@ -132,8 +133,12 @@ public class ShopController implements Initializable {
 
         if (cardNameForBuy.equals("")) {
             equalBuybtn.setDisable(true);
+//            sellbtn.setDisable(true);
+//            auctionBtn.setDisable(true);
         } else {
             equalBuybtn.setDisable(false);
+//            sellbtn.setDisable(false);
+//            auctionBtn.setDisable(false);
         }
     }
 
@@ -192,6 +197,25 @@ public class ShopController implements Initializable {
             equalSelectedCardNameLabel
                     .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
         }
+
+        String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetNumberOfBoughtCardsByCardName(token, cardNameForBuy);
+
+        String answerOfShop2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        int boughtCards;
+        try {
+            boughtCards = Integer.parseInt(answerOfShop2);
+        } catch (Exception e) {
+            boughtCards = 0;
+        }
+
+//        if (boughtCards == 0) {
+//            sellbtn.setDisable(true);
+//            auctionBtn.setDisable(true);
+//        }
+//        else {
+//            sellbtn.setDisable(false);
+//            auctionBtn.setDisable(false);
+//        }
     }
 
     private void flipRectangle(Rectangle rectangle) {
@@ -366,7 +390,11 @@ public class ShopController implements Initializable {
         ShopController.anchorPane = anchorPane;
     }
 
-    public void sellCard(ActionEvent actionEvent) {
-
-    }
+//    public void sellCard(ActionEvent actionEvent) {
+//
+//    }
+//
+//    public void gotoAuctionCard(ActionEvent actionEvent) {
+//
+//    }
 }

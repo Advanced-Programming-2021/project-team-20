@@ -167,10 +167,27 @@ public class Shop {
         return String.valueOf(user.getMoney());
     }
 
+    public static String getNumberOfBoughtCardsByCardName(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByToken(token);
+        if (user == null) {
+            return ServerController.getBadRequestFormat();
+        }
 
-    public HashMap<String, Integer> getNumberOfCards(String cardName) {
+        HashMap<String, Integer> numberOfCards = getNumberOfCards(cardName);
+        return String.valueOf(numberOfCards.get("numberOfBoughtCards"));
+    }
+
+
+    public static HashMap<String, Integer> getNumberOfCards(String cardName) {
         HashMap<String, Integer> numberOfCards = new HashMap<>();
-        User user = LoginController.getOnlineUser();
         HashMap<String, Deck> allDecks = user.getDecks();
         int numberOfCardsInDeck = 0;
         for (Map.Entry<String, Deck> entrySet : allDecks.entrySet()) {
