@@ -2,6 +2,7 @@ package project.client.view;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -34,6 +35,8 @@ import java.util.*;
 public class ShopController implements Initializable {
     @FXML
     private Button buybtn;
+    @FXML
+    private Button sellbtn;
     @FXML
     private Button backbtn;
     @FXML
@@ -102,17 +105,17 @@ public class ShopController implements Initializable {
 
         equalUserMoneyLabel = userMoneyLabel;
         equalUserMoneyLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        equalUserMoneyLabel.setTextFill(Color.BLUE);
+        equalUserMoneyLabel.setTextFill(Color.WHITE);
 //        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
         equalUserMoneyLabel.setText("My Money: " + user.getMoney());
         equalSelectedCardNameLabel = selectedCardNameLabel;
         equalSelectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumbserOfShoppingCardsLabel = numbserOfShoppingCardsLabel;
-        equalNumbserOfShoppingCardsLabel.setTextFill(Color.BLUE);
+        equalNumbserOfShoppingCardsLabel.setTextFill(Color.WHITE);
         equalNumbserOfShoppingCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumberOfUselessCardsLabel = numberOfUselessCardsLabel;
         equalNumberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        equalNumberOfUselessCardsLabel.setTextFill(Color.BLUE);
+        equalNumberOfUselessCardsLabel.setTextFill(Color.WHITE);
     }
 
     private void setEffectsOfButtons() {
@@ -162,14 +165,22 @@ public class ShopController implements Initializable {
     }
 
     private void showNumberOfBoughtCards(String cardName) {
+        System.out.println("show");
         HashMap<String, Integer> numberOfCards = shop.getNumberOfCards(cardName);
         equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
         equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
     }
 
     private void setEffectsOfBuyButtonAndShowLabel() {
-        Card card = Storage.getCardByName(cardNameForBuy);
-        int cardPrice = card.getCardPrice();
+        System.out.println(cardNameForBuy);
+        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
+
+        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+
+//        givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
+//        Card card = Storage.getCardByName(cardNameForBuy);
+//        int cardPrice = card.getCardPrice();
+        int cardPrice = Integer.parseInt(answerOfShop);
         if (cardPrice > user.getMoney()) {
             equalSelectedCardNameLabel.setTextFill(Color.RED);
             equalSelectedCardNameLabel
@@ -177,7 +188,7 @@ public class ShopController implements Initializable {
             equalBuybtn.setDisable(true);
         } else {
             equalBuybtn.setDisable(false);
-            equalSelectedCardNameLabel.setTextFill(Color.BLUE);
+            equalSelectedCardNameLabel.setTextFill(Color.WHITE);
             equalSelectedCardNameLabel
                     .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
         }
@@ -194,8 +205,13 @@ public class ShopController implements Initializable {
     }
 
     private void addCardDescription(String cardName) {
-        Card card = Storage.getCardByName(cardName);
-        String cardDiscription = card.getCardDescription();
+
+        System.out.println(cardName);
+        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardDescriptionByCardName(cardName);
+
+        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+//        Card card = Storage.getCardByName(cardName);
+        String cardDiscription = answerOfShop;
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
         Pane pane;
         if (scrollPane.getContent() == null) {
@@ -206,7 +222,7 @@ public class ShopController implements Initializable {
         pane.getChildren().clear();
         Label label = allCardDiscriptionLabels.get(0);
         label.setText("  " + cardName);
-        label.setTextFill(Color.BLUE);
+        label.setTextFill(Color.WHITE);
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
@@ -346,4 +362,7 @@ public class ShopController implements Initializable {
         ShopController.anchorPane = anchorPane;
     }
 
+    public void sellCard(ActionEvent actionEvent) {
+
+    }
 }

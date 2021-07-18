@@ -12,6 +12,7 @@ import project.server.controller.non_duel.loginMenu.LoginMenu;
 import project.server.controller.non_duel.profile.Profile;
 import project.server.controller.non_duel.scoreboard.Scoreboard;
 import project.server.controller.non_duel.shop.Shop;
+import project.server.controller.non_duel.storage.Storage;
 import project.server.controller.non_duel.tweets.TweetController;
 
 import java.io.DataInputStream;
@@ -248,6 +249,10 @@ public class ServerController {
                 return Scoreboard.findCommands("scoreboardOnline");
             case "shopBuy":
                 return Shop.buyRequestFromClient(details);
+            case "getCardPriceByCardName":
+                return String.valueOf(Storage.getCardByName(details.get("cardName").getAsString()).getCardPrice());
+            case "getCardDescriptionByCardName":
+                return Storage.getCardByName(details.get("cardName").getAsString()).getCardDescription();
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":
