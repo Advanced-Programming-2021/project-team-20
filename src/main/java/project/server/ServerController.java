@@ -42,7 +42,7 @@ public class ServerController {
                 secondSocket = secondServerSocket.accept();
                 startNewDuelThread(secondServerSocket, secondSocket);
                 thirdSocket = thirdServerSocket.accept();
-                startNewDuelThread1(thirdServerSocket, thirdSocket);
+                startNewThreadForScoreboard(thirdServerSocket, thirdSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,12 +124,12 @@ public class ServerController {
     }
 
 
-    private static void startNewDuelThread1(ServerSocket serverSocket, Socket socket) {
+    private static void startNewThreadForScoreboard(ServerSocket serverSocket, Socket socket) {
         new Thread(() -> {
             try {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                getDuelInputAndProcess1(dataInputStream, dataOutputStream);
+                getScoreboardInputAndProcess(dataInputStream, dataOutputStream);
                 dataInputStream.close();
                 socket.close();
                 serverSocket.close();
@@ -139,7 +139,7 @@ public class ServerController {
         }).start();
     }
 
-    private static void getDuelInputAndProcess1(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+    private static void getScoreboardInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
         throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
