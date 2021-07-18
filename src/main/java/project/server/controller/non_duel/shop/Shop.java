@@ -125,7 +125,7 @@ public class Shop {
         String cardName = "";
         try {
             token = details.get("token").getAsString();
-            cardName = details.get("cardName").getAsString();
+            cardName = details.get("cardNameForBuy").getAsString();
         } catch (Exception a) {
             return ServerController.getBadRequestFormat();
         }

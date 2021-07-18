@@ -1,12 +1,16 @@
 package project.server;
 
-import java.util.*;
-
-import com.google.gson.*;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import project.model.Deck;
 import project.model.User;
-import project.server.controller.non_duel.storage.TweetStorage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ToGsonFormatForSendInformationToClient {
     private static String successful = "Successful";
@@ -113,6 +117,15 @@ public class ToGsonFormatForSendInformationToClient {
     public static String toGsonFormatForSentLastTweetsToClient(ArrayList<String> newTweets) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("newTweets", toJsonArrayTweets(newTweets));
+        return jsonObject.toString();
+    }
+
+    public static String toGsonFormatForBuyCard(String token, String cardNameForBuy) {
+        JsonObject jsonObject = new JsonObject();
+
+        jsonObject.addProperty("type", "shopBuy");
+        jsonObject.addProperty("token", token);
+        jsonObject.addProperty("cardNameForBuy", cardNameForBuy);
         return jsonObject.toString();
     }
 }

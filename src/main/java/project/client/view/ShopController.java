@@ -20,8 +20,11 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
 import project.model.User;
 import project.model.cardData.General.Card;
+import project.server.ToGsonFormatForSendInformationToClient;
 import project.server.controller.non_duel.shop.Shop;
 import project.server.controller.non_duel.storage.Storage;
 
@@ -64,6 +67,7 @@ public class ShopController implements Initializable {
     private Shop shop = new Shop();
     private static String token;
     private static User user;
+    private static HashMap<String, String> givenInformationDeserialized;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -294,19 +298,37 @@ public class ShopController implements Initializable {
     public void buyCard() {
         SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3");
 
-//        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
-//
-//         String answerOfShop = ServerConnection.sendDataToServerAndRecieveResult(dataToSend);
-//         if (answerOfShop)
-//         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-         int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
-         int userAmount = LoginController.getOnlineUser().getMoney();
-         if (cardAmount > userAmount) {
-             buybtn.setDisable(true);
-         }
-         else {
-             buybtn.setDisable(false);
-         }
+        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
+
+        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+
+        givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
+
+        if (givenInformationDeserialized.get("type").equals("Error")) {
+            if (givenInformationDeserialized.get("message").equals("not enough money")) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+                customDialog.openDialog();
+            }
+            else if (givenInformationDeserialized.get("message").equals("there is no card with this name")) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "INVALID CARD NAME");
+                customDialog.openDialog();
+            }
+            else {
+                CustomDialog customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR!");
+                customDialog.openDialog();
+            }
+
+        }
+        else if (givenInformationDeserialized.get("type").equals("Successful")) {
+            CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "SUCCESSFUL BUY!");
+            customDialog.openDialog();
+            LoginController.getOnlineUser().setMoney(Integer.parseInt(givenInformationDeserialized.get("message")));
+        }
+        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+
+        int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+        int userAmount = LoginController.getOnlineUser().getMoney();
+        buybtn.setDisable(cardAmount > userAmount);
 
     }
 

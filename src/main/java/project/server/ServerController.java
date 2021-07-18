@@ -6,12 +6,12 @@ import com.google.gson.JsonParser;
 import project.model.User;
 import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.server.controller.duel.PreliminaryPackage.ClientMessageReceiver;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.non_duel.loginMenu.LoginMenu;
-import project.server.controller.non_duel.scoreboard.Scoreboard;
-import project.server.controller.non_duel.profile.Profile;
 import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.non_duel.deckCommands.DeckCommands;
+import project.server.controller.non_duel.loginMenu.LoginMenu;
+import project.server.controller.non_duel.profile.Profile;
+import project.server.controller.non_duel.scoreboard.Scoreboard;
+import project.server.controller.non_duel.shop.Shop;
 import project.server.controller.non_duel.tweets.TweetController;
 
 import java.io.DataInputStream;
@@ -191,6 +191,8 @@ public class ServerController {
                 return Scoreboard.findCommands("scoreboard show");
             case "scoreboardOnline":
                 return Scoreboard.findCommands("scoreboardOnline");
+            case "shopBuy":
+                return Shop.buyRequestFromClient(details);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":

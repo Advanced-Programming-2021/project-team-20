@@ -89,20 +89,21 @@ public class DeserializeInformationFromServer {
         return information;
     }
 
-    public static HashMap<String, String> deserializeForBuyCard(String informationOfServer) {
-        HashMap<String, String> information = new HashMap<>();
-        JsonParser jsonParser = new JsonParser();
-        JsonElement jsonElement = jsonParser.parse(informationOfServer);
-        try {
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            information.put("Successful", jsonObject.get("Successful").getAsString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            information.put("type", "Error");
-            information.put("message", "Error");
-        }
-        return information;
-    }
+//    public static HashMap<String, String> deserializeForBuyCard(String informationOfServer) {
+//        HashMap<String, String> information = new HashMap<>();
+//        JsonParser jsonParser = new JsonParser();
+//        JsonElement jsonElement = jsonParser.parse(informationOfServer);
+//        try {
+//            JsonObject jsonObject = jsonElement.getAsJsonObject();
+//            information.put(type, jsonObject.get(type).getAsString());
+//            information.put("message", jsonObject.get("message").getAsString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            information.put("type", "Error");
+//            information.put("message", "Error");
+//        }
+//        return information;
+//    }
 
 
     public static String getError() {
