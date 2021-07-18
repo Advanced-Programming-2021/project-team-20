@@ -3,6 +3,8 @@ package project.client;
 import com.google.gson.JsonObject;
 import project.client.view.LoginController;
 
+import java.util.UUID;
+
 public class ToGsonFormatToSendDataToServer {
     public static String toGsonFormatRegister(String userName, String nickName, String password) {
         JsonObject jsonObject = new JsonObject();
@@ -21,13 +23,6 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatGetInformation(String whichClass) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", whichClass);
-        jsonObject.addProperty("token", LoginController.getToken());
-        return jsonObject.toString();
-    }
-
     public static String toGsonFormatChangePassword(String currentPassword, String newPassword) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", "changePassword");
@@ -41,6 +36,15 @@ public class ToGsonFormatToSendDataToServer {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", type);
         jsonObject.addProperty(requestName, request);
+        jsonObject.addProperty("token", LoginController.getToken());
+        return jsonObject.toString();
+    }
+
+    public static String toGsonFormatToPlayWithComputer(int numberOfRounds) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "playWithComputer");
+        jsonObject.addProperty("numberOfRounds", numberOfRounds + "");
+        jsonObject.addProperty("computerToken", UUID.randomUUID().toString());
         jsonObject.addProperty("token", LoginController.getToken());
         return jsonObject.toString();
     }

@@ -148,6 +148,18 @@ public class SpellCard extends Card {
                     UserReplyForActivation.CHOOSE_ONE_RITUAL_MONSTER_FROM_YOUR_HAND_WITH_LEVEL_EQUAL_TO_SUM_OF_LEVELS_YOU_CHOSE);
             userReplyForActivations
                     .add(UserReplyForActivation.CHOOSE_FACE_UP_ATTACK_POSITION_OR_DEFENSE_POSITION_OF_YOUR_MONSTER);
+        } else if (cardName.equals("Giant Trunade")){
+            normalSpellCardEffects.add(NormalSpellCardEffect.ALL_SPELL_TRAPS_IN_FIELD_GO_TO_RESPECTIVE_HANDS);
+        } else if (cardName.equals("Card Destruction")){
+            normalSpellCardEffects.add(NormalSpellCardEffect.BOTH_PLAYERS_DISCARD_ALL_CARDS_FROM_HAND_AND_DRAW_CARDS_EQUAL_TO_THROWN_AWAY_CARDS);
+        } else if (cardName.equals("Shrink")){
+            quickSpellEffects.add(QuickSpellEffect.TARGET_FACE_UP_MONSTER_WILL_HAVE_HALF_ATTACK_UNTIL_THE_END_OF_THIS_TURN);
+        } else if (cardName.equals("Rush Recklessly")){
+            quickSpellEffects.add(QuickSpellEffect.TARGET_FACE_UP_MONSTER_WILL_GAIN_700_ATTACK_UNTIL_THE_END_OF_THIS_TURN);
+        } else if (cardName.equals("Ancient Rules")){
+            normalSpellCardEffects.add(NormalSpellCardEffect.SPECIAL_SUMMON_ONE_LEVEL_5_OR_HIGHER_NORMAL_MONSTER_FROM_YOUR_HAND);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_LEVEL_5_OR_HIGHER_NORMAL_MONSTER_IN_HAND);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_LEVEL_5_OR_HIGHER_NORMAL_MONSTER_FROM_HAND);
         }
         if (enumValues != null) {
             setEnumValues(enumValues, monsterCardFamilies, integers);

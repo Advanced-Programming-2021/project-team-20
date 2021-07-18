@@ -104,18 +104,22 @@ public class TrapCard extends Card {
         } else if (cardName.equals("Call Of The Haunted")) {
             monsterAttackingTrapCardEffects.add(
                     MonsterAttackingTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
-            normalTrapCardEffects
-                    .add(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
-            logicalActivationRequirements
-                    .add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY);
-            userReplyForActivations
-                    .add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_OWNERS_GRAVEYARD_TO_SPECIAL_SUMMON);
+            normalTrapCardEffects.add(NormalTrapCardEffect.SPECIAL_SUMMON_ONE_MONSTER_IN_YOUR_GRAVEYARD_IN_FACE_UP_ATTACK_POSITION);
+            logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_MONSTER_IN_THEIR_GY);
+            userReplyForActivations.add(UserReplyForActivation.CHOOSE_ONE_MONSTER_FROM_OWNERS_GRAVEYARD_TO_SPECIAL_SUMMON);
         } else if (cardName.equals("Mind Crush")) {
-            normalTrapCardEffects.add(
-                    NormalTrapCardEffect.OPPONENT_DISCARDS_ALL_CARDS_WITH_A_GIVEN_NAME_OTHERWISE_OWNER_LOSES_ONE_RANDOM_CARD);
+            normalTrapCardEffects.add(NormalTrapCardEffect.OPPONENT_DISCARDS_ALL_CARDS_WITH_A_GIVEN_NAME_OTHERWISE_OWNER_LOSES_ONE_RANDOM_CARD);
             logicalActivationRequirements.add(LogicalActivationRequirement.OWNER_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
             logicalActivationRequirements.add(LogicalActivationRequirement.OPPONENT_MUST_HAVE_AT_LEAST_ONE_CARD_IN_HAND);
             userReplyForActivations.add(UserReplyForActivation.ENTER_NAME_OF_A_CARD);
+        } else if (cardName.equals("D.D. Dynamite")){
+            normalTrapCardEffects.add(NormalTrapCardEffect.DEAL_300_MULTIPLIED_BY_NUMBER_OF_CARDS_IN_GRAVEYARD_TO_OPPONENT);
+        } else if (cardName.equals("Blasting Zone")){
+            normalTrapCardEffects.add(NormalTrapCardEffect.DESTROY_ALL_CARDS_IN_THE_SAME_COLUMN_AS_THIS_CARD);
+            logicalActivationRequirements.add(LogicalActivationRequirement.ALL_CARDS_IN_SAME_COLUMN_AS_THIS_CARD_MUST_BE_OCCUPIED);
+        } else if (cardName.equals("Draining Shield")){
+            monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.NEGATE_OPPONENT_ATTACK);
+            monsterAttackingTrapCardEffects.add(MonsterAttackingTrapCardEffect.GAIN_HP_EQUAL_TO_MONSTERS_ATK);
         }
         if (enumValues != null) {
             setEnumValues(enumValues);

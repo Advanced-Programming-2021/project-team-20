@@ -104,50 +104,18 @@ public class startDuelController implements Initializable {
         }
     }
 
-    public void singleDuelWithComputer() {
-        isPlayWithComputer = true;
-        isMatchGame = false;
-        // if (checkConditionsOfPlayers("AI")) {
-        // startGame();
-        // }
-    }
-
-    public void matchDuleWithComputer() {
-        isPlayWithComputer = true;
-        isMatchGame = false;
-        // if (checkConditionsOfPlayers("AI")) {
-        // startGame();
-        // }
-    }
-
-    public void singleDuelWithUser() {
-        String condition = checkConditionOfPlayer();
-        if (!condition.equals("Wait Until Another Player Wants To Play")) {
-            showAlert(condition, "Error");
-            return;
-        }
-        isMatchGame = false;
-        sendRequestDuelToServer();
-    }
-
-    public void matchDuelWithUser() {
-        String condition = checkConditionOfPlayer();
-        if (!condition.equals("Wait Until Another Player Wants To Play")) {
-            showAlert(condition, "Error");
-            return;
-        }
-        isMatchGame = true;
-        sendRequestDuelToServer();
-
-    }
-
     private void sendRequestDuelToServer() {
         isRequestForGameSend = true;
         setEffectsOfGameButtons();
         new Thread(() -> {
             int numberOfRounds = isMatchGame ? 3 : 1;
-            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
-                "numberOfRounds", numberOfRounds + "");
+            String dataSendToServer = "";
+            if (isPlayWithComputer) {
+                dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToPlayWithComputer(numberOfRounds);
+            } else {
+                dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
+                    "numberOfRounds", numberOfRounds + "");
+            }
             String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
             HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
             System.out.println(messageFromServer);
@@ -220,6 +188,7 @@ public class startDuelController implements Initializable {
 
     public void playGame() {
         String condition = checkConditionOfPlayer();
+        System.out.println(condition);
         if (!condition.equals("Wait Until Another Player Wants To Play")) {
             showAlert(condition, "Error");
             return;
@@ -329,10 +298,9 @@ public class startDuelController implements Initializable {
             return "Your Active Deck is Not Valid!";
         }
 
-        if (!isPlayWithComputer) {
+//        if (!isPlayWithComputer) {
             return "Wait Until Another Player Wants To Play";
-        }
-        return "null";
+//        }
     }
 
     private void showAlert(String message, String typeOfMessage) {
