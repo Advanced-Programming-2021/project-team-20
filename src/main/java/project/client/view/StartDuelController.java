@@ -198,14 +198,14 @@ public class StartDuelController implements Initializable {
         String message = textArea.getText();
         textArea.setText("");
 
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived + 1);
-        String messageFromServer =  ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived );
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
     public void refreshTweets() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived + 1);
-        String messageFromServer =  ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
@@ -219,8 +219,69 @@ public class StartDuelController implements Initializable {
             JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
             showTweet(jsonObject);
         }
+        JsonArray deletedTweets = details.get("deletedTweetIds").getAsJsonArray();
+        for (int i = 0; i < deletedTweets.size(); i++) {
+            int tweetId = deletedTweets.get(i).getAsInt();
+            deleteTweet(tweetId);
+        }
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
+    }
+
+    private void deleteMessage(PackageForShowTweet packageForShowTweet) {
+
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("deleteTweet", "tweetId", packageForShowTweet.getMessageId() + "");
+        String result = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(result);
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            showAlert(deserializeResult.get("message"), "Error");
+            new MainMenuController().backToLoginPage();
+        } else if (deserializeResult.get("type").equals("Error")) {
+            showAlert(deserializeResult.get("message"), "Error");
+            return;
+        }
+
+        deleteTweet(packageForShowTweet.getMessageId());
+        showAlert(deserializeResult.get("message"), "Successful");
+
+    }
+
+    private void deleteTweet(int idOfTweet) {
+        PackageForShowTweet packageForShowTweet = getPackageForShowTweetById(idOfTweet);
+        if (packageForShowTweet == null) {
+            return;
+        }
+        for (int i = 0; i < packageForShowTweets.size(); i++) {
+            if (packageForShowTweets.get(i).getMessageId() > idOfTweet)
+                packageForShowTweets.get(i).setTranslateY(packageForShowTweets.get(i).getTranslateY() - packageForShowTweet.getBackGroundRectangle().getHeight() - 15);
+        }
+
+        packageForShowTweets.remove(packageForShowTweet);
+        pane.getChildren().remove(packageForShowTweet);
+        YMoveOfScrollPane -= packageForShowTweet.getBackGroundRectangle().getHeight() + 15;
+        pane.setPrefHeight(YMoveOfScrollPane - 20);
+        fixImageOfRepeatedTweetsWithTheSameAuthor();
+    }
+
+    private PackageForShowTweet getPackageForShowTweetById(int tweetId) {
+        for (int i = 0; i < packageForShowTweets.size(); i++) {
+            if (packageForShowTweets.get(i).getMessageId() == tweetId) {
+                return packageForShowTweets.get(i);
+            }
+        }
+        return null;
+    }
+
+    private void fixImageOfRepeatedTweetsWithTheSameAuthor() {
+        for (int i = 0; i < packageForShowTweets.size() - 1; i++) {
+            if (packageForShowTweets.get(i).getShowUserNameLabel().getText().equals(packageForShowTweets.get(i + 1).getShowUserNameLabel().getText())) {
+                packageForShowTweets.get(i).getUserImageCircle().setOpacity(0);
+            }
+            if (!packageForShowTweets.get(i).getShowUserNameLabel().getText().equals(packageForShowTweets.get(i + 1).getShowUserNameLabel().getText())) {
+                packageForShowTweets.get(i).getUserImageCircle().setOpacity(1);
+            }
+        }
+        lastIdOfTweetFixItsImage = packageForShowTweets.size() - 1;
     }
 
     private void checkConnectionStatus(JsonObject details) {
@@ -241,15 +302,6 @@ public class StartDuelController implements Initializable {
         addMessageToPackageForShowTweet(packageForShowTweet, jsonObject.get("message").getAsString());
         YMoveOfScrollPane += 20;
         packageForShowTweets.add(packageForShowTweet);
-    }
-
-    private void fixImageOfRepeatedTweetsWithTheSameAuthor() {
-        for (int i = lastIdOfTweetFixItsImage; i < packageForShowTweets.size() - 1; i++) {
-            if (packageForShowTweets.get(i).getShowUserNameLabel().getText().equals(packageForShowTweets.get(i + 1).getShowUserNameLabel().getText())) {
-                packageForShowTweets.get(i).getUserImageCircle().setFill(null);
-            }
-        }
-        lastIdOfTweetFixItsImage = packageForShowTweets.size() - 1;
     }
 
     private void addMessageToPackageForShowTweet(PackageForShowTweet packageForShowTweet, String message) {

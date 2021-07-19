@@ -16,13 +16,11 @@ public class TweetStorage {
     private static List<Integer> deletedTweets = new ArrayList<>();
     private static long lastTimeTweetsSavedInFile = 0l;
     private static long lastTimeTweetsDeleted = 0l;
-    private static int numberOfTweetsSavedInFile;
 
     public static void startProgram() {
 
         File directory = new File(tweetsFolderPath);
         File[] contents = directory.listFiles();
-        numberOfTweetsSavedInFile = contents.length;
         for (File f : contents) {
             try {
                 Scanner scanner = new Scanner(f);
@@ -31,6 +29,7 @@ public class TweetStorage {
                     fileInformation.append(scanner.nextLine());
                 }
                 addTweetToAllTweets(fileInformation.toString());
+                scanner.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -47,44 +46,49 @@ public class TweetStorage {
 
     public static void sendTweet(HashMap<String, String> tweet) {
 
-        tweet.put("id", allTweets.size() + "");
+        tweet.put("id", getLastIdOfTweets() + "");
         addTweetToAllTweets(new Gson().toJson(tweet));
         if (System.currentTimeMillis() - lastTimeTweetsSavedInFile > 120000) {
             lastTimeTweetsSavedInFile = System.currentTimeMillis();
-            new Thread(() -> {
-                saveTweetsInFile();
-            }).start();
+//            new Thread(() -> {
+            saveTweetsInFile();
+//            }).start();
         }
+    }
+
+    private static int getLastIdOfTweets() {
+        Collections.sort(getAllTweets(), (o1, o2) -> o1.getId() - o2.getId());
+        return allTweets.get(allTweets.size() - 1).getId() + 1;
     }
 
     public static void endProgram() {
         saveTweetsInFile();
-        allTweets.clear();
         deleteTweetsFromStorage();
-        System.out.println("end");
         System.exit(0);
     }
 
     private static void saveTweetsInFile() {
-        for (int i = numberOfTweetsSavedInFile; i < allTweets.size(); i++) {
-            FileWriter fileWriter = null;
-            try {
-                fileWriter = new FileWriter(new File(tweetsFolderPath + "\\" + i + ".json"));
-                fileWriter.append(allTweets.get(i).toGsonString());
-                fileWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+        for (int i = 0; i < allTweets.size(); i++) {
+            File file = new File(tweetsFolderPath + "\\" + allTweets.get(i).getId() + ".json");
+            if (!file.exists()) {
+                FileWriter fileWriter = null;
+                try {
+                    fileWriter = new FileWriter(new File(tweetsFolderPath + "\\" + allTweets.get(i).getId() + ".json"));
+                    fileWriter.append(allTweets.get(i).toGsonString());
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private static void deleteTweetsFromStorage() {
-        new Thread(() -> {
-            for (int i = 0; i < deletedTweets.size(); i++) {
-                File file = new File(tweetsFolderPath + "\\" + i + ".json");
-                System.out.println(file.delete() + " " + file.exists());
-            }
-        }).start();
+        for (int i = 0; i < deletedTweets.size(); i++) {
+            File file = new File(tweetsFolderPath + "\\" + deletedTweets.get(i) + ".json");
+            file.delete();
+        }
     }
 
     public static void deleteTweetById(int id) {

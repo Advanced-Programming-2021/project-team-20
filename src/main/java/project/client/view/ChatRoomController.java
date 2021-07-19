@@ -70,6 +70,11 @@ public class ChatRoomController implements Initializable {
             JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
             showTweet(jsonObject);
         }
+        JsonArray deletedTweets = details.get("deletedTweetIds").getAsJsonArray();
+        for (int i = 0; i < deletedTweets.size(); i++) {
+            int tweetId = deletedTweets.get(i).getAsInt();
+            deleteTweet(tweetId);
+        }
         onlineUsersLabel.setText("Online Users: " + details.get("onlineUsers").getAsString());
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
@@ -106,13 +111,13 @@ public class ChatRoomController implements Initializable {
 
     private void addRightClickEffect(PackageForShowTweet packageForShowTweet) {
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem edit = new MenuItem("Edit");
-        edit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-            }
-        });
+//        MenuItem edit = new MenuItem("Edit");
+//        edit.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//
+//            }
+//        });
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -120,7 +125,7 @@ public class ChatRoomController implements Initializable {
                 deleteMessage(packageForShowTweet);
             }
         });
-        contextMenu.getItems().addAll(edit, delete);
+        contextMenu.getItems().addAll(delete);
         packageForShowTweet.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent contextMenuEvent) {
@@ -142,20 +147,44 @@ public class ChatRoomController implements Initializable {
             return;
         }
 
+        deleteTweet(packageForShowTweet.getMessageId());
         showAlert(deserializeResult.get("message"), "Successful");
-        for (int i = packageForShowTweet.getMessageId(); i < packageForShowTweets.size(); i++) {
-            packageForShowTweets.get(i).setTranslateY(packageForShowTweets.get(i).getTranslateY() - packageForShowTweet.getBackGroundRectangle().getHeight());
+
+    }
+
+    private void deleteTweet(int idOfTweet) {
+        PackageForShowTweet packageForShowTweet = getPackageForShowTweetById(idOfTweet);
+        if (packageForShowTweet == null) {
+            return;
+        }
+        for (int i = 0; i < packageForShowTweets.size(); i++) {
+            if (packageForShowTweets.get(i).getMessageId() > idOfTweet)
+                packageForShowTweets.get(i).setTranslateY(packageForShowTweets.get(i).getTranslateY() - packageForShowTweet.getBackGroundRectangle().getHeight() - 15);
         }
 
         packageForShowTweets.remove(packageForShowTweet);
         pane.getChildren().remove(packageForShowTweet);
-        YMoveOfScrollPane -= packageForShowTweet.getBackGroundRectangle().getHeight();
+        YMoveOfScrollPane -= packageForShowTweet.getBackGroundRectangle().getHeight() + 15;
+        pane.setPrefHeight(YMoveOfScrollPane - 20);
+        fixImageOfRepeatedTweetsWithTheSameAuthor();
+    }
+
+    private PackageForShowTweet getPackageForShowTweetById(int tweetId) {
+        for (int i = 0; i < packageForShowTweets.size(); i++) {
+            if (packageForShowTweets.get(i).getMessageId() == tweetId) {
+                return packageForShowTweets.get(i);
+            }
+        }
+        return null;
     }
 
     private void fixImageOfRepeatedTweetsWithTheSameAuthor() {
-        for (int i = lastIdOfTweetFixItsImage; i < packageForShowTweets.size() - 1; i++) {
+        for (int i = 0; i < packageForShowTweets.size() - 1; i++) {
             if (packageForShowTweets.get(i).getShowUserNameLabel().getText().equals(packageForShowTweets.get(i + 1).getShowUserNameLabel().getText())) {
-                packageForShowTweets.get(i).getUserImageCircle().setFill(null);
+                packageForShowTweets.get(i).getUserImageCircle().setOpacity(0);
+            }
+            if (!packageForShowTweets.get(i).getShowUserNameLabel().getText().equals(packageForShowTweets.get(i + 1).getShowUserNameLabel().getText())) {
+                packageForShowTweets.get(i).getUserImageCircle().setOpacity(1);
             }
         }
         lastIdOfTweetFixItsImage = packageForShowTweets.size() - 1;
@@ -178,15 +207,6 @@ public class ChatRoomController implements Initializable {
         }
         packageForShowTweet.getBackGroundRectangle().setHeight(YMoveOfScrollPane - YMoveBeforeMessage);
     }
-
-//    private void addLabelToPackageForShowTweet(String text, PackageForShowTweet packageForShowTweet, int row) {
-//        Label label = createLabelForMessage(text, packageForShowTweet);
-//        label.setLayoutY(packageForShowTweet.getLayoutY() + (row) * 20);
-//        packageForShowTweet.getChildren().add(label);
-//        packageForShowTweet.addOneToNumberOfLabelForShowMessages();
-//        packageForShowTweet.getBackGroundRectangle().setHeight(30 + packageForShowTweet.getNumberOfLabelForShowMessages() * 20);
-//        YMoveOfScrollPane += 20;
-//    }
 
     private Label createLabelForMessage(String text, PackageForShowTweet packageForShowTweet) {
         Label label = new Label();
@@ -223,7 +243,7 @@ public class ChatRoomController implements Initializable {
         }
         String message = textArea.getText();
         textArea.setText("");
-        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived );
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived);
         String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }

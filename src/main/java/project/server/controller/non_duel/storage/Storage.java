@@ -1,11 +1,6 @@
 package project.server.controller.non_duel.storage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +36,7 @@ public class Storage {
     private static HashMap<String, Card> allMonsterCards = new HashMap<>();
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private static Card unknownCard;
-    private String addressOfStorage = "Resourses\\Server\\";
+    private static String addressOfStorage = "Resourses\\Server\\";
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
     private static HashMap<User, String> newImagesThatChanges = new HashMap<>();
     private static HashMap<String, Image> newImageOfNewCards = new HashMap<>();
@@ -435,6 +430,38 @@ public class Storage {
             deck.addCardToSideDeck(jsonElement.getAsString());
         }
         return deck;
+    }
+
+    public static void changeShopCardInformation(Card card, boolean isShopAllowed, int numberOfCards) {
+        if (card.getCardType().equals(CardType.MONSTER)) {
+            saveChangeShopCardInformation(card.getCardName(), isShopAllowed, numberOfCards, 18, 19, addressOfStorage + "CSV\\Monster.csv");
+        } else if (card.getCardType().equals(CardType.SPELL)) {
+            saveChangeShopCardInformation(card.getCardName(), isShopAllowed, numberOfCards, 17, 18, addressOfStorage + "CSV\\Spell.csv");
+        } else {
+            saveChangeShopCardInformation(card.getCardName(), isShopAllowed, numberOfCards, 18, 19, addressOfStorage + "CSV\\Trap.csv");
+        }
+    }
+
+    private static void saveChangeShopCardInformation(String cardName, boolean isShopAllowed, int numberOfCards, int isShopAllowedRow, int numberOfCardsRow, String filePath) {
+        try {
+            File file = new File(filePath);
+            CSVReader csvReader = new CSVReader(new FileReader(file), ',');
+            List<String[]> csvBody = csvReader.readAll();
+            for (int i = 0; i < csvBody.size(); i++) {
+                String[] strArray = csvBody.get(i);
+                if (strArray[0].equals(cardName)) {
+                    csvBody.get(i)[isShopAllowedRow] = isShopAllowed + "";
+                    csvBody.get(i)[numberOfCardsRow] = numberOfCards + "";
+                }
+            }
+            csvReader.close();
+            CSVWriter writer = new CSVWriter(new FileWriter(file), ',');
+            writer.writeAll(csvBody);
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+
+        }
     }
 
     public static void addUserToAllUsers(User newUser) {

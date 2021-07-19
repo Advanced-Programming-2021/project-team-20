@@ -23,7 +23,7 @@ import java.util.List;
 
 public class PackageForShowTweet extends Group {
     private Rectangle backGroundRectangle;
-    private Circle userImageCircle = new Circle(25);
+    private Circle userImageCircle = new Circle(20);
     private Label showUserNameLabel;
     private int messageId;
     private int numberOfLabelForShowMessages = 0;
@@ -67,6 +67,7 @@ public class PackageForShowTweet extends Group {
     private Circle createImageCircle() {
         userImageCircle.setFill(new ImagePattern(LoginController.getOnlineUser().getImage()));
         userImageCircle.setCenterX(this.getTranslateX() * 1.07 + 22);
+        userImageCircle.setCenterY(15);
         return userImageCircle;
     }
 
@@ -127,4 +128,5 @@ public class PackageForShowTweet extends Group {
     public int getMessageId() {
         return messageId;
     }
+
 }
