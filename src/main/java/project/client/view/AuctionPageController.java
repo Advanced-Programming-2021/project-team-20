@@ -169,7 +169,7 @@ public class AuctionPageController implements Initializable {
 
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("addCardToUselessCards",
             "cardName", transfferdRectangle.getId());
-        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
+        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(resultOfServer);
         if (deserializeResult.get("type").equals("Error")) {
@@ -209,7 +209,7 @@ public class AuctionPageController implements Initializable {
 
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck(
             "addCardToMainOrSideDeck", nameOfAddedCard, deckname, isTransferToMainDeck);
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
@@ -386,7 +386,7 @@ public class AuctionPageController implements Initializable {
     private void deleteCardFromScrollBar(Rectangle transfferdRectangle) {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest(
             "deleteCardFromUselessCards", "cardName", transfferdRectangle.getId().replace("scrollBar", ""));
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
@@ -463,7 +463,7 @@ public class AuctionPageController implements Initializable {
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck(
             "deleteCardFromMainOrSideDeck", transfferdRectangle.getId(), deckname, isDeleteFromMainDeck);
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
@@ -541,7 +541,7 @@ public class AuctionPageController implements Initializable {
     public void activeDeck() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("activeDeck", "deckName",
             deckname);
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
