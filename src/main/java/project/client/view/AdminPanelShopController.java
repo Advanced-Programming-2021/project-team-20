@@ -9,7 +9,6 @@ import project.server.controller.non_duel.storage.Storage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 public class AdminPanelShopController implements Initializable {
 
@@ -86,16 +85,45 @@ public class AdminPanelShopController implements Initializable {
     }
 
     public void increaseCard(ActionEvent actionEvent) {
-        Pattern pattern = Pattern.compile("^\\d+$");
-        if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
-
+        if (!textField.getText().isEmpty()) {
+            String cardName = textField.getText();
+            //TODO: get card from server
+            Card card = Storage.getCardByName(cardName);
+            if (card == null) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "invalid card name");
+                customDialog.openDialog();
+            }
+            else {
+                //TODO: send data from server
+                card.increaseNumberOfCardsInShop();
+                    CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "number increased successfully");
+                customDialog.openDialog();
+            }
         }
     }
 
     public void decreaseCard(ActionEvent actionEvent) {
-        Pattern pattern = Pattern.compile("^\\d+$");
-        if (!textField.getText().isEmpty() && pattern.matcher(textField.getText()).find()) {
-
+        if (!textField.getText().isEmpty()) {
+            String cardName = textField.getText();
+            //TODO: get card from server
+            Card card = Storage.getCardByName(cardName);
+            if (card == null) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "invalid card name");
+                customDialog.openDialog();
+            }
+            else {
+                //TODO: send data from server
+                if (card.getNumberOfCardsInShop() == 0) {
+                    CustomDialog customDialog = new CustomDialog("ERROR", "number of cards in shop is 0");
+                    customDialog.openDialog();
+                }
+                else {
+                    //TODO: server
+                    card.decreaseNumberOfCardsInShop();
+                    CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "number decreased successfully");
+                    customDialog.openDialog();
+                }
+            }
         }
     }
 }
