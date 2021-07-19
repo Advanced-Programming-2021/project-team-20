@@ -52,6 +52,10 @@ public class Card {
         this.numberOfCardsInShop--;
     }
 
+    public void setNumberOfCardsInShop(int numberOfCardsInShop) {
+        this.numberOfCardsInShop = numberOfCardsInShop;
+    }
+
     public void setShopAllowed(boolean booleanForShop) {
         this.isShopAllowed = booleanForShop;
     }

@@ -191,6 +191,8 @@ public class Storage {
                             TrapCardValue.valueOf(nextRecord[2].toUpperCase()), null,
                             nextRecord[4].equals("Unlimited") ? 3 : 1, 120, Integer.parseInt(nextRecord[5]),
                             addEffectsTrapCards(nextRecord), createImageOfCards(nextRecord[0])));
+                    allSpellAndTrapCards.get(correctCardName).setShopAllowed(nextRecord[18].equals("TRUE"));
+                    allSpellAndTrapCards.get(correctCardName).setNumberOfCardsInShop(Integer.parseInt(nextRecord[19]));
                 }
             }
             csvReader.close();
@@ -220,6 +222,8 @@ public class Storage {
                             Integer.parseInt(nextRecord[5]), addEffectsSpellCards(nextRecord),
                             createImageOfCards(nextRecord[0]), addMonsterCardFamilyToSpellCards(nextRecord[16]),
                             addArrayListOfIntegerToSpellCard(nextRecord[15])));
+                    allSpellAndTrapCards.get(correctCardName).setShopAllowed(nextRecord[17].equals("TRUE"));
+                    allSpellAndTrapCards.get(correctCardName).setNumberOfCardsInShop(Integer.parseInt(nextRecord[18]));
                 }
             }
             csvReader.close();
@@ -292,6 +296,8 @@ public class Storage {
                             MonsterCardValue.valueOf(nextRecord[4].toUpperCase()), nextRecord[0], nextRecord[7],
                             null, 3, Integer.parseInt(nextRecord[8]), addEffectsMonsterCards(nextRecord),
                             createImageOfCards(nextRecord[0])));
+                    allMonsterCards.get(correctCardName).setShopAllowed(nextRecord[17].equals("TRUE"));
+                    allMonsterCards.get(correctCardName).setNumberOfCardsInShop(Integer.parseInt(nextRecord[18]));
                 }
                 firstRow++;
             }
@@ -434,7 +440,7 @@ public class Storage {
 
     public static void changeShopCardInformation(Card card, boolean isShopAllowed, int numberOfCards) {
         if (card.getCardType().equals(CardType.MONSTER)) {
-            saveChangeShopCardInformation(card.getCardName(), isShopAllowed, numberOfCards, 18, 19, addressOfStorage + "CSV\\Monster.csv");
+            saveChangeShopCardInformation(card.getCardName(), isShopAllowed, numberOfCards, 17, 18, addressOfStorage + "CSV\\Monster.csv");
         } else if (card.getCardType().equals(CardType.SPELL)) {
             saveChangeShopCardInformation(card.getCardName(), isShopAllowed, numberOfCards, 17, 18, addressOfStorage + "CSV\\Spell.csv");
         } else {
@@ -450,7 +456,7 @@ public class Storage {
             for (int i = 0; i < csvBody.size(); i++) {
                 String[] strArray = csvBody.get(i);
                 if (strArray[0].equals(cardName)) {
-                    csvBody.get(i)[isShopAllowedRow] = isShopAllowed + "";
+                    csvBody.get(i)[isShopAllowedRow] = isShopAllowed ? "TRUE" : "FALSE";
                     csvBody.get(i)[numberOfCardsRow] = numberOfCards + "";
                 }
             }
