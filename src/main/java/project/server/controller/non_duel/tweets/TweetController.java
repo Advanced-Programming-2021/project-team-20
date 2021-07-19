@@ -37,9 +37,9 @@ public class TweetController {
 
     private static ArrayList<String> getLastTweets(int lastIdOfTweetReceived) {
         ArrayList<String> newMessages = new ArrayList<>();
-//        System.out.println(TweetStorage.getAllTweets().size());
-        for (int i = lastIdOfTweetReceived; i < TweetStorage.getAllTweets().size(); i++) {
-            newMessages.add(TweetStorage.getAllTweets().get(i).toGsonString());
+        for (int i = 0; i < TweetStorage.getAllTweets().size(); i++) {
+            if (TweetStorage.getAllTweets().get(i).getId() > lastIdOfTweetReceived)
+                newMessages.add(TweetStorage.getAllTweets().get(i).toGsonString());
         }
         return newMessages;
     }
@@ -57,7 +57,23 @@ public class TweetController {
         if (user == null) {
             return ServerController.getConnectionDisconnected();
         }
-        System.out.println(getLastTweets(lastIdOfTweets));
         return ToGsonFormatForSendInformationToClient.toGsonFormatForSentLastTweetsToClient(getLastTweets(lastIdOfTweets));
+    }
+
+    public static String deleteTweet(JsonObject details) {
+        String token = "";
+        int deletedTweetId;
+        try {
+            token = details.get("token").getAsString();
+            deletedTweetId = details.get("tweetId").getAsInt();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ServerController.getConnectionDisconnected();
+        }
+        TweetStorage.deleteTweetById(deletedTweetId);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Tweet Deleted Successfully!");
     }
 }

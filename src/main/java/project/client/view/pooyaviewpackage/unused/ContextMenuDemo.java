@@ -58,10 +58,8 @@ public class ContextMenuDemo extends Application {
 
         // When user right-click on Circle
         circle.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-
             @Override
             public void handle(ContextMenuEvent event) {
-
                 contextMenu.show(circle, event.getScreenX(), event.getScreenY());
             }
         });

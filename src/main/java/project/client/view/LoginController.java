@@ -44,7 +44,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         SongPlayer.getInstance().pauseMusic();
-     //   SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
+        SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/opening.mp3");
     }
 
     public void loginUser() {

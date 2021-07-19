@@ -1,7 +1,13 @@
 package project.client.view.Components;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
@@ -19,15 +25,17 @@ public class PackageForShowTweet extends Group {
     private Rectangle backGroundRectangle;
     private Circle userImageCircle = new Circle(25);
     private Label showUserNameLabel;
+    private int messageId;
     private int numberOfLabelForShowMessages = 0;
     boolean isMessageFromOnlineUser;
 
-    public PackageForShowTweet(String message, String userName, double translateY) {
+    public PackageForShowTweet(String message, String userName, double translateY, int messageId) {
         isMessageFromOnlineUser = userName.equals(LoginController.getOnlineUser().getName());
         double translateX = 0;
         if (isMessageFromOnlineUser) {
             translateX = 380;
         }
+        this.messageId = messageId;
         setTranslateY(translateY + 5);
         setTranslateX(translateX);
         this.backGroundRectangle = createRectangle();
@@ -35,9 +43,11 @@ public class PackageForShowTweet extends Group {
         this.getChildren().add(backGroundRectangle);
         this.getChildren().add(showUserNameLabel);
         this.getChildren().add(createImageCircle());
+
     }
 
-    public PackageForShowTweet(String userName, double translateY){
+
+    public PackageForShowTweet(String userName, double translateY) {
         isMessageFromOnlineUser = userName.equals(LoginController.getOnlineUser().getName());
         double translateX = 0;
         if (isMessageFromOnlineUser) {
@@ -112,5 +122,9 @@ public class PackageForShowTweet extends Group {
 
     public boolean isMessageFromOnlineUser() {
         return isMessageFromOnlineUser;
+    }
+
+    public int getMessageId() {
+        return messageId;
     }
 }

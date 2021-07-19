@@ -22,7 +22,7 @@ public class CardsStorage {
     private static HashMap<String, Card> allSpellAndTrapCards = new HashMap<>();
     private static Card unknownCard;
     private static HashMap<String, Card> newCardsCreated = new HashMap<>();
-    private String addressOfStorage = "Resourses\\Client\\";
+    private String addressOfStorage = "Resourses\\Server\\";
 
     public void startProgram() throws Exception {
 
@@ -215,11 +215,11 @@ public class CardsStorage {
     private Image createImageOfCards(String cardname) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("src\\main\\resources\\project\\clientCards\\cards\\monsters\\" + cardname + ".jpg");
+            stream = new FileInputStream("src\\main\\resources\\project\\cards\\monsters\\" + cardname + ".jpg");
             return new Image(stream);
         } catch (Exception e) {
             try {
-                stream = new FileInputStream("src\\main\\resources\\project\\clientCards\\cards\\spelltraps\\" + cardname + ".jpg");
+                stream = new FileInputStream("src\\main\\resources\\project\\cards\\spelltraps\\" + cardname + ".jpg");
                 return new Image(stream);
             } catch (Exception ee) {
                 ee.printStackTrace();

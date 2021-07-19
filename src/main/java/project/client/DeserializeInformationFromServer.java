@@ -23,7 +23,7 @@ public class DeserializeInformationFromServer {
             information.put(type, jsonObject.get(type).getAsString());
             information.put(message, jsonObject.get(message).getAsString());
             if (information.get(type).equals(success)) {
-                information.put(token, jsonObject.get(token).getAsString());
+                information.put("token", jsonObject.get(token).getAsString());
                 information.put("userInformation", jsonObject.get("userInformation").getAsString());
                 information.put("wholeDeck", jsonObject.get("wholeDeck").getAsString());
             }
