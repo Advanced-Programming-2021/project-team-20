@@ -154,9 +154,8 @@ public class RockPaperScissorController implements Initializable {
                 pauseTransition();
                 String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("setTurnOfDuel",
                     "userSelection", selection + "");
-                String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+                String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
                 deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-                System.out.println("Message from servers is: " + messageFromServer);
                 if (deserializeResult.get("type").equals("Error")) {
                     if (deserializeResult.get("message").equals("Players Must Repeat Game")) {
                         backRectanglesToFirstPlace();
@@ -164,6 +163,8 @@ public class RockPaperScissorController implements Initializable {
                         player2Selection = player1Selection;
                         attackChosenRectangles();
                         return;
+                    } else if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                        new MainMenuController().backToLoginPage();
                     } else {
                         CustomDialog customDialog = new CustomDialog("Error", "Game interrupted", "mainMenu");
                         customDialog.openDialog();

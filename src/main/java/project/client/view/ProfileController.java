@@ -97,11 +97,14 @@ public class ProfileController implements Initializable {
             return;
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatChangePassword(currentPasswordField.getText(),
-                newPasswordField.getText());
-        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(data);
+            newPasswordField.getText());
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(resultOfServer);
+            .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            new MainMenuController().backToLoginPage();
+        }
         currentPasswordField.setText("");
         newPasswordField.setText("");
     }
@@ -118,15 +121,18 @@ public class ProfileController implements Initializable {
             return;
         }
 
-        String data = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeNickName", "newNickName",newNicknameField.getText());
-        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(data);
+        String data = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeNickName", "newNickName", newNicknameField.getText());
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
-                .deserializeForOnlyTypeAndMessage(resultOfServer);
+            .deserializeForOnlyTypeAndMessage(resultOfServer);
 
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
         if (deserializeResult.get("type").equals("Successful")) {
             LoginController.getOnlineUser().setNickname(nicknameLabel.getText());
             nicknameLabel.setText(newNicknameField.getText());
+        }
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            new MainMenuController().backToLoginPage();
         }
         newNicknameField.setText("");
     }

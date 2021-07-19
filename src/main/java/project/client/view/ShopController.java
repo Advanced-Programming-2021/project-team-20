@@ -180,7 +180,7 @@ public class ShopController implements Initializable {
         System.out.println(cardNameForBuy);
         String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
 
-        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+        String answerOfShop = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
 
 //        givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
 //        Card card = Storage.getCardByName(cardNameForBuy);
@@ -200,7 +200,7 @@ public class ShopController implements Initializable {
 
         String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetNumberOfBoughtCardsByCardName(token, cardNameForBuy);
 
-        String answerOfShop2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        String answerOfShop2 = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
         int boughtCards;
         try {
             boughtCards = Integer.parseInt(answerOfShop2);
@@ -233,7 +233,7 @@ public class ShopController implements Initializable {
         System.out.println(cardName);
         String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardDescriptionByCardName(cardName);
 
-        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+        String answerOfShop = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
 //        Card card = Storage.getCardByName(cardName);
         String cardDiscription = answerOfShop;
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
@@ -342,7 +342,7 @@ public class ShopController implements Initializable {
 
         String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
 
-        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+        String answerOfShop = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
 
         givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
 
@@ -371,7 +371,7 @@ public class ShopController implements Initializable {
 
 
         String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
-        String answerOfShop2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        String answerOfShop2 = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
         int cardAmount = Integer.parseInt(answerOfShop2);
         int userAmount = LoginController.getOnlineUser().getMoney();
         buybtn.setDisable(cardAmount > userAmount);

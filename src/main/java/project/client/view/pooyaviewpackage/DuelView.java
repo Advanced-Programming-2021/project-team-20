@@ -635,7 +635,7 @@ public class DuelView {
         } else if (keyEvent.getCode().getName().equals("Enter")) {
             System.out.println(cheatCodes);
             String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("cheat", "cheatCommand", cheatCodes.toString());
-            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+            String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
             HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");

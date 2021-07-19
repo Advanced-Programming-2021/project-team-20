@@ -15,25 +15,25 @@ import project.server.controller.non_duel.shop.Shop;
 import project.server.controller.non_duel.storage.Storage;
 import project.server.controller.non_duel.tweets.TweetController;
 
-import java.awt.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ServerController {
     private static String badRequestFormat = "{\"type\":\"Error\",\"message\":\"Bad request format\"}";
-    private static String userNotLogined = "{\"type\":\"Error\",\"message\":\"User Not Logined\"}";
+    private static String connectionDisconnected = "{\"type\":\"Error\",\"message\":\"Connection Disconnected\"}";
     private static String error = "Error";
     private static String successful = "Successful";
     private static HashMap<String, User> loginedUsers = new HashMap<>();
+    private static HashMap<Long, String> lastConnectionFromClients = new HashMap<>();
 
     public static void runServer() {
         Socket socket = null;
         Socket secondSocket = null;
         Socket thirdSocket = null;
+//        deleteClientsThatLoseConnections();
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             ServerSocket secondServerSocket = new ServerSocket(12346);
@@ -48,13 +48,37 @@ public class ServerController {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("accept failed");
         }
         try {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private static void deleteClientsThatLoseConnections() {
+        new Thread(() -> {
+            while (true) {
+                try {
+//                    System.out.println(lastConnectionFromClients.size());
+                    for (Map.Entry<Long, String> entry : lastConnectionFromClients.entrySet()) {
+//                        System.out.println(entry.getKey());
+                        if (System.currentTimeMillis() - entry.getKey() > 1200000) {
+                            loginedUsers.remove(entry.getValue());
+                            lastConnectionFromClients.remove(entry.getKey());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("exception in deleteClientsThatLoseConnections");
+                }
+                try {
+                    Thread.sleep(100000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private static void startNewThread(ServerSocket serverSocket, Socket socket) {
@@ -62,11 +86,13 @@ public class ServerController {
             try {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+//                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 getInputAndProcess(dataInputStream, dataOutputStream);
                 dataInputStream.close();
                 socket.close();
                 serverSocket.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("Connection reset");
             }
         }).start();
@@ -205,18 +231,20 @@ public class ServerController {
 //        }
 //    }
 
-    private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
-        throws IOException {
+    private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream) {
         while (true) {
-            String input = dataInputStream.readUTF();
-            System.out.println("=============================================");
-            System.out.println("message from client: " + input);
-            String result = process(input);
-//            if (result.equals(""))
-//                break;
-            System.out.println("message send to client: " + result);
-            dataOutputStream.writeUTF(result);
-            dataOutputStream.flush();
+            try {
+                String input = dataInputStream.readUTF();
+                System.out.println("=============================================");
+                System.out.println("message from client: " + input);
+                String result = process(input);
+                System.out.println("message send to client: " + result);
+                dataOutputStream.writeUTF(result);
+                dataOutputStream.flush();
+            } catch (Exception e) {
+                System.out.println("connection reset");
+                break;
+            }
         }
     }
 
@@ -311,8 +339,19 @@ public class ServerController {
         return "null";
     }
 
-    public static User getUserByToken(String token) {
+    public static void refreshLastConnectionTime(String token) {
+        for (Map.Entry<Long, String> entry : lastConnectionFromClients.entrySet()) {
+            if (entry.getValue().equals(token)) {
+                lastConnectionFromClients.remove(entry.getKey());
+                break;
+            }
+        }
+        lastConnectionFromClients.put(System.currentTimeMillis(), token);
+    }
+
+    public static User getUserByTokenAndRefreshLastConnectionTime(String token) {
         if (loginedUsers.containsKey(token)) {
+            refreshLastConnectionTime(token);
             return loginedUsers.get(token);
         }
         return null;
@@ -334,8 +373,41 @@ public class ServerController {
         return loginedUsers;
     }
 
-    public static String getUserNotLogined() {
-        return userNotLogined;
+    public static String getConnectionDisconnected() {
+        return connectionDisconnected;
     }
 
 }
+//
+//class Client {
+//    Socket firstSocket;
+//    ServerSocket firstServerSocket;
+//    Socket secondSocket;
+//    ServerSocket secondServerSocket;
+//    Socket thirdSocket;
+//    ServerSocket thirdServerSocket;
+//    long lastConnectionTime;
+//
+//    public Client(Socket firstSocket, ServerSocket firstServerSocket, Socket secondSocket, ServerSocket secondServerSocket, Socket thirdSocket, ServerSocket thirdServerSocket, long connectionTime) {
+//        this.firstSocket = firstSocket;
+//        this.firstServerSocket = firstServerSocket;
+//        this.secondSocket = secondSocket;
+//        this.secondServerSocket = secondServerSocket;
+//        this.thirdSocket = thirdSocket;
+//        this.thirdServerSocket = thirdServerSocket;
+//        lastConnectionTime = connectionTime;
+//    }
+//
+//    public void closeSockets() {
+//        try {
+//            firstSocket.close();
+//            firstServerSocket.close();
+//            secondSocket.close();
+//            secondServerSocket.close();
+//            thirdSocket.close();
+//            thirdServerSocket.close();
+//        } catch (Exception e) {
+//            System.out.println("connection reset in  close socket");
+//        }
+//    }
+//}

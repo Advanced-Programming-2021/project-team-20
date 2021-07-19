@@ -24,6 +24,7 @@ public class ToGsonFormatForSendInformationToClient {
         if (type.equals(ServerController.getSuccessful())) {
             String token = UUID.randomUUID().toString();
             ServerController.getLoginedUsers().put(token, user);
+            ServerController.refreshLastConnectionTime(token);
             jsonObject.addProperty(token, token);
             jsonObject.addProperty("userInformation", toGsonFormatUserInformation(user));
             jsonObject.addProperty("wholeDeck", toGsonFormatDecksAndCards(user));
@@ -38,6 +39,7 @@ public class ToGsonFormatForSendInformationToClient {
         if (type.equals(ToGsonFormatForSendInformationToClient.successful)) {
             String token = UUID.randomUUID().toString();
             ServerController.getLoginedUsers().put(token, user);
+            ServerController.refreshLastConnectionTime(token);
             jsonObject.addProperty("token", token);
             jsonObject.addProperty("userInformation", toGsonFormatUserInformation(user));
             jsonObject.addProperty("wholeDeck", toGsonFormatDecksAndCards(user));

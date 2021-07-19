@@ -14,7 +14,7 @@ public class JsonCreator {
         jsonObject.addProperty("firstAdditionalString", firstAdditionalString);
         jsonObject.addProperty("integerString", integerString);
         jsonObject.addProperty("request", string);
-        return ServerConnection.sendDataToServerAndReceiveResult(jsonObject.toString());
+        return (String) ServerConnection.sendDataToServerAndReceiveResult(jsonObject.toString());
     }
 
     public static String getFirstAdditionalString() {

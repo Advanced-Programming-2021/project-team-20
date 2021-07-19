@@ -1,14 +1,12 @@
 package project.server.controller.non_duel.deckCommands;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
 
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformationToClient;
-import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.Deck;
 import project.model.User;
@@ -188,9 +186,9 @@ public class DeckCommands {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
         if (isCardDeletedFromMainDeck) {
@@ -216,9 +214,9 @@ public class DeckCommands {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
@@ -241,9 +239,9 @@ public class DeckCommands {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         user.deleteCardFromAllUselessCards(cardName);
@@ -260,9 +258,9 @@ public class DeckCommands {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         user.addCardToAllUselessCards(cardName);
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
@@ -278,9 +276,9 @@ public class DeckCommands {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         HashMap<String, Deck> allDecksOfUser = user.getDecks();
@@ -301,9 +299,9 @@ public class DeckCommands {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         user.deleteDeck(deckName);
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
@@ -319,9 +317,9 @@ public class DeckCommands {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         HashMap<String, Deck> allDecksOfUser = user.getDecks();

@@ -148,9 +148,9 @@ public class ChangeCardsBetweenTwoRounds {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
 

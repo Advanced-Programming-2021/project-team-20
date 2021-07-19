@@ -1,7 +1,6 @@
 package project.server.controller.duel.PreliminaryPackage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -40,9 +39,9 @@ public class DuelStarter {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         listOfTypeOfGameThatSuggest.put(token, numberOfRounds);
         for (int i = 0; i < 150; i++) {
@@ -107,16 +106,10 @@ public class DuelStarter {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
-
-//        Deck firstUserActiveDeck = getActiveDeck(user);
-//        User aiUser = Storage.getUserByName("AI");
-//        Deck secondUserActiveDeck = getActiveDeck(aiUser);
-
-//        startNewGame(user, aiUser, numberOfRounds, firstUserActiveDeck, secondUserActiveDeck, token, computerToken);
 
         SetTurnForGame setTurnForGame = new SetTurnForGame(token, computerToken, numberOfRounds);
         setTurnForGame.setPlayer2Selection(-1);
@@ -139,9 +132,9 @@ public class DuelStarter {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         SetTurnForGame setTurnForGame = null;
         for (int i = 0; i < newGamesThatShouldSetItsTurn.size(); i++) {
@@ -157,7 +150,7 @@ public class DuelStarter {
         }
 
         if (setTurnForGame == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         for (int i = 0; i < 30; i++) {
@@ -188,7 +181,7 @@ public class DuelStarter {
                 }
                 boolean isPlayingWithComputer = setTurnForGame.getPlayer2Selection() == -1;
                 startGame(result, secondPlayerToken, isPlayingWithComputer);
-                user = ServerController.getUserByToken(result);
+                user = ServerController.getUserByTokenAndRefreshLastConnectionTime(result);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("CONFIRMATION",
                     "Player " + user.getName() + " Must Start Game");
             }
@@ -203,9 +196,9 @@ public class DuelStarter {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         for (Map.Entry<String, Integer> entry : listOfTypeOfGameThatSuggest.entrySet()) {
@@ -218,14 +211,14 @@ public class DuelStarter {
     }
 
     private static synchronized void startGame(String firstPlayerToken, String secondPlayerToken, boolean isPlayingWithComputer) {
-        User firstUser = ServerController.getUserByToken(firstPlayerToken);
+        User firstUser = ServerController.getUserByTokenAndRefreshLastConnectionTime(firstPlayerToken);
         Deck firstUserActiveDeck = getActiveDeck(firstUser);
 //        System.out.println(firstUserActiveDeck.getMainDeck().size());
         User secondUser;
         if (isPlayingWithComputer) {
             secondUser = Storage.getUserByName("AI");
         } else {
-            secondUser = ServerController.getUserByToken(secondPlayerToken);
+            secondUser = ServerController.getUserByTokenAndRefreshLastConnectionTime(secondPlayerToken);
         }
         System.out.println(secondUser.getName()); // what does it mean ?????????? :///
         Deck secondUserActiveDeck = getActiveDeck(secondUser);

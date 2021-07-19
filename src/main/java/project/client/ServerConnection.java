@@ -2,12 +2,11 @@ package project.client;
 
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import project.client.view.ScoreboardController;
 import project.client.view.pooyaviewpackage.DuelView;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class ServerConnection {
@@ -47,10 +46,11 @@ public class ServerConnection {
 
     public static String sendDataToServerAndReceiveResult(String data) {
         try {
-            dataOutputStream.writeUTF(data);
+            String input = (String) data;
+            dataOutputStream.writeUTF(input);
             dataOutputStream.flush();
             return dataInputStream.readUTF();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "exception";
         }
@@ -63,7 +63,7 @@ public class ServerConnection {
             return secondDataInputStream.readUTF();
         } catch (Exception e) {
             e.printStackTrace();
-            return  "exception";
+            return "exception";
         }
     }
 
@@ -111,7 +111,7 @@ public class ServerConnection {
         readingThirdThread.start();
     }
 
-    public static void stopScoreboard(){
+    public static void stopScoreboard() {
         shouldContinueScoreboard = false;
     }
 
@@ -147,7 +147,7 @@ public class ServerConnection {
                 while (true) {
                     String whatServerGave = secondDataInputStream.readUTF();
                     // System.out.println("what server gave to second thread: *" + whatServerGave+"*");
-                    if (whatServerGave.contains("do you want to ")||whatServerGave.contains("now it will be")) {
+                    if (whatServerGave.contains("do you want to ") || whatServerGave.contains("now it will be")) {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {

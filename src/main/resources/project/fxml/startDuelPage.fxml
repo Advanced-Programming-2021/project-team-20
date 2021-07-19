@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background15" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.startDuelController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" styleClass="chart-plot-background15" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.StartDuelController">
    <children>
       <Button fx:id="backbtn" layoutX="338.0" layoutY="654.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="31.0" prefWidth="109.0" text="back" />
       <Button fx:id="cancelGamebtn" layoutX="828.0" layoutY="540.0" mnemonicParsing="false" onAction="#cancelGame" text=" cancel game" />

@@ -22,9 +22,9 @@ public class TweetController {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         details.addProperty("author", user.getName());
         HashMap<String, String> hashMapTweet = new HashMap<>();
@@ -37,6 +37,7 @@ public class TweetController {
 
     private static ArrayList<String> getLastTweets(int lastIdOfTweetReceived) {
         ArrayList<String> newMessages = new ArrayList<>();
+//        System.out.println(TweetStorage.getAllTweets().size());
         for (int i = lastIdOfTweetReceived; i < TweetStorage.getAllTweets().size(); i++) {
             newMessages.add(TweetStorage.getAllTweets().get(i).toGsonString());
         }
@@ -52,10 +53,11 @@ public class TweetController {
         } catch (Exception e) {
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
+        System.out.println(getLastTweets(lastIdOfTweets));
         return ToGsonFormatForSendInformationToClient.toGsonFormatForSentLastTweetsToClient(getLastTweets(lastIdOfTweets));
     }
 }

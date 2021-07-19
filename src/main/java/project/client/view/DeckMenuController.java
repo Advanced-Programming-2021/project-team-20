@@ -173,11 +173,14 @@ public class DeckMenuController implements Initializable {
 
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("addCardToUselessCards",
             "cardName", transfferdRectangle.getId());
-        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(resultOfServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
         LoginController.getOnlineUser().getAllUselessCards().add(transfferdRectangle.getId());
@@ -213,11 +216,14 @@ public class DeckMenuController implements Initializable {
 
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck(
             "addCardToMainOrSideDeck", nameOfAddedCard, deckname, isTransferToMainDeck);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
 
@@ -390,11 +396,14 @@ public class DeckMenuController implements Initializable {
     private void deleteCardFromScrollBar(Rectangle transfferdRectangle) {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest(
             "deleteCardFromUselessCards", "cardName", transfferdRectangle.getId().replace("scrollBar", ""));
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
         LoginController.getOnlineUser().getAllUselessCards()
@@ -467,11 +476,14 @@ public class DeckMenuController implements Initializable {
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
         String dataSentToServer = ToGsonFormatToSendDataToServer.toGsonFormatAddOrRemoveCardFromMainOrSideDeck(
             "deleteCardFromMainOrSideDeck", transfferdRectangle.getId(), deckname, isDeleteFromMainDeck);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSentToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
         Deck deck = LoginController.getOnlineUser().getDecks().get(deckname);
@@ -545,11 +557,14 @@ public class DeckMenuController implements Initializable {
     public void activeDeck() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("activeDeck", "deckName",
             deckname);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
             .deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
 

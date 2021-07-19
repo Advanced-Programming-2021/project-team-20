@@ -135,12 +135,15 @@ public class WholeDeckPageMenuController implements Initializable {
     public void deleteDeck() {
         String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("deleteDeck", "deckName",
                 chosenDeck);
-        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
         if (!deserializeResult.get("type").equals("Successful")) {
             return;
+        }
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            new MainMenuController().backToLoginPage();
         }
         if (decksInDifferentPages.get(currentPageToShowDecks).size() == 1) {
             if (currentPageToShowDecks != 0) {
@@ -194,13 +197,16 @@ public class WholeDeckPageMenuController implements Initializable {
         String createdDeckName = createdDeckNameField.getText();
         String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName",
                 createdDeckName);
-        String resultOfServer = ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer
                 .deserializeForOnlyTypeAndMessage(resultOfServer);
         showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
         if (deserializeResult.get("type").equals("Error")) {
             createdDeckNameField.setText("");
             return;
+        }
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            new MainMenuController().backToLoginPage();
         }
 
         Deck deck = new Deck(createdDeckName);

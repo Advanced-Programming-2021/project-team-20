@@ -5,6 +5,7 @@ import java.util.*;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -89,17 +90,26 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
         sideDeckCards = LoginController.getOnlineUser().getDecks().get(deckName).getSideDeck();
     }
 
-    public void confirmChanges(String token) {
-        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeCardsBetweenTwoRounds", "ConfirmChanges", "ConfirmChanges");
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
-        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-        if (deserializeResult.get("type").equals("Error")) {
-            CustomDialog customDialog = new CustomDialog("Error", "Game interrupted", "mainMenu");
-            customDialog.openDialog();
-        } else {
-            SongPlayer.getInstance().pauseMusic();
-            DuelView.callStage();
-        }
+    public void confirmChanges() {
+
+        new Thread(() -> {
+            String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeCardsBetweenTwoRounds", "ConfirmChanges", "ConfirmChanges");
+            String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
+            HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (deserializeResult.get("type").equals("Error")) {
+                        CustomDialog customDialog = new CustomDialog("Error", "Game interrupted", "mainMenu");
+                        customDialog.openDialog();
+                    } else {
+                        SongPlayer.getInstance().pauseMusic();
+                        DuelView.callStage();
+                    }
+                }
+            });
+        }).start();
+        equalConfirmbtn.setDisable(true);
     }
 
     private void setEffectsOfConfirmButton() {
@@ -305,10 +315,13 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
 
     private void deleteCardFromMianOrSideDeck(Rectangle transfferdRectangle, Pane pane, boolean isDeleteFromMainDeck) {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatForChangeCardsBetweenTowRounds(transfferdRectangle.getId(), isDeleteFromMainDeck, false);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("type"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
 
@@ -339,10 +352,13 @@ public class ChangeCardsBetweenTwoRoundsController implements Initializable {
     private void transferCardToMainOrSideDeck(DragEvent e, Pane pane, boolean isTransferToMainDeck) {
         Rectangle transfferdRectangle = (Rectangle) e.getGestureSource();
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatForChangeCardsBetweenTowRounds(transfferdRectangle.getId(), isTransferToMainDeck, true);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
             return;
         }
         Deck deck = LoginController.getOnlineUser().getDecks().get(deckName);

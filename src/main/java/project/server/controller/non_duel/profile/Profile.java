@@ -25,9 +25,9 @@ public class Profile {
             return ServerController.getBadRequestFormat();
         }
 
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         ArrayList<User> allUsers = Storage.getAllUsers();
@@ -55,9 +55,9 @@ public class Profile {
             e.printStackTrace();
             return ServerController.getBadRequestFormat();
         }
-        User user = ServerController.getUserByToken(token);
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
 
         if (!currentPassword.equals(user.getPassword())) {
@@ -102,7 +102,7 @@ public class Profile {
             }
         }
         if (user == null) {
-            return ServerController.getUserNotLogined();
+            return ServerController.getConnectionDisconnected();
         }
         return ToGsonFormatForSendInformationToClient.toGsonFormatForGetInformationOfProfile(user);
     }

@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         storage.startProgram();
-        //TweetStorage.startProgram();
+        TweetStorage.startProgram();
         new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
             while (true) {
@@ -18,6 +18,7 @@ public class Main {
                 if (input.equals("end")) {
                     try {
                         storage.endProgram();
+                        TweetStorage.endProgram();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

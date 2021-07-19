@@ -1,6 +1,8 @@
 package project.client.view;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -91,11 +93,11 @@ public class CustomDialog extends Stage {
         setScene(new Scene(root, null));
     }
 
-    private Button createButtonWhenUserLogined(Rectangle bg){
+    private Button createButtonWhenUserLogined(Rectangle bg) {
         Button btn = new Button("OK");
         btn.setTranslateX(bg.getWidth() - 75);
         btn.setTranslateY(bg.getHeight() - 50);
-        btn.setOnAction(e-> callMainMenu());
+        btn.setOnAction(e -> callMainMenu());
         btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         return btn;
     }
@@ -144,10 +146,15 @@ public class CustomDialog extends Stage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String currentPlayerWhoChangesDeck = GameManager.getDuelControllerByIndex(token).getPlayingUsers().get(0);
-        Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token).getAllyPlayerDeck();
+        String currentPlayerWhoChangesDeck = LoginController.getOnlineUser().getName();
+        Deck activeDeck = null;
+        HashMap<String, Deck> allDecks = LoginController.getOnlineUser().getDecks();
+        for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
+            if (allDecks.get(entry.getKey()).getIsDeckActive())
+                activeDeck = entry.getValue();
+        }
         new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
-                activeDeck.getDeckname(), token);
+            activeDeck.getDeckname(), token);
     }
 
     private Button createButton(Rectangle bg, boolean isRockPaperScissorController) {

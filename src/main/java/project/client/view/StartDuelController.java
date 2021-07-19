@@ -24,7 +24,7 @@ import project.client.view.Components.PackageForShowTweet;
 import project.model.Deck;
 import project.model.User;
 
-public class startDuelController implements Initializable {
+public class StartDuelController implements Initializable {
 
     @FXML
     private Button randomUserbtn;
@@ -55,6 +55,7 @@ public class startDuelController implements Initializable {
     private double YMoveOfScrollPane = 0;
     private List<PackageForShowTweet> packageForShowTweets = new ArrayList<>();
     private Pane pane;
+    private SendDuelRequestToServer sendDuelRequestToServer;
 
     private boolean isRequestForGameSend;
     private boolean isPlayWithComputer;
@@ -107,38 +108,40 @@ public class startDuelController implements Initializable {
     private void sendRequestDuelToServer() {
         isRequestForGameSend = true;
         setEffectsOfGameButtons();
-        new Thread(() -> {
-            int numberOfRounds = isMatchGame ? 3 : 1;
-            String dataSendToServer = "";
-            if (isPlayWithComputer) {
-                dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToPlayWithComputer(numberOfRounds);
-            } else {
-                dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
-                    "numberOfRounds", numberOfRounds + "");
-            }
-            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
-            HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-            System.out.println(messageFromServer);
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("before deserializeResult.get(type)");
-                    if (deserializeResult.get("type").equals("Error")) {
-                        showAlert(deserializeResult.get("message"), "Error");
-                        return;
-                    }
-                    if (deserializeResult.get("type").equals("Confirmation")) {
-                        System.out.println("here");
-                        showAlert("Duel Canceled!", "CONFIRMATION");
-                        return;
-                    }
-                    startGame();
-                }
-            });
-        }).start();
+        sendDuelRequestToServer = new SendDuelRequestToServer(this);
+
+//        new Thread(() -> {
+//            int numberOfRounds = isMatchGame ? 3 : 1;
+//            String dataSendToServer = "";
+//            if (isPlayWithComputer) {
+//                dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToPlayWithComputer(numberOfRounds);
+//            } else {
+//                dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
+//                    "numberOfRounds", numberOfRounds + "");
+//            }
+//            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+//            HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+//            System.out.println(messageFromServer);
+//            Platform.runLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    System.out.println("before deserializeResult.get(type)");
+//                    if (deserializeResult.get("type").equals("Error")) {
+//                        showAlert(deserializeResult.get("message"), "Error");
+//                        return;
+//                    }
+//                    if (deserializeResult.get("type").equals("Confirmation")) {
+//                        System.out.println("here");
+//                        showAlert("Duel Canceled!", "CONFIRMATION");
+//                        return;
+//                    }
+//                    startGame();
+//                }
+//            });
+//        }).start();
     }
 
-    private void startGame() {
+    protected void startGame() {
         try {
             new MainView().changeView("/project/fxml/rockPaperScissorPage.fxml");
         } catch (IOException e) {
@@ -154,7 +157,8 @@ public class startDuelController implements Initializable {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("cancelDuel", "", "");
         String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult2(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
-
+        showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+        sendDuelRequestToServer.stop();
     }
 
     public void setComputerOpponent() {
@@ -179,7 +183,6 @@ public class startDuelController implements Initializable {
 
     public void playGame() {
         String condition = checkConditionOfPlayer();
-        System.out.println(condition);
         if (!condition.equals("Wait Until Another Player Wants To Play")) {
             showAlert(condition, "Error");
             return;
@@ -196,13 +199,13 @@ public class startDuelController implements Initializable {
         textArea.setText("");
 
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived + 1);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
     public void refreshTweets() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived + 1);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
@@ -210,6 +213,7 @@ public class startDuelController implements Initializable {
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(messageFromServer);
         JsonObject details = jsonElement.getAsJsonObject();
+        checkConnectionStatus(details);
         JsonArray newTweets = details.getAsJsonArray("newTweets");
         for (int i = 0; i < newTweets.size(); i++) {
             JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
@@ -217,6 +221,17 @@ public class startDuelController implements Initializable {
         }
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
+    }
+
+    private void checkConnectionStatus(JsonObject details) {
+        try {
+            if (details.get("message").getAsString().equals("Connection Disconnected")) {
+                showAlert(details.get("message").getAsString(), "Error");
+                new MainMenuController().backToLoginPage();
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     private void showTweet(JsonObject jsonObject) {
@@ -294,7 +309,7 @@ public class startDuelController implements Initializable {
 //        }
     }
 
-    private void showAlert(String message, String typeOfMessage) {
+    public void showAlert(String message, String typeOfMessage) {
         CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
         customDialog.openDialog();
     }
@@ -328,15 +343,61 @@ public class startDuelController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    public boolean isMatchGame() {
+        return isMatchGame;
+    }
+
+    public boolean isPlayWithComputer() {
+        return isPlayWithComputer;
+    }
 }
+
 
 class SendDuelRequestToServer implements Runnable {
 
-    private boolean exit;
+    private boolean exit = false;
+    StartDuelController startDuelController;
+    Thread thread;
+
+    SendDuelRequestToServer(StartDuelController startDuelController) {
+        this.startDuelController = startDuelController;
+        thread = new Thread(this);
+        thread.start();
+    }
+
     @Override
     public void run() {
-
+        System.out.println("started");
+//        while (!exit) {
+        int numberOfRounds = startDuelController.isMatchGame() ? 3 : 1;
+        String dataSendToServer = "";
+        if (startDuelController.isPlayWithComputer()) {
+            dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToPlayWithComputer(numberOfRounds);
+        } else {
+            dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
+                "numberOfRounds", numberOfRounds + "");
+        }
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+        System.out.println(messageFromServer);
+        if (deserializeResult.get("type").equals("Confirmation")) {
+            System.out.println("return");
+            return;
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("before deserializeResult.get(type)");
+                if (deserializeResult.get("type").equals("Error")) {
+                    startDuelController.showAlert(deserializeResult.get("message"), "Error");
+                    return;
+                }
+                startDuelController.startGame();
+            }
+        });
     }
+
 
     public void stop() {
         exit = true;

@@ -55,7 +55,7 @@ public class LoginController implements Initializable {
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatLogin(usernameField.getText(),
                 passwordField.getText());
-        String result = ServerConnection.sendDataToServerAndReceiveResult(data);
+        String result = (String) ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeLogin(result);
         if (deserializeResult.get("type").equals("Error")) {
             showAlert(deserializeResult.get("message"), "Error");
@@ -84,7 +84,7 @@ public class LoginController implements Initializable {
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatRegister(usernameFieldForRegister.getText(),
                 nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
-        String result = ServerConnection.sendDataToServerAndReceiveResult(data);
+        String result = (String) ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeRegister(result);
         if (deserializeResult.get(DeserializeInformationFromServer.getType())
                 .equals(DeserializeInformationFromServer.getError())) {

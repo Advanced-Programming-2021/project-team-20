@@ -66,6 +66,7 @@ public class ChatRoomController implements Initializable {
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(messageFromServer);
         JsonObject details = jsonElement.getAsJsonObject();
+        checkConnectionStatus(details);
         JsonArray newTweets = details.getAsJsonArray("newTweets");
         for (int i = 0; i < newTweets.size(); i++) {
             JsonObject jsonObject = newTweets.get(i).getAsJsonObject();
@@ -73,6 +74,22 @@ public class ChatRoomController implements Initializable {
         }
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
+    }
+
+    private void checkConnectionStatus(JsonObject details) {
+        try {
+            if (details.get("message").getAsString().equals("Connection Disconnected")) {
+                showAlert(details.get("message").getAsString(), "Error");
+                new MainMenuController().backToLoginPage();
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void showAlert(String message, String typeOfMessage) {
+        CustomDialog customDialog = new CustomDialog(typeOfMessage, message);
+        customDialog.openDialog();
     }
 
     private void showTweet(JsonObject jsonObject) {
@@ -159,13 +176,13 @@ public class ChatRoomController implements Initializable {
         textArea.setText("");
 
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived + 1);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
     public void refreshTweets() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived + 1);
-        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 

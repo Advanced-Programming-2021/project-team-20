@@ -131,7 +131,7 @@ public class Shop {
         }
 
 
-        user = ServerController.getUserByToken(token);
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
             return "{\"type\":\"Error\",\"message\":\"invalid token!\"}";
         }
@@ -160,7 +160,7 @@ public class Shop {
         } catch (Exception a) {
             return ServerController.getBadRequestFormat();
         }
-        user = ServerController.getUserByToken(token);
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
             return "{\"type\":\"Error\",\"message\":\"invalid token!\"}";
         }
@@ -176,7 +176,7 @@ public class Shop {
         } catch (Exception a) {
             return ServerController.getBadRequestFormat();
         }
-        user = ServerController.getUserByToken(token);
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
         if (user == null) {
             return ServerController.getBadRequestFormat();
         }
