@@ -6,11 +6,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import project.model.Deck;
 import project.model.User;
+import project.server.controller.non_duel.storage.TweetStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ToGsonFormatForSendInformationToClient {
     private static String successful = "Successful";
@@ -25,7 +23,7 @@ public class ToGsonFormatForSendInformationToClient {
             String token = UUID.randomUUID().toString();
             ServerController.getLoginedUsers().put(token, user);
             ServerController.refreshLastConnectionTime(token);
-            jsonObject.addProperty(token, token);
+            jsonObject.addProperty("token", token);
             jsonObject.addProperty("userInformation", toGsonFormatUserInformation(user));
             jsonObject.addProperty("wholeDeck", toGsonFormatDecksAndCards(user));
         }
@@ -104,7 +102,17 @@ public class ToGsonFormatForSendInformationToClient {
         jsonObject.addProperty("type", "Successful");
         jsonObject.addProperty("message", "Tweet Sent Successfully!");
         jsonObject.add("newTweets", toJsonArrayTweets(newTweets));
+        jsonObject.add("deletedTweetIds", toJsonArrayDeletedTweetIds(TweetStorage.getDeletedTweets()));
+        jsonObject.addProperty("onlineUsers", ServerController.getLoginedUsers().size());
         return jsonObject.toString();
+    }
+
+    private static JsonArray toJsonArrayDeletedTweetIds(List<Integer> deletedTweetIds) {
+        JsonArray jsonArray = new JsonArray();
+        for (int i = 0; i < deletedTweetIds.size(); i++) {
+            jsonArray.add(deletedTweetIds.get(i));
+        }
+        return jsonArray;
     }
 
     private static JsonArray toJsonArrayTweets(ArrayList<String> newTweets) {
@@ -119,6 +127,8 @@ public class ToGsonFormatForSendInformationToClient {
     public static String toGsonFormatForSentLastTweetsToClient(ArrayList<String> newTweets) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("newTweets", toJsonArrayTweets(newTweets));
+        jsonObject.add("deletedTweetIds", toJsonArrayDeletedTweetIds(TweetStorage.getDeletedTweets()));
+        jsonObject.addProperty("onlineUsers", ServerController.getLoginedUsers().size());
         return jsonObject.toString();
     }
 

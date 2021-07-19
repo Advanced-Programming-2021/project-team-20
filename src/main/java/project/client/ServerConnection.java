@@ -46,8 +46,7 @@ public class ServerConnection {
 
     public static String sendDataToServerAndReceiveResult(String data) {
         try {
-            String input = (String) data;
-            dataOutputStream.writeUTF(input);
+            dataOutputStream.writeUTF(data);
             dataOutputStream.flush();
             return dataInputStream.readUTF();
         } catch (Exception e) {

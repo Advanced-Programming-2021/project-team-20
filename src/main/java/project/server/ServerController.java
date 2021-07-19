@@ -33,7 +33,7 @@ public class ServerController {
         Socket socket = null;
         Socket secondSocket = null;
         Socket thirdSocket = null;
-//        deleteClientsThatLoseConnections();
+        deleteClientsThatLoseConnections();
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             ServerSocket secondServerSocket = new ServerSocket(12346);
@@ -86,8 +86,6 @@ public class ServerController {
             try {
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-//                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-//                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 getInputAndProcess(dataInputStream, dataOutputStream);
                 dataInputStream.close();
                 socket.close();
@@ -231,20 +229,16 @@ public class ServerController {
 //        }
 //    }
 
-    private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream) {
+    private static void getInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream)
+        throws IOException {
         while (true) {
-            try {
-                String input = dataInputStream.readUTF();
-                System.out.println("=============================================");
-                System.out.println("message from client: " + input);
-                String result = process(input);
-                System.out.println("message send to client: " + result);
-                dataOutputStream.writeUTF(result);
-                dataOutputStream.flush();
-            } catch (Exception e) {
-                System.out.println("connection reset");
-                break;
-            }
+            String input = dataInputStream.readUTF();
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
+            String result = process(input);
+            System.out.println("message send to client: " + result);
+            dataOutputStream.writeUTF(result);
+            dataOutputStream.flush();
         }
     }
 
@@ -313,10 +307,10 @@ public class ServerController {
                 return TweetController.sendTweet(details);
             case "getLastTweets":
                 return TweetController.getLastTweets(details);
+            case "deleteTweet":
+                return TweetController.deleteTweet(details);
             case "changeCardsBetweenTwoRounds":
                 return ChangeCardsBetweenTwoRounds.getInputFromClientAndProcessIt(details);
-            case "cheat":
-
             case "logout":
                 return logoutUser(details);
             case "duel":

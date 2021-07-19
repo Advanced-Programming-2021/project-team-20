@@ -13,7 +13,9 @@ public class TweetStorage {
 
     private static String tweetsFolderPath = "Resourses\\Server\\Tweets";
     private static List<Tweet> allTweets = new ArrayList<>();
+    private static List<Integer> deletedTweets = new ArrayList<>();
     private static long lastTimeTweetsSavedInFile = 0l;
+    private static long lastTimeTweetsDeleted = 0l;
     private static int numberOfTweetsSavedInFile;
 
     public static void startProgram() {
@@ -57,6 +59,10 @@ public class TweetStorage {
 
     public static void endProgram() {
         saveTweetsInFile();
+        allTweets.clear();
+        deleteTweetsFromStorage();
+        System.out.println("end");
+        System.exit(0);
     }
 
     private static void saveTweetsInFile() {
@@ -70,6 +76,31 @@ public class TweetStorage {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void deleteTweetsFromStorage() {
+        new Thread(() -> {
+            for (int i = 0; i < deletedTweets.size(); i++) {
+                File file = new File(tweetsFolderPath + "\\" + i + ".json");
+                System.out.println(file.delete() + " " + file.exists());
+            }
+        }).start();
+    }
+
+    public static void deleteTweetById(int id) {
+        for (int i = 0; i < allTweets.size(); i++) {
+            if (allTweets.get(i).getId() == id) {
+                deletedTweets.add(allTweets.get(i).getId());
+                allTweets.remove(i);
+            }
+        }
+//        if (System.currentTimeMillis() - lastTimeTweetsDeleted > 120000) {
+//            deleteTweetsFromStorage();
+//        }
+    }
+
+    public static List<Integer> getDeletedTweets() {
+        return deletedTweets;
     }
 
     public static List<Tweet> getAllTweets() {

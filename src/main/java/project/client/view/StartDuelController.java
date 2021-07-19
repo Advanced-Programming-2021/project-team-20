@@ -199,13 +199,13 @@ public class StartDuelController implements Initializable {
         textArea.setText("");
 
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatSendTweet(message, lastIdOfTweetReceived + 1);
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer =  ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
     public void refreshTweets() {
         String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatToGetTweetsById(lastIdOfTweetReceived + 1);
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer =  ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         deserializeMessageAndShowIt(messageFromServer);
     }
 
@@ -378,7 +378,7 @@ class SendDuelRequestToServer implements Runnable {
             dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("requestDuel",
                 "numberOfRounds", numberOfRounds + "");
         }
-        String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
         System.out.println(messageFromServer);
         if (deserializeResult.get("type").equals("Confirmation")) {
