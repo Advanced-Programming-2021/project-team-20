@@ -2,6 +2,7 @@ package project.client.view;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,7 +32,8 @@ import java.net.URL;
 import java.util.*;
 
 public class ShopController implements Initializable {
-//    @FXML
+    public Button adminPanel;
+    //    @FXML
 //    private Button auctionBtn;
     @FXML
     private Button buybtn;
@@ -388,6 +390,20 @@ public class ShopController implements Initializable {
 
     public static void setAnchorPane(AnchorPane anchorPane) {
         ShopController.anchorPane = anchorPane;
+    }
+
+    public void gotoAdminPanel(ActionEvent actionEvent) {
+        if (!LoginController.getOnlineUser().getName().equals("admin")) {
+            try {
+                new MainView().changeView("/project/fxml/adminPanelShop.fxml");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            CustomDialog customDialog = new CustomDialog("ERROR", "YOU ARE NOT ADMIN");
+            customDialog.openDialog();
+        }
     }
 
 //    public void sellCard(ActionEvent actionEvent) {
