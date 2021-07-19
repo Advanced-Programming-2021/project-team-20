@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import project.model.cardData.General.Card;
 import project.server.controller.non_duel.storage.Storage;
 
@@ -18,10 +19,11 @@ public class AdminPanelShopController implements Initializable {
     public Button backButton;
     public Button increaseButton;
     public Button decreaseButton;
+    public Pane pane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        pane.setStyle("-fx-background-color: #fffefe");
     }
 
     public void dontAllowACard(ActionEvent actionEvent) {

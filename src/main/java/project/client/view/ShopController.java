@@ -393,7 +393,7 @@ public class ShopController implements Initializable {
     }
 
     public void gotoAdminPanel(ActionEvent actionEvent) {
-        //TODO
+        //TODO: change it(ADMIN)
         if (!LoginController.getOnlineUser().getName().equals("admin")) {
             try {
                 new MainView().changeView("/project/fxml/adminPanelShop.fxml");
