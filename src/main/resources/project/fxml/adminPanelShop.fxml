@@ -21,5 +21,14 @@
          </font>
       </TextField>
       <Button fx:id="backButton" layoutX="37.0" layoutY="618.0" mnemonicParsing="false" onAction="#back" prefHeight="43.0" prefWidth="97.0" text="back" />
+      <Pane fx:id="pane" layoutX="399.0" layoutY="215.0" prefHeight="57.0" prefWidth="263.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="11.0" prefHeight="17.0" prefWidth="214.0" text="admin panel">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>
