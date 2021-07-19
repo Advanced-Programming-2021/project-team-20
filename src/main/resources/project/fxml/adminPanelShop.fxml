@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.AdminPanelShopController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/abc.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.AdminPanelShopController">
   <styleClass>
-    <String fx:value="admin-panel-shop-background" />
+    <String fx:value="background" />
+    <String fx:value="chart-plot-background" />
   </styleClass>
+   <children>
+      <Button fx:id="increaseButton" layoutX="385.0" layoutY="488.0" mnemonicParsing="false" onAction="#increaseCard" prefHeight="31.0" prefWidth="98.0" text="increase" />
+      <Button fx:id="decreaseButton" layoutX="566.0" layoutY="488.0" mnemonicParsing="false" onAction="#decreaseCard" prefHeight="31.0" prefWidth="98.0" text="decrease" />
+      <Button fx:id="allowButton" layoutX="385.0" layoutY="438.0" mnemonicParsing="false" onAction="#allowACard" prefHeight="31.0" prefWidth="98.0" text="allow" />
+      <Button fx:id="disAllowButton" layoutX="565.0" layoutY="438.0" mnemonicParsing="false" onAction="#dontAllowACard" prefHeight="31.0" prefWidth="98.0" text="disallow" />
+      <TextField fx:id="textField" alignment="CENTER" layoutX="385.0" layoutY="304.0" prefHeight="91.0" prefWidth="279.0" promptText="CARD NAME">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <Button fx:id="backButton" layoutX="37.0" layoutY="618.0" mnemonicParsing="false" onAction="#back" prefHeight="43.0" prefWidth="97.0" text="back" />
+   </children>
 </AnchorPane>
