@@ -253,6 +253,9 @@ public class Shop {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "ADMIN ERROR");
         }
         else {
+            if (card.getNumberOfCardsInShop() + changeInt < 0) {
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "NUMBER OF CARDS IN SHOP IS 0");
+            }
             Storage.changeShopCardInformation(card, card.getIsShopAllowed(), card.getNumberOfCardsInShop() + changeInt);
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "SUCCESSFUL");
         }
