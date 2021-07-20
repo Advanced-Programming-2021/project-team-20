@@ -305,6 +305,8 @@ public class ServerController {
                 return Profile.changeNickname(details);
             case "requestDuel":
                 return DuelStarter.requestGame(details);
+            case "getStatusAfterRequestDuel":
+                return DuelStarter.getStatusAfterRequestDuel(details);
             case "playWithComputer":
                 return DuelStarter.playWithComputer(details);
             case "cancelDuel":

@@ -23,6 +23,7 @@ import project.model.cardData.TrapCardData.TrapCard;
 public class DuelStarter {
 
     private static HashMap<String, Integer> listOfTypeOfGameThatSuggest = new HashMap<>();
+    private static HashMap<String, Integer> numberOfRequestsSentFromClientForGetStatus = new HashMap<>();
     private static List<SetTurnForGame> newGamesThatShouldSetItsTurn = new ArrayList<>();
     private static GameManager gameManager = new GameManager();
 
@@ -44,42 +45,58 @@ public class DuelStarter {
             return ServerController.getConnectionDisconnected();
         }
         listOfTypeOfGameThatSuggest.put(token, numberOfRounds);
-        for (int i = 0; i < 150; i++) {
-            for (Map.Entry<String, Integer> entry : listOfTypeOfGameThatSuggest.entrySet()) {
-                if (!entry.getKey().equals(token) && entry.getValue() == numberOfRounds) {
-                    addANewSetTurnForGame(token, entry.getKey(), entry.getValue());
-                    listOfTypeOfGameThatSuggest.remove(token);
-                    listOfTypeOfGameThatSuggest.remove(entry.getKey());
-                    return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
-                        "Duel Started Successfully!");
-                }
-            }
+        numberOfRequestsSentFromClientForGetStatus.put(token, 0);
 
-            for (int j = 0; j < newGamesThatShouldSetItsTurn.size(); j++) {
-                if (newGamesThatShouldSetItsTurn.get(j).getPlayer1Token().equals(token)) {
-                    return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
-                        "Duel Started Successfully!");
-                }
-                if (newGamesThatShouldSetItsTurn.get(j).getPlayer2Token().equals(token)) {
-                    return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
-                        "Duel Started Successfully!");
-                }
-            }
-
-            if (!listOfTypeOfGameThatSuggest.containsKey(token)) {
-                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Confirmation", "Duel Canceled Successfully!");
-            }
-
-            try {
-                Thread.sleep(200);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        listOfTypeOfGameThatSuggest.remove(token);
-        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Game interrupted");
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Request Submitted Successfully!");
 
     }
+
+    public static synchronized String getStatusAfterRequestDuel(JsonObject details) {
+        String token = "";
+        int numberOfRounds;
+        try {
+            token = details.get("token").getAsString();
+            numberOfRounds = details.get("numberOfRounds").getAsInt();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ServerController.getConnectionDisconnected();
+        }
+
+        for (Map.Entry<String, Integer> entry : listOfTypeOfGameThatSuggest.entrySet()) {
+            if (!entry.getKey().equals(token) && entry.getValue() == numberOfRounds) {
+                addANewSetTurnForGame(token, entry.getKey(), entry.getValue());
+                listOfTypeOfGameThatSuggest.remove(token);
+                listOfTypeOfGameThatSuggest.remove(entry.getKey());
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                    "Duel Started Successfully!");
+            }
+        }
+
+        for (int j = 0; j < newGamesThatShouldSetItsTurn.size(); j++) {
+            if (newGamesThatShouldSetItsTurn.get(j).getPlayer1Token().equals(token)) {
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                    "Duel Started Successfully!");
+            }
+            if (newGamesThatShouldSetItsTurn.get(j).getPlayer2Token().equals(token)) {
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
+                    "Duel Started Successfully!");
+            }
+        }
+
+        if (!listOfTypeOfGameThatSuggest.containsKey(token)) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Confirmation", "Duel Canceled Successfully!");
+        }
+
+        numberOfRequestsSentFromClientForGetStatus.put(token, numberOfRequestsSentFromClientForGetStatus.get(token) + 1);
+        if (numberOfRequestsSentFromClientForGetStatus.get(token) > 30) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Game interrupted");
+        }
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Confirmation", "There is not another player to play");
+    }
+
 
     private static synchronized void addANewSetTurnForGame(String player1Token, String player2Token, int numberOfRounds) {
         for (int i = 0; i < newGamesThatShouldSetItsTurn.size(); i++) {
@@ -204,6 +221,7 @@ public class DuelStarter {
         for (Map.Entry<String, Integer> entry : listOfTypeOfGameThatSuggest.entrySet()) {
             if (entry.getKey().equals(token)) {
                 listOfTypeOfGameThatSuggest.remove(token);
+                numberOfRequestsSentFromClientForGetStatus.remove(token);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Duel Canceled Successfully!");
             }
         }
@@ -291,5 +309,6 @@ public class DuelStarter {
         }
         return null;
     }
+
 
 }
