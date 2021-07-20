@@ -32,6 +32,6 @@
             <Font size="24.0" />
          </font>
       </TextField>
-      <Button fx:id="refreshButton" layoutX="83.0" layoutY="20.0" mnemonicParsing="false" onAction="#refresh" text="refresh" />
+      <Button fx:id="backButton" layoutX="84.0" layoutY="58.0" mnemonicParsing="false" onAction="#back" text="back" />
    </children>
 </AnchorPane>

@@ -2,11 +2,13 @@ package project.client;
 
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
+import project.client.view.AuctionPageController;
 import project.client.view.ScoreboardController;
 import project.client.view.pooyaviewpackage.DuelView;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 public class ServerConnection {
@@ -24,6 +26,12 @@ public class ServerConnection {
     private static Thread readingThirdThread;
     private static Thread writingThirdThread;
     private static boolean shouldContinueScoreboard = true;
+    private static Socket fourthSocket;
+    private static DataInputStream fifthDataInputStream;
+    private static DataOutputStream fifthDataOutputStream;
+    private static Thread readingFourthThread;
+    private static Thread writingFourthThread;
+    private static boolean shouldContinueAuctionRefresh = true;
 
     public static void initializeNetwork() {
         try {
@@ -38,6 +46,9 @@ public class ServerConnection {
             thirdDataOutputStream = new DataOutputStream(thirdSocket.getOutputStream());
             fourthDataInputStream = new DataInputStream(thirdSocket.getInputStream());
             fourthDataOutputStream = new DataOutputStream(thirdSocket.getOutputStream());
+            fourthSocket = new Socket("localhost", 11122);
+            fifthDataInputStream = new DataInputStream(fourthSocket.getInputStream());
+            fifthDataOutputStream = new DataOutputStream(fourthSocket.getOutputStream());
             receiveDataFromServerAndGiveResults();
         } catch (IOException x) {
             x.printStackTrace();
@@ -112,6 +123,45 @@ public class ServerConnection {
 
     public static void stopScoreboard() {
         shouldContinueScoreboard = false;
+    }
+
+    public static void startAuction() {
+        shouldContinueAuctionRefresh = true;
+    }
+    public static void auctionAutoRefresh(AuctionPageController auctionPageController) {
+        writingFourthThread = new Thread(() -> {
+            try {
+                long time = System.currentTimeMillis();
+                while (shouldContinueAuctionRefresh) {
+                    if (System.currentTimeMillis() - time > 1000) {
+                        time = System.currentTimeMillis();
+                        fifthDataOutputStream.writeUTF(ToGsonFormatToSendDataToServer.toGsonFormatRefreshAuction());
+                        fifthDataOutputStream.flush();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        readingFourthThread = new Thread(() -> {
+            try {
+                while (shouldContinueAuctionRefresh) {
+                    String whatServerGave = fifthDataInputStream.readUTF();
+                    System.out.println(whatServerGave);
+                    auctionPageController.refreshTable(whatServerGave);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        writingFourthThread.setDaemon(shouldContinueAuctionRefresh);
+        readingFourthThread.setDaemon(shouldContinueAuctionRefresh);
+        writingFourthThread.start();
+        readingFourthThread.start();
+    }
+
+    public static void stopAuctionRefresh() {
+        shouldContinueAuctionRefresh = false;
     }
 
     public static String getResultSecondTime(String string) {

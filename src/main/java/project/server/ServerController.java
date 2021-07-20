@@ -34,11 +34,13 @@ public class ServerController {
         Socket socket = null;
         Socket secondSocket = null;
         Socket thirdSocket = null;
+        Socket fourthSocket = null;
         deleteClientsThatLoseConnections();
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             ServerSocket secondServerSocket = new ServerSocket(12346);
             ServerSocket thirdServerSocket = new ServerSocket(12356);
+            ServerSocket fourthServerSocket = new ServerSocket(11122);
             while (true) {
                 socket = serverSocket.accept();
                 startNewThread(serverSocket, socket);
@@ -46,6 +48,8 @@ public class ServerController {
                 startNewDuelThread(secondServerSocket, secondSocket);
                 thirdSocket = thirdServerSocket.accept();
                 startNewThreadForScoreboard(thirdServerSocket, thirdSocket);
+                fourthSocket = fourthServerSocket.accept();
+                startNewThreadForAuction(fourthServerSocket, fourthSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,6 +60,55 @@ public class ServerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void startNewThreadForAuction(ServerSocket fourthServerSocket, Socket fourthSocket) {
+        new Thread(() -> {
+            try {
+                DataInputStream dataInputStream = new DataInputStream(fourthSocket.getInputStream());
+                DataOutputStream dataOutputStream = new DataOutputStream(fourthSocket.getOutputStream());
+                getAuctionInputAndProcess(dataInputStream, dataOutputStream);
+                dataInputStream.close();
+                fourthSocket.close();
+                fourthServerSocket.close();
+            } catch (IOException e) {
+                System.out.println("Connection reset");
+            }
+        }).start();
+    }
+
+    private static void getAuctionInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream) throws IOException {
+            while (true) {
+                String input = dataInputStream.readUTF();
+                System.out.println("=============================================");
+                System.out.println("message from client: " + input);
+
+                String result = null;
+
+                JsonParser parser = new JsonParser();
+                JsonElement rootNode = parser.parse(input);
+                try {
+                    if (rootNode.isJsonObject()) {
+                        JsonObject details = rootNode.getAsJsonObject();
+                        String type = details.get("type").getAsString();
+                        if (type.equals("refreshAuction")) {
+                            result = Auction.getAllAuctions();
+                        }
+                        else {
+                            result = type;
+                        }
+                    } else {
+                        result = "ERROR";
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result = "ERROR";
+                }
+
+                System.out.println("message send to client: " + result);
+                dataOutputStream.writeUTF(result);
+                dataOutputStream.flush();
+            }
     }
 
     private static void deleteClientsThatLoseConnections() {
