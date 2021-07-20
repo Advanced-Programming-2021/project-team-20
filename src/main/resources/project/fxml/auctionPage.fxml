@@ -6,28 +6,28 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.client.view.AuctionPageController">
    <children>
-      <TableView layoutX="287.0" layoutY="58.0" prefHeight="468.0" prefWidth="673.0">
+      <TableView fx:id="tableView" layoutX="287.0" layoutY="58.0" prefHeight="468.0" prefWidth="673.0">
         <columns>
         </columns>
       </TableView>
-      <Button layoutX="46.0" layoutY="482.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="128.0" text="auction" />
-      <Button layoutX="46.0" layoutY="239.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="128.0" text="Bid Price" />
-      <TextField alignment="CENTER" layoutX="18.0" layoutY="416.0" prefHeight="51.0" prefWidth="182.0" promptText="Card Name">
+      <Button fx:id="auctionButton" layoutX="46.0" layoutY="482.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="128.0" onAction="#auctionFunction" text="auction" />
+      <Button fx:id="bidPriceButton" layoutX="46.0" layoutY="239.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="128.0" onAction="#bidPriceFunction" text="Bid Price" />
+      <TextField fx:id="cardNameTextField" alignment="CENTER" layoutX="18.0" layoutY="416.0" prefHeight="51.0" prefWidth="182.0" promptText="Card Name">
          <font>
             <Font size="24.0" />
          </font>
       </TextField>
-      <TextField fx:id="auctionButton" alignment="CENTER" layoutX="19.0" layoutY="175.0" prefHeight="51.0" prefWidth="181.0" onAction="#auctionFunction" promptText="Auction Code">
+      <TextField fx:id="auctionCodeTextField" alignment="CENTER" layoutX="19.0" layoutY="175.0" prefHeight="51.0" prefWidth="181.0" promptText="Auction Code">
          <font>
             <Font size="24.0" />
          </font>
       </TextField>
-      <TextField alignment="CENTER" layoutX="19.0" layoutY="114.0" prefHeight="51.0" prefWidth="181.0" promptText="Price">
+      <TextField fx:id="priceTextField" alignment="CENTER" layoutX="19.0" layoutY="114.0" prefHeight="51.0" prefWidth="181.0" promptText="Price">
          <font>
             <Font size="24.0" />
          </font>
       </TextField>
-      <TextField alignment="CENTER" layoutX="19.0" layoutY="350.0" prefHeight="51.0" prefWidth="182.0" promptText="Initial Price">
+      <TextField fx:id="initialPriceTextField" alignment="CENTER" layoutX="19.0" layoutY="350.0" prefHeight="51.0" prefWidth="182.0" promptText="Initial Price">
          <font>
             <Font size="24.0" />
          </font>
