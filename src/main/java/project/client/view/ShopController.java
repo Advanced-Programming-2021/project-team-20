@@ -33,14 +33,17 @@ import java.net.URL;
 import java.util.*;
 
 public class ShopController implements Initializable {
-    public Button adminPanel;
-    public Label allowedOrNotLabel;
-    public Label numberOfCardsInShop;
+    @FXML
+    private Button adminPanel;
+    @FXML
+    private Label allowedOrNotLabel;
+    @FXML
+    private Label numberOfCardsInShop;
     //    @FXML
 //    private Button auctionBtn;
     @FXML
     private Button buybtn;
-//    @FXML
+    //    @FXML
 //    private Button sellbtn;
     @FXML
     private Button backbtn;
@@ -71,6 +74,9 @@ public class ShopController implements Initializable {
     private static Label equalNumbserOfShoppingCardsLabel;
     private static Label equalNumberOfUselessCardsLabel;
     private static Label equalUserMoneyLabel;
+    private static Label equalAllowedOrNotLabel;
+    private static Label equalNumberOfCardsInShop;
+    private static Button equalAdminPanel;
     private static Button equalBuybtn;
     private Shop shop = new Shop();
     private static String token;
@@ -101,6 +107,7 @@ public class ShopController implements Initializable {
         if (sizeOfCardsInDifferentPages != UIStorage.getAllTypeOfCards().get("allCards").size()) {
             createPacksOfCardsForEachPage();
         }
+        equalAdminPanel = adminPanel;
         equalBuybtn = buybtn;
         setEffectsOfLabels();
         setEffectsOfButtons();
@@ -122,11 +129,14 @@ public class ShopController implements Initializable {
         equalNumberOfUselessCardsLabel = numberOfUselessCardsLabel;
         equalNumberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumberOfUselessCardsLabel.setTextFill(Color.WHITE);
-        allowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        allowedOrNotLabel.setTextFill(Color.WHITE);
 
-        numberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        numberOfCardsInShop.setTextFill(Color.WHITE);
+        equalAllowedOrNotLabel = allowedOrNotLabel;
+        equalAllowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalAllowedOrNotLabel.setTextFill(Color.WHITE);
+
+        equalNumberOfCardsInShop = numberOfCardsInShop;
+        equalNumberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumberOfCardsInShop.setTextFill(Color.WHITE);
 
     }
 
@@ -200,14 +210,14 @@ public class ShopController implements Initializable {
         HashMap<String, String> deserializedAnswer = DeserializeInformationFromServer.deserializeInformationOfAdmin(answerOfServer2);
 
         String allowedOrNotAnswerOfServer = deserializedAnswer.get("isAllowed");
-        allowedOrNotLabel.setText(allowedOrNotAnswerOfServer);
-        allowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        allowedOrNotLabel.setTextFill(Color.WHITE);
+        equalAllowedOrNotLabel.setText(allowedOrNotAnswerOfServer);
+        equalAllowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalAllowedOrNotLabel.setTextFill(Color.WHITE);
 
         String numberOfCardsInShopAnswerOfShop = deserializedAnswer.get("numberOfCardsInShop");
-        numberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        numberOfCardsInShop.setTextFill(Color.WHITE);
-        numberOfCardsInShop.setText(numberOfCardsInShopAnswerOfShop);
+        equalNumberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumberOfCardsInShop.setTextFill(Color.WHITE);
+        equalNumberOfCardsInShop.setText(numberOfCardsInShopAnswerOfShop);
     }
 
     private void setEffectsOfBuyButtonAndShowLabel() {
@@ -223,13 +233,13 @@ public class ShopController implements Initializable {
         if (cardPrice > user.getMoney()) {
             equalSelectedCardNameLabel.setTextFill(Color.RED);
             equalSelectedCardNameLabel
-                    .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
+                .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
             equalBuybtn.setDisable(true);
         } else {
             equalBuybtn.setDisable(false);
             equalSelectedCardNameLabel.setTextFill(Color.WHITE);
             equalSelectedCardNameLabel
-                    .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
+                .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
         }
 
         String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetNumberOfBoughtCardsByCardName(token, cardNameForBuy);
@@ -351,7 +361,7 @@ public class ShopController implements Initializable {
             }
             rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
             rectanglesToShowCards.get(i)
-                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+                .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
         }
     }
 
@@ -365,7 +375,7 @@ public class ShopController implements Initializable {
             }
             rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
             rectanglesToShowCards.get(i)
-                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+                .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
         }
     }
 
@@ -384,24 +394,20 @@ public class ShopController implements Initializable {
             if (givenInformationDeserialized.get("message").equals("not enough money")) {
                 CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
                 customDialog.openDialog();
-            }
-            else if (givenInformationDeserialized.get("message").equals("there is no card with this name")) {
+            } else if (givenInformationDeserialized.get("message").equals("there is no card with this name")) {
                 CustomDialog customDialog = new CustomDialog("ERROR", "INVALID CARD NAME");
                 customDialog.openDialog();
-            }
-            else {
+            } else {
                 CustomDialog customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR!");
                 customDialog.openDialog();
             }
 
-        }
-        else if (givenInformationDeserialized.get("type").equals("Successful")) {
+        } else if (givenInformationDeserialized.get("type").equals("Successful")) {
             CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "SUCCESSFUL BUY!");
             customDialog.openDialog();
             LoginController.getOnlineUser().setMoney(Integer.parseInt(givenInformationDeserialized.get("message")));
         }
         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-
 
 
         String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
@@ -431,8 +437,7 @@ public class ShopController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             CustomDialog customDialog = new CustomDialog("ERROR", "YOU ARE NOT ADMIN");
             customDialog.openDialog();
         }
