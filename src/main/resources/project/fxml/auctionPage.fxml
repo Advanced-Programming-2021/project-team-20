@@ -17,7 +17,7 @@
             <Font size="24.0" />
          </font>
       </TextField>
-      <TextField alignment="CENTER" layoutX="19.0" layoutY="175.0" prefHeight="51.0" prefWidth="181.0" promptText="Auction Code">
+      <TextField fx:id="auctionButton" alignment="CENTER" layoutX="19.0" layoutY="175.0" prefHeight="51.0" prefWidth="181.0" onAction="#auctionFunction" promptText="Auction Code">
          <font>
             <Font size="24.0" />
          </font>
