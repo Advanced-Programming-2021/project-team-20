@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -21,7 +22,6 @@ public class AuctionPageController implements Initializable {
     public TextField priceTextField;
     public TextField cardNameTextField;
     public TextField initialPriceTextField;
-    public Button refreshButton;
 
 
     @Override
@@ -30,7 +30,8 @@ public class AuctionPageController implements Initializable {
     }
 
     private void createTable() {
-
+        ServerConnection.startAuction();
+        ServerConnection.auctionAutoRefresh(this);
     }
 
     public void auctionFunction(ActionEvent actionEvent) {
@@ -49,10 +50,23 @@ public class AuctionPageController implements Initializable {
 
     }
 
-    public void refresh(ActionEvent actionEvent) {
-        String dataToSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatRefreshAuction();
-        String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
-        System.out.println(answerOfServer);
+//    public void refresh(ActionEvent actionEvent) {
+////        String dataToSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatRefreshAuction();
+////        String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
+////        System.out.println(answerOfServer);
+//    }
+
+    public void refreshTable(String whatServerGave) {
+        System.out.println(whatServerGave);
+    }
+
+    public void back(ActionEvent actionEvent) {
+        ServerConnection.stopAuctionRefresh();
+        try {
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
