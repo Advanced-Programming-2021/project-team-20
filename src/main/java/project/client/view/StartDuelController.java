@@ -9,9 +9,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -199,6 +202,25 @@ public class StartDuelController implements Initializable {
         }
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
+
+    }
+
+    private void addRightClickEffect(PackageForShowTweet packageForShowTweet) {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                deleteMessage(packageForShowTweet);
+            }
+        });
+        contextMenu.getItems().addAll(delete);
+        packageForShowTweet.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent contextMenuEvent) {
+                contextMenu.show(packageForShowTweet.getBackGroundRectangle(), contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            }
+        });
     }
 
     private void deleteMessage(PackageForShowTweet packageForShowTweet) {
@@ -220,19 +242,21 @@ public class StartDuelController implements Initializable {
     }
 
     private void deleteTweet(int idOfTweet) {
-        PackageForShowTweet packageForShowTweet = getPackageForShowTweetById(idOfTweet);
-        if (packageForShowTweet == null) {
+        PackageForShowTweet deletedPackage = getPackageForShowTweetById(idOfTweet);
+        if (deletedPackage == null) {
             return;
         }
         for (int i = 0; i < packageForShowTweets.size(); i++) {
-            if (packageForShowTweets.get(i).getMessageId() > idOfTweet)
-                packageForShowTweets.get(i).setTranslateY(packageForShowTweets.get(i).getTranslateY() - packageForShowTweet.getBackGroundRectangle().getHeight() - 15);
+            if (packageForShowTweets.get(i).getMessageId() > idOfTweet) {
+                packageForShowTweets.get(i).setTranslateY(packageForShowTweets.get(i).getTranslateY() - deletedPackage.getBackGroundRectangle().getHeight() - 10);
+            }
         }
 
-        packageForShowTweets.remove(packageForShowTweet);
-        pane.getChildren().remove(packageForShowTweet);
-        YMoveOfScrollPane -= packageForShowTweet.getBackGroundRectangle().getHeight() + 15;
-        pane.setPrefHeight(YMoveOfScrollPane - 20);
+        packageForShowTweets.remove(deletedPackage);
+        pane.getChildren().remove(deletedPackage);
+        System.out.println(deletedPackage.getBackGroundRectangle().getHeight() + "   " + pane.getPrefHeight() + "   " + YMoveOfScrollPane);
+        YMoveOfScrollPane -= deletedPackage.getBackGroundRectangle().getHeight() + 10;
+        pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
     }
 
@@ -254,6 +278,7 @@ public class StartDuelController implements Initializable {
                 packageForShowTweets.get(i).getUserImageCircle().setOpacity(1);
             }
         }
+        packageForShowTweets.get(packageForShowTweets.size() - 1 ).getUserImageCircle().setOpacity(1);
         lastIdOfTweetFixItsImage = packageForShowTweets.size() - 1;
     }
 
@@ -275,6 +300,9 @@ public class StartDuelController implements Initializable {
         addMessageToPackageForShowTweet(packageForShowTweet, jsonObject.get("message").getAsString());
         YMoveOfScrollPane += 20;
         packageForShowTweets.add(packageForShowTweet);
+        if (packageForShowTweet.isMessageFromOnlineUser()) {
+            addRightClickEffect(packageForShowTweet);
+        }
     }
 
     private void addMessageToPackageForShowTweet(PackageForShowTweet packageForShowTweet, String message) {
@@ -455,7 +483,7 @@ class SendDuelRequestToServer implements Runnable {
                         startDuelController.showAlert("Game interrupted", "Confirmation");
                         startDuelController.setRequestForGameSend(false);
                         startDuelController.setEffectsOfGameButtons();
-                            exit = true;
+                        exit = true;
                     }
                 }
             });
