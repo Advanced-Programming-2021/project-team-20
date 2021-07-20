@@ -386,7 +386,7 @@ public class ShopController implements Initializable {
 
         String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
 
-        String answerOfShop = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
 
         givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
 
@@ -394,10 +394,22 @@ public class ShopController implements Initializable {
             if (givenInformationDeserialized.get("message").equals("not enough money")) {
                 CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
                 customDialog.openDialog();
-            } else if (givenInformationDeserialized.get("message").equals("there is no card with this name")) {
+            }
+            else if (givenInformationDeserialized.get("message").equals("there is no card with this name")) {
                 CustomDialog customDialog = new CustomDialog("ERROR", "INVALID CARD NAME");
                 customDialog.openDialog();
-            } else {
+            }
+
+            else if (givenInformationDeserialized.get("message").equals("not enough cards in shop")){
+                CustomDialog customDialog = new CustomDialog("ERROR", "not enough cards in shop");
+                customDialog.openDialog();
+            }
+
+            else if (givenInformationDeserialized.get("message").equals("NOT ALLOWED")) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "NOT ALLOWED");
+                customDialog.openDialog();
+            }
+            else {
                 CustomDialog customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR!");
                 customDialog.openDialog();
             }
@@ -406,15 +418,18 @@ public class ShopController implements Initializable {
             CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "SUCCESSFUL BUY!");
             customDialog.openDialog();
             LoginController.getOnlineUser().setMoney(Integer.parseInt(givenInformationDeserialized.get("message")));
+            LoginController.getOnlineUser().addCardToAllUselessCards(cardNameForBuy);
         }
         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
 
 
         String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
-        String answerOfShop2 = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        String answerOfShop2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
         int cardAmount = Integer.parseInt(answerOfShop2);
         int userAmount = LoginController.getOnlineUser().getMoney();
         buybtn.setDisable(cardAmount > userAmount);
+        showNumberOfBoughtCards(cardNameForBuy);
+        continueShow(cardNameForBuy);
 
     }
 

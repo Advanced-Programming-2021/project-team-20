@@ -22,6 +22,7 @@ import java.util.Map;
 public class Shop {
 
     private static User user;
+
     public static String findCommand(String command) {
 
         if (ShopPatterns.isItBuyPattern(command)) {
@@ -38,9 +39,7 @@ public class Shop {
             LoginController.getOnlineUser().setMoney(userAmount - cardAmount);
             LoginController.getOnlineUser().addCardToAllUselessCards(card.getCardName());
             return "successful buy";
-        }
-
-        else if (ShopPatterns.isItShowAllPattern(command)) {
+        } else if (ShopPatterns.isItShowAllPattern(command)) {
             return showAllCards();
         }
 
@@ -141,15 +140,22 @@ public class Shop {
     private static String buyCard(String cardName) {
         int userAmount = user.getMoney();
         if (!isItValidCardName(cardName)) {
-             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "there is no card with this name");
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "there is no card with this name");
         }
         Card card = getCardWithName(cardName);
         int cardAmount = card.getCardPrice();
+        if (!card.getIsShopAllowed()) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "NOT ALLOWED");
+        }
         if (cardAmount > userAmount) {
-             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "not enough money");
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "not enough money");
+        }
+        if (card.getNumberOfCardsInShop() <= 0) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "not enough cards in shop");
         }
         user.setMoney(userAmount - cardAmount);
         user.addCardToAllUselessCards(cardName);
+        card.decreaseNumberOfCardsInShop();
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", String.valueOf(user.getMoney()));
     }
 
@@ -217,14 +223,12 @@ public class Shop {
         }
         if (Storage.getCardByName(cardName) == null) {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "invalid card name");
-        }
-        else {
+        } else {
             Card card = Storage.getCardByName(cardName);
             assert card != null;
             if (card.getIsShopAllowed() == expectedBoolean) {
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "Before");
-            }
-            else {
+            } else {
                 card.setShopAllowed(expectedBoolean);
                 Storage.changeShopCardInformation(card, expectedBoolean, card.getNumberOfCardsInShop());
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "Now");
@@ -252,8 +256,7 @@ public class Shop {
         }
         if (!user.getName().equals("admin")) {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "ADMIN ERROR");
-        }
-        else {
+        } else {
             int newNumber = card.getNumberOfCardsInShop() + changeInt;
             if (newNumber < 0) {
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "NUMBER OF CARDS IN SHOP IS 0");
@@ -304,8 +307,7 @@ public class Shop {
         String isAllowedString = "";
         if (isAllowed) {
             isAllowedString = "Allowed";
-        }
-        else {
+        } else {
             isAllowedString = "Not Allowed";
         }
 
