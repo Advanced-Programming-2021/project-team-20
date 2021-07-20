@@ -14,7 +14,7 @@
       <Button fx:id="increaseButton" layoutX="385.0" layoutY="488.0" mnemonicParsing="false" onAction="#increaseCard" prefHeight="31.0" prefWidth="98.0" text="increase" />
       <Button fx:id="decreaseButton" layoutX="566.0" layoutY="488.0" mnemonicParsing="false" onAction="#decreaseCard" prefHeight="31.0" prefWidth="98.0" text="decrease" />
       <Button fx:id="allowButton" layoutX="385.0" layoutY="438.0" mnemonicParsing="false" onAction="#allowACard" prefHeight="31.0" prefWidth="98.0" text="allow" />
-      <Button fx:id="disAllowButton" layoutX="565.0" layoutY="438.0" mnemonicParsing="false" onAction="#dontAllowACard" prefHeight="31.0" prefWidth="98.0" text="disallow" />
+      <Button fx:id="disAllowButton" layoutX="565.0" layoutY="438.0" mnemonicParsing="false" onAction="#disallowACard" prefHeight="31.0" prefWidth="98.0" text="disallow" />
       <TextField fx:id="textField" alignment="CENTER" layoutX="385.0" layoutY="304.0" prefHeight="91.0" prefWidth="279.0" promptText="CARD NAME">
          <font>
             <Font size="24.0" />

@@ -98,4 +98,21 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("type", "scoreboardOnline");
         return jsonObject.toString();
     }
+
+    public static String toGsonFormatForGetDataAllowCardAdminPanelShop(String cardName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "allowAdminPanelShop");
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("token", LoginController.getToken());
+        return jsonObject.toString();
+    }
+
+    public static String toGsonFormatForGetDataDisallowCardAdminPanelShop(String cardName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "disallowAdminPanelShop");
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("token", LoginController.getToken());
+        return jsonObject.toString();
+    }
+
 }

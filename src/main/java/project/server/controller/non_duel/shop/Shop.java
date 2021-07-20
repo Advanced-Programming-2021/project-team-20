@@ -198,4 +198,36 @@ public class Shop {
         numberOfCards.put("uselessCards", numberOfUselessCards);
         return numberOfCards;
     }
+
+    public static String adminAllowACard(JsonObject details, boolean expectedBoolean) {
+        String token = "";
+        String cardName = "";
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ServerController.getBadRequestFormat();
+        }
+        if (!user.getName().equals("admin")) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "NOT ADMIN");
+        }
+        if (Storage.getCardByName(cardName) == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "invalid card name");
+        }
+        else {
+            Card card = Storage.getCardByName(cardName);
+            assert card != null;
+            if (card.getIsShopAllowed() == expectedBoolean) {
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "Before");
+            }
+            else {
+                Storage.changeShopCardInformation(card, expectedBoolean, card.getNumberOfCardsInShop());
+                return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "Now");
+            }
+        }
+    }
 }

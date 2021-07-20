@@ -277,6 +277,10 @@ public class ServerController {
                 return Storage.getCardByName(details.get("cardName").getAsString()).getCardDescription();
             case "getNumberOfBoughtCardsByCardName":
                 return Shop.getNumberOfBoughtCardsByCardName(details);
+            case "allowAdminPanelShop":
+                return Shop.adminAllowACard(details, true);
+            case "disallowAdminPanelShop":
+                return Shop.adminAllowACard(details, false);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":

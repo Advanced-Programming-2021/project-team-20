@@ -5,10 +5,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 import project.model.cardData.General.Card;
 import project.server.controller.non_duel.storage.Storage;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class AdminPanelShopController implements Initializable {
@@ -26,52 +30,69 @@ public class AdminPanelShopController implements Initializable {
         pane.setStyle("-fx-background-color: #fffefe");
     }
 
-    public void dontAllowACard(ActionEvent actionEvent) {
-        if (!textField.getText().isEmpty()) {
-            String cardName = textField.getText();
-            //TODO: get card from server
-            Card card = Storage.getCardByName(cardName);
-            if (card == null) {
-                CustomDialog customDialog = new CustomDialog("ERROR", "invalid card name");
-                customDialog.openDialog();
-            }
-            else {
-                //TODO: get from server
-                boolean isAllowed = card.getIsShopAllowed();
-                if (!isAllowed) {
-                    CustomDialog customDialog = new CustomDialog("ERROR", "this card had been disallowed before");
-                    customDialog.openDialog();
-                }
-                else {
-                    card.setShopAllowed(false);
-                    //TODO: send data to server
-                    CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "this card had been disallowed successfully");
-                    customDialog.openDialog();
-                }
-            }
-        }
-    }
-
     public void allowACard(ActionEvent actionEvent) {
         if (!textField.getText().isEmpty()) {
             String cardName = textField.getText();
-            //TODO: get card from server
-            Card card = Storage.getCardByName(cardName);
-            if (card == null) {
-                CustomDialog customDialog = new CustomDialog("ERROR", "invalid card name");
+            String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatForGetDataAllowCardAdminPanelShop(cardName);
+            String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+            HashMap<String, String> deserializedAnswer = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfServer);
+            String type = deserializedAnswer.get("type");
+            String message = deserializedAnswer.get("message");
+            if (type.equals("ERROR")) {
+                CustomDialog customDialog;
+                if (message.equals("invalid card name")) {
+                    customDialog = new CustomDialog("ERROR", "invalid card name");
+                }
+                else if (message.equals("NOT ADMIN")) {
+                    customDialog = new CustomDialog("ERROR", "YOU ARE NOT ADMIN");
+                }
+                else {
+                    customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR");
+                }
                 customDialog.openDialog();
             }
             else {
-                //TODO: get from server
-                boolean isAllowed = card.getIsShopAllowed();
-                if (isAllowed) {
+                if (message.equals("Before")) {
                     CustomDialog customDialog = new CustomDialog("ERROR", "this card had been allowed before");
                     customDialog.openDialog();
                 }
-                else {
-                    card.setShopAllowed(true);
-                    //TODO: send data to server
+                else if (message.equals("Now")){
                     CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "this card had been allowed successfully");
+                    customDialog.openDialog();
+                }
+            }
+
+        }
+    }
+
+    public void disallowACard(ActionEvent actionEvent) {
+        if (!textField.getText().isEmpty()) {
+            String cardName = textField.getText();
+            String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatForGetDataDisallowCardAdminPanelShop(cardName);
+            String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+            HashMap<String, String> deserializedAnswer = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfServer);
+            String type = deserializedAnswer.get("type");
+            String message = deserializedAnswer.get("message");
+            if (type.equals("ERROR")) {
+                CustomDialog customDialog;
+                if (message.equals("invalid card name")) {
+                    customDialog = new CustomDialog("ERROR", "invalid card name");
+                }
+                else if (message.equals("NOT ADMIN")) {
+                    customDialog = new CustomDialog("ERROR", "YOU ARE NOT ADMIN");
+                }
+                else {
+                    customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR");
+                }
+                customDialog.openDialog();
+            }
+            else {
+                if (message.equals("Before")) {
+                    CustomDialog customDialog = new CustomDialog("ERROR", "this card had been disallowed before");
+                    customDialog.openDialog();
+                }
+                else if (message.equals("Now")){
+                    CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "this card had been disallowed successfully");
                     customDialog.openDialog();
                 }
             }
