@@ -3,6 +3,7 @@ package project.server;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import project.model.Auction;
 import project.model.User;
 import project.server.controller.duel.GamePackage.ChangeCardsBetweenTwoRounds;
 import project.server.controller.duel.PreliminaryPackage.ClientMessageReceiver;
@@ -291,6 +292,12 @@ public class ServerController {
                 return Shop.showInformationOfAdmin(details);
             case "createAuction":
                 return Shop.createAuction(details);
+            case "refreshAuction":
+                try {
+                    return Auction.getAllAuctions();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":

@@ -21,6 +21,7 @@ public class AuctionPageController implements Initializable {
     public TextField priceTextField;
     public TextField cardNameTextField;
     public TextField initialPriceTextField;
+    public Button refreshButton;
 
 
     @Override
@@ -46,6 +47,12 @@ public class AuctionPageController implements Initializable {
 
     public void bidPriceFunction(ActionEvent actionEvent) {
 
+    }
+
+    public void refresh(ActionEvent actionEvent) {
+        String dataToSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatRefreshAuction();
+        String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
+        System.out.println(answerOfServer);
     }
 
 

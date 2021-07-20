@@ -21,7 +21,7 @@ public class Auction {
     public Auction(String auctionCreatorName, int initialPrice) {
         this.auctionCreatorName = auctionCreatorName;
         this.price = initialPrice;
-        this.bestBuyerName = "";
+        this.bestBuyerName = "null";
         this.auctionCode = calculateAuctionCode();
         this.isActivated = true;
         calculateAuctionCode();
@@ -39,7 +39,6 @@ public class Auction {
 
     private int calculateAuctionCode() {
         List<String> results = new ArrayList<String>();
-
         File[] files = new File("Resourses\\Server\\Auctions\\").listFiles();
 //If this pathname does not denote a directory, then listFiles() returns null.
 
@@ -58,10 +57,10 @@ public class Auction {
 
     private String toGsonFormat(Auction auction) {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("auctionCode", auction.getAuctionCode());
         jsonObject.addProperty("auctionCreatorName", auction.getAuctionCreatorName());
         jsonObject.addProperty("bestBuyerName", auction.getBestBuyerName());
         jsonObject.addProperty("price", auction.getPrice());
-        jsonObject.addProperty("auctionCode", auction.getAuctionCode());
         jsonObject.addProperty("isActivated", auction.getIsActivated());
         return jsonObject.toString();
     }
@@ -92,7 +91,7 @@ public class Auction {
         return this.isActivated;
     }
 
-    public String getAllAuctions() throws IOException {
+    public static String getAllAuctions() throws IOException {
         String answer = "";
 
         List<String> allFileNames = new ArrayList<String>();
@@ -117,13 +116,13 @@ public class Auction {
 
             if (rootNode.isJsonObject()) {
                 JsonObject details = rootNode.getAsJsonObject();
+                answer += details.get("auctionCode").getAsString();
+                answer += ",";
                 answer += details.get("auctionCreatorName").getAsString();
                 answer += ",";
                 answer += details.get("bestBuyerName").getAsString();
                 answer += ",";
                 answer += details.get("price").getAsString();
-                answer += ",";
-                answer += details.get("auctionCode").getAsString();
                 answer += ",";
                 answer += details.get("isActivated").getAsString();
                 answer += ",";

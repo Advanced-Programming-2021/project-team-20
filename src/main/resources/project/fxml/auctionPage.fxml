@@ -10,8 +10,8 @@
         <columns>
         </columns>
       </TableView>
-      <Button fx:id="auctionButton" layoutX="46.0" layoutY="482.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="128.0" onAction="#auctionFunction" text="auction" />
-      <Button fx:id="bidPriceButton" layoutX="46.0" layoutY="239.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="128.0" onAction="#bidPriceFunction" text="Bid Price" />
+      <Button fx:id="auctionButton" layoutX="46.0" layoutY="482.0" mnemonicParsing="false" onAction="#auctionFunction" prefHeight="44.0" prefWidth="128.0" text="auction" />
+      <Button fx:id="bidPriceButton" layoutX="46.0" layoutY="239.0" mnemonicParsing="false" onAction="#bidPriceFunction" prefHeight="44.0" prefWidth="128.0" text="Bid Price" />
       <TextField fx:id="cardNameTextField" alignment="CENTER" layoutX="18.0" layoutY="416.0" prefHeight="51.0" prefWidth="182.0" promptText="Card Name">
          <font>
             <Font size="24.0" />
@@ -32,5 +32,6 @@
             <Font size="24.0" />
          </font>
       </TextField>
+      <Button fx:id="refreshButton" layoutX="83.0" layoutY="20.0" mnemonicParsing="false" onAction="#refresh" text="refresh" />
    </children>
 </AnchorPane>

@@ -155,4 +155,10 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("initialPrice", initialPrice);
         return jsonObject.toString();
     }
+
+    public static String toGsonFormatRefreshAuction() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "refreshAuction");
+        return jsonObject.toString();
+    }
 }
