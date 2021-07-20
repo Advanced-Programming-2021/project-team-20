@@ -115,4 +115,19 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
     }
 
+    public static String toGsonFormatForGetDataIncreaseCardAdminPanelShop(String cardName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "increaseAdminPanelShop");
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("token", LoginController.getToken());
+        return jsonObject.toString();
+    }
+
+    public static String toGsonFormatForGetDataDecreaseCardAdminPanelShop(String cardName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "decreaseAdminPanelShop");
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("token", LoginController.getToken());
+        return jsonObject.toString();
+    }
 }

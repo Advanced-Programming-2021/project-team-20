@@ -230,4 +230,31 @@ public class Shop {
             }
         }
     }
+
+    public static String changeNumberOfCardsInShop(JsonObject details, int changeInt) {
+        String token = "";
+        String cardName = "";
+        Card card = null;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        card = Storage.getCardByName(cardName);
+        if (card == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID CARD");
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ServerController.getBadRequestFormat();
+        }
+        if (!user.getName().equals("admin")) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "ADMIN ERROR");
+        }
+        else {
+            Storage.changeShopCardInformation(card, card.getIsShopAllowed(), card.getNumberOfCardsInShop() + changeInt);
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "SUCCESSFUL");
+        }
+    }
 }

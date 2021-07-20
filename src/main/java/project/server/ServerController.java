@@ -281,6 +281,10 @@ public class ServerController {
                 return Shop.adminAllowACard(details, true);
             case "disallowAdminPanelShop":
                 return Shop.adminAllowACard(details, false);
+            case "increaseAdminPanelShop":
+                return Shop.changeNumberOfCardsInShop(details, 1);
+            case "decreaseAdminPanelShop":
+                return Shop.changeNumberOfCardsInShop(details, -1);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":

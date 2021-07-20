@@ -8,8 +8,6 @@ import javafx.scene.layout.Pane;
 import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
-import project.model.cardData.General.Card;
-import project.server.controller.non_duel.storage.Storage;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -110,16 +108,33 @@ public class AdminPanelShopController implements Initializable {
     public void increaseCard(ActionEvent actionEvent) {
         if (!textField.getText().isEmpty()) {
             String cardName = textField.getText();
-            //TODO: get card from server
-            Card card = Storage.getCardByName(cardName);
-            if (card == null) {
-                CustomDialog customDialog = new CustomDialog("ERROR", "invalid card name");
+            String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatForGetDataIncreaseCardAdminPanelShop(cardName);
+            String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+            HashMap<String, String> deserializaedInformation = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfServer);
+
+            String type = deserializaedInformation.get("type");
+            String message = deserializaedInformation.get("message");
+
+            if (type.equals("ERROR")) {
+                CustomDialog customDialog;
+                if (message.equals("INVALID CARD")) {
+                    customDialog = new CustomDialog("ERROR", "invalid card name");
+                }
+                else if (message.equals("ADMIN ERROR")) {
+                    customDialog = new CustomDialog("ERROR", "you are not admin");
+                }
+                else {
+                    customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR");
+                }
+                customDialog.openDialog();
+
+            }
+            else if (type.equals("SUCCESSFUL")){
+                CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "successfully increased");
                 customDialog.openDialog();
             }
             else {
-                //TODO: send data from server
-                card.increaseNumberOfCardsInShop();
-                    CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "number increased successfully");
+                CustomDialog customDialog = new CustomDialog("UNKNOWN", "UNKNOWN");
                 customDialog.openDialog();
             }
         }
@@ -128,25 +143,30 @@ public class AdminPanelShopController implements Initializable {
     public void decreaseCard(ActionEvent actionEvent) {
         if (!textField.getText().isEmpty()) {
             String cardName = textField.getText();
-            //TODO: get card from server
-            Card card = Storage.getCardByName(cardName);
-            if (card == null) {
-                CustomDialog customDialog = new CustomDialog("ERROR", "invalid card name");
+            String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatForGetDataDecreaseCardAdminPanelShop(cardName);
+            String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+            HashMap<String, String> deserializaedInformation = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfServer);
+
+            String type = deserializaedInformation.get("type");
+            String message = deserializaedInformation.get("message");
+
+            if (type.equals("ERROR")) {
+                CustomDialog customDialog;
+                if (message.equals("INVALID CARD")) {
+                    customDialog = new CustomDialog("ERROR", "invalid card name");
+                } else {
+                    customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR");
+                }
                 customDialog.openDialog();
-            }
-            else {
-                //TODO: send data from server
-                if (card.getNumberOfCardsInShop() == 0) {
-                    CustomDialog customDialog = new CustomDialog("ERROR", "number of cards in shop is 0");
-                    customDialog.openDialog();
-                }
-                else {
-                    //TODO: server
-                    card.decreaseNumberOfCardsInShop();
-                    CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "number decreased successfully");
-                    customDialog.openDialog();
-                }
+
+            } else if (type.equals("SUCCESSFUL")) {
+                CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "successfully decreased");
+                customDialog.openDialog();
+            } else {
+                CustomDialog customDialog = new CustomDialog("UNKNOWN", "UNKNOWN");
+                customDialog.openDialog();
             }
         }
     }
+
 }
