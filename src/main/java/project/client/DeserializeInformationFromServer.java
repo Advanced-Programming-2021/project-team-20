@@ -103,6 +103,21 @@ public class DeserializeInformationFromServer {
         }
         return information;
     }
+
+    public static HashMap<String, String> deserializeInformationOfAdmin(String answerOfServer2) {
+        HashMap<String, String> information = new HashMap<>();
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(answerOfServer2);
+        try {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            information.put("isAllowed", jsonObject.get("isAllowed").getAsString());
+            information.put("numberOfCardsInShop", jsonObject.get("numberOfCardsInShop").getAsString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            information.put("type", "Error");
+        }
+        return information;
+    }
 //    public static HashMap<String, String> deserializeForBuyCard(String informationOfServer) {
 //        HashMap<String, String> information = new HashMap<>();
 //        JsonParser jsonParser = new JsonParser();
@@ -139,6 +154,7 @@ public class DeserializeInformationFromServer {
     public static String getType() {
         return type;
     }
+
 
 
 }

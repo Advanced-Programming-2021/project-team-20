@@ -34,6 +34,8 @@ import java.util.*;
 
 public class ShopController implements Initializable {
     public Button adminPanel;
+    public Label allowedOrNotLabel;
+    public Label numberOfCardsInShop;
     //    @FXML
 //    private Button auctionBtn;
     @FXML
@@ -120,6 +122,12 @@ public class ShopController implements Initializable {
         equalNumberOfUselessCardsLabel = numberOfUselessCardsLabel;
         equalNumberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumberOfUselessCardsLabel.setTextFill(Color.WHITE);
+        allowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        allowedOrNotLabel.setTextFill(Color.WHITE);
+
+        numberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        numberOfCardsInShop.setTextFill(Color.WHITE);
+
     }
 
     private void setEffectsOfButtons() {
@@ -166,6 +174,7 @@ public class ShopController implements Initializable {
                     equalShowCardRectangle.setOpacity(1);
                     addCardDescription(rectangle.getId());
                     showNumberOfBoughtCards(rectangle.getId());
+                    continueShow(rectangle.getId());
                     flipRectangle(equalShowCardRectangle);
                 }
             });
@@ -173,7 +182,7 @@ public class ShopController implements Initializable {
     }
 
     private void showNumberOfBoughtCards(String cardName) {
-        System.out.println("show");
+        System.out.println("show11");
         String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatshowNumberOfBoughtCards(cardName);
         String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
         HashMap<String, String> deserializedInformation = DeserializeInformationFromServer.deserializeShowNumberShop(answerOfServer);
@@ -181,6 +190,24 @@ public class ShopController implements Initializable {
         int numberOfBoughtCards = Integer.parseInt(deserializedInformation.get("numberOfBoughtCards"));
         equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfUselessCards);
         equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfBoughtCards);
+    }
+
+    private void continueShow(String cardName) {
+
+        String dataToSend2 = ToGsonFormatToSendDataToServer.toGsonFormatShowInformationOfAdmin(cardName);
+        String answerOfServer2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+
+        HashMap<String, String> deserializedAnswer = DeserializeInformationFromServer.deserializeInformationOfAdmin(answerOfServer2);
+
+        String allowedOrNotAnswerOfServer = deserializedAnswer.get("isAllowed");
+        allowedOrNotLabel.setText(allowedOrNotAnswerOfServer);
+        allowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        allowedOrNotLabel.setTextFill(Color.WHITE);
+
+        String numberOfCardsInShopAnswerOfShop = deserializedAnswer.get("numberOfCardsInShop");
+        numberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        numberOfCardsInShop.setTextFill(Color.WHITE);
+        numberOfCardsInShop.setText(numberOfCardsInShopAnswerOfShop);
     }
 
     private void setEffectsOfBuyButtonAndShowLabel() {

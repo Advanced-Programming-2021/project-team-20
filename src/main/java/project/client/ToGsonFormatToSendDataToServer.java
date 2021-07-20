@@ -139,4 +139,11 @@ public class ToGsonFormatToSendDataToServer {
         return jsonObject.toString();
 
     }
+
+    public static String toGsonFormatShowInformationOfAdmin(String cardName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "showInformationOfAdmin");
+        jsonObject.addProperty("cardName", cardName);
+        return jsonObject.toString();
+    }
 }

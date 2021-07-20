@@ -10,7 +10,7 @@
 "Feral Imp","4","DARK","Fiend","Normal","1300","1400","A playful little fiend that lurks in the dark, waiting to attack an unwary enemy.","2800","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#","TRUE","20"
 "Dark Magician","7","DARK","Spellcaster","Normal","2500","2100","The ultimate wizard in terms of attack and defense.","8300","#","#","#","#","#","#","#CAN_BE_TRIBUTE_SUMMONED#CAN_BE_NORMAL_SUMMONED#TRIBUTE_2_MONSTERS","#","TRUE","20"
 "Wattkid","3","LIGHT","Thunder","Normal","1000","500","A creature that electrocutes opponents with bolts of lightning.","1300","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#","TRUE","20"
-"Baby Dragon","3","WIND","Dragon","Normal","1200","700","Much more than just a child, this dragon is gifted with untapped power.","1600","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#","TRUE","20"
+"Baby Dragon","3","WIND","Dragon","Normal","1200","700","Much more than just a child, this dragon is gifted with untapped power.","1600","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#","FALSE","18"
 "Hero Of The East","3","EARTH","Warrior","Normal","1100","1000","Feel da strength ah dis sword-swinging samurai from da Far East.","1700","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#","TRUE","20"
 "Battle Warrior","3","EARTH","Warrior","Normal","700","1000","A warrior that fights with his bare hands!!!","1300","#","#","#","#","#","#","#CAN_BE_NORMAL_SUMMONED","#","TRUE","20"
 "Crawling Dragon","5","EARTH","Dragon","Normal","1600","1400","This weakened dragon can no longer fly, but is still a deadly force to be reckoned with.","3900","#","#","#","#","#","#","#CAN_BE_TRIBUTE_SUMMONED#CAN_BE_NORMAL_SUMMONED#TRIBUTE_1_MONSTER","#","TRUE","20"

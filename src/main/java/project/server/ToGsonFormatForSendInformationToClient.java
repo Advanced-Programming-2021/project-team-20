@@ -169,4 +169,11 @@ public class ToGsonFormatForSendInformationToClient {
         jsonObject.addProperty("numberOfBoughtCards", numberOfCards.get("numberOfBoughtCards"));
         return jsonObject.toString();
     }
+
+    public static String showInformationOfAdmin(String isAllowed, String numberOfCardsInShop) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("isAllowed", isAllowed);
+        jsonObject.addProperty("numberOfCardsInShop", numberOfCardsInShop);
+        return jsonObject.toString();
+    }
 }

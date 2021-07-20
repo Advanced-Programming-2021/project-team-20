@@ -288,4 +288,29 @@ public class Shop {
 //        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
 //        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
     }
+
+    public static String showInformationOfAdmin(JsonObject details) {
+        String cardName = "";
+        try {
+            cardName = details.get("cardName").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        Card card = Storage.getCardByName(cardName);
+        if (card == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID CARD");
+        }
+        boolean isAllowed = card.getIsShopAllowed();
+        String isAllowedString = "";
+        if (isAllowed) {
+            isAllowedString = "Allowed";
+        }
+        else {
+            isAllowedString = "Not Allowed";
+        }
+
+        String numberOfCardsInShop = String.valueOf(card.getNumberOfCardsInShop());
+        String answer = ToGsonFormatForSendInformationToClient.showInformationOfAdmin(isAllowedString, numberOfCardsInShop);
+        return answer;
+    }
 }

@@ -99,7 +99,7 @@ public class AdminPanelShopController implements Initializable {
 
     public void back(ActionEvent actionEvent) {
         try {
-            new MainView().changeView("/project/fxml/shopPage.fxml");
+            new MainView().changeView("/project/fxml/mainMenu.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
