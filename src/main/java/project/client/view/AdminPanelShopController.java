@@ -123,6 +123,9 @@ public class AdminPanelShopController implements Initializable {
                 else if (message.equals("ADMIN ERROR")) {
                     customDialog = new CustomDialog("ERROR", "you are not admin");
                 }
+                else if (message.equals("NUMBER OF CARDS IN SHOP IS 0")) {
+                    customDialog = new CustomDialog("ERROR", "NUMBER OF CARDS IN SHOP IS 0");
+                }
                 else {
                     customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR");
                 }
