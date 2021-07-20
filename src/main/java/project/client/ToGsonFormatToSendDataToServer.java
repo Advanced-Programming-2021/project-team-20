@@ -130,4 +130,13 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("token", LoginController.getToken());
         return jsonObject.toString();
     }
+
+    public static String toGsonFormatshowNumberOfBoughtCards(String cardName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "showNumberOfBoughtCards");
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("token", LoginController.getToken());
+        return jsonObject.toString();
+
+    }
 }

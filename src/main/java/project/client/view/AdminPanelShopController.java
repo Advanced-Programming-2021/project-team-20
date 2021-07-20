@@ -157,7 +157,11 @@ public class AdminPanelShopController implements Initializable {
                 CustomDialog customDialog;
                 if (message.equals("INVALID CARD")) {
                     customDialog = new CustomDialog("ERROR", "invalid card name");
-                } else {
+                }
+                else if (message.equals("NUMBER OF CARDS IN SHOP IS 0")) {
+                    customDialog = new CustomDialog("ERROR", "NUMBER OF CARDS IN SHOP IS 0");
+                }
+                else {
                     customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR");
                 }
                 customDialog.openDialog();

@@ -162,4 +162,11 @@ public class ToGsonFormatForSendInformationToClient {
         jsonObject.addProperty("cardName", cardNameForBuy);
         return jsonObject.toString();
     }
+
+    public static String toGsonFormatForNumberOfBoughtCardsAndUselessCards(HashMap<String, Integer> numberOfCards) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("uselessCards", numberOfCards.get("uselessCards"));
+        jsonObject.addProperty("numberOfBoughtCards", numberOfCards.get("numberOfBoughtCards"));
+        return jsonObject.toString();
+    }
 }

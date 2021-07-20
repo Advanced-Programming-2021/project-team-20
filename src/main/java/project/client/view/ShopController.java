@@ -23,6 +23,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 import project.model.User;
 import project.model.cardData.General.Card;
 import project.server.ToGsonFormatForSendInformationToClient;
@@ -111,6 +112,7 @@ public class ShopController implements Initializable {
 //        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
         equalUserMoneyLabel.setText("My Money: " + user.getMoney());
         equalSelectedCardNameLabel = selectedCardNameLabel;
+//        selectedCardNameLabel.setTextFill(Color.BLACK);
         equalSelectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumbserOfShoppingCardsLabel = numbserOfShoppingCardsLabel;
         equalNumbserOfShoppingCardsLabel.setTextFill(Color.WHITE);
@@ -172,10 +174,13 @@ public class ShopController implements Initializable {
 
     private void showNumberOfBoughtCards(String cardName) {
         System.out.println("show");
-        //TODO : get it from shop controller
-        HashMap<String, Integer> numberOfCards = shop.getNumberOfCards(cardName);
-        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
-        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
+        String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatshowNumberOfBoughtCards(cardName);
+        String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+        HashMap<String, String> deserializedInformation = DeserializeInformationFromServer.deserializeShowNumberShop(answerOfServer);
+        int numberOfUselessCards = Integer.parseInt(deserializedInformation.get("uselessCards"));
+        int numberOfBoughtCards = Integer.parseInt(deserializedInformation.get("numberOfBoughtCards"));
+        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfUselessCards);
+        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfBoughtCards);
     }
 
     private void setEffectsOfBuyButtonAndShowLabel() {

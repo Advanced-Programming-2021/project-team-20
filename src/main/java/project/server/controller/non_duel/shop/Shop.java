@@ -225,6 +225,7 @@ public class Shop {
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "Before");
             }
             else {
+                card.setShopAllowed(expectedBoolean);
                 Storage.changeShopCardInformation(card, expectedBoolean, card.getNumberOfCardsInShop());
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "Now");
             }
@@ -253,11 +254,38 @@ public class Shop {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "ADMIN ERROR");
         }
         else {
-            if (card.getNumberOfCardsInShop() + changeInt < 0) {
+            int newNumber = card.getNumberOfCardsInShop() + changeInt;
+            if (newNumber < 0) {
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "NUMBER OF CARDS IN SHOP IS 0");
             }
-            Storage.changeShopCardInformation(card, card.getIsShopAllowed(), card.getNumberOfCardsInShop() + changeInt);
+            card.setNumberOfCardsInShop(newNumber);
+            Storage.changeShopCardInformation(card, card.getIsShopAllowed(), newNumber);
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "SUCCESSFUL");
         }
+    }
+
+    public static String getShowNumberOfBoughtCardsForClient(JsonObject details) {
+        String token = "";
+        String cardName = "";
+        Card card = null;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        card = Storage.getCardByName(cardName);
+        if (card == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID CARD");
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ServerController.getBadRequestFormat();
+        }
+        HashMap<String, Integer> numberOfCards = getNumberOfCards(cardName);
+        String answer = ToGsonFormatForSendInformationToClient.toGsonFormatForNumberOfBoughtCardsAndUselessCards(numberOfCards);
+        return answer;
+//        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
+//        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
     }
 }

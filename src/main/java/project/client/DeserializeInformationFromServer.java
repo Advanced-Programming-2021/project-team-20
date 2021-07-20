@@ -89,6 +89,20 @@ public class DeserializeInformationFromServer {
         return information;
     }
 
+    public static HashMap<String, String> deserializeShowNumberShop(String answerOfServer) {
+        HashMap<String, String> information = new HashMap<>();
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(answerOfServer);
+        try {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            information.put("uselessCards", jsonObject.get("uselessCards").getAsString());
+            information.put("numberOfBoughtCards", jsonObject.get("numberOfBoughtCards").getAsString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            information.put("type", "Error");
+        }
+        return information;
+    }
 //    public static HashMap<String, String> deserializeForBuyCard(String informationOfServer) {
 //        HashMap<String, String> information = new HashMap<>();
 //        JsonParser jsonParser = new JsonParser();
@@ -125,4 +139,6 @@ public class DeserializeInformationFromServer {
     public static String getType() {
         return type;
     }
+
+
 }
