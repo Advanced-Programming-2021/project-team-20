@@ -2,6 +2,7 @@ package project.server.controller.non_duel.shop;
 
 import com.google.gson.JsonObject;
 import project.client.view.LoginController;
+import project.model.Auction;
 import project.model.Deck;
 import project.model.User;
 import project.model.cardData.General.Card;
@@ -314,5 +315,36 @@ public class Shop {
         String numberOfCardsInShop = String.valueOf(card.getNumberOfCardsInShop());
         String answer = ToGsonFormatForSendInformationToClient.showInformationOfAdmin(isAllowedString, numberOfCardsInShop);
         return answer;
+    }
+
+    public static String createAuction(JsonObject details) {
+        String cardName = "";
+        String token = "";
+        String username = "";
+        int initialPrice = 0;
+        try {
+            token = details.get("token").getAsString();
+            cardName = details.get("cardName").getAsString();
+            //?
+            initialPrice = details.get("initialPrice").getAsInt();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID TOKEN");
+        }
+        username = user.getName();
+        Card card = Storage.getCardByName(cardName);
+        if (card == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID CARD");
+        }
+
+        if (!user.getAllUselessCards().contains(cardName)) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "YOU DON'T HAVE THIS CARD IN YOUR USELESS CARDS");
+        }
+
+        Auction auction = new Auction(username, initialPrice);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "SUCCESSFUL");
     }
 }

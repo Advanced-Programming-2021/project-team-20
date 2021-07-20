@@ -5,9 +5,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 public class AuctionPageController implements Initializable {
 
@@ -30,7 +33,15 @@ public class AuctionPageController implements Initializable {
     }
 
     public void auctionFunction(ActionEvent actionEvent) {
-
+        String initialPriceAsString = initialPriceTextField.getText();
+        String cardName = cardNameTextField.getText();
+        Pattern pattern = Pattern.compile("^\\d+$");
+        if (!initialPriceAsString.isEmpty() && !cardName.isEmpty() && pattern.matcher(initialPriceAsString).find()) {
+            int initialPrice = Integer.parseInt(initialPriceAsString);
+            String token = LoginController.getToken();
+            String dataToSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatAuction(token, cardName, initialPrice);
+            String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
+        }
     }
 
     public void bidPriceFunction(ActionEvent actionEvent) {

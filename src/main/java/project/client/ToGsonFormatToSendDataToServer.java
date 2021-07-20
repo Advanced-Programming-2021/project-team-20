@@ -146,4 +146,13 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("cardName", cardName);
         return jsonObject.toString();
     }
+
+    public static String toGsonFormatAuction(String token, String cardName, int initialPrice) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "createAuction");
+        jsonObject.addProperty("cardName", cardName);
+        jsonObject.addProperty("token", token);
+        jsonObject.addProperty("initialPrice", initialPrice);
+        return jsonObject.toString();
+    }
 }

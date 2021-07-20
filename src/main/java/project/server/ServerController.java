@@ -289,6 +289,8 @@ public class ServerController {
                 return Shop.getShowNumberOfBoughtCardsForClient(details);
             case "showInformationOfAdmin":
                 return Shop.showInformationOfAdmin(details);
+            case "createAuction":
+                return Shop.createAuction(details);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":
