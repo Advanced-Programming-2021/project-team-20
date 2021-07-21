@@ -78,7 +78,6 @@ public class ChatRoomController implements Initializable {
         onlineUsersLabel.setText("Online Users: " + details.get("onlineUsers").getAsString());
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
-        System.out.println(pane.getPrefHeight());
     }
 
     private void checkConnectionStatus(JsonObject details) {

@@ -68,18 +68,6 @@ public class ServerConnection {
         }
     }
 
-    public static String sendDataToServerAndReceiveResult2(String data) {
-        try {
-            secondDataOutputStream.writeUTF(data);
-            secondDataOutputStream.flush();
-            return secondDataInputStream.readUTF();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "exception";
-        }
-    }
-
-
     public static void scoreboardAutoRefresh(ScoreboardController scoreboardController) {
         writingThirdThread = new Thread(() -> {
             try {

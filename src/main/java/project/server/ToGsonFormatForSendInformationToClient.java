@@ -50,7 +50,7 @@ public class ToGsonFormatForSendInformationToClient {
         jsonObject.addProperty("name", user.getName());
         jsonObject.addProperty("nickname", user.getNickname());
         jsonObject.addProperty("password", user.getPassword());
-        // jsonObject.addProperty("imagePath", user.getImagePath());
+        jsonObject.addProperty("imagePath", user.getImagePath());
         jsonObject.addProperty("score", user.getScore());
         jsonObject.addProperty("money", user.getMoney());
         return jsonObject.toString();
@@ -92,9 +92,10 @@ public class ToGsonFormatForSendInformationToClient {
         return jsonObject.toString();
     }
 
-    public static String toGsonFormatForAcceptPlaying(String message) {
-
-        return null;
+    public static String toGsonFormatForGetImagePath(String path) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("imagePath", path);
+        return jsonObject.toString();
     }
 
     public static String toGsonFormatForSendTweetsToClient(ArrayList<String> newTweets) {

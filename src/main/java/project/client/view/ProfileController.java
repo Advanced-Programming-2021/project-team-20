@@ -14,11 +14,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.*;
 import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -70,22 +71,41 @@ public class ProfileController implements Initializable {
 
     public void changeImage() {
 
-        // FileChooser fileChooser = new FileChooser();
-        // fileChooser.setTitle("Open Image");
-        // fileChooser.getExtensionFilters().add(new ExtensionFilter("images",
-        // "*.png"));
-        // fileChooser.getExtensionFilters().add(new ExtensionFilter("images",
-        // "*.jpg"));
-        // fileChooser.getExtensionFilters().add(new ExtensionFilter("images",
-        // "*.PNG"));
-        // fileChooser.getExtensionFilters().add(new ExtensionFilter("images",
-        // "*.JPG"));
-        // File file = fileChooser.showOpenDialog(MainView.getStage());
-        // if (file != null) {
-        // profile.changeImage(file.getAbsolutePath());
-        // rectangleImage.setFill(new
-        // ImagePattern(LoginController.getOnlineUser().getImage()));
-        // }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images",
+            "*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images",
+            "*.jpg"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images",
+            "*.PNG"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("images",
+            "*.JPG"));
+        File file = fileChooser.showOpenDialog(MainView.getStage());
+        if (file != null) {
+            String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("changeImage", "imagePath", file.getAbsolutePath());
+            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+            HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
+            showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+            if (deserializeResult.get("message").equals("Connection Disconnected")) {
+                new MainMenuController().backToLoginPage();
+            }
+            if (deserializeResult.get("type").equals("Successful")) {
+                LoginController.getOnlineUser().setImage(createImage(file.getAbsolutePath()));
+                rectangleImage.setFill(new
+                    ImagePattern(LoginController.getOnlineUser().getImage()));
+            }
+        }
+    }
+
+    private Image createImage(String path) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(path);
+            return new Image(stream);
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public void changePassword() {

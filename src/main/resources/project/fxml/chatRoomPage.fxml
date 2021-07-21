@@ -21,7 +21,7 @@
       </ScrollPane>
       <Button fx:id="refreshTweets" layoutX="446.0" layoutY="561.0" mnemonicParsing="false" onAction="#refreshTweets" prefHeight="31.0" prefWidth="109.0" text="refresh" />
       <Rectangle arcHeight="25.0" arcWidth="25.0" fill="#000000cc" height="111.0" layoutX="110.0" layoutY="492.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="327.0" />
-      <Label fx:id="onlineUsersLabel" layoutX="127.0" layoutY="499.0" prefHeight="45.0" prefWidth="268.0" />
+      <Label fx:id="onlineUsersLabel" layoutX="140.0" layoutY="521.0" prefHeight="45.0" prefWidth="268.0" />
    </children>
    <styleClass>
       <String fx:value="context-menu" />
