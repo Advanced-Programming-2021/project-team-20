@@ -1,5 +1,7 @@
 package project.server.controller.duel.GamePackage.ai;
 
+import project.model.PhaseInGame;
+import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.aidata.AIActionType;
 import project.model.aidata.AIFurtherActivationInput;
@@ -85,13 +87,34 @@ public class AI {
     }
 
     public String getCommand() {
+        shouldICallNextPhaseTwice();
         updateAIInformationAccordingToBoard();
+        String output;
         if (shouldRedirectAIMind) {
-            return redirectInput() + "\n";
+            output = redirectInput() + "\n";
+            if (output.contains("next phase")) {
+                atBeginningOfMainPhaseOne = true;
+            }
+            return output;
         }
-        return aiQueryUnderstander.understandQuery(this);
+        output = aiQueryUnderstander.understandQuery(this);
+        if (output.contains("next phase")) {
+            atBeginningOfMainPhaseOne = true;
+        }
+        return output;
     }
 
+    private boolean atBeginningOfMainPhaseOne = true;
+
+    private void shouldICallNextPhaseTwice() {
+        PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(token).getPhaseInGame();
+        if (phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1) && atBeginningOfMainPhaseOne) {
+            atBeginningOfMainPhaseOne = false;
+            DuelController duelController = GameManager.getDuelControllerByIndex(token);
+            duelController.addStringToWhatUsersSay("*user" + aiTurn + ": next phase*", token);
+            duelController.addStringToWhatUsersSay("*user" + aiTurn + ": next phase*", token);
+        }
+    }
 
     protected void updateAIInformationAccordingToBoard() {
         aiMainPhaseMind.getAiKeyVariablesUpdater().clearVariables();

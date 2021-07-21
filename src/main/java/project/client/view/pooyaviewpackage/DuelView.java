@@ -2,6 +2,7 @@ package project.client.view.pooyaviewpackage;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -83,6 +84,7 @@ public class DuelView {
     private static Transition transition;
     private static ControllerForView controllerForView;
     private static Group moreCardInfoGroup;
+    private static Rectangle whiteBackgroundRectangle;
 
     private static MediaPlayer backgroundMusic;
     private static MediaView mediaView;
@@ -91,6 +93,74 @@ public class DuelView {
     private static Rectangle pause;
     private static Rectangle mute;
     private static Rectangle surrender;
+
+    private static String supremeKingActivatingSpellString = "/project/videos/Supreme King Actions/Supreme King Activating Spell.mp4";
+
+    private static String supremeKingAttackDirectString = "/project/videos/Supreme King Actions/Supreme King Attack Direct.mp4";
+
+    private static String supremeKingAttackMonsterString = "/project/videos/Supreme King Actions/Supreme King Attack Monster.mp4";
+
+    private static String supremeKingSettingAMonsterString = "/project/videos/Supreme King Actions/Supreme King Setting A Monster.mp4";
+
+    private static String supremeKingSettingASpellString = "/project/videos/Supreme King Actions/Supreme King Setting A Spell.mp4";
+
+    private static String supremeKingSummoningInAttackPositionString = "/project/videos/Supreme King Actions/Supreme King Summoning In Attack Position.mp4";
+
+    private static String supremeKingDrawingCardAtTheBeginningOfTurn = "/project/videos/Supreme King Actions/Supreme King Drawing Card At The Beginning Of Turn.mp4";
+
+    private static String supremeKingEndingTurnString = "/project/videos/Supreme King Actions/Supreme King Ending Turn.mp4";
+    private static String supremeKingActivatingSpellAlreadyInFieldString = "/project/videos/Supreme King Actions/Supreme King Activating Spell Already In Field.mp4";
+    private static String supremeKingActivatingTrapString = "/project/videos/Supreme King Actions/Supreme King Activating Trap.mp4";
+    private static String supremeKingActivatingMonsterEffectString = "/project/videos/Supreme King Actions/Supreme King Activating Monster Effect.mp4";
+    private static String supremeKingReceivingDamageString = "/project/videos/Supreme King Actions/Supreme King Receiving Damage.mp4";
+
+    public static String getSupremeKingReceivingDamageString() {
+        return supremeKingReceivingDamageString;
+    }
+
+    public static String getSupremeKingActivatingTrapString() {
+        return supremeKingActivatingTrapString;
+    }
+
+    public static String getSupremeKingActivatingMonsterEffectString() {
+        return supremeKingActivatingMonsterEffectString;
+    }
+
+    public static String getSupremeKingActivatingSpellAlreadyInFieldString() {
+        return supremeKingActivatingSpellAlreadyInFieldString;
+    }
+
+    public static String getSupremeKingDrawingCardAtTheBeginningOfTurn() {
+        return supremeKingDrawingCardAtTheBeginningOfTurn;
+    }
+
+    public static String getSupremeKingEndingTurnString() {
+        return supremeKingEndingTurnString;
+    }
+
+    public static String getSupremeKingActivatingSpellString() {
+        return supremeKingActivatingSpellString;
+    }
+
+    public static String getSupremeKingAttackDirectString() {
+        return supremeKingAttackDirectString;
+    }
+
+    public static String getSupremeKingAttackMonsterString() {
+        return supremeKingAttackMonsterString;
+    }
+
+    public static String getSupremeKingSettingAMonsterString() {
+        return supremeKingSettingAMonsterString;
+    }
+
+    public static String getSupremeKingSettingASpellString() {
+        return supremeKingSettingASpellString;
+    }
+
+    public static String getSupremeKingSummoningInAttackPositionString() {
+        return supremeKingSummoningInAttackPositionString;
+    }
 
     public static boolean isIsGameMute() {
         return isGameMute;
@@ -146,7 +216,6 @@ public class DuelView {
     private static HealthBarAndHealthPoints opponentHealthStatus;
     private static Long lastTimeKeyPressed = 0l;
     private static StringBuilder cheatCodes = new StringBuilder();
-
     private static boolean areWePlayingWithAI;
 
     private static volatile String token = "nothing";
@@ -257,7 +326,7 @@ public class DuelView {
         DuelView.anchorPane = anchorPane;
         // System.out.println(battleFieldView == null);
         anchorPane.setOnMouseClicked(e -> {
-            System.out.println("isMyTurn = "+isMyTurn);
+            System.out.println("isMyTurn = " + isMyTurn);
             if (shouldDuelViewClickingAbilitiesWork && isMyTurn) {
                 TwoDimensionalPoint finalTwoDimensionalPoint = new TwoDimensionalPoint(e.getSceneX(), e.getSceneY());
                 CardLocation cardLocation = controllerForView.giveCardLocationByCoordinateInView(finalTwoDimensionalPoint, null);
@@ -286,7 +355,7 @@ public class DuelView {
                                         if (cardLocationSelecting != null) {
                                             // System.out.println("important selection:" + "select " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting) + ":");
                                             JsonCreator.setFirstAdditionalString(SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting));
-                                            System.out.println("cantt keep my hands on my selection: "+SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting));
+                                            System.out.println("cantt keep my hands on my selection: " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting));
                                             String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
                                             System.out.println("&@&@&@&@& " + output);
                                             if (output == null) {
@@ -477,12 +546,8 @@ public class DuelView {
         anchorPane.getChildren().add(secondPlayerUsernameLabel);
         anchorPane.getChildren().add(secondPlayerNicknameLabel);
         anchorPane.getChildren().add(secondPlayerAvatar);
-
-
+        anchorPane.getChildren().add(whiteBackgroundRectangle);
         controllerForView.giveCardsAtTheBeginningOfGame();
-//        System.out.println(battleFieldView.getUpperLeftX() + " wouiiiiiiiiiiiiiiiiiiiiiiiii");
-//        System.out.println(stage.getWidth());
-//        System.out.println(stage.getHeight());
         return anchorPane;
         // MainView.changeScene(anchorPane);
     }
@@ -491,23 +556,6 @@ public class DuelView {
         System.out.println("I am newing DuelStage");
         new DuelStage();
     }
-
-    // public static void main(String args[]) {
-    //  launch(args);
-//        Stage stage = new Stage();
-//        DuelView duelView = new DuelView();
-//        AnchorPane anchorPane = duelView.getAnchorpaneAtBeginning(stage);
-//        Scene scene = new Scene(anchorPane, 1200, 1000);
-////        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-////            @Override
-////            public void handle(KeyEvent keyEvent) {
-////                checkCheatCommands(keyEvent);
-////            }
-////        });
-//        stage.setScene(scene);
-//        stage.show();
-//        //callStage();
-    // }
 
     public void callPayOrDestroy(String output) {
         String something = "do you want to pay 100 lifepoints or do you want to destroy your spell card?";
@@ -635,7 +683,7 @@ public class DuelView {
         } else if (keyEvent.getCode().getName().equals("Enter")) {
             System.out.println(cheatCodes);
             String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("cheat", "cheatCommand", cheatCodes.toString());
-            String messageFromServer = (String) ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+            String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
             HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(messageFromServer);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
@@ -683,6 +731,10 @@ public class DuelView {
     }
 
     private void prepareObjectsForWorking() {
+        whiteBackgroundRectangle = new Rectangle(0, 0, stageWidth, stageHeight);
+        whiteBackgroundRectangle.setFill(new ImagePattern(new Image(DuelView.class.getResource("/project/battlefield/white background.png").toExternalForm())));
+        whiteBackgroundRectangle.setViewOrder(9);
+        //complete error
         battleFieldView = new BattleFieldView();
         URL resource = getClass().getResource("/project/ingameicons/music/song2.mp3");
         backgroundMusic = new MediaPlayer(new Media(resource.toString()));
@@ -755,6 +807,8 @@ public class DuelView {
             }
         });
         GamePhaseButton.removeAllGamePhaseButtons();
+
+
         drawPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_DRAW_PHASE);
         standByPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_STANDBY_PHASE);
         mainPhaseOneLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_1);
@@ -762,16 +816,7 @@ public class DuelView {
         mainPhaseTwoLabel = new GamePhaseButton(PhaseInGame.ALLY_MAIN_PHASE_2);
         endPhaseLabel = new GamePhaseButton(PhaseInGame.ALLY_END_PHASE);
         nextPhaseLabel = new GamePhaseButton(null);
-        // nextPhaseLabel.setLayoutX(100);
-        // nextPhaseLabel.setLayoutY(500);
-        // nextPhaseButton.setX(100);
-        // nextPhaseButton.setY(500);
-//        nextPhaseButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                System.out.println(GameManager.getDuelControllerByIndex(0).getInput("advanced show board", true));
-//            }
-//        });
+        String firstUsername = LoginController.getOnlineUser().getName();
         shouldICallPayAndDestroy = false;
         nextPhaseLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -789,83 +834,60 @@ public class DuelView {
                         if (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2)) {
                             shouldPrepareAICard = true;
                         }
+                        String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"next phase\", true, token)");
+                        System.out.println("HOHO output is$$$$:\n"+output);
+                        String nowItWillBeString = "now it will be " + firstUsername + "'s turn";
+                        System.out.println("NOW IT WILL BE " + nowItWillBeString);
+                        Pattern nowItWillBePattern = Pattern.compile(nowItWillBeString);
+                        Matcher match = nowItWillBePattern.matcher(output);
+                        String nowItWillBeTurn = "";
+                        System.out.println("WHOUUUUUUU");
+                        boolean isTrue = false;
+                        if (match.find()) {
+                            nowItWillBeTurn = output.substring(match.start(), match.end());
+                            nowItWillBeString = "do you want to (.+)";
+                            nowItWillBePattern = Pattern.compile(nowItWillBeString);
+                            Matcher newmatch = nowItWillBePattern.matcher(output);
+                            if (newmatch.find()) {
+                                System.out.println("second match found");
+                                nowItWillBeTurn += "\n";
+                                nowItWillBeTurn += output.substring(newmatch.start(), newmatch.end());
+                            } else {
+                                System.out.println("second match not found");
+                            }
+                            System.out.println("Now It will be turn is = " + nowItWillBeTurn);
+                            AdvancedCardMovingController.allyChainingMessage = nowItWillBeTurn;
+                        } else {
+                            System.out.println("cloudnt find first match");
+                        }
                         if (shouldPrepareAICard) {
                             updatePrivacyForCardsForAI();
+                            Media media = new Media(DuelView.class.getResource(supremeKingDrawingCardAtTheBeginningOfTurn).toExternalForm());
+                            MediaPlayer mediaPlayer = new MediaPlayer(media);
+                            MediaView mediaView = new MediaView(mediaPlayer);
+                            DuelView.getAnchorPane().getChildren().add(mediaView);
+                            mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+                            mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+                            mediaView.setPreserveRatio(false);
+                            mediaView.setViewOrder(10);
+                            mediaView.setViewOrder(0);
+                            mediaPlayer.play();
+                            mediaPlayer.setOnEndOfMedia(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mediaView.setViewOrder(10);
+                                    advancedCardMovingController.advanceForwardBattleField();
+                                }
+                            });
+                        } else {
+                            advancedCardMovingController.advanceForwardBattleField();
                         }
-                        String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"next phase\", true, token)");
-                        // System.out.println("we are playing with ai");
-                        // System.out.println("&" + output + "&");
-                        if (output.contains("phase: ")) {
-                            GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                            if (output.contains("phase: draw phase") && output.contains("new card added to hand") && output.contains("phase: standby phase")) {
-                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                //DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-                                PauseTransition pauseTransition = (new PauseTransition(Duration.seconds(0.2)));
-                                pauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent actionEvent) {
-                                        GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                        advancedCardMovingController.advanceForwardBattleField();
-                                        PauseTransition newPauseTransition = new PauseTransition(Duration.seconds(0.3));
-                                        newPauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent actionEvent) {
-                                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                                PauseTransition newerPauseTransition = new PauseTransition(Duration.seconds(0.3));
-                                                newerPauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                                                    @Override
-                                                    public void handle(ActionEvent actionEvent) {
-                                                        GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                                        PauseTransition newestPauseTransition = new PauseTransition(Duration.seconds(0.3));
-                                                        newestPauseTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                                                            @Override
-                                                            public void handle(ActionEvent actionEvent) {
-                                                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                                                //updatePrivacyForCards();
-                                                                GamePhaseButton.updateAllGamePhaseButtonsOnce();
-                                                                advancedCardMovingController.advanceForwardBattleField();
-                                                            }
-                                                        });
-                                                        newestPauseTransition.play();
-                                                    }
-                                                });
-                                                newerPauseTransition.play();
-                                            }
-                                        });
-                                        newPauseTransition.play();
-                                    }
 
-                                });
-                                pauseTransition.play();
-                            }
-                        }
                     }
                 } else {
                     System.out.println("we are playing with ai");
                 }
             }
-
-
-//                PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-//                standByPhaseLabel.updateImage(phaseInGame);
-//                mainPhaseOneLabel.updateImage(phaseInGame);
-//                battlePhaseLabel.updateImage(phaseInGame);
-//                mainPhaseTwoLabel.updateImage(phaseInGame);
-//                endPhaseLabel.updateImage(phaseInGame);
-//                if (output.contains("phase: draw phase") && output.contains("new card added to hand:")) {
-//                    DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-//                }
-            // PhaseInGame phaseInGame =
-            // GameManager.getPhaseControllerByIndex(0).getPhaseInGame();
-            // standByPhaseLabel.updateImage(phaseInGame);
-            // mainPhaseOneLabel.updateImage(phaseInGame);
-            // battlePhaseLabel.updateImage(phaseInGame);
-            // mainPhaseTwoLabel.updateImage(phaseInGame);
-            // endPhaseLabel.updateImage(phaseInGame);
-            // if (output.contains("phase: draw phase") && output.contains("new card added
-            // to hand:")) {
-            // DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
-            // }
 
         });
 
@@ -896,8 +918,6 @@ public class DuelView {
             System.out.println("matcher.group(2) = " + matcher.group(2));
             allyCardsInDeck.add(CardsStorage.getCardByName(matcher.group(2)));
         }
-        //ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(token).getAllyCardsInHand();
-        //ArrayList<Card> allyCardsInDeck = GameManager.getDuelBoardByIndex(token).getAllyCardsInDeck();
         for (int i = 0; i < allyCardsInDeck.size() + allyCardsInHand.size(); i++) {
             boolean inHand = false;
             if (i < allyCardsInHand.size()) {
@@ -921,7 +941,6 @@ public class DuelView {
         }
 
 
-        String firstUsername = LoginController.getOnlineUser().getName();
         String secondUsername = JsonCreator.getResult("give my opponent username");
         String firstNickname = LoginController.getOnlineUser().getNickname();
         String secondNickname = JsonCreator.getResult("give my opponent nickname");
@@ -982,7 +1001,7 @@ public class DuelView {
             xHelperForCardViewConstructor = battleFieldView.getUpperLeftX() + 40;
             yHelperForCardViewConstructor = battleFieldView.getUpperLeftY() + 108;
             CardView cardView;
-            if (areWePlayingWithAI){
+            if (areWePlayingWithAI) {
                 cardView = new CardView(currentCardForView, true, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
             } else {
                 cardView = new CardView(currentCardForView, false, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
@@ -1057,7 +1076,7 @@ public class DuelView {
 //                    }
 //                });
 
-            }
+        }
 //            GamePhaseButton.updateAllGamePhaseButtonsOnce();
 //            //updatePrivacyForCards();
 //            //DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -1214,9 +1233,9 @@ public class DuelView {
         cardLocationSelecting = controllerForView.giveCardLocationByCoordinateInView(twoDimensionalPoint, cardView);
         if (cardLocationSelecting != null) {
             JsonCreator.setFirstAdditionalString(SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting));
-            System.out.println("cantt keep my hands on my selection: "+SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting));
+            System.out.println("cantt keep my hands on my selection: " + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting));
             String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + SendingRequestsToServer.giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");
-            System.out.println("can't keep my hands on my one click selection "+output);
+            System.out.println("can't keep my hands on my one click selection " + output);
             output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"card show --selected\", true, token)");
             System.out.println("I'm with this monster: show card: " + output);
             String cardDescriptionUselessString = "Description: (.+)";

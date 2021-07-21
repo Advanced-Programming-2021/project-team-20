@@ -621,7 +621,16 @@ public class DuelController {
             // System.out.println("aiTurn is "+fakeTurn);
             aiString = ai.getCommand();
             // System.out.println("AI COMMAND! AI COMMAND! is" + aiString + ".");
-            nothing = getInput(aiString, false, token);
+            if (aiString.contains("next phase") && GameManager.getPhaseControllerByIndex(token).getPhaseInGame().equals(PhaseInGame.OPPONENT_MAIN_PHASE_2)) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + (3 - duelController.getTurnByToken(token)) + ": next phase*", token);
+                nothing = getInput(aiString, false, token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
+            } else {
+                nothing = getInput(aiString, false, token);
+            }
+
             // System.out.println("whoops aiString: " + aiString + " getResult: " +
             // nothing);
             // System.out.println("AI RESULT OF SAYING " + nothing);
@@ -891,7 +900,8 @@ public class DuelController {
 class UserAndTurn {
     String username;
     int turn;
-    public UserAndTurn(String user, int turn){
+
+    public UserAndTurn(String user, int turn) {
         this.username = user;
         this.turn = turn;
     }

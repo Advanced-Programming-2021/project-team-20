@@ -3,16 +3,31 @@ package project.client.view.pooyaviewpackage;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.effect.PerspectiveTransform;
+import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import project.model.PhaseInGame;
+import project.model.Utility.Utility;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
 import project.client.modelsforview.CardView;
 import project.client.modelsforview.GamePhaseButton;
+//import project.server.controller.duel.GamePackage.DuelBoard;
+import project.server.controller.duel.GamePackage.DuelController;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,6 +39,15 @@ public class AdvancedCardMovingController {
     private static String report = "";
     private DuelView duelView;
     private static Card newlyAddedCard;
+    private static CardLocation previousSelected = new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1);
+
+    public static CardLocation getPreviousSelected() {
+        return previousSelected;
+    }
+
+    public static void setPreviousSelected(CardLocation previousSelected) {
+        AdvancedCardMovingController.previousSelected = previousSelected;
+    }
 
     public static void setNewlyAddedCard(Card newlyAddedCard) {
         AdvancedCardMovingController.newlyAddedCard = newlyAddedCard;
@@ -126,16 +150,112 @@ public class AdvancedCardMovingController {
         }
     }
 
+    public static String allyChainingMessage = "";
+
+    private static int numberOfAINextPhaseSayings = 0;
+    private static boolean prepareForAIChaining = false;
+
     public ObjectOfChange giveObjectForThisSingleString(String change) {
         int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
         if (change.startsWith("*")) {
             if (change.contains("next phase")) {
+
+                if (DuelView.isAreWePlayingWithAI() && change.contains("user2")) {
+                    numberOfAINextPhaseSayings++;
+                    if (numberOfAINextPhaseSayings % 6 == 0) {
+                        return new ObjectOfChange(new Animation(DuelView.getSupremeKingEndingTurnString()), action.NOT_APPLICABLE);
+                    }
+                }
                 PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.4));
                 ParallelTransition parallelTransition = new ParallelTransition();
                 parallelTransition.getChildren().add(pauseTransition);
                 PredefinedActionWithParallelTransition predefinedActionWithParallelTransition = new PredefinedActionWithParallelTransition(parallelTransition);
                 return new ObjectOfChange(predefinedActionWithParallelTransition, action.NOT_APPLICABLE);
             } else {
+                if (DuelView.isAreWePlayingWithAI() && change.contains("user2")) {
+                    System.out.println("AI Action: change = " + change);
+                    if (change.contains("yes")) {
+                        prepareForAIChaining = true;
+                    } else if (change.contains("no") && !change.contains("normal")) {
+                        prepareForAIChaining = false;
+                    } else if (change.contains("select")) {
+                        String inputRegex = "\\*user2: (?<=\\s|^)(select[\\s]+(--|-)([\\S]+)(|[\\s]+(--|-)([\\S]+))(|[\\s]+([\\d]+))(?=\\*|$))\\*";
+                        Matcher matcher = Utility.getCommandMatcher(change, inputRegex);
+                        RowOfCardLocation rowOfCardLocation;
+                        //  DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                        //  int fakeTurn = duelController.getFakeTurn();
+                        if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
+                            System.out.println("Match successful");
+                            System.out.println("match3 = " + matcher.group(3) + " match6 = " + matcher.group(6));
+                            rowOfCardLocation = switchCaseInputToGetRowOfCardLocation(matcher.group(3), matcher.group(6), 1);
+                            if (rowOfCardLocation == null) {
+                                // return "invalid selection";
+                            } else if (matcher.group(8) != null) {
+                                int cardIndex = Integer.parseInt(matcher.group(8));
+                                rowOfCardLocation = RowOfCardLocation.valueOf(rowOfCardLocation.toString().replaceAll("ALLY", "OPPONENT"));
+                                cardIndex = Utility.changeYuGiOhIndexToArrayIndex(cardIndex, rowOfCardLocation);
+                                CardLocation cardLocation = new CardLocation(rowOfCardLocation, cardIndex);
+                                CardView cardView = DuelView.getControllerForView().getCardViewByCardLocation(cardLocation);
+                                if (cardView != null) {
+                                    previousSelected = cardLocation;
+                                    if (prepareForAIChaining) {
+                                        prepareForAIChaining = false;
+                                        if (Card.isCardASpell(cardView.getCard())) {
+                                            return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingSpellAlreadyInFieldString()), action.NOT_APPLICABLE);
+                                        } else if (Card.isCardATrap(cardView.getCard())) {
+                                            return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingTrapString()), action.NOT_APPLICABLE);
+                                        } else if (Card.isCardAMonster(cardView.getCard())) {
+                                            return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingMonsterEffectString()), action.NOT_APPLICABLE);
+                                        }
+                                    }
+                                }
+                            } else if (matcher.group(6) != null || matcher.group(6) == null &&
+                                (rowOfCardLocation.equals(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE) || rowOfCardLocation.equals(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE))) {
+                                CardLocation cardLocation = new CardLocation(rowOfCardLocation, 1);
+                                CardView cardView = DuelView.getControllerForView().getCardViewByCardLocation(cardLocation);
+                                if (cardView != null) {
+                                    previousSelected = cardLocation;
+                                    if (prepareForAIChaining) {
+                                        prepareForAIChaining = false;
+                                        if (Card.isCardASpell(cardView.getCard())) {
+                                            return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingSpellAlreadyInFieldString()), action.NOT_APPLICABLE);
+                                        } else if (Card.isCardATrap(cardView.getCard())) {
+                                            return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingTrapString()), action.NOT_APPLICABLE);
+                                        } else if (Card.isCardAMonster(cardView.getCard())) {
+                                            return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingMonsterEffectString()), action.NOT_APPLICABLE);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            System.out.println("MAATCH ERROR");
+                        }
+                    } else if (change.contains("set")) {
+                        if (previousSelected != null) {
+                            CardView cardView = DuelView.getControllerForView().getCardViewByCardLocation(previousSelected);
+                            Card card = cardView.getCard();
+                            System.out.println("Selected Card! Selected card! name !!!: " + card.getCardName());
+                            if (Card.isCardAMonster(card)) {
+                                return new ObjectOfChange(new Animation(DuelView.getSupremeKingSettingAMonsterString()), action.NOT_APPLICABLE);
+                            } else {
+                                return new ObjectOfChange(new Animation(DuelView.getSupremeKingSettingASpellString()), action.NOT_APPLICABLE);
+                            }
+                        }
+                    } else if (change.contains("normal summon")) {
+                        return new ObjectOfChange(new Animation(DuelView.getSupremeKingSummoningInAttackPositionString()), action.NOT_APPLICABLE);
+                    } else if (change.contains("direct") && change.contains("attack")) {
+                        return new ObjectOfChange(new Animation(DuelView.getSupremeKingAttackDirectString()), action.NOT_APPLICABLE);
+                    } else if (change.contains("attack")) {
+                        return new ObjectOfChange(new Animation(DuelView.getSupremeKingAttackMonsterString()), action.NOT_APPLICABLE);
+                    } else if (change.contains("activate effect")) {
+                        if (previousSelected != null) {
+                            RowOfCardLocation rowOfCardLocation = previousSelected.getRowOfCardLocation();
+                            if (rowOfCardLocation.toString().contains("HAND")) {
+                                return new ObjectOfChange(new Animation(DuelView.getSupremeKingActivatingSpellString()), action.NOT_APPLICABLE);
+                            }
+                        }
+                    }
+                }
                 ParallelTransition parallelTransition = new ParallelTransition();
                 PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.0001));
                 parallelTransition.getChildren().add(pauseTransition);
@@ -164,7 +284,14 @@ public class AdvancedCardMovingController {
             parallelTransition.getChildren().add(DuelView.getTransition().applyTransitionForHealthBar(false, realIncreaseInHealthForOpponent,
                 DuelView.getAllyHealthStatus().getUpdateHealthPointsTransition().getPreviousHealth()));
             if (realIncreaseInHealthForAlly != 0 || realIncreaseInHealthForOpponent != 0) {
-                return new ObjectOfChange(parallelTransition, action.HP_LOSS);
+                boolean bool = Boolean.parseBoolean(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).isAIPlaying()"));
+                if (bool && realIncreaseInHealthForOpponent != 0) {
+                    return new ObjectOfChange(
+                        new AnimationAndParallelTransition(new Animation(DuelView.getSupremeKingReceivingDamageString()), parallelTransition),
+                        action.HP_LOSS);
+                } else {
+                    return new ObjectOfChange(parallelTransition, action.HP_LOSS);
+                }
             } else {
                 return new ObjectOfChange(parallelTransition, action.NOT_APPLICABLE);
             }
@@ -294,6 +421,54 @@ public class AdvancedCardMovingController {
         return false;
     }
 
+    private RowOfCardLocation switchCaseInputToGetRowOfCardLocation(String firstString, String secondString, int turn) {
+        if (firstString == null) {
+            firstString = "";
+        }
+        if (secondString == null) {
+            secondString = "";
+        }
+        if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("monster") || secondString.equals("m"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, turn);
+        } else if ((firstString.equals("monster") || firstString.equals("m")) && (secondString.equals("opponent") || secondString.equals("o"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, turn);
+        } else if ((firstString.equals("spell") || firstString.equals("s")) && (secondString.equals("opponent") || secondString.equals("o"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, turn);
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("spell") || secondString.equals("s"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, turn);
+        } else if ((firstString.equals("field") || firstString.equals("f")) && (secondString.equals("opponent") || secondString.equals("o"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, turn);
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("field") || secondString.equals("f"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, turn);
+        } else if ((firstString.equals("hand") || firstString.equals("h")) && (secondString.equals("opponent") || secondString.equals("o"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, turn);
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("hand") || secondString.equals("h"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, turn);
+        } else if ((firstString.equals("deck") || firstString.equals("d")) && (secondString.equals("opponent") || secondString.equals("o"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, turn);
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("deck") || secondString.equals("d"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, turn);
+        } else if ((firstString.equals("graveyard") || firstString.equals("g")) && (secondString.equals("opponent") || secondString.equals("o"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, turn);
+        } else if ((firstString.equals("opponent") || firstString.equals("o")) && (secondString.equals("graveyard") || secondString.equals("g"))) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, turn);
+        } else if ((firstString.equals("monster") || firstString.equals("m")) && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, turn);
+        } else if ((firstString.equals("spell") || firstString.equals("s")) && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, turn);
+        } else if ((firstString.equals("field") || firstString.equals("f")) && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, turn);
+        } else if ((firstString.equals("hand") || firstString.equals("h")) && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_HAND_ZONE, turn);
+        } else if ((firstString.equals("deck") || firstString.equals("d")) && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_DECK_ZONE, turn);
+        } else if ((firstString.equals("graveyard") || firstString.equals("g")) && secondString.equals("")) {
+            return Utility.considerTurnsForRowOfCardLocation(RowOfCardLocation.ALLY_GRAVEYARD_ZONE, turn);
+        }
+        return null;
+    }
+
+
 }
 
 interface conductChange {
@@ -315,31 +490,81 @@ class ChangeConductor implements conductChange {
         this.objectOfChange = DuelView.getAdvancedCardMovingController().giveObjectForThisSingleString(information);
         if (helpIndex != DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().size() - 1) {
             chainThisChangeConductorToYourself();
+        } else if (!AdvancedCardMovingController.allyChainingMessage.equals("")) {
+            if (objectOfChange.getObject() instanceof ParallelTransition) {
+                ParallelTransition parallelTransition = ((ParallelTransition) objectOfChange.getObject());
+                parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getShowOptionsToUser().doYouWantToAlert(AdvancedCardMovingController.allyChainingMessage);
+                                AdvancedCardMovingController.allyChainingMessage = "";
+                            }
+                        });
+                    }
+                });
+            } else if (objectOfChange.getObject() instanceof TroubleFlipTransition) {
+                ScaleTransition troubleFlipTransition = ((TroubleFlipTransition) objectOfChange.getObject()).getStShowBack();
+                troubleFlipTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getShowOptionsToUser().doYouWantToAlert(AdvancedCardMovingController.allyChainingMessage);
+                                AdvancedCardMovingController.allyChainingMessage = "";
+                            }
+                        });
+                    }
+                });
+            } else if (objectOfChange.getObject() instanceof PredefinedActionWithParallelTransition) {
+                ParallelTransition parallelTransition = ((PredefinedActionWithParallelTransition) objectOfChange.getObject()).getParallelTransition();
+                parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getShowOptionsToUser().doYouWantToAlert(AdvancedCardMovingController.allyChainingMessage);
+                                AdvancedCardMovingController.allyChainingMessage = "";
+                            }
+                        });
+                    }
+                });
+            } else if (objectOfChange.getObject() instanceof Animation) {
+                MediaPlayer mediaPlayer = ((Animation) objectOfChange.getObject()).getMediaPlayer();
+                mediaPlayer.setOnEndOfMedia(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((Animation) objectOfChange.getObject()).adjustSizeToZero();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getShowOptionsToUser().doYouWantToAlert(AdvancedCardMovingController.allyChainingMessage);
+                                AdvancedCardMovingController.allyChainingMessage = "";
+                            }
+                        });
+                    }
+                });
+            } else if (objectOfChange.getObject() instanceof AnimationAndParallelTransition) {
+                ParallelTransition parallelTransition = ((AnimationAndParallelTransition) objectOfChange.getObject()).getParallelTransition();
+                parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        ((AnimationAndParallelTransition) objectOfChange.getObject()).getAnimation().adjustSizeToZero();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DuelView.getShowOptionsToUser().doYouWantToAlert(AdvancedCardMovingController.allyChainingMessage);
+                                AdvancedCardMovingController.allyChainingMessage = "";
+                            }
+                        });
+                    }
+                });
+            }
         }
-//        else {
-//            if (!AdvancedCardMovingController.getReport().equals("")) {
-//                Platform.runLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        boolean oneRound = true;
-//                        if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
-//                            oneRound = false;
-//                        }
-//                        int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
-//                        System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
-//                        String output = AdvancedCardMovingController.getReport();
-//                        System.out.println("WinLoss: " + output);
-//                        DuelView.getStage().close();
-//                        if (!oneRound && (currentRound == 1 || currentRound == 2)) {
-//                            DuelView.endOneRoundOfDuel(output);
-//                        } else {
-//                            DuelView.endGame(output);
-//                        }
-//                        AdvancedCardMovingController.setReport("");
-//                    }
-//                });
-//            }
-//        }
         AudioClip audioClip = objectOfChange.giveMediaPlayerBasedOnAction();
         if (objectOfChange.getObject() instanceof ParallelTransition) {
             ((ParallelTransition) objectOfChange.getObject()).play();
@@ -353,6 +578,13 @@ class ChangeConductor implements conductChange {
             }
         } else if (objectOfChange.getObject() instanceof PredefinedActionWithParallelTransition) {
             ((PredefinedActionWithParallelTransition) objectOfChange.getObject()).play();
+            if (audioClip != null) {
+                audioClip.play();
+            }
+        } else if (objectOfChange.getObject() instanceof Animation) {
+            ((Animation) objectOfChange.getObject()).play();
+        } else if (objectOfChange.getObject() instanceof AnimationAndParallelTransition) {
+            ((AnimationAndParallelTransition) objectOfChange.getObject()).play();
             if (audioClip != null) {
                 audioClip.play();
             }
@@ -381,6 +613,24 @@ class ChangeConductor implements conductChange {
             parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
+                    DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex + 1).conductChange();
+                }
+            });
+        } else if (objectOfChange.getObject() instanceof Animation) {
+            MediaPlayer mediaPlayer = ((Animation) objectOfChange.getObject()).getMediaPlayer();
+            mediaPlayer.setOnEndOfMedia(new Runnable() {
+                @Override
+                public void run() {
+                    ((Animation) objectOfChange.getObject()).adjustSizeToZero();
+                    DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex + 1).conductChange();
+                }
+            });
+        } else if (objectOfChange.getObject() instanceof AnimationAndParallelTransition) {
+            ParallelTransition parallelTransition = ((AnimationAndParallelTransition) objectOfChange.getObject()).getParallelTransition();
+            parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    ((AnimationAndParallelTransition) objectOfChange.getObject()).getAnimation().adjustSizeToZero();
                     DuelView.getAdvancedCardMovingController().getAllChangeConductorsObjects().get(helpIndex + 1).conductChange();
                 }
             });
@@ -477,5 +727,206 @@ class PredefinedActionWithParallelTransition {
 
     public ParallelTransition getParallelTransition() {
         return parallelTransition;
+    }
+}
+
+class Animation {
+    Media media;
+    MediaPlayer mediaPlayer;
+    MediaView mediaView;
+    String string;
+    Rectangle helpfulRectangle;
+    double prevTime;
+    boolean firstTimeShowingCard;
+    boolean supremeKingActivatingSpell;
+    boolean supremeKingActivatingMonsterEffect;
+    boolean supremeKingActivatingSpellAlreadyInField;
+    boolean supremeKingActivatingTrap;
+    boolean supremeKingSummoningMonsterInAttackPosition;
+    double readyTime = 0;
+    public Animation(String string) {
+        this.supremeKingActivatingMonsterEffect = false;
+        this.supremeKingActivatingSpell = false;
+        this.supremeKingActivatingSpellAlreadyInField = false;
+        this.supremeKingActivatingTrap = false;
+        this.supremeKingSummoningMonsterInAttackPosition = false;
+        if (string.contains("Activating")){
+            if (string.contains("Monster") && string.contains("Effect")){
+                supremeKingActivatingMonsterEffect = true;
+                readyTime = 1200;
+            }
+            if (string.contains("Spell") && string.contains("Already") && string.contains("Field")){
+                supremeKingActivatingSpellAlreadyInField = true;
+                readyTime = 1000;
+            }
+            else if (string.contains("Spell")){
+                supremeKingActivatingSpell = true;
+                readyTime = 360;
+            }
+            if (string.contains("Trap")){
+                supremeKingActivatingTrap = true;
+                readyTime = 1400;
+            }
+        }
+        if (string.contains("Summoning")){
+            supremeKingSummoningMonsterInAttackPosition = true;
+            readyTime = 4200;
+        }
+        this.firstTimeShowingCard = true;
+        this.helpfulRectangle = null;
+        this.string = string;
+        //DuelView.setSupremeKingMedia(new Media(AdvancedCardMovingController.class.getResource(string).toExternalForm()));
+        this.media = new Media(AdvancedCardMovingController.class.getResource(string).toExternalForm());
+        this.mediaPlayer = new MediaPlayer(media);
+        this.mediaView = new MediaView(mediaPlayer);
+        DuelView.getAnchorPane().getChildren().add(mediaView);
+        mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+        mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+        mediaView.setPreserveRatio(false);
+        mediaView.setViewOrder(10);
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public MediaView getMediaView() {
+        return mediaView;
+    }
+
+
+    public void play() {
+        adjustSizeToFullScreen();
+        prevTime = System.currentTimeMillis();
+        if (string.contains("Summoning") || string.contains("Activating")) {
+            mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+
+                @Override
+                public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+
+                    long currTime = System.currentTimeMillis();
+                    if (Double.compare((currTime - prevTime), readyTime) > 0 && firstTimeShowingCard) {
+                        firstTimeShowingCard = false;
+                        helpfulRectangle = new Rectangle(0, 400, 400, 600);
+                        if (supremeKingActivatingSpell){
+                            PerspectiveTransform e = new PerspectiveTransform();
+                            e.setUlx(650);    // Upper left
+                            e.setUly(180);
+                            e.setUrx(880);    // Upper right
+                            e.setUry(160);
+                            e.setLlx(680);      // Lower left
+                            e.setLly(560);
+                            e.setLrx(910);    // Lower right
+                            e.setLry(540);
+                            helpfulRectangle.setEffect(e);
+                        } else if (supremeKingActivatingSpellAlreadyInField){
+                            PerspectiveTransform e = new PerspectiveTransform();
+                            e.setUlx(400);    // Upper left
+                            e.setUly(100);
+                            e.setUrx(700);    // Upper right
+                            e.setUry(-50);
+                            e.setLlx(450);      // Lower left
+                            e.setLly(1200);
+                            e.setLrx(800);    // Lower right
+                            e.setLry(1050);
+                            helpfulRectangle.setEffect(e);
+                        } else if (supremeKingActivatingTrap){
+                            //perfection complete
+                            PerspectiveTransform e = new PerspectiveTransform();
+                            e.setUlx(420);    // Upper left
+                            e.setUly(60);
+                            e.setUrx(850);    // Upper right
+                            e.setUry(160);
+                            e.setLlx(370);      // Lower left
+                            e.setLly(1100);
+                            e.setLrx(880);    // Lower right
+                            e.setLry(1000);
+                            helpfulRectangle.setEffect(e);
+                        } else if (supremeKingActivatingMonsterEffect){
+                            PerspectiveTransform e = new PerspectiveTransform();
+                            e.setUlx(350);    // Upper left
+                            e.setUly(80);
+                            e.setUrx(800);    // Upper right
+                            e.setUry(-100);
+                            e.setLlx(500);      // Lower left
+                            e.setLly(1100);
+                            e.setLrx(950);    // Lower right
+                            e.setLry(1000);
+                            helpfulRectangle.setEffect(e);
+                        } else if (supremeKingSummoningMonsterInAttackPosition){
+                            PerspectiveTransform e = new PerspectiveTransform();
+                            e.setUlx(50);    // Upper left
+                            e.setUly(150);
+                            e.setUrx(650);    // Upper right
+                            e.setUry(50);
+                            e.setLlx(10);      // Lower left
+                            e.setLly(1100);
+                            e.setLrx(750);    // Lower right
+                            e.setLry(1300);
+                            helpfulRectangle.setEffect(e);
+                        }
+                        CardView cardView = DuelView.getControllerForView().getCardViewByCardLocation(AdvancedCardMovingController.getPreviousSelected());
+                        System.out.println("card name i am showing in animation is " + cardView.getCard().getCardName());
+                        Card card = cardView.getCard();
+                        if (card.getCardType().equals(CardType.MONSTER)) {
+                            helpfulRectangle.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/monsters/" + card.getCardName() + ".jpg").toExternalForm())));
+                        } else {
+                            helpfulRectangle.setFill(new ImagePattern(new Image(CardView.class.getResource("/project/cards/spelltraps/" + card.getCardName() + ".jpg").toExternalForm())));
+                        }
+                        DuelView.getAnchorPane().getChildren().add(helpfulRectangle);
+                        System.out.println("delta: " + (currTime - prevTime) + ", old value: " + oldValue + ", new value: " + newValue);
+                    }
+
+                }
+            });
+        }
+        mediaPlayer.play();
+        if (string.contains("Ending Turn")) {
+            GamePhaseButton.updateAllGamePhaseButtonsOnce();
+        }
+    }
+
+    public void adjustSizeToFullScreen() {
+        //mediaView.setFitWidth(DuelView.getStage().getWidth());
+        //mediaView.setFitHeight(DuelView.getStage().getHeight());
+        mediaView.setViewOrder(0);
+    }
+
+    public void adjustSizeToZero() {
+        mediaView.setViewOrder(10);
+        if (helpfulRectangle != null) {
+            helpfulRectangle.setWidth(0);
+            helpfulRectangle.setHeight(0);
+        }
+//        mediaView.fitWidthProperty().bind();setFitHeight(0);
+//        mediaView.setFitWidth(0);
+    }
+}
+
+class AnimationAndParallelTransition {
+    ParallelTransition parallelTransition;
+    Animation animation;
+
+    public AnimationAndParallelTransition(Animation animation, ParallelTransition parallelTransition) {
+        this.animation = animation;
+        this.parallelTransition = parallelTransition;
+    }
+
+    public ParallelTransition getParallelTransition() {
+        return parallelTransition;
+    }
+
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public void play() {
+        animation.play();
+        animation.getMediaPlayer().setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                parallelTransition.play();
+            }
+        });
     }
 }
