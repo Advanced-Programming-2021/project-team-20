@@ -16,7 +16,8 @@ public class Auction {
     private int auctionCode;
     private boolean isActivated;
     private String cardName;
-//    private static HashMap<String, Integer>
+    private int timeLeftAsSeconds;
+    //    private static HashMap<String, Integer>
     private static String addressOfStorage = "Resourses\\Server\\";
 
     public Auction(String auctionCreatorName, int initialPrice, String cardName) {
@@ -26,17 +27,63 @@ public class Auction {
         this.auctionCode = calculateAuctionCode();
         this.isActivated = true;
         this.cardName = cardName;
+        this.timeLeftAsSeconds = 60;
         calculateAuctionCode();
 
-            try {
-                FileWriter fileWriter = new FileWriter(
-                    addressOfStorage + "Auctions\\" + getAuctionCode() + ".json");
-                fileWriter.write(toGsonFormat(this));
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(0);
+        try {
+            FileWriter fileWriter = new FileWriter(
+                addressOfStorage + "Auctions\\" + getAuctionCode() + ".json");
+            fileWriter.write(toGsonFormat(this));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+
+        startTimeDecreasing(this);
+
+
+    }
+
+    private void startTimeDecreasing(Auction auction) {
+        new Thread(() -> {
+            for (int i = 0; i < 59; i++) {
+                try {
+                    Thread.sleep(1000);
+                    decreaseTimeByOne(auction);
+                    auction.timeLeftAsSeconds = auction.getTimeLeftAsSeconds() - 1;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            auction.isActivated = false;
+            decreaseTimeByOne(auction);
+        }).start();
+    }
+
+    private static void decreaseTimeByOne(Auction auction) {
+        try {
+            FileWriter fileWriter = new FileWriter(
+                addressOfStorage + "Auctions\\" + auction.getAuctionCode() + ".json");
+            fileWriter.write(toGsonFormatForSecond(auction));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    private static String toGsonFormatForSecond(Auction auction) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("auctionCode", auction.getAuctionCode());
+        jsonObject.addProperty("cardName", auction.getCardName());
+        jsonObject.addProperty("auctionCreatorName", auction.getAuctionCreatorName());
+        jsonObject.addProperty("bestBuyerName", auction.getBestBuyerName());
+        jsonObject.addProperty("price", auction.getPrice());
+        jsonObject.addProperty("isActivated", auction.getIsActivated());
+        jsonObject.addProperty("timeLeftAsSeconds", auction.getTimeLeftAsSeconds() - 1);
+        return jsonObject.toString();
     }
 
     private int calculateAuctionCode() {
@@ -64,6 +111,7 @@ public class Auction {
         jsonObject.addProperty("bestBuyerName", auction.getBestBuyerName());
         jsonObject.addProperty("price", auction.getPrice());
         jsonObject.addProperty("isActivated", auction.getIsActivated());
+        jsonObject.addProperty("timeLeftAsSeconds", auction.getTimeLeftAsSeconds());
         return jsonObject.toString();
     }
 
@@ -75,12 +123,16 @@ public class Auction {
         return this.auctionCreatorName;
     }
 
-    public String getBestBuyerName(){
+    public String getBestBuyerName() {
         return this.bestBuyerName;
     }
 
-    public int getPrice(){
+    public int getPrice() {
         return this.price;
+    }
+
+    public int getTimeLeftAsSeconds() {
+        return this.timeLeftAsSeconds;
     }
 
     public void setNewSuggestion(String username, int newPrice) {
@@ -89,11 +141,11 @@ public class Auction {
         //Change database
     }
 
-    public int getAuctionCode(){
+    public int getAuctionCode() {
         return this.auctionCode;
     }
 
-    private boolean getIsActivated(){
+    private boolean getIsActivated() {
         return this.isActivated;
     }
 
@@ -133,6 +185,8 @@ public class Auction {
                 answer += details.get("price").getAsString();
                 answer += ",";
                 answer += details.get("isActivated").getAsString();
+                answer += ",";
+                answer += details.get("timeLeftAsSeconds").getAsString();
                 answer += ",";
             }
         }
