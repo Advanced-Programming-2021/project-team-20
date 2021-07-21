@@ -61,18 +61,19 @@ public class AuctionPageController implements Initializable {
 
         String allPeople = whatServerGave;
         String[] allPeopleSplited = allPeople.split(",");
-        AuctionToShow[] auctionsToShows = new AuctionToShow[allPeopleSplited.length / 6];
+        AuctionToShow[] auctionsToShows = new AuctionToShow[allPeopleSplited.length / 7];
 
         for (int i = 0; i < auctionsToShows.length; i++) {
-            String auctionCode = allPeopleSplited[i * 6];
-            String cardName = allPeopleSplited[i * 6 + 1];
-            String auctionCreatorName = allPeopleSplited[i * 6 + 2];
-            String bestBuyerName = allPeopleSplited[i * 6 + 3];
-            String price = allPeopleSplited[i * 6 + 4];
-            String isActivated = allPeopleSplited[i * 6 + 5];
-            auctionsToShows[i] = new AuctionToShow(auctionCode, cardName, auctionCreatorName, bestBuyerName, price, isActivated);
-            System.out.println(auctionsToShows[i].getAuctionCode() + "==Code");
-            System.out.println(auctionsToShows[i].getCardName() + "==namecard");
+            String auctionCode = allPeopleSplited[i * 7];
+            String cardName = allPeopleSplited[i * 7 + 1];
+            String auctionCreatorName = allPeopleSplited[i * 7 + 2];
+            String bestBuyerName = allPeopleSplited[i * 7 + 3];
+            String price = allPeopleSplited[i * 7 + 4];
+            String isActivated = allPeopleSplited[i * 7 + 5];
+            String timeLeftAsSeconds = allPeopleSplited[i * 7 + 6];
+            auctionsToShows[i] = new AuctionToShow(auctionCode, cardName, auctionCreatorName, bestBuyerName, price, isActivated, timeLeftAsSeconds);
+//            System.out.println(auctionsToShows[i].getAuctionCode() + "==Code");
+//            System.out.println(auctionsToShows[i].getCardName() + "==namecard");
         }
 
 
@@ -90,26 +91,26 @@ public class AuctionPageController implements Initializable {
         TableColumn<AuctionToShow, String> cardNameColumn = new TableColumn<>("CARD NAME");
         cardNameColumn.setCellValueFactory(new PropertyValueFactory<>("cardName"));
         cardNameColumn.setStyle("-fx-alignment: CENTER;");
-        cardNameColumn.setMinWidth(140);
+        cardNameColumn.setMinWidth(80);
 
         ///2
         TableColumn<AuctionToShow, String> auctionCreatorNameColumn = new TableColumn<>("CREATOR NAME");
         auctionCreatorNameColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCreatorName"));
         auctionCreatorNameColumn.setStyle("-fx-alignment: CENTER;");
-        auctionCreatorNameColumn.setMinWidth(130);
+        auctionCreatorNameColumn.setMinWidth(80);
 
         ///3
         TableColumn<AuctionToShow, String> bestBuyerNameColumn = new TableColumn<>("BEST BUYER");
         bestBuyerNameColumn.setCellValueFactory(new PropertyValueFactory<>("bestBuyerName"));
         bestBuyerNameColumn.setStyle("-fx-alignment: CENTER;");
-        bestBuyerNameColumn.setMinWidth(130);
+        bestBuyerNameColumn.setMinWidth(80);
 
 
         ///4
         TableColumn<AuctionToShow, String> priceColumn = new TableColumn<>("PRICE");
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         priceColumn.setStyle("-fx-alignment: CENTER;");
-        priceColumn.setMinWidth(100);
+        priceColumn.setMinWidth(70);
 
 
         ///5
@@ -118,11 +119,18 @@ public class AuctionPageController implements Initializable {
         isActivatedColumn.setStyle("-fx-alignment: CENTER;");
         isActivatedColumn.setMinWidth(70);
 
+        ///6
+        TableColumn<AuctionToShow, String> timeLeftAsSecondsColumn = new TableColumn<>("LEFT TIME");
+        timeLeftAsSecondsColumn.setCellValueFactory(new PropertyValueFactory<>("timeLeftAsSeconds"));
+        timeLeftAsSecondsColumn.setStyle("-fx-alignment: CENTER;");
+        timeLeftAsSecondsColumn.setMinWidth(70);
+
+
         ObservableList<String> list = FXCollections.observableArrayList();
 
         tableView.setItems(data);
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableView.getColumns().addAll(auctionCodeColumn, cardNameColumn, auctionCreatorNameColumn, bestBuyerNameColumn, priceColumn, isActivatedColumn);
+        tableView.getColumns().addAll(auctionCodeColumn, cardNameColumn, auctionCreatorNameColumn, bestBuyerNameColumn, priceColumn, isActivatedColumn, timeLeftAsSecondsColumn);
 
     }
 

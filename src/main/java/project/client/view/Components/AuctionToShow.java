@@ -10,17 +10,22 @@ public class AuctionToShow {
     private SimpleStringProperty bestBuyerName = new SimpleStringProperty();
     private SimpleStringProperty price = new SimpleStringProperty();
     private SimpleStringProperty isActivated = new SimpleStringProperty();
+    private SimpleStringProperty timeLeftAsSeconds = new SimpleStringProperty();
 
 
-    public AuctionToShow(String auctionCode, String cardName, String auctionCreatorName, String bestBuyerName, String price, String isActivated) {
+    public AuctionToShow(String auctionCode, String cardName, String auctionCreatorName, String bestBuyerName, String price, String isActivated, String timeLeftAsSeconds) {
         setAuctionCode(auctionCode);
         setCardName(cardName);
         setAuctionCreatorName(auctionCreatorName);
         setBestBuyerName(bestBuyerName);
         setPrice(price);
         setIsActivated(isActivated);
+        setTmeLeftAsSeconds(timeLeftAsSeconds);
     }
 
+    private void setTmeLeftAsSeconds(String timeLeftAsSeconds) {
+        this.timeLeftAsSeconds.set(timeLeftAsSeconds);
+    }
 
 
     public void setIsActivated(String isActivated) {
@@ -70,6 +75,10 @@ public class AuctionToShow {
 
     public String getIsActivated(){
         return this.isActivated.get();
+    }
+
+    public String getTimeLeftAsSeconds() {
+        return this.timeLeftAsSeconds.get();
     }
 
 
