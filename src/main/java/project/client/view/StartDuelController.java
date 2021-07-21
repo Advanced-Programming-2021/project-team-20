@@ -53,6 +53,8 @@ public class StartDuelController implements Initializable {
     private ScrollPane messageHolderScrollPane;
     @FXML
     private TextArea textArea;
+    @FXML
+    private Label onlineUsersLabel;
     private int lastIdOfTweetReceived = 0;
     private int lastIdOfTweetFixItsImage = 0;
     private double YMoveOfScrollPane = 0;
@@ -72,6 +74,8 @@ public class StartDuelController implements Initializable {
         gameStateLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
         numberOfRoundsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
         playWithAnotherLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
+        onlineUsersLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        onlineUsersLabel.setTextFill(Color.BLUE);
         pane = new Pane();
         messageHolderScrollPane.setContent(pane);
         refreshTweets();
@@ -200,6 +204,7 @@ public class StartDuelController implements Initializable {
             int tweetId = deletedTweets.get(i).getAsInt();
             deleteTweet(tweetId);
         }
+        onlineUsersLabel.setText("Online Users: " + details.get("onlineUsers").getAsString());
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();
 
@@ -278,7 +283,7 @@ public class StartDuelController implements Initializable {
                 packageForShowTweets.get(i).getUserImageCircle().setOpacity(1);
             }
         }
-        packageForShowTweets.get(packageForShowTweets.size() - 1 ).getUserImageCircle().setOpacity(1);
+        packageForShowTweets.get(packageForShowTweets.size() - 1).getUserImageCircle().setOpacity(1);
         lastIdOfTweetFixItsImage = packageForShowTweets.size() - 1;
     }
 

@@ -1,6 +1,7 @@
 package project.client.view;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -54,7 +55,7 @@ public class LoginController implements Initializable {
             usernameField.setText("");
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatLogin(usernameField.getText(),
-                passwordField.getText());
+            passwordField.getText());
         String result = (String) ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeLogin(result);
         if (deserializeResult.get("type").equals("Error")) {
@@ -78,22 +79,24 @@ public class LoginController implements Initializable {
 
     public void signUpUser() {
         if (usernameFieldForRegister.getText().equals("") || nickNameFieldForRegister.getText().equals("")
-                || passwordFieldfORegister.getText().equals("")) {
+            || passwordFieldfORegister.getText().equals("")) {
             showAlert("FILL FIELDS", "ERROR");
             return;
         }
         String data = ToGsonFormatToSendDataToServer.toGsonFormatRegister(usernameFieldForRegister.getText(),
-                nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
+            nickNameFieldForRegister.getText(), passwordFieldfORegister.getText());
         String result = (String) ServerConnection.sendDataToServerAndReceiveResult(data);
         HashMap<String, String> deserializeResult = DeserializeInformationFromServer.deserializeRegister(result);
         if (deserializeResult.get(DeserializeInformationFromServer.getType())
-                .equals(DeserializeInformationFromServer.getError())) {
+            .equals(DeserializeInformationFromServer.getError())) {
             showAlert(deserializeResult.get(DeserializeInformationFromServer.getMessage()),
-                    DeserializeInformationFromServer.getError());
+                DeserializeInformationFromServer.getError());
         } else {
             token = deserializeResult.get("token");
+            createUser(deserializeResult);
             CustomDialog customDialog = new CustomDialog(DeserializeInformationFromServer.getSuccess(),
-                    deserializeResult.get(DeserializeInformationFromServer.getMessage()), "mainMenu");
+                deserializeResult.get(DeserializeInformationFromServer.getMessage()), "mainMenu");
+
             customDialog.openDialog();
             // onlineUser = new User(usernameFieldForRegister.getText(),
             // nickNameFieldForRegister.getText(),
@@ -106,13 +109,17 @@ public class LoginController implements Initializable {
         nickNameFieldForRegister.setText("");
     }
 
-    private Image createImageAlaki() {
+    private Image createImage(String path) {
         InputStream stream = null;
         try {
-            stream = new FileInputStream("src\\main\\resources\\project\\images\\userLabel.jpg");
+            stream = new FileInputStream(path);
             return new Image(stream);
         } catch (Exception e) {
-            System.out.println("exception in createImageAlaki");
+            try {
+                stream = new FileInputStream("src\\main\\resources\\project\\images\\userLabel.jpg");
+                return new Image(stream);
+            } catch (FileNotFoundException fileNotFoundException) {
+            }
         }
         return null;
     }
@@ -124,10 +131,10 @@ public class LoginController implements Initializable {
         if (jsonElement.isJsonObject()) {
             JsonObject detailes = jsonElement.getAsJsonObject();
             user = new User(detailes.get("name").getAsString(), detailes.get("nickname").getAsString(),
-                    detailes.get("password").getAsString(), "");
+                detailes.get("password").getAsString(), "");
             user.setMoney(detailes.get("money").getAsInt());
             user.setScore(detailes.get("score").getAsInt());
-            user.setImage(createImageAlaki());
+            user.setImage(createImage(detailes.get("imagePath").getAsString()));
         }
 
         jsonElement = jsonParser.parse(deserializeResult.get("wholeDeck"));

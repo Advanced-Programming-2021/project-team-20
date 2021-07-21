@@ -373,6 +373,10 @@ public class ServerController {
                 return Profile.changePassword(details);
             case "changeNickName":
                 return Profile.changeNickname(details);
+            case "changeImage":
+                return Profile.changeImage(details);
+            case "getImage":
+                return Profile.getImagePath(details);
             case "requestDuel":
                 return DuelStarter.requestGame(details);
             case "getStatusAfterRequestDuel":

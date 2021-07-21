@@ -157,7 +157,7 @@ public class ChangeCardsBetweenTwoRounds {
         ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager.getChangeCardsBetweenTwoRoundsByIndex(token);
 
         if (isConfirmedChanges) {
-            return changeCardsBetweenTwoRounds.ConfirmChanges(token);
+            return changeCardsBetweenTwoRounds.confirmChanges(token);
         }
         if (changeCardsBetweenTwoRounds.addOrRemoveCardFromMainOrSideDeck(cardName, isAddCard, isMainDeck, token)) {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Card Moved Successfully!");
@@ -165,7 +165,7 @@ public class ChangeCardsBetweenTwoRounds {
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Card Does Not Exit!");
     }
 
-    public String ConfirmChanges(String token) {
+    public String confirmChanges(String token) {
 
         if (token.equals(allyPlayerToken)) {
             isAllyPlayerConfirmChanges = true;

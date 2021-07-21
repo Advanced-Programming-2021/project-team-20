@@ -275,7 +275,7 @@ public class ActivateTrapConductor {
         } else {
             numberOfCardsInGraveyard = duelBoard.getAllyCardsInGraveyard().size();
         }
-        GameManager.getDuelControllerByIndex(token).increaseLifePoints(300*numberOfCardsInGraveyard, 3-turn, token);
+        GameManager.getDuelControllerByIndex(token).increaseLifePoints((-300) * numberOfCardsInGraveyard, 3 - turn, token);
     }
 
     private static void gainHPEqualToMonsterAttack(String token, Action uninterruptedAction, Action thisUninterruptedAction) {
@@ -470,7 +470,7 @@ public class ActivateTrapConductor {
             phaseController.setPhaseInGame(PhaseInGame.OPPONENT_MAIN_PHASE_2);
         }
         int actionTurn = thisUninterruptedAction.getActionTurn();
-        GameManager.getDuelControllerByIndex(token).addStringToWhatUsersSay("*user" + (3-actionTurn) + ": next phase*", token);
+        GameManager.getDuelControllerByIndex(token).addStringToWhatUsersSay("*user" + (3 - actionTurn) + ": next phase*", token);
     }
 
     public static void discardCard(String token, int numberInListOfActions) {

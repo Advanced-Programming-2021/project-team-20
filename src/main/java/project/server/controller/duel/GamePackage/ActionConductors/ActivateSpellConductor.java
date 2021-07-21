@@ -276,6 +276,7 @@ public class ActivateSpellConductor {
             cardLocation = new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, i + 1);
             card = duelBoard.getCardByCardLocation(cardLocation);
             if (card != null) {
+                System.out.println("card name in ally size "+i+" is "+card.getCardName());
                 SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, token);
             }
         }
@@ -284,6 +285,7 @@ public class ActivateSpellConductor {
             cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, i + 1);
             card = duelBoard.getCardByCardLocation(cardLocation);
             if (card != null) {
+                System.out.println("card name in opponent size "+i+" is "+card.getCardName());
                 SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, token);
             }
         }

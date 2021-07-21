@@ -1,11 +1,14 @@
 package project.server.controller.non_duel.profile;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
 
+import javafx.scene.image.Image;
 import project.model.User;
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformationToClient;
@@ -34,12 +37,12 @@ public class Profile {
         for (int i = 0; i < allUsers.size(); i++) {
             if (allUsers.get(i).getNickname().equals(newNickName)) {
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
-                        "NEW NICKNAME IS REPEATED");
+                    "NEW NICKNAME IS REPEATED");
             }
         }
         user.setNickname(newNickName);
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
-                "NICKNAME CHANGED SUCCESSFULLY!");
+            "NICKNAME CHANGED SUCCESSFULLY!");
     }
 
     public static String changePassword(JsonObject details) {
@@ -62,7 +65,7 @@ public class Profile {
 
         if (!currentPassword.equals(user.getPassword())) {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error",
-                    "CURRENT PASSWORD IS WRONG");
+                "CURRENT PASSWORD IS WRONG");
         }
 
         if (newPassword.equals(currentPassword)) {
@@ -71,18 +74,33 @@ public class Profile {
 
         user.setPassword(newPassword);
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful",
-                "PASSWORD CHANGED SUCCESSFULLY!");
+            "PASSWORD CHANGED SUCCESSFULLY!");
     }
 
-    public void changeImage(String imagePath) {
-        // InputStream stream = null;
-        // try {
-        // stream = new FileInputStream(imagePath);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // LoginController.getOnlineUser().setImage(new Image(stream));
-        // Storage.saveNewImageOfUsers(LoginController.getOnlineUser() ,imagePath);
+    public static String changeImage(JsonObject details) {
+        String imagePath = "";
+        String token = "";
+        try {
+            token = details.get("token").getAsString();
+            imagePath = details.get("imagePath").getAsString();
+        } catch (Exception e) {
+            return ServerController.getBadRequestFormat();
+        }
+        User user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ServerController.getConnectionDisconnected();
+        }
+
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(imagePath);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Storage.saveNewImageOfUsers(user, imagePath);
+        user.setImage(new Image(stream));
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Image Changed Successfully!");
     }
 
     public static String getInformationOfUser(JsonObject details) {
@@ -105,5 +123,16 @@ public class Profile {
             return ServerController.getConnectionDisconnected();
         }
         return ToGsonFormatForSendInformationToClient.toGsonFormatForGetInformationOfProfile(user);
+    }
+
+    public static String getImagePath(JsonObject details) {
+        String userName = "";
+        try {
+          userName = details.get("userName").getAsString();
+        } catch (Exception e) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForGetImagePath("src\\main\\resources\\project\\images\\userLabel.jpg");
+        }
+        User user = Storage.getUserByName(userName);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForGetImagePath(user.getImagePath());
     }
 }
