@@ -77,7 +77,7 @@ public class GameManager {
         uninterruptedActionsHashMap.put(doubleToken, new ArrayList<>());
         changeCardsBetweenTwoRoundsHashMap.put(doubleToken, new ChangeCardsBetweenTwoRounds(firstUserToken, firstPlayerActiveDeck, secondUserToken, secondPlayerActiveDeck, secondPlayerUsername.equals("AI")));
         // setTurnForGameHashMap.put(doubleToken, new SetTurnForGame());
-       aiHashMap.put(doubleToken, new AI(secondUserToken));
+        aiHashMap.put(doubleToken, new AI(secondUserToken));
 
     }
 
@@ -109,6 +109,42 @@ public class GameManager {
         aiHashMap.remove(token);
     }
 
+    public static boolean shouldEndGameBeCalled = false;
+    public static int timesInput = 0;
+
+    public static void clearNecessaryObjects(String token) {
+        timesInput++;
+        if (timesInput >= 2) {
+            timesInput = 0;
+            if (shouldEndGameBeCalled) {
+                if (DoubleToken.getDoubleTokenByOneToken(token) != null) {
+                    if (DuelStarter.getGameManager().superAlmightyChangesStringHashMap.containsKey(DoubleToken.getDoubleTokenByOneToken(token))) {
+                        DuelStarter.getGameManager().superAlmightyChangesStringHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+                        DuelStarter.getGameManager().availableCardLocationForUseForClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+                        DuelStarter.getGameManager().changesInLifePointsToBeGivenToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+                        DuelStarter.getGameManager().whatUsersSayHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+                        DuelStarter.getGameManager().wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+                        DoubleToken.deleteSuchExistence(DoubleToken.getDoubleTokenByOneToken(token));
+                    }
+                }
+            } else {
+                System.out.println("END OF GAME CALLED");
+                if (DoubleToken.getDoubleTokenByOneToken(token) != null) {
+                    System.out.println("UN NULL");
+                    if (DuelStarter.getGameManager().superAlmightyChangesStringHashMap.containsKey(DoubleToken.getDoubleTokenByOneToken(token))) {
+                        System.out.println("UNNULL");
+                        DuelStarter.getGameManager().superAlmightyChangesStringHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+                        DuelStarter.getGameManager().availableCardLocationForUseForClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+                        DuelStarter.getGameManager().changesInLifePointsToBeGivenToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+                        DuelStarter.getGameManager().whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+                        DuelStarter.getGameManager().wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+                        DoubleToken.getDoubleTokenByOneToken(token).clearYourselfUp();
+                    }
+                }
+            }
+            shouldEndGameBeCalled = false;
+        }
+    }
 
     public static DuelController getDuelControllerByIndex(String token) {
         return duelControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
@@ -231,18 +267,19 @@ public class GameManager {
         getUninterruptedActionsByIndex(token).clear();
         getChangeCardsBetweenTwoRoundsByIndex(token).resetFieldsAfterOneRoundOfDuel();
         //setTurnForGames.add(new SetTurnForGame());
+
     }
 
 
-    private HashMap<DoubleToken, String> superAlmightyChangesStringHashMap = new HashMap<>();
-    private HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
-    private HashMap<DoubleToken, String> changesInLifePointsToBeGivenToClientHashMap = new HashMap<>();
+    public HashMap<DoubleToken, String> superAlmightyChangesStringHashMap = new HashMap<>();
+    public HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
+    public HashMap<DoubleToken, String> changesInLifePointsToBeGivenToClientHashMap = new HashMap<>();
     // private String superAlmightyChangesString = "";
     // private String availableCardLocationForUseForClient = "";
     // private String changesInLifePointsToBeGivenToClient = "";
-    private String whatUsersSay = "";
-    private HashMap<DoubleToken, String> whatUsersSayHashMap = new HashMap<>();
-    private HashMap<DoubleToken, String> wholeReportToClientHashMap = new HashMap<>();
+    public String whatUsersSay = "";
+    public HashMap<DoubleToken, String> whatUsersSayHashMap = new HashMap<>();
+    public HashMap<DoubleToken, String> wholeReportToClientHashMap = new HashMap<>();
 
 
     public void addStringToChangesInLifePointsToBeGivenToClient(String string, String token) {
@@ -476,5 +513,16 @@ class DoubleToken {
             }
         }
         return null;
+    }
+
+    public void clearYourselfUp() {
+        this.firstLinesRead = 0;
+        this.secondLinesRead = 0;
+        this.firstLinesReadFromWholeReportToClient = 0;
+        this.secondLinesReadFromWholeReportToClient = 0;
+    }
+
+    public static void deleteSuchExistence(DoubleToken doubleToken) {
+        doubleTokens.remove(doubleToken);
     }
 }

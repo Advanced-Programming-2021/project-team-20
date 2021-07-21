@@ -1255,11 +1255,13 @@ public class DuelView {
 
     public static void endOneRoundOfDuel(String result) {
         CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, true);
+        ServerConnection.setWhatToWrite("game is over.");
         customDialog.openDialog();
     }
 
     public static void endGame(String result) {
         CustomDialog customDialog = new CustomDialog("CONFIRMATION", result, false);
+        ServerConnection.setWhatToWrite("game is over.");
         customDialog.openDialog();
     }
 

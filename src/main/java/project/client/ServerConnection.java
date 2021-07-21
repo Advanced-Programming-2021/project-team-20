@@ -3,6 +3,7 @@ package project.client;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import project.client.view.AuctionPageController;
+import project.client.view.CustomDialog;
 import project.client.view.ScoreboardController;
 import project.client.view.pooyaviewpackage.DuelView;
 
@@ -171,7 +172,7 @@ public class ServerConnection {
 
     private static String whatToWrite = "Is it my turn?";
 
-    private static synchronized void setWhatToWrite(String string) {
+    public static synchronized void setWhatToWrite(String string) {
         whatToWrite = string;
     }
 

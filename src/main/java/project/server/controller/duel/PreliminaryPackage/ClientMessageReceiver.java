@@ -30,6 +30,11 @@ public class ClientMessageReceiver {
         String integerString = details.get("integerString").getAsString();
         String outputFromServer = "";
         System.out.println(DuelStarter.getGameManager().getWholeReportToClient(token));
+        if (request.startsWith("game is over")) {
+            indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), "call your advance");
+            GameManager.clearNecessaryObjects(token);
+            return "you haven't kjnjhbmnhb";
+        }
         if (token.startsWith("nothin")) {
             return "you haven't logged in";
         }

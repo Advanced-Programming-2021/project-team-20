@@ -586,6 +586,7 @@ public class DuelController {
         winnerUser.setScore(numberOfRounds * (1000) + winnerUser.getScore());
         loserUser.setMoney(numberOfRounds * (100) + loserUser.getMoney());
         GameManager.removeClassesWhenGameIsOver(token);
+        GameManager.shouldEndGameBeCalled = true;
         isGameOver = true;
         String output = winnerUser.getName() + " won the whole match with score: " + numberOfRounds * 1000;
         DuelStarter.getGameManager().addStringToWholeReportToClient(output, token);
@@ -604,6 +605,7 @@ public class DuelController {
         this.turn = 1;
         fakeTurn = 1;
         currentRound += 1;
+        GameManager.shouldEndGameBeCalled = false;
         GameManager.clearAllVariablesOfThisIndex(token);
         String output = winnerUser.getName() + " won the game and the score is: 1000";
         DuelStarter.getGameManager().addStringToWholeReportToClient(output, token);

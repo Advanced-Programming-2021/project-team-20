@@ -168,12 +168,12 @@ public class ServerController {
         throws IOException {
         while (true) {
             String input = dataInputStream.readUTF();
-//            System.out.println("=============================================");
-//            System.out.println("message from client: " + input);
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
             String result = processDuel(input);
             //  if (result.equals(""))
             //      break;
-//            System.out.println("message send to client: " + result);
+            System.out.println("message send to client: " + result);
             dataOutputStream.writeUTF(result);
             dataOutputStream.flush();
         }

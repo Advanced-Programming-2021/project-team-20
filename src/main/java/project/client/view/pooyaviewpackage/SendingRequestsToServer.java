@@ -29,7 +29,10 @@ public class SendingRequestsToServer {
     }
 
     public void conductSwitchingTurnsForSummoningBeingCarefulForAI(String output, String typeOfErrorMessage) {
-        if (output.startsWith("please wait until")) {
+        if (output.contains("won the")){
+            DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+        }
+        else if (output.startsWith("please wait until")) {
             Boolean bool = Boolean.parseBoolean(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).isAIPlaying()"));
             if (bool) {
                 DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -41,7 +44,7 @@ public class SendingRequestsToServer {
                 alert.showAndWait();
             }
         } else {
-            if (output.contains("successfully")) {
+            if (output.contains("successfully") || output.contains("won the")) {
                 DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
             } else if (!output.contains("successfully") && typeOfErrorMessage.contains("ummon") ||
                 typeOfErrorMessage.contains("irect") && (output.contains("this card already attack") || output.contains("you can't")) ||
