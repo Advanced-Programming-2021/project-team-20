@@ -344,7 +344,7 @@ public class Shop {
             return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "YOU DON'T HAVE THIS CARD IN YOUR USELESS CARDS");
         }
 
-        Auction auction = new Auction(username, initialPrice);
+        Auction auction = new Auction(username, initialPrice, cardName);
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "SUCCESSFUL");
     }
 }
