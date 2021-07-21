@@ -1,9 +1,5 @@
 package project.client.view;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,6 +22,10 @@ import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.Components.PackageForShowTweet;
 import project.model.Deck;
 import project.model.User;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 public class StartDuelController implements Initializable {
 

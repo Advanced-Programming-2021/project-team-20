@@ -46,6 +46,58 @@ public class Auction {
 
     }
 
+    public static String getCardNameByAuctionCode(int parseInt) {
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(addressOfStorage + "Auctions\\" + parseInt + ".json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Scanner myReader = new Scanner(fileReader);
+        String informationOfUser = myReader.nextLine();
+        JsonParser parser = new JsonParser();
+        JsonElement rootNode = parser.parse(informationOfUser);
+        myReader.close();
+        try {
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (rootNode.isJsonObject()) {
+            JsonObject details = rootNode.getAsJsonObject();
+            return details.get("cardName").getAsString();
+        }
+        return null;
+    }
+
+    public static String getBuyerNameByAuctionCode(String auctionCode) {
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(addressOfStorage + "Auctions\\" + auctionCode + ".json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Scanner myReader = new Scanner(fileReader);
+        String informationOfUser = myReader.nextLine();
+        JsonParser parser = new JsonParser();
+        JsonElement rootNode = parser.parse(informationOfUser);
+        myReader.close();
+        try {
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (rootNode.isJsonObject()) {
+            JsonObject details = rootNode.getAsJsonObject();
+            return details.get("bestBuyerName").getAsString();
+        }
+        return null;
+    }
+
     private void startTimeDecreasing(Auction auction) {
         new Thread(() -> {
             for (int i = 0; i < 59; i++) {

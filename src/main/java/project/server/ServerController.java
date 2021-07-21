@@ -353,6 +353,8 @@ public class ServerController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            case "getInformationOfAuction":
+                return Shop.getAuctionInfo(details);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":
