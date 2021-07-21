@@ -169,4 +169,21 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("auctionCode", auctionCode);
         return jsonObject.toString();
     }
+
+    public static String sendBuyRequest(String token, String auctionCode, int price) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "sendBuyRequestForAuction");
+        jsonObject.addProperty("token", token);
+        jsonObject.addProperty("auctionCode", auctionCode);
+        jsonObject.addProperty("price", price);
+        return jsonObject.toString();
+    }
+
+    public static String getInformationOfAuctionAsBuyer(String auctionCode) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "getInformationOfAuctionAsBuyer");
+        jsonObject.addProperty("token", LoginController.getToken());
+        jsonObject.addProperty("auctionCode", auctionCode);
+        return jsonObject.toString();
+    }
 }

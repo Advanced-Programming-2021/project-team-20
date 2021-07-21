@@ -355,6 +355,10 @@ public class ServerController {
                 }
             case "getInformationOfAuction":
                 return Shop.getAuctionInfo(details);
+            case "sendBuyRequestForAuction":
+                return Shop.buyRequestForAuction(details);
+            case "getInformationOfAuctionAsBuyer":
+                return Shop.getAuctionInfoForBuyer(details);
             case "deleteDeck":
                 return DeckCommands.deleteDeck(details);
             case "createDeck":

@@ -140,7 +140,40 @@ public class AuctionPageController implements Initializable {
     }
 
     public void bidPriceFunction(ActionEvent actionEvent) {
+        String suggestedPrice = priceTextField.getText();
+        String auctionCode = auctionCodeTextField.getText();
+        Pattern pattern = Pattern.compile("^\\d+$");
+        if (!suggestedPrice.isEmpty() && !auctionCode.isEmpty() && pattern.matcher(suggestedPrice).find()) {
+            int price = Integer.parseInt(suggestedPrice);
+            String token = LoginController.getToken();
+            String dataToSendToServer = ToGsonFormatToSendDataToServer.sendBuyRequest(token, auctionCode, price);
+            String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
+            HashMap<String, String> desreializedAnswer = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfServer);
 
+            String type = desreializedAnswer.get("type");
+            String message = desreializedAnswer.get("message");
+            if (type.equals("SUCCESSFUL")) {
+                LoginController.getOnlineUser().setMoney(LoginController.getOnlineUser().getMoney() - CardsStorage.getCardByName(message).getCardPrice());
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(61000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String dataToSend = ToGsonFormatToSendDataToServer.getInformationOfAuctionAsBuyer(auctionCode);
+                    String answer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+                    if (answer.equals("SUCCESSFUL")) {
+                        System.out.println("OK for auction successful!!");
+                        LoginController.getOnlineUser().addCardToAllUselessCards(message);
+                    }
+                    else {
+                        LoginController.getOnlineUser().setMoney(LoginController.getOnlineUser().getMoney() + CardsStorage.getCardByName(message).getCardPrice());
+                    }
+                }).start();
+            }
+            CustomDialog customDialog = new CustomDialog(type, message);
+            customDialog.openDialog();
+        }
     }
 
 

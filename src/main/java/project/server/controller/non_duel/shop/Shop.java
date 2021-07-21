@@ -376,4 +376,71 @@ public class Shop {
         buyerUser.addCardToAllUselessCards(cardName);
         return "SUCCESSFUL";
     }
+
+    public static String buyRequestForAuction(JsonObject details) {
+        String auctionCode = "";
+        String token = "";
+        String price = "";
+        try {
+            token = details.get("token").getAsString();
+            auctionCode = details.get("auctionCode").getAsString();
+            price = details.get("price").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID TOKEN");
+        }
+        int requestedAuctionCode = Integer.parseInt(auctionCode);
+        int numberOfAuctions = Auction.getNumberOfAllAuctons();
+        if (requestedAuctionCode > numberOfAuctions) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID AUCTION CODE");
+        }
+        String isActive = Auction.getIsActivated(auctionCode);
+        boolean isActivated = Boolean.parseBoolean(isActive);
+        if (!isActivated) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "EXPIRED");
+        }
+        int currentPrice = Auction.getPriceByCode(auctionCode);
+        int suggestedPrice = Integer.parseInt(price);
+        System.out.println(currentPrice + "c");
+        System.out.println(suggestedPrice + "s");
+        if (currentPrice > suggestedPrice) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID PRICE");
+        }
+        int userMoney = user.getMoney();
+        if (userMoney < suggestedPrice) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "NOT ENOUGH MONEY");
+        }
+        String cardName = Auction.getCardNameByAuctionCode(Integer.parseInt(auctionCode));
+        Card card = Storage.getCardByName(cardName);
+        user.setMoney(user.getMoney() - card.getCardPrice());
+        Auction.changeAuctionBuyerAndPrice(auctionCode, user.getName(), suggestedPrice);
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", cardName);
+    }
+
+    public static String getAuctionInfoForBuyer(JsonObject details) {
+        String auctionCode = "";
+        String token = "";
+        try {
+            token = details.get("token").getAsString();
+            auctionCode = details.get("auctionCode").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID TOKEN");
+        }
+        String cardName = Auction.getCardNameByAuctionCode(Integer.parseInt(auctionCode));
+        String buyerName = Auction.getBuyerNameByAuctionCode(auctionCode);
+        if (cardName == null) {
+            return ServerController.getBadRequestFormat();
+        }
+        if (!buyerName.equals(user.getName())) {
+            return "FAILED";
+        }
+        return "SUCCESSFUL";
+    }
 }
