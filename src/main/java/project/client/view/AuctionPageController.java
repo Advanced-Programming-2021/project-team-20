@@ -65,14 +65,14 @@ public class AuctionPageController implements Initializable {
 
         for (int i = 0; i < auctionsToShows.length; i++) {
             String auctionCode = allPeopleSplited[i * 6];
-            System.out.println("code:" + auctionCode);
             String cardName = allPeopleSplited[i * 6 + 1];
-            System.out.println("name:" + cardName);
             String auctionCreatorName = allPeopleSplited[i * 6 + 2];
             String bestBuyerName = allPeopleSplited[i * 6 + 3];
             String price = allPeopleSplited[i * 6 + 4];
             String isActivated = allPeopleSplited[i * 6 + 5];
             auctionsToShows[i] = new AuctionToShow(auctionCode, cardName, auctionCreatorName, bestBuyerName, price, isActivated);
+            System.out.println(auctionsToShows[i].getAuctionCode() + "==Code");
+            System.out.println(auctionsToShows[i].getCardName() + "==namecard");
         }
 
 
@@ -83,26 +83,26 @@ public class AuctionPageController implements Initializable {
         TableColumn<AuctionToShow, String> auctionCodeColumn = new TableColumn<>("CODE");
         auctionCodeColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCode"));
         auctionCodeColumn.setStyle("-fx-alignment: CENTER;");
-        auctionCodeColumn.setMinWidth(97);
+        auctionCodeColumn.setMinWidth(80);
 
 
         ///1.5
         TableColumn<AuctionToShow, String> cardNameColumn = new TableColumn<>("CARD NAME");
-        auctionCodeColumn.setCellValueFactory(new PropertyValueFactory<>("cardName"));
-        auctionCodeColumn.setStyle("-fx-alignment: CENTER;");
-        auctionCodeColumn.setMinWidth(97);
+        cardNameColumn.setCellValueFactory(new PropertyValueFactory<>("cardName"));
+        cardNameColumn.setStyle("-fx-alignment: CENTER;");
+        cardNameColumn.setMinWidth(140);
 
         ///2
         TableColumn<AuctionToShow, String> auctionCreatorNameColumn = new TableColumn<>("CREATOR NAME");
         auctionCreatorNameColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCreatorName"));
         auctionCreatorNameColumn.setStyle("-fx-alignment: CENTER;");
-        auctionCreatorNameColumn.setMinWidth(100);
+        auctionCreatorNameColumn.setMinWidth(130);
 
         ///3
-        TableColumn<AuctionToShow, String> bestBuyerNameColumn = new TableColumn<>("BEST BUYER NAME");
+        TableColumn<AuctionToShow, String> bestBuyerNameColumn = new TableColumn<>("BEST BUYER");
         bestBuyerNameColumn.setCellValueFactory(new PropertyValueFactory<>("bestBuyerName"));
         bestBuyerNameColumn.setStyle("-fx-alignment: CENTER;");
-        bestBuyerNameColumn.setMinWidth(100);
+        bestBuyerNameColumn.setMinWidth(130);
 
 
         ///4
@@ -116,7 +116,7 @@ public class AuctionPageController implements Initializable {
         TableColumn<AuctionToShow, String> isActivatedColumn = new TableColumn<>("IS ACTIVATED");
         isActivatedColumn.setCellValueFactory(new PropertyValueFactory<>("isActivated"));
         isActivatedColumn.setStyle("-fx-alignment: CENTER;");
-        isActivatedColumn.setMinWidth(100);
+        isActivatedColumn.setMinWidth(70);
 
         ObservableList<String> list = FXCollections.observableArrayList();
 

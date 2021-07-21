@@ -47,9 +47,6 @@ public class AuctionToShow {
         this.auctionCode.set(auctionCode);
     }
 
-    public String getAuctionCreatorName(){
-        return this.auctionCreatorName.get();
-    }
 
     public String getAuctionCode(){
         return this.auctionCode.get();
@@ -57,6 +54,10 @@ public class AuctionToShow {
 
     public String getCardName() {
         return this.cardName.get();
+    }
+
+    public String getAuctionCreatorName(){
+        return this.auctionCreatorName.get();
     }
 
     public String getBestBuyerName(){

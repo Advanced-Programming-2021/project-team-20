@@ -156,6 +156,7 @@ public class Shop {
         }
         user.setMoney(userAmount - cardAmount);
         user.addCardToAllUselessCards(cardName);
+        Storage.changeShopCardInformation(card, card.getIsShopAllowed(), card.getNumberOfCardsInShop() - 1);
         card.decreaseNumberOfCardsInShop();
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", String.valueOf(user.getMoney()));
     }
