@@ -43,7 +43,7 @@
       </ImageView>
       <Button fx:id="backbtn" layoutX="491.0" layoutY="638.0" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
       <Button fx:id="previousCardsbtn" layoutX="604.0" layoutY="470.0" mnemonicParsing="false" onAction="#previousPage" text="Previous" />
-      <Button fx:id="buybtn" alignment="CENTER" layoutX="762.0" layoutY="530.0" mnemonicParsing="false" onAction="#buyCard" text="Buy" textAlignment="CENTER">
+      <Button fx:id="buybtn" alignment="CENTER" layoutX="699.0" layoutY="530.0" mnemonicParsing="false" onAction="#buyCard" text="Buy" textAlignment="CENTER">
          <font>
             <Font name="Old English Text MT" size="28.0" />
          </font></Button>
@@ -94,11 +94,6 @@
       <Label fx:id="numberOfUselessCardsLabel" alignment="CENTER" layoutX="280.0" layoutY="290.0" prefHeight="42.0" prefWidth="227.0" />
       <Label fx:id="numbserOfShoppingCardsLabel" alignment="CENTER" layoutX="281.0" layoutY="232.0" prefHeight="47.0" prefWidth="227.0" />
       <Label fx:id="userMoneyLabel" alignment="CENTER" layoutX="281.0" layoutY="184.0" prefHeight="47.0" prefWidth="227.0" />
-      <Button fx:id="sellbtn" alignment="CENTER" layoutX="656.0" layoutY="528.0" mnemonicParsing="false" text="Sell" textAlignment="CENTER">
-         <font>
-            <Font name="Old English Text MT" size="28.0" />
-         </font>
-      </Button>
       <Button fx:id="adminPanel" layoutX="669.0" layoutY="125.0" mnemonicParsing="false" onAction="#gotoAdminPanel" text="Admin Panel" />
       <Label fx:id="numberOfCardsInShop" alignment="CENTER" layoutX="275.0" layoutY="139.0" prefHeight="34.0" prefWidth="239.0" text="Label" />
       <Label fx:id="allowedOrNotLabel" alignment="CENTER" layoutX="280.0" layoutY="95.0" prefHeight="34.0" prefWidth="227.0" text="Label" />
