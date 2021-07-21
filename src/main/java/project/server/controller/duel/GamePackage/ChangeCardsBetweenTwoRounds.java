@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import project.model.User;
 import project.server.ServerController;
 import project.server.ToGsonFormatForSendInformationToClient;
+import project.server.controller.duel.PreliminaryPackage.DuelStarter;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.Deck;
 
@@ -22,8 +23,9 @@ public class ChangeCardsBetweenTwoRounds {
     private boolean isAllyPlayerChangingHisDeck;
     private boolean isOpponentPlayerChangingHisDeck;
     private boolean isPlayingWithComputer;
+    private boolean isInitializedCardsInDuelBoard = false;
 
-    public ChangeCardsBetweenTwoRounds(String allyPlayerToken, Deck allyPlayerDeck, String opponentPlayerToken, Deck opponentPlayerDeck,boolean isPlayingWithComputer) {
+    public ChangeCardsBetweenTwoRounds(String allyPlayerToken, Deck allyPlayerDeck, String opponentPlayerToken, Deck opponentPlayerDeck, boolean isPlayingWithComputer) {
         this.allyPlayerToken = allyPlayerToken;
         this.allyPlayerDeck = allyPlayerDeck;
         this.opponentPlayerToken = opponentPlayerToken;
@@ -164,6 +166,7 @@ public class ChangeCardsBetweenTwoRounds {
     }
 
     public String ConfirmChanges(String token) {
+
         if (token.equals(allyPlayerToken)) {
             isAllyPlayerConfirmChanges = true;
         } else {
@@ -172,6 +175,7 @@ public class ChangeCardsBetweenTwoRounds {
 
         for (int i = 0; i < 30; i++) {
             if (isOpponentPlayerConfirmChanges && isAllyPlayerConfirmChanges) {
+                initializeCardsInDuelBoard(token);
                 return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Successful", "Next Round Started Successfully!");
             }
             try {
@@ -188,6 +192,29 @@ public class ChangeCardsBetweenTwoRounds {
             }
         }
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("Error", "Game interrupted");
+    }
+
+    private synchronized void initializeCardsInDuelBoard(String token) {
+        if (!isInitializedCardsInDuelBoard) {
+            DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+            ChangeCardsBetweenTwoRounds changeCardsBetweenTwoRounds = GameManager
+                .getChangeCardsBetweenTwoRoundsByIndex(token);
+            Deck firstPlayerActiveDeck = changeCardsBetweenTwoRounds.getAllyPlayerDeck();
+            Deck secondPlayerActiveDeck = changeCardsBetweenTwoRounds.getOpponentPlayerDeck();
+            duelBoard.initializeCardsInDuelBoard(DuelStarter.getMainOrSideDeckCards(firstPlayerActiveDeck, true),
+                DuelStarter.getMainOrSideDeckCards(secondPlayerActiveDeck, true));
+            GameManager.getDuelControllerByIndex(token).setTurnSetedBetweenTwoPlayerWhenRoundBegin(true);
+            GameManager.getDuelControllerByIndex(token).startDuel(token);
+            isInitializedCardsInDuelBoard = true;
+        }
+    }
+
+    public void resetFieldsAfterOneRoundOfDuel() {
+        isInitializedCardsInDuelBoard = false;
+        isOpponentPlayerConfirmChanges = isPlayingWithComputer;
+        isAllyPlayerConfirmChanges = false;
+        isAllyPlayerChangingHisDeck = false;
+        isOpponentPlayerChangingHisDeck = false;
     }
 
     public Deck getAllyPlayerDeck() {

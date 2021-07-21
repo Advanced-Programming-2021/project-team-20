@@ -102,7 +102,6 @@ public class ChatRoomController implements Initializable {
         lastIdOfTweetReceived = jsonObject.get("id").getAsInt();
         PackageForShowTweet packageForShowTweet = new PackageForShowTweet(jsonObject.get("message").getAsString(), jsonObject.get("author").getAsString(), YMoveOfScrollPane, lastIdOfTweetReceived);
         pane.getChildren().add(packageForShowTweet);
-        System.out.println(lastIdOfTweetReceived);
         addMessageToPackageForShowTweet(packageForShowTweet, jsonObject.get("message").getAsString());
         YMoveOfScrollPane += 20;
         packageForShowTweets.add(packageForShowTweet);
@@ -161,7 +160,6 @@ public class ChatRoomController implements Initializable {
 
         packageForShowTweets.remove(deletedPackage);
         pane.getChildren().remove(deletedPackage);
-        System.out.println(deletedPackage.getBackGroundRectangle().getHeight() + "   " + pane.getPrefHeight() + "   " + YMoveOfScrollPane);
         YMoveOfScrollPane -= deletedPackage.getBackGroundRectangle().getHeight() + 10;
         pane.setPrefHeight(YMoveOfScrollPane);
         fixImageOfRepeatedTweetsWithTheSameAuthor();

@@ -229,7 +229,7 @@ public class GameManager {
         getPhaseControllerByIndex(token).clearAllVariablesOfThisClass();
         getActionsByIndex(token).clear();
         getUninterruptedActionsByIndex(token).clear();
-        //changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
+        getChangeCardsBetweenTwoRoundsByIndex(token).resetFieldsAfterOneRoundOfDuel();
         //setTurnForGames.add(new SetTurnForGame());
     }
 
