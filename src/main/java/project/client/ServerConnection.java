@@ -35,7 +35,8 @@ public class ServerConnection {
 
     public static void initializeNetwork() {
         try {
-            socket = new Socket("localhost", 12345);
+//            socket = new Socket("localhost", 12345);
+            socket = new Socket("2.tcp.ngrok.io", 19178);
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
             secondSocket = new Socket("localhost", 12346);

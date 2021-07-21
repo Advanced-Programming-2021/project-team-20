@@ -1,12 +1,14 @@
 package project.client.view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
+import project.client.view.Components.AuctionToShow;
 
 import java.io.IOException;
 import java.net.URL;
@@ -50,14 +52,78 @@ public class AuctionPageController implements Initializable {
 
     }
 
-//    public void refresh(ActionEvent actionEvent) {
-////        String dataToSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatRefreshAuction();
-////        String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
-////        System.out.println(answerOfServer);
-//    }
 
     public void refreshTable(String whatServerGave) {
         System.out.println(whatServerGave);
+
+
+        tableView.getColumns().clear();
+
+        String allPeople = whatServerGave;
+        String[] allPeopleSplited = allPeople.split(",");
+        AuctionToShow[] auctionsToShows = new AuctionToShow[allPeopleSplited.length / 6];
+
+        for (int i = 0; i < auctionsToShows.length; i++) {
+            String auctionCode = allPeopleSplited[i * 6];
+            String cardName = allPeopleSplited[i * 6 + 1];
+            String auctionCreatorName = allPeopleSplited[i * 6 + 2];
+            String bestBuyerName = allPeopleSplited[i * 6 + 3];
+            String price = allPeopleSplited[i * 6 + 4];
+            String isActivated = allPeopleSplited[i * 6 + 5];
+            auctionsToShows[i] = new AuctionToShow(auctionCode, cardName, auctionCreatorName, bestBuyerName, price, isActivated);
+            System.out.println(auctionsToShows[i].getAuctionCode() + "==Code");
+            System.out.println(auctionsToShows[i].getCardName() + "==namecard");
+        }
+
+
+        final ObservableList<AuctionToShow> data = FXCollections.observableArrayList(
+            auctionsToShows
+        );
+        ///1
+        TableColumn<AuctionToShow, String> auctionCodeColumn = new TableColumn<>("CODE");
+        auctionCodeColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCode"));
+        auctionCodeColumn.setStyle("-fx-alignment: CENTER;");
+        auctionCodeColumn.setMinWidth(80);
+
+
+        ///1.5
+        TableColumn<AuctionToShow, String> cardNameColumn = new TableColumn<>("CARD NAME");
+        cardNameColumn.setCellValueFactory(new PropertyValueFactory<>("cardName"));
+        cardNameColumn.setStyle("-fx-alignment: CENTER;");
+        cardNameColumn.setMinWidth(140);
+
+        ///2
+        TableColumn<AuctionToShow, String> auctionCreatorNameColumn = new TableColumn<>("CREATOR NAME");
+        auctionCreatorNameColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCreatorName"));
+        auctionCreatorNameColumn.setStyle("-fx-alignment: CENTER;");
+        auctionCreatorNameColumn.setMinWidth(130);
+
+        ///3
+        TableColumn<AuctionToShow, String> bestBuyerNameColumn = new TableColumn<>("BEST BUYER");
+        bestBuyerNameColumn.setCellValueFactory(new PropertyValueFactory<>("bestBuyerName"));
+        bestBuyerNameColumn.setStyle("-fx-alignment: CENTER;");
+        bestBuyerNameColumn.setMinWidth(130);
+
+
+        ///4
+        TableColumn<AuctionToShow, String> priceColumn = new TableColumn<>("PRICE");
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceColumn.setStyle("-fx-alignment: CENTER;");
+        priceColumn.setMinWidth(100);
+
+
+        ///5
+        TableColumn<AuctionToShow, String> isActivatedColumn = new TableColumn<>("IS ACTIVATED");
+        isActivatedColumn.setCellValueFactory(new PropertyValueFactory<>("isActivated"));
+        isActivatedColumn.setStyle("-fx-alignment: CENTER;");
+        isActivatedColumn.setMinWidth(70);
+
+        ObservableList<String> list = FXCollections.observableArrayList();
+
+        tableView.setItems(data);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableView.getColumns().addAll(auctionCodeColumn, cardNameColumn, auctionCreatorNameColumn, bestBuyerNameColumn, priceColumn, isActivatedColumn);
+
     }
 
     public void back(ActionEvent actionEvent) {

@@ -15,15 +15,17 @@ public class Auction {
     private String bestBuyerName;
     private int auctionCode;
     private boolean isActivated;
+    private String cardName;
 //    private static HashMap<String, Integer>
     private static String addressOfStorage = "Resourses\\Server\\";
 
-    public Auction(String auctionCreatorName, int initialPrice) {
+    public Auction(String auctionCreatorName, int initialPrice, String cardName) {
         this.auctionCreatorName = auctionCreatorName;
         this.price = initialPrice;
         this.bestBuyerName = "null";
         this.auctionCode = calculateAuctionCode();
         this.isActivated = true;
+        this.cardName = cardName;
         calculateAuctionCode();
 
             try {
@@ -40,7 +42,6 @@ public class Auction {
     private int calculateAuctionCode() {
         List<String> results = new ArrayList<String>();
         File[] files = new File("Resourses\\Server\\Auctions\\").listFiles();
-//If this pathname does not denote a directory, then listFiles() returns null.
 
         for (File file : files) {
             if (file.isFile()) {
@@ -58,11 +59,16 @@ public class Auction {
     private String toGsonFormat(Auction auction) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("auctionCode", auction.getAuctionCode());
+        jsonObject.addProperty("cardName", auction.getCardName());
         jsonObject.addProperty("auctionCreatorName", auction.getAuctionCreatorName());
         jsonObject.addProperty("bestBuyerName", auction.getBestBuyerName());
         jsonObject.addProperty("price", auction.getPrice());
         jsonObject.addProperty("isActivated", auction.getIsActivated());
         return jsonObject.toString();
+    }
+
+    private String getCardName() {
+        return this.cardName;
     }
 
     public String getAuctionCreatorName() {
@@ -117,6 +123,8 @@ public class Auction {
             if (rootNode.isJsonObject()) {
                 JsonObject details = rootNode.getAsJsonObject();
                 answer += details.get("auctionCode").getAsString();
+                answer += ",";
+                answer += details.get("cardName").getAsString();
                 answer += ",";
                 answer += details.get("auctionCreatorName").getAsString();
                 answer += ",";
