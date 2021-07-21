@@ -24,10 +24,72 @@ public class AuctionPageController implements Initializable {
     public TextField priceTextField;
     public TextField cardNameTextField;
     public TextField initialPriceTextField;
+    public static TableView staticTableView;
+    private static int i = 0;
+
+    public static TableColumn<AuctionToShow, String> auctionCodeColumn;
+    public static TableColumn<AuctionToShow, String> cardNameColumn;
+    public static TableColumn<AuctionToShow, String> auctionCreatorNameColumn;
+    public static TableColumn<AuctionToShow, String> bestBuyerNameColumn;
+    public static TableColumn<AuctionToShow, String> priceColumn;
+    public static TableColumn<AuctionToShow, String> isActivatedColumn;
+    public static TableColumn<AuctionToShow, String> timeLeftAsSecondsColumn;
+    static {
+        auctionCodeColumn = new TableColumn<>("CODE");
+        auctionCodeColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCode"));
+        auctionCodeColumn.setStyle("-fx-alignment: CENTER;");
+        auctionCodeColumn.setMinWidth(80);
+
+
+        ///1.5
+        cardNameColumn = new TableColumn<>("CARD NAME");
+        cardNameColumn.setCellValueFactory(new PropertyValueFactory<>("cardName"));
+        cardNameColumn.setStyle("-fx-alignment: CENTER;");
+        cardNameColumn.setMinWidth(80);
+
+        ///2
+        auctionCreatorNameColumn = new TableColumn<>("CREATOR NAME");
+        auctionCreatorNameColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCreatorName"));
+        auctionCreatorNameColumn.setStyle("-fx-alignment: CENTER;");
+        auctionCreatorNameColumn.setMinWidth(80);
+
+        ///3
+        bestBuyerNameColumn = new TableColumn<>("BEST BUYER");
+        bestBuyerNameColumn.setCellValueFactory(new PropertyValueFactory<>("bestBuyerName"));
+        bestBuyerNameColumn.setStyle("-fx-alignment: CENTER;");
+        bestBuyerNameColumn.setMinWidth(80);
+
+
+        ///4
+        priceColumn = new TableColumn<>("PRICE");
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceColumn.setStyle("-fx-alignment: CENTER;");
+        priceColumn.setMinWidth(70);
+
+
+        ///5
+        isActivatedColumn = new TableColumn<>("IS ACTIVATED");
+        isActivatedColumn.setCellValueFactory(new PropertyValueFactory<>("isActivated"));
+        isActivatedColumn.setStyle("-fx-alignment: CENTER;");
+        isActivatedColumn.setMinWidth(70);
+
+        ///6
+        timeLeftAsSecondsColumn = new TableColumn<>("LEFT TIME");
+        timeLeftAsSecondsColumn.setCellValueFactory(new PropertyValueFactory<>("timeLeftAsSeconds"));
+        timeLeftAsSecondsColumn.setStyle("-fx-alignment: CENTER;");
+        timeLeftAsSecondsColumn.setMinWidth(70);
+
+
+
+    }
+
+
+
 
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        staticTableView = tableView;
         createTable();
     }
 
@@ -55,9 +117,8 @@ public class AuctionPageController implements Initializable {
 
     public void refreshTable(String whatServerGave) {
         System.out.println(whatServerGave);
-
-
-        tableView.getColumns().clear();
+//        if (staticTableView == null) staticTableView = new TableView();
+        staticTableView.getItems().clear();
 
         String allPeople = whatServerGave;
         String[] allPeopleSplited = allPeople.split(",");
@@ -81,60 +142,20 @@ public class AuctionPageController implements Initializable {
             auctionsToShows
         );
         ///1
-        TableColumn<AuctionToShow, String> auctionCodeColumn = new TableColumn<>("CODE");
-        auctionCodeColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCode"));
-        auctionCodeColumn.setStyle("-fx-alignment: CENTER;");
-        auctionCodeColumn.setMinWidth(80);
-
-
-        ///1.5
-        TableColumn<AuctionToShow, String> cardNameColumn = new TableColumn<>("CARD NAME");
-        cardNameColumn.setCellValueFactory(new PropertyValueFactory<>("cardName"));
-        cardNameColumn.setStyle("-fx-alignment: CENTER;");
-        cardNameColumn.setMinWidth(80);
-
-        ///2
-        TableColumn<AuctionToShow, String> auctionCreatorNameColumn = new TableColumn<>("CREATOR NAME");
-        auctionCreatorNameColumn.setCellValueFactory(new PropertyValueFactory<>("auctionCreatorName"));
-        auctionCreatorNameColumn.setStyle("-fx-alignment: CENTER;");
-        auctionCreatorNameColumn.setMinWidth(80);
-
-        ///3
-        TableColumn<AuctionToShow, String> bestBuyerNameColumn = new TableColumn<>("BEST BUYER");
-        bestBuyerNameColumn.setCellValueFactory(new PropertyValueFactory<>("bestBuyerName"));
-        bestBuyerNameColumn.setStyle("-fx-alignment: CENTER;");
-        bestBuyerNameColumn.setMinWidth(80);
-
-
-        ///4
-        TableColumn<AuctionToShow, String> priceColumn = new TableColumn<>("PRICE");
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        priceColumn.setStyle("-fx-alignment: CENTER;");
-        priceColumn.setMinWidth(70);
-
-
-        ///5
-        TableColumn<AuctionToShow, String> isActivatedColumn = new TableColumn<>("IS ACTIVATED");
-        isActivatedColumn.setCellValueFactory(new PropertyValueFactory<>("isActivated"));
-        isActivatedColumn.setStyle("-fx-alignment: CENTER;");
-        isActivatedColumn.setMinWidth(70);
-
-        ///6
-        TableColumn<AuctionToShow, String> timeLeftAsSecondsColumn = new TableColumn<>("LEFT TIME");
-        timeLeftAsSecondsColumn.setCellValueFactory(new PropertyValueFactory<>("timeLeftAsSeconds"));
-        timeLeftAsSecondsColumn.setStyle("-fx-alignment: CENTER;");
-        timeLeftAsSecondsColumn.setMinWidth(70);
-
 
         ObservableList<String> list = FXCollections.observableArrayList();
 
-        tableView.setItems(data);
-        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableView.getColumns().addAll(auctionCodeColumn, cardNameColumn, auctionCreatorNameColumn, bestBuyerNameColumn, priceColumn, isActivatedColumn, timeLeftAsSecondsColumn);
+
+        staticTableView.setItems(data);
+        staticTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        if (!staticTableView.getColumns().contains(auctionCodeColumn)) {
+            staticTableView.getColumns().addAll(auctionCodeColumn, cardNameColumn, auctionCreatorNameColumn, bestBuyerNameColumn, priceColumn, isActivatedColumn, timeLeftAsSecondsColumn);
+        }
 
     }
 
     public void back(ActionEvent actionEvent) {
+
         ServerConnection.stopAuctionRefresh();
         try {
             new MainView().changeView("/project/fxml/mainMenu.fxml");

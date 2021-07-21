@@ -21,11 +21,39 @@ public class ScoreboardController implements Initializable {
     public AnchorPane anchor1;
     public TableView tableViewForOnlineUsers2;
     public TableView tableView2;
+    public static TableView staticTable;
+    public static TableColumn<Person, Integer> rankingColumn;
+    public static TableColumn<Person, String> usernameColumn;
+    public static TableColumn<Person, Integer> scoreColumn;
+    public static TableColumn<Person, String> usernameColumnmessageForOnlineUsers;
+    static {
+        rankingColumn = new TableColumn<>("RANKING");
+        rankingColumn.setCellValueFactory(new PropertyValueFactory<>("ranking"));
+        rankingColumn.setStyle("-fx-alignment: CENTER;");
+        rankingColumn.setMinWidth(97);
+
+
+        usernameColumn = new TableColumn<>("NICKNAME");
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        usernameColumn.setStyle("-fx-alignment: CENTER;");
+        usernameColumn.setMinWidth(400);
+
+        scoreColumn = new TableColumn<>("SCORE");
+        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        scoreColumn.setStyle("-fx-alignment: CENTER;");
+        scoreColumn.setMinWidth(100);
+
+        usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
+        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        usernameColumnmessageForOnlineUsers.setStyle("-fx-alignment: CENTER;");
+        usernameColumnmessageForOnlineUsers.setMinWidth(600);
+    }
 //    private TableView tableView;
 //    private TableView tableViewForOnlineUsers;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        staticTable = tableView2;
         fillLabel();
     }
 
@@ -37,8 +65,8 @@ public class ScoreboardController implements Initializable {
 //        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
 //        anchor1.getChildren().removeAll(tableView2, tableViewForOnlineUsers2);
 
-        tableView2.getColumns().clear();
-        tableViewForOnlineUsers2.getColumns().clear();
+        staticTable.getItems().clear();
+        tableViewForOnlineUsers2.getItems().clear();
 //        tableView2.getItems().clear();
 //        tableViewForOnlineUsers2.getItems().clear();
 
@@ -62,29 +90,18 @@ public class ScoreboardController implements Initializable {
         final ObservableList<Person> data = FXCollections.observableArrayList(
             person
         );
-        TableColumn<Person, Integer> rankingColumn = new TableColumn<>("RANKING");
-        rankingColumn.setCellValueFactory(new PropertyValueFactory<>("ranking"));
-        rankingColumn.setStyle("-fx-alignment: CENTER;");
-        rankingColumn.setMinWidth(97);
 
-
-        TableColumn<Person, String> usernameColumn = new TableColumn<>("NICKNAME");
-        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-        usernameColumn.setStyle("-fx-alignment: CENTER;");
-        usernameColumn.setMinWidth(400);
-
-        TableColumn<Person, Integer> scoreColumn = new TableColumn<>("SCORE");
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
-        scoreColumn.setStyle("-fx-alignment: CENTER;");
-        scoreColumn.setMinWidth(100);
         ObservableList<String> list = FXCollections.observableArrayList();
 
-        tableView2.setItems(data);
-        tableView2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableView2.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
+        staticTable.setItems(data);
+        staticTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        if (!staticTable.getColumns().contains(rankingColumn)) {
+            staticTable.getColumns().addAll(rankingColumn, usernameColumn, scoreColumn);
+        }
+
 
         String userNickname = LoginController.getOnlineUser().getNickname();
-        customiseFactory((TableColumn<Person, String>) tableView2.getColumns().get(1), userNickname);
+        customiseFactory((TableColumn<Person, String>) staticTable.getColumns().get(1), userNickname);
 
 
         //Show OnlineUsers
@@ -102,17 +119,13 @@ public class ScoreboardController implements Initializable {
             personmessageForOnlineUsers
         );
 
-
-        TableColumn<Person, String> usernameColumnmessageForOnlineUsers = new TableColumn<>("NICKNAME OF ONLINE USERS");
-        usernameColumnmessageForOnlineUsers.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-        usernameColumnmessageForOnlineUsers.setStyle("-fx-alignment: CENTER;");
-        usernameColumnmessageForOnlineUsers.setMinWidth(600);
-
         ObservableList<String> listmessageForOnlineUsers = FXCollections.observableArrayList();
 
         tableViewForOnlineUsers2.setItems(datamessageForOnlineUsers);
         tableViewForOnlineUsers2.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableViewForOnlineUsers2.getColumns().addAll(usernameColumnmessageForOnlineUsers);
+        if (!tableViewForOnlineUsers2.getColumns().contains(usernameColumnmessageForOnlineUsers)) {
+            tableViewForOnlineUsers2.getColumns().addAll(usernameColumnmessageForOnlineUsers);
+        }
 
 //        anchor1.getChildren().add(tableView2);
 //        anchor1.getChildren().add(tableViewForOnlineUsers2);
