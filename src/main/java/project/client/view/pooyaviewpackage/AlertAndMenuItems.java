@@ -6,9 +6,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 
@@ -52,7 +52,7 @@ public class AlertAndMenuItems {
                 DuelView.setCardLocationSelecting(DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView));
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
                 if (cardLocationSelecting != null) {
-                    DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardView, cardLocationSelecting, duelView);
+                    DuelView.getSendingRequestsToServer().sendShowGraveyardRequestToServer(cardView);
                 }
                 //label.setText("Select Menu Item 1");
             }
@@ -269,8 +269,9 @@ public class AlertAndMenuItems {
     public void doYouWantToAlert(String nowItWillBeTurn){
         Alert alert = new Alert(CONFIRMATION, nowItWillBeTurn, ButtonType.YES, ButtonType.NO);
         ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+        String token = DuelView.getToken();
         if (result.equals(ButtonType.YES)) {
-            String output = GameManager.getDuelControllerByIndex(0).getInput("yes", true);
+            String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"yes\", true, token)");
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");
@@ -299,7 +300,7 @@ public class AlertAndMenuItems {
                 DuelView.getDeckScene().start(new Stage());
             }
         } else if (result.equals(ButtonType.NO)){
-            String output = GameManager.getDuelControllerByIndex(0).getInput("no", true);
+            String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"no\", true, token)");
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Result Message");

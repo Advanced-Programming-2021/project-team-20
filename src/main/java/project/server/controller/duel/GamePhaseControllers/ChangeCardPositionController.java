@@ -7,7 +7,7 @@ import project.server.controller.duel.GamePackage.Action;
 import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;

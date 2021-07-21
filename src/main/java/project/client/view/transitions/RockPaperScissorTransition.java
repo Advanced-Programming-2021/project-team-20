@@ -1,4 +1,4 @@
-package project.view.transitions;
+package project.client.view.transitions;
 
 import javafx.animation.Transition;
 import javafx.scene.shape.Rectangle;

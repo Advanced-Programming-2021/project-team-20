@@ -7,7 +7,7 @@ import project.server.controller.duel.GamePackage.Action;
 import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.aidata.AIFurtherActivationInput;
 import project.model.aidata.AISpellTrapSelections;
 import project.model.cardData.General.Card;
@@ -55,19 +55,19 @@ public class AIBattlePhaseMind {
 
     //AI BATTLE PHASE CHAIN MIND
     protected String getCommandForChoosingToActivateTrapInChainOrNotInBattlePhase(AI ai) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action attackAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation attackingMonsterLocation = attackAction.getFinalMainCardLocation();
         if (attackAction.getActionType().equals(ActionType.ALLY_MONSTER_ATTACKING_OPPONENT_MONSTER) || attackAction.getActionType().equals(ActionType.OPPONENT_MONSTER_ATTACKING_ALLY_MONSTER)) {
             CardLocation beingAttackedLocation = attackAction.getTargetingCards().get(attackAction.getTargetingCards().size() - 1);
-            if (doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(beingAttackedLocation, attackingMonsterLocation, 0)) {
+            if (doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(beingAttackedLocation, attackingMonsterLocation, ai.getToken())) {
                 return "no";
             }
         }
-        int aiTurn = GameManager.getDuelControllerByIndex(0).getAiTurn();
-        int enemyLifePoints = GameManager.getDuelControllerByIndex(0).getLifePoints().get(2 - aiTurn);
-        if ((enemyLifePoints < MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, 0)
-            || 1600 <= MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, 0)) &&
+        int aiTurn = GameManager.getDuelControllerByIndex(ai.getToken()).getAiTurn();
+        int enemyLifePoints = GameManager.getDuelControllerByIndex(ai.getToken()).getLifePoints().get(2 - aiTurn);
+        if ((enemyLifePoints < MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, ai.getToken())
+            || 1600 <= MonsterCard.giveATKDEFConsideringEffects("attack", attackingMonsterLocation, ai.getToken())) &&
             aiKeyVariablesUpdater.isDoesAIHaveDamageInflictingTrapCardsInBattlePhaseInBoard()) {
             ai.setAiSpellTrapSelections(AISpellTrapSelections.SELECT_A_DAMAGE_INFLICTING_TRAP_CARD_IN_BOARD);
             return "yes";
@@ -143,7 +143,7 @@ public class AIBattlePhaseMind {
         for (int i = 0; i < opponentMonsterCards.size(); i++) {
             if (Card.isCardAMonster(opponentMonsterCards.get(i))) {
                 MonsterCard monsterCard = (MonsterCard) opponentMonsterCards.get(i);
-                if (!monsterCard.isHasCardAlreadyAttacked() && MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(ai.getAiBoardUnderstander().opponentMonsterCardsRowOfCardLocation, i + 1), 0) >= 2400) {
+                if (!monsterCard.isHasCardAlreadyAttacked() && MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(ai.getAiBoardUnderstander().opponentMonsterCardsRowOfCardLocation, i + 1), ai.getToken()) >= 2400) {
                     doesOpponentHaveHighAttackingMonsters = true;
                 }
             }
@@ -173,8 +173,8 @@ public class AIBattlePhaseMind {
             if (Card.isCardAMonster(opponentMonsterCards.get(i))) {
                 MonsterCard monsterCard = (MonsterCard) opponentMonsterCards.get(i);
                 if (!monsterCard.isHasCardAlreadyAttacked() &&
-                    MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(ai.getAiBoardUnderstander().opponentMonsterCardsRowOfCardLocation, i + 1), 0) >= 2400) {
-                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false);
+                    MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(ai.getAiBoardUnderstander().opponentMonsterCardsRowOfCardLocation, i + 1), ai.getToken()) >= 2400) {
+                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false, ai.getToken());
                 }
             }
         }
@@ -183,7 +183,7 @@ public class AIBattlePhaseMind {
                 MonsterCard monsterCard = (MonsterCard) opponentMonsterCards.get(i);
                 ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();
                 if (beingAttackedEffects.contains(BeingAttackedEffect.CANNOT_BE_DESTROYED_BY_BATTLE)) {
-                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false);
+                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false, ai.getToken());
                 }
             }
         }
@@ -192,19 +192,19 @@ public class AIBattlePhaseMind {
                 MonsterCard monsterCard = (MonsterCard) opponentMonsterCards.get(i);
                 ArrayList<BeingAttackedEffect> beingAttackedEffects = monsterCard.getBeingAttackedEffects();
                 if (beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)) {
-                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false);
+                    return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false, ai.getToken());
                 }
             }
         }
-        ArrayList<Action> uninterruptedAction = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedAction = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action attackingAction = uninterruptedAction.get(uninterruptedAction.size() - 1);
         CardLocation attackingMonsterCardLocation = attackingAction.getFinalMainCardLocation();
-        return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(attackingMonsterCardLocation.getIndex(), false);
+        return "select --opponent --monster " + Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(attackingMonsterCardLocation.getIndex(), false, ai.getToken());
     }
 
 
     protected boolean doMonstersInThisSideDominateTheOtherSideExtendable(ArrayList<CardLocation> monsterCardsFirstSide
-        , ArrayList<CardLocation> monsterCardsSecondSide, int index, boolean considerEquipSpellField) {
+        , ArrayList<CardLocation> monsterCardsSecondSide, String token, boolean considerEquipSpellField) {
         //return false;
 
         //System.out.println("MNMNMNM");
@@ -214,9 +214,9 @@ public class AIBattlePhaseMind {
         for (int i = 0; i < monsterCardsSecondSide.size(); i++) {
             boolean answer;
             if (considerEquipSpellField) {
-                answer = doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(monsterCardsFirstSide.get(0), monsterCardsSecondSide.get(i), index);
+                answer = doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(monsterCardsFirstSide.get(0), monsterCardsSecondSide.get(i), token);
             } else {
-                answer = doesMonsterDominateOtherMonsterAlone(monsterCardsFirstSide.get(0), monsterCardsSecondSide.get(i), index);
+                answer = doesMonsterDominateOtherMonsterAlone(monsterCardsFirstSide.get(0), monsterCardsSecondSide.get(i), token);
             }
             if (answer) {
                 ArrayList<CardLocation> newMonsterCardsFirstSide = new ArrayList<>();
@@ -230,9 +230,9 @@ public class AIBattlePhaseMind {
                     }
                 }
                 if (considerEquipSpellField) {
-                    return doMonstersInThisSideDominateTheOtherSideExtendable(newMonsterCardsFirstSide, newMonsterCardsForSecondSide, index, true);
+                    return doMonstersInThisSideDominateTheOtherSideExtendable(newMonsterCardsFirstSide, newMonsterCardsForSecondSide, token, true);
                 }
-                return doMonstersInThisSideDominateTheOtherSideExtendable(newMonsterCardsFirstSide, newMonsterCardsForSecondSide, index, false);
+                return doMonstersInThisSideDominateTheOtherSideExtendable(newMonsterCardsFirstSide, newMonsterCardsForSecondSide, token, false);
             }
         }
         if (monsterCardsSecondSide.size() == 0) {
@@ -242,8 +242,8 @@ public class AIBattlePhaseMind {
         }
     }
 
-    protected boolean doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(CardLocation firstMonsterLocation, CardLocation secondMonsterLocation, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    protected boolean doesMonsterDominateOtherMonsterConsideringEquipAndFieldSpellCards(CardLocation firstMonsterLocation, CardLocation secondMonsterLocation, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         MonsterCard secondMonster = (MonsterCard) duelBoard.getCardByCardLocation(secondMonsterLocation);
         ArrayList<BeingAttackedEffect> beingAttackedEffects = secondMonster.getBeingAttackedEffects();
         ArrayList<FlipEffect> flipEffects = secondMonster.getFlipEffects();
@@ -252,31 +252,31 @@ public class AIBattlePhaseMind {
         }
         if ((beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)
             || flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD) && secondMonster.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) &&
-            MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, index) > MonsterCard.giveATKDEFConsideringEffects("attack", secondMonsterLocation, index)
-            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, index) <= 2000) {
+            MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, token) > MonsterCard.giveATKDEFConsideringEffects("attack", secondMonsterLocation, token)
+            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, token) <= 2000) {
             return true;
         }
         if ((beingAttackedEffects.contains(BeingAttackedEffect.IF_DESTROYED_AND_SENT_TO_GRAVEYARD_SEND_ATTACKING_MONSTER_TO_GRAVEYARD)
             || flipEffects.contains(FlipEffect.DESTROY_1_MONSTER_ON_THE_FIELD) && secondMonster.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) &&
-            MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, index) > MonsterCard.giveATKDEFConsideringEffects("defense", secondMonsterLocation, index)
-            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, index) > 2000) {
+            MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, token) > MonsterCard.giveATKDEFConsideringEffects("defense", secondMonsterLocation, token)
+            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, token) > 2000) {
             return false;
         }
         if (secondMonster.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)
-            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, index) >
-            MonsterCard.giveATKDEFConsideringEffects("attack", secondMonsterLocation, index)) {
+            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, token) >
+            MonsterCard.giveATKDEFConsideringEffects("attack", secondMonsterLocation, token)) {
             return true;
         }
         if ((secondMonster.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION) || secondMonster.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION))
-            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, index) >
-            MonsterCard.giveATKDEFConsideringEffects("defense", secondMonsterLocation, index)) {
+            && MonsterCard.giveATKDEFConsideringEffects("attack", firstMonsterLocation, token) >
+            MonsterCard.giveATKDEFConsideringEffects("defense", secondMonsterLocation, token)) {
             return true;
         }
         return false;
     }
 
-    protected boolean doesMonsterDominateOtherMonsterAlone(CardLocation firstMonsterLocation, CardLocation secondMonsterLocation, int index) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    protected boolean doesMonsterDominateOtherMonsterAlone(CardLocation firstMonsterLocation, CardLocation secondMonsterLocation, String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         MonsterCard secondMonster = (MonsterCard) duelBoard.getCardByCardLocation(secondMonsterLocation);
         ArrayList<BeingAttackedEffect> beingAttackedEffects = secondMonster.getBeingAttackedEffects();
         ArrayList<FlipEffect> flipEffects = secondMonster.getFlipEffects();
@@ -341,16 +341,16 @@ public class AIBattlePhaseMind {
     }
 
     public String getCommandForChoosingToActivateSpellTrapForThirdTimeInChain(AI ai) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(ai.getToken());
         Action aiSummoningAction = uninterruptedActions.get(uninterruptedActions.size() - 2);
         CardLocation mainCardLocation = aiSummoningAction.getFinalMainCardLocation();
-        MonsterCard attackingMonsterCard = (MonsterCard) GameManager.getDuelBoardByIndex(0).getCardByCardLocation(mainCardLocation);
+        MonsterCard attackingMonsterCard = (MonsterCard) GameManager.getDuelBoardByIndex(ai.getToken()).getCardByCardLocation(mainCardLocation);
         Action opponentTrapActivatingAction = uninterruptedActions.get(uninterruptedActions.size() - 1);
         CardLocation opponentTrapLocation = opponentTrapActivatingAction.getFinalMainCardLocation();
-        TrapCard trapCard = (TrapCard) GameManager.getDuelBoardByIndex(0).getCardByCardLocation(opponentTrapLocation);
+        TrapCard trapCard = (TrapCard) GameManager.getDuelBoardByIndex(ai.getToken()).getCardByCardLocation(opponentTrapLocation);
         ArrayList<MonsterAttackingTrapCardEffect> monsterAttackingTrapCardEffects = trapCard.getMonsterAttackingTrapCardEffects();
         if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.INFLICT_DAMAGE_TO_OPPONENT_EQUAL_TO_MONSTERS_ATK)) {
-            if (MonsterCard.giveATKDEFConsideringEffects("attack", mainCardLocation, 0) >= 2200) {
+            if (MonsterCard.giveATKDEFConsideringEffects("attack", mainCardLocation, ai.getToken()) >= 2200) {
                 return "yes";
             } else {
                 return "no";

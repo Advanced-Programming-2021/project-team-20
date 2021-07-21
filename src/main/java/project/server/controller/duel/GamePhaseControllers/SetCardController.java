@@ -8,7 +8,7 @@ import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.RowOfCardLocation;
@@ -42,7 +42,7 @@ public class SetCardController extends SummonSetCommonClass {
             } else {
                 Card card = duelBoard.getCardByCardLocation(selectedCardLocations.get(selectedCardLocations.size() - 1));
                 if (Card.isCardAMonster(card)) {
-                    return monsterCardSetInputCheck(card);
+                    return monsterCardSetInputCheck(card, token);
                 } else if (Card.isCardASpell(card) || Card.isCardATrap(card)) {
                     return spellOrTrapCardSetInputCheck(card, token);
                 }

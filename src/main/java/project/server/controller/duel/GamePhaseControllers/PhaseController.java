@@ -10,7 +10,7 @@ import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.model.PhaseInGame;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.server.controller.non_duel.storage.Storage;
 import project.model.User;
 import project.model.cardData.General.*;
@@ -29,6 +29,7 @@ public class PhaseController {
     private boolean gameIsOver;
 
     public PhaseController() {
+        phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
         playersProhibitedToDrawCardNextTurn = new ArrayList<>();
         playersProhibitedToDrawCardNextTurn.add(false);
         playersProhibitedToDrawCardNextTurn.add(false);
@@ -122,7 +123,7 @@ public class PhaseController {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         int turn = duelController.getTurn();
         if (string.equals("pay")) {
-            duelController.increaseLifePoints(-100, turn);
+            duelController.increaseLifePoints(-100, turn, token);
             numberOfSpellCardsToPayFor -= 1;
             numberOfSpellCardsPayedFor += 1;
             if (numberOfSpellCardsToPayFor == 0) {
@@ -157,7 +158,7 @@ public class PhaseController {
                             if (numberOfSpellsFound == numberOfSpellCardsPayedFor + 1) {
                                 if (turn == 1) {
                                     SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
-                                        new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), 0);
+                                        new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1), token);
                                     if (numberOfSpellCardsToPayFor == 0) {
                                         isClassWaitingForPayingLifePointsOrDestroyingCard = false;
                                         phaseInGame = PhaseInGame.ALLY_MAIN_PHASE_1;
@@ -167,7 +168,7 @@ public class PhaseController {
                                     }
                                 } else {
                                     SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(
-                                        new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), 0);
+                                        new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1), token);
                                     if (numberOfSpellCardsToPayFor == 0) {
                                         isClassWaitingForPayingLifePointsOrDestroyingCard = false;
                                         phaseInGame = PhaseInGame.OPPONENT_MAIN_PHASE_1;
@@ -247,7 +248,7 @@ public class PhaseController {
         duelBoard.removeCardByCardLocation(cardLocation);
         duelBoard.addCardToHand(card, turn);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-            + " " + cardLocation.getIndex() + " is being added to hand zone " + turn + " and should finally be NO_CHANGE");
+            + " " + cardLocation.getIndex() + " is being added to hand zone " + turn + " and should finally be NO_CHANGE", token);
 
         return "card with name " + card.getCardName() + " is added to hand\n";
     }
@@ -292,8 +293,8 @@ public class PhaseController {
             card = duelBoard.getCardByCardLocation(cardLocation);
             duelBoard.removeCardByCardLocation(cardLocation);
             duelBoard.addCardToHand(card, 3 - turn);
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                + " " + cardLocation.getIndex() + " is being added to hand zone " + (3 - turn) + " and should finally be NO_CHANGE");
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
+                + " " + cardLocation.getIndex() + " is being added to hand zone " + (3 - turn) + " and should finally be NO_CHANGE", token);
 
             drawingCardSuccessful = true;
         } else {
@@ -338,16 +339,16 @@ public class PhaseController {
             if (card != null) {
                 SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
                 if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_MONSTER_ZONE)) {
-                    duelBoard.addCardToMonsterZone(card, 1);
+                    duelBoard.addCardToMonsterZone(card, 1, token);
 
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 1 + " and should finally be NO_CHANGE");
+                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 1 + " and should finally be NO_CHANGE", token);
 
                 } else if (cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_MONSTER_ZONE)) {
-                    duelBoard.addCardToMonsterZone(card, 2);
+                    duelBoard.addCardToMonsterZone(card, 2, token);
 
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 2 + " and should finally be NO_CHANGE");
+                        + " " + cardLocation.getIndex() + " is being added to monster zone " + 2 + " and should finally be NO_CHANGE", token);
 
                 }
             }

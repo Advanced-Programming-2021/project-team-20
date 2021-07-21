@@ -3,24 +3,17 @@ package project.client.view.pooyaviewpackage;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import project.server.controller.duel.PreliminaryPackage.DuelStarter;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
-import project.model.modelsforview.CardView;
-import project.model.modelsforview.GamePhaseButton;
+import project.client.modelsforview.CardView;
+import project.client.modelsforview.GamePhaseButton;
 
-import java.awt.*;
-import java.awt.image.PixelInterleavedSampleModel;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -53,19 +46,22 @@ public class AdvancedCardMovingController {
     }
 
     public void advanceForwardBattleField() {
-        String string = DuelStarter.getGameManager().getWholeReportToClient();
+        //this function simply splits whole report into pieces for better understanding
+        String string = JsonCreator.getResult("DuelStarter.getGameManager().getWholeReportToClient()");
         if (!string.isBlank()) {
             System.out.println("advanceForwardBattleField is called with input =\n" + string);
             String winloss = "(\\S+) won the game and the score is: (\\S+)";
             Pattern pattern = Pattern.compile(winloss);
             Matcher matcher = pattern.matcher(string);
+            String token = DuelView.getToken();
             if (matcher.find()) {
                 report = matcher.group(0);
                 boolean oneRound = true;
-                if (GameManager.getDuelControllerByIndex(0).getNumberOfRounds() == 3) {
+                int numberOfRounds = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getNumberOfRounds()"));
+                if (numberOfRounds == 3) {
                     oneRound = false;
                 }
-                int currentRound = GameManager.getDuelControllerByIndex(0).getCurrentRound();
+                int currentRound = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getCurrentRound()"));
                 System.out.println("Was this one round " + oneRound + " currentRound = " + currentRound);
                 String output = AdvancedCardMovingController.getReport();
                 System.out.println("WinLoss: " + output);
@@ -121,16 +117,9 @@ public class AdvancedCardMovingController {
                             allChangeConductorsObjects.add(new ChangeConductor(changeConductorsInStringForm.get(i).get(j), helpIndex));
                             helpIndex++;
                         }
-//            ArrayList<Object> giveMeObjects = improveForwardBattleFieldItShouldGiveArrayListOfAllElements(changeConductorsInStringForm.get(i));
-//            for (int j = 0; j < giveMeObjects.size(); j++) {
-//                allChangeConductorsObjects.add(new ChangeConductor(giveMeObjects.get(j)));
-//            }
                     }
-//        for (int i = 0; i < allChangeConductorsObjects.size() - 1; i++) {
-//            allChangeConductorsObjects.get(i).chainThisChangeConductorToYourself(allChangeConductorsObjects.get(i + 1));
-//        }
                     allChangeConductorsObjects.get(0).conductChange();
-                    DuelStarter.getGameManager().clearWholeReportToClient();
+                    JsonCreator.getResult("DuelStarter.getGameManager().clearWholeReportToClient()");
                 }
             }
 
@@ -138,6 +127,7 @@ public class AdvancedCardMovingController {
     }
 
     public ObjectOfChange giveObjectForThisSingleString(String change) {
+        int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
         if (change.startsWith("*")) {
             if (change.contains("next phase")) {
                 PauseTransition pauseTransition = new PauseTransition(Duration.seconds(0.4));
@@ -152,7 +142,7 @@ public class AdvancedCardMovingController {
                 return new ObjectOfChange(parallelTransition, action.NOT_APPLICABLE);
             }
         } else if (change.startsWith("&")) {
-            int turn = Integer.parseInt(change.split(" ")[3]);
+            int turn = (belongingTurn == 1 ? Integer.parseInt(change.split(" ")[3]) : 3 - Integer.parseInt(change.split(" ")[3]));
             int increaseInHealth = Integer.parseInt(change.split(" ")[9]);
             System.out.println("TURN SI " + turn + " AND INCREASEINHEALTH IS " + increaseInHealth);
             int realIncreaseInHealthForAlly = 0;
@@ -182,19 +172,25 @@ public class AdvancedCardMovingController {
             System.out.println("Look dude my string is " + change);
             String[] subCommands = change.split(" ");
             int sideOfFinalDestination = (subCommands[9].equals("zone") ? 0 : Integer.parseInt(subCommands[9]));
+            //
+            int myActualTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
+            if (myActualTurn == 2 && (sideOfFinalDestination == 1 || sideOfFinalDestination == 2)) {
+                sideOfFinalDestination = 3 - sideOfFinalDestination;
+            }
+            //
             if (subCommands[1].equals("UNKNOWN")) {
-                int turn = GameManager.getDuelControllerByIndex(0).getTurn();
-                if (turn == 1){
+                int turn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
+                if (turn == 1) {
                     DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() +
                         DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7);
                     DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY() +
                         DuelView.getBattleFieldView().getHeight() - 2 * CardView.getCardHeight() + 20);
                 } else {
-                    DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX()+40);
-                    DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY()+108);
+                    DuelView.setXHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftX() + 40);
+                    DuelView.setYHelperForCardViewConstructor(DuelView.getBattleFieldView().getUpperLeftY() + 108);
                 }
-                System.out.println("cheating card name is "+newlyAddedCard.getCardName()+" going to sideOfFInalDestination = "+sideOfFinalDestination+
-                    " right now turn = "+GameManager.getDuelControllerByIndex(0).getTurn());
+                System.out.println("cheating card name is " + newlyAddedCard.getCardName() + " going to sideOfFInalDestination = " + sideOfFinalDestination +
+                    " right now turn = " + JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
                 CardView cardView = new CardView(newlyAddedCard, true,
                     (turn == 1 ? RowOfCardLocation.ALLY_MONSTER_ZONE : RowOfCardLocation.OPPONENT_MONSTER_ZONE), duelView);
                 DuelView.getAllCards().getChildren().add(cardView);
@@ -202,6 +198,17 @@ public class AdvancedCardMovingController {
             }
             RowOfCardLocation initialRowOfCardLocation = RowOfCardLocation.valueOf(subCommands[1]);
             int initialSide = (initialRowOfCardLocation.toString().startsWith("ALLY") ? 1 : 2);
+            //
+            //int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
+            if (myActualTurn == 2) {
+                initialSide = 3 - initialSide;
+                if (initialRowOfCardLocation.toString().startsWith("ALL")) {
+                    initialRowOfCardLocation = RowOfCardLocation.valueOf(initialRowOfCardLocation.toString().replaceAll("ALLY", "OPPONENT"));
+                } else if (initialRowOfCardLocation.toString().startsWith("OPP")) {
+                    initialRowOfCardLocation = RowOfCardLocation.valueOf(initialRowOfCardLocation.toString().replaceAll("OPPONENT", "ALLY"));
+                }
+            }
+            //
             int index = Integer.parseInt(subCommands[2]);
             boolean staying = subCommands[5].equals("stayed");
             String finalDestination = subCommands[7];
@@ -209,7 +216,13 @@ public class AdvancedCardMovingController {
             CardPosition finalCardPosition = (subCommands[14].equals("NO_CHANGE") ? CardPosition.NOT_APPLICABLE : CardPosition.valueOf(subCommands[14]));
             System.out.println("rowOfCardLocation = " + initialRowOfCardLocation + " index = " + index + " finalDestination = " +
                 finalDestination + " sideOfFinalDestination = " + sideOfFinalDestination + " finalCardPosition = " + finalCardPosition);
-            CardView cardView = DuelView.getControllerForView().getCardViewByCardLocation(new CardLocation(initialRowOfCardLocation, index));
+            CardView cardView = null;
+            if ((initialRowOfCardLocation.toString().contains("MONSTER") || initialRowOfCardLocation.toString().contains("SPELL") &&
+                !initialRowOfCardLocation.toString().contains("SPELL_FIELD")) && belongingTurn == 2) {
+                cardView = DuelView.getControllerForView().getCardViewByCardLocation(new CardLocation(initialRowOfCardLocation, 6 - index));
+            } else {
+                cardView = DuelView.getControllerForView().getCardViewByCardLocation(new CardLocation(initialRowOfCardLocation, index));
+            }
             if (cardView == null) {
                 System.out.println("\nYOU ARE DOOMED SEVERELY BECAUSE CARDVIEW IS NULL\n");
             }
@@ -458,6 +471,7 @@ class PredefinedActionWithParallelTransition {
     public void play() {
         //predefined
         GamePhaseButton.updateAllGamePhaseButtonsOnce();
+        // i think i should put if here that goes through end phase draw phase ... as well
         parallelTransition.play();
     }
 

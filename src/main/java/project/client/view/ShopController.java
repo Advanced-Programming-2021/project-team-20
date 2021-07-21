@@ -2,6 +2,7 @@ package project.client.view;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,16 +21,30 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import project.server.controller.non_duel.shop.Shop;
-import project.server.controller.non_duel.storage.Storage;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
+import project.model.User;
 import project.model.cardData.General.Card;
+import project.server.ToGsonFormatForSendInformationToClient;
+import project.server.controller.non_duel.shop.Shop;
 
 import java.net.URL;
 import java.util.*;
 
 public class ShopController implements Initializable {
     @FXML
+    private Button adminPanel;
+    @FXML
+    private Label allowedOrNotLabel;
+    @FXML
+    private Label numberOfCardsInShop;
+    //    @FXML
+//    private Button auctionBtn;
+    @FXML
     private Button buybtn;
+    //    @FXML
+//    private Button sellbtn;
     @FXML
     private Button backbtn;
     @FXML
@@ -59,13 +74,21 @@ public class ShopController implements Initializable {
     private static Label equalNumbserOfShoppingCardsLabel;
     private static Label equalNumberOfUselessCardsLabel;
     private static Label equalUserMoneyLabel;
+    private static Label equalAllowedOrNotLabel;
+    private static Label equalNumberOfCardsInShop;
+    private static Button equalAdminPanel;
     private static Button equalBuybtn;
     private Shop shop = new Shop();
+    private static String token;
+    private static User user;
+    private static HashMap<String, String> givenInformationDeserialized;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         SongPlayer.getInstance().pauseMusic();
         SongPlayer.getInstance().prepareBackgroundMusic("/project/ingameicons/music/Shop.mp3");
+
+        user = LoginController.getOnlineUser();
 
         if (rectanglesToShowCards == null) {
             rectanglesToShowCards = UIStorage.getAllShopRectangles();
@@ -84,24 +107,37 @@ public class ShopController implements Initializable {
         if (sizeOfCardsInDifferentPages != UIStorage.getAllTypeOfCards().get("allCards").size()) {
             createPacksOfCardsForEachPage();
         }
+        equalAdminPanel = adminPanel;
         equalBuybtn = buybtn;
         setEffectsOfLabels();
         setEffectsOfButtons();
     }
 
     private void setEffectsOfLabels() {
+
         equalUserMoneyLabel = userMoneyLabel;
         equalUserMoneyLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        equalUserMoneyLabel.setTextFill(Color.BLUE);
-        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        equalUserMoneyLabel.setTextFill(Color.WHITE);
+//        equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
+        equalUserMoneyLabel.setText("My Money: " + user.getMoney());
         equalSelectedCardNameLabel = selectedCardNameLabel;
+//        selectedCardNameLabel.setTextFill(Color.BLACK);
         equalSelectedCardNameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumbserOfShoppingCardsLabel = numbserOfShoppingCardsLabel;
-        equalNumbserOfShoppingCardsLabel.setTextFill(Color.BLUE);
+        equalNumbserOfShoppingCardsLabel.setTextFill(Color.WHITE);
         equalNumbserOfShoppingCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         equalNumberOfUselessCardsLabel = numberOfUselessCardsLabel;
         equalNumberOfUselessCardsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-        equalNumberOfUselessCardsLabel.setTextFill(Color.BLUE);
+        equalNumberOfUselessCardsLabel.setTextFill(Color.WHITE);
+
+        equalAllowedOrNotLabel = allowedOrNotLabel;
+        equalAllowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalAllowedOrNotLabel.setTextFill(Color.WHITE);
+
+        equalNumberOfCardsInShop = numberOfCardsInShop;
+        equalNumberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumberOfCardsInShop.setTextFill(Color.WHITE);
+
     }
 
     private void setEffectsOfButtons() {
@@ -119,8 +155,12 @@ public class ShopController implements Initializable {
 
         if (cardNameForBuy.equals("")) {
             equalBuybtn.setDisable(true);
+//            sellbtn.setDisable(true);
+//            auctionBtn.setDisable(true);
         } else {
             equalBuybtn.setDisable(false);
+//            sellbtn.setDisable(false);
+//            auctionBtn.setDisable(false);
         }
     }
 
@@ -144,6 +184,7 @@ public class ShopController implements Initializable {
                     equalShowCardRectangle.setOpacity(1);
                     addCardDescription(rectangle.getId());
                     showNumberOfBoughtCards(rectangle.getId());
+                    continueShow(rectangle.getId());
                     flipRectangle(equalShowCardRectangle);
                 }
             });
@@ -151,25 +192,74 @@ public class ShopController implements Initializable {
     }
 
     private void showNumberOfBoughtCards(String cardName) {
-        HashMap<String, Integer> numberOfCards = shop.getNumberOfCards(cardName);
-        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfCards.get("uselessCards"));
-        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfCards.get("numberOfBoughtCards"));
+        System.out.println("show11");
+        String dataToSend = ToGsonFormatToSendDataToServer.toGsonFormatshowNumberOfBoughtCards(cardName);
+        String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+        HashMap<String, String> deserializedInformation = DeserializeInformationFromServer.deserializeShowNumberShop(answerOfServer);
+        int numberOfUselessCards = Integer.parseInt(deserializedInformation.get("uselessCards"));
+        int numberOfBoughtCards = Integer.parseInt(deserializedInformation.get("numberOfBoughtCards"));
+        equalNumberOfUselessCardsLabel.setText("Useless Cards: " + numberOfUselessCards);
+        equalNumbserOfShoppingCardsLabel.setText("Bought Cards: " + numberOfBoughtCards);
+    }
+
+    private void continueShow(String cardName) {
+
+        String dataToSend2 = ToGsonFormatToSendDataToServer.toGsonFormatShowInformationOfAdmin(cardName);
+        String answerOfServer2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+
+        HashMap<String, String> deserializedAnswer = DeserializeInformationFromServer.deserializeInformationOfAdmin(answerOfServer2);
+
+        String allowedOrNotAnswerOfServer = deserializedAnswer.get("isAllowed");
+        equalAllowedOrNotLabel.setText(allowedOrNotAnswerOfServer);
+        equalAllowedOrNotLabel.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalAllowedOrNotLabel.setTextFill(Color.WHITE);
+
+        String numberOfCardsInShopAnswerOfShop = deserializedAnswer.get("numberOfCardsInShop");
+        equalNumberOfCardsInShop.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+        equalNumberOfCardsInShop.setTextFill(Color.WHITE);
+        equalNumberOfCardsInShop.setText(numberOfCardsInShopAnswerOfShop);
     }
 
     private void setEffectsOfBuyButtonAndShowLabel() {
-        Card card = Storage.getCardByName(cardNameForBuy);
-        int cardPrice = card.getCardPrice();
-        if (cardPrice > LoginController.getOnlineUser().getMoney()) {
+        System.out.println(cardNameForBuy);
+        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
+
+        String answerOfShop = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+
+//        givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
+//        Card card = Storage.getCardByName(cardNameForBuy);
+//        int cardPrice = card.getCardPrice();
+        int cardPrice = Integer.parseInt(answerOfShop);
+        if (cardPrice > user.getMoney()) {
             equalSelectedCardNameLabel.setTextFill(Color.RED);
             equalSelectedCardNameLabel
-                    .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
+                .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
             equalBuybtn.setDisable(true);
         } else {
             equalBuybtn.setDisable(false);
-            equalSelectedCardNameLabel.setTextFill(Color.BLUE);
+            equalSelectedCardNameLabel.setTextFill(Color.WHITE);
             equalSelectedCardNameLabel
-                    .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
+                .setText("Selected Card To Buy: " + cardNameForBuy + " , Card price: " + cardPrice);
         }
+
+        String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetNumberOfBoughtCardsByCardName(token, cardNameForBuy);
+
+        String answerOfShop2 = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        int boughtCards;
+        try {
+            boughtCards = Integer.parseInt(answerOfShop2);
+        } catch (Exception e) {
+            boughtCards = 0;
+        }
+
+//        if (boughtCards == 0) {
+//            sellbtn.setDisable(true);
+//            auctionBtn.setDisable(true);
+//        }
+//        else {
+//            sellbtn.setDisable(false);
+//            auctionBtn.setDisable(false);
+//        }
     }
 
     private void flipRectangle(Rectangle rectangle) {
@@ -183,8 +273,13 @@ public class ShopController implements Initializable {
     }
 
     private void addCardDescription(String cardName) {
-        Card card = Storage.getCardByName(cardName);
-        String cardDiscription = card.getCardDescription();
+
+        System.out.println(cardName);
+        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardDescriptionByCardName(cardName);
+
+        String answerOfShop = (String) ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+//        Card card = Storage.getCardByName(cardName);
+        String cardDiscription = answerOfShop;
         ScrollPane scrollPane = (ScrollPane) anchorPane.getChildren().get(0);
         Pane pane;
         if (scrollPane.getContent() == null) {
@@ -195,7 +290,7 @@ public class ShopController implements Initializable {
         pane.getChildren().clear();
         Label label = allCardDiscriptionLabels.get(0);
         label.setText("  " + cardName);
-        label.setTextFill(Color.BLUE);
+        label.setTextFill(Color.WHITE);
         pane.getChildren().add(label);
         List<String> shortCardDescription = new ArrayList<>();
         shortCardDescription = Arrays.asList(cardDiscription.split(" "));
@@ -266,7 +361,7 @@ public class ShopController implements Initializable {
             }
             rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
             rectanglesToShowCards.get(i)
-                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+                .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
         }
     }
 
@@ -280,22 +375,61 @@ public class ShopController implements Initializable {
             }
             rectanglesToShowCards.get(i).setId(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getCardName());
             rectanglesToShowCards.get(i)
-                    .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
+                .setFill(new ImagePattern(allCardsInDifferentPages.get(whichPageIsShowing).get(i).getImage()));
         }
     }
 
     public void buyCard() {
         SongPlayer.getInstance().playShortMusic("/project/ingameicons/music/buyCard.mp3");
-         String answerOfShop = shop.findCommand("shop buy " + cardNameForBuy);
+
+        token = LoginController.getToken();
+
+        String dataToSend = ToGsonFormatForSendInformationToClient.toGsonFormatForBuyCard(token, cardNameForBuy);
+
+        String answerOfShop = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+
+        givenInformationDeserialized = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfShop);
+
+        if (givenInformationDeserialized.get("type").equals("Error")) {
+            if (givenInformationDeserialized.get("message").equals("not enough money")) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "NOT ENOUGH MONEY");
+                customDialog.openDialog();
+            }
+            else if (givenInformationDeserialized.get("message").equals("there is no card with this name")) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "INVALID CARD NAME");
+                customDialog.openDialog();
+            }
+
+            else if (givenInformationDeserialized.get("message").equals("not enough cards in shop")){
+                CustomDialog customDialog = new CustomDialog("ERROR", "not enough cards in shop");
+                customDialog.openDialog();
+            }
+
+            else if (givenInformationDeserialized.get("message").equals("NOT ALLOWED")) {
+                CustomDialog customDialog = new CustomDialog("ERROR", "NOT ALLOWED");
+                customDialog.openDialog();
+            }
+            else {
+                CustomDialog customDialog = new CustomDialog("ERROR", "UNKNOWN ERROR!");
+                customDialog.openDialog();
+            }
+
+        } else if (givenInformationDeserialized.get("type").equals("Successful")) {
+            CustomDialog customDialog = new CustomDialog("SUCCESSFUL", "SUCCESSFUL BUY!");
+            customDialog.openDialog();
+            LoginController.getOnlineUser().setMoney(Integer.parseInt(givenInformationDeserialized.get("message")));
+            LoginController.getOnlineUser().addCardToAllUselessCards(cardNameForBuy);
+        }
         equalUserMoneyLabel.setText("My Money: " + LoginController.getOnlineUser().getMoney());
-        int cardAmount = Storage.getCardByName(cardNameForBuy).getCardPrice();
+
+
+        String dataToSend2 = ToGsonFormatForSendInformationToClient.toGsonFormatForGetCardPriceByCardName(cardNameForBuy);
+        String answerOfShop2 = ServerConnection.sendDataToServerAndReceiveResult(dataToSend2);
+        int cardAmount = Integer.parseInt(answerOfShop2);
         int userAmount = LoginController.getOnlineUser().getMoney();
-        if (cardAmount > userAmount) {
-            buybtn.setDisable(true);
-        }
-        else {
-            buybtn.setDisable(false);
-        }
+        buybtn.setDisable(cardAmount > userAmount);
+        showNumberOfBoughtCards(cardNameForBuy);
+        continueShow(cardNameForBuy);
 
     }
 
@@ -311,4 +445,24 @@ public class ShopController implements Initializable {
         ShopController.anchorPane = anchorPane;
     }
 
+    public void gotoAdminPanel(ActionEvent actionEvent) {
+        if (LoginController.getOnlineUser().getName().equals("admin")) {
+            try {
+                new MainView().changeView("/project/fxml/adminPanelShop.fxml");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            CustomDialog customDialog = new CustomDialog("ERROR", "YOU ARE NOT ADMIN");
+            customDialog.openDialog();
+        }
+    }
+
+//    public void sellCard(ActionEvent actionEvent) {
+//
+//    }
+//
+//    public void gotoAuctionCard(ActionEvent actionEvent) {
+//
+//    }
 }

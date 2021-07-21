@@ -13,7 +13,7 @@ import project.server.controller.duel.GamePhaseControllers.ChainController;
 import project.server.controller.duel.GamePhaseControllers.SelectCardController;
 import project.server.controller.duel.GamePhaseControllers.SpecialSummonController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
@@ -123,7 +123,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION)) {
                 //System.out.println("FFFFFFF");
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + defendingMonsterCardLocation.getRowOfCardLocation()
-                    + " " + defendingMonsterCardLocation.getIndex() + " is being added to monster zone " + (3-actionTurn) + " and should finally be FACE_UP_DEFENSE_POSITION");
+                    + " " + defendingMonsterCardLocation.getIndex() + " is being added to monster zone " + (3 - actionTurn) + " and should finally be FACE_UP_DEFENSE_POSITION", token);
 
                 defendingMonsterCard.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);
                 isBeingAttackedMonsterFlipped = true;
@@ -147,7 +147,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             }
             return conductBattle(token);
         } else {
-            if (attackingMonsterCard != null){
+            if (attackingMonsterCard != null) {
                 attackingMonsterCard.setHasCardAlreadyAttacked(true);
             }
         }
@@ -361,11 +361,11 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         Action action = actions.get(numberInListOfActionsOfClass);
         if (!isConductBattleNegatedBecauseOfMonsterEffect && !action.isActionCanceled()) {
             if (defendingMonsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
-                String output = faceUpAttackPositionMonsterToFaceUpAttackPositionMonster();
+                String output = faceUpAttackPositionMonsterToFaceUpAttackPositionMonster(token);
                 resetVariables();
                 return output;
             }
-            String output = faceUpAttackPositionMonsterToFaceUpDefensePositionMonster();
+            String output = faceUpAttackPositionMonsterToFaceUpDefensePositionMonster(token);
             resetVariables();
             return output;
         }
@@ -411,7 +411,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterATK);
             didAttackingUserReceiveDamage = true;
         }
-        return finishAttackConduction();
+        return finishAttackConduction(token);
     }
 
     public String faceUpAttackPositionMonsterToFaceUpDefensePositionMonster(String token) {
@@ -434,7 +434,7 @@ public class AttackMonsterToMonsterConductor extends ChainController {
             playersLifePointsChange.set(actionTurn - 1, attackingMonsterATK - defendingMonsterDEF);
             didAttackingUserReceiveDamage = true;
         }
-        return finishAttackConduction();
+        return finishAttackConduction(token);
     }
 
     public void tendToNeitherPlayerReceivesBattleDamageIfMonsterDies(ArrayList<BeingAttackedEffect> beingAttackedEffectsForAttackingMonster, ArrayList<BeingAttackedEffect> beingAttackedEffectsForDefendingMonster) {
@@ -458,8 +458,8 @@ public class AttackMonsterToMonsterConductor extends ChainController {
         if (beingAttackedEffectsForDefendingMonster.contains(BeingAttackedEffect.IF_FACE_DOWN_AT_THE_BEGINNING_THEN_OPPONENT_RECEIVES_1000_DAMAGE) && isBeingAttackedMonsterFlipped) {
             playersLifePointsChange.set(actionTurn - 1, playersLifePointsChange.get(actionTurn - 1) - 1000);
         }
-        duelController.increaseLifePoints(playersLifePointsChange.get(0), 1);
-        duelController.increaseLifePoints(playersLifePointsChange.get(1), 2);
+        duelController.increaseLifePoints(playersLifePointsChange.get(0), 1, token);
+        duelController.increaseLifePoints(playersLifePointsChange.get(1), 2, token);
         String output = "";
         output += tendToFaceUpAttackPositionMonsterLogicallyWinning(beingAttackedEffectsForAttackingMonster, beingAttackedEffectsForDefendingMonster);
         output += tendToFaceUpAttackPositionMonsterLogicallyEqual(beingAttackedEffectsForAttackingMonster, beingAttackedEffectsForDefendingMonster);

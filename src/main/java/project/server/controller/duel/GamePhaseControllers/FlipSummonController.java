@@ -8,7 +8,7 @@ import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
@@ -48,7 +48,7 @@ public class FlipSummonController extends SummonSetCommonClass {
                         if (!(card.getCardPosition().equals(CardPosition.FACE_DOWN_MONSTER_SET_POSITION))) {
                             return "you can't flip summon this card";
                         } else {
-                            ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(0);
+                            ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(token);
                             mainCard = selectedCardLocations.get(selectedCardLocations.size() - 1);
                             createActionForFlipSummoning(token);
                             String output = Action.conductUninterruptedAction(token);

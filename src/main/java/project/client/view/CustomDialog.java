@@ -1,6 +1,8 @@
 package project.client.view;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -24,7 +26,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.Deck;
 
 public class CustomDialog extends Stage {
@@ -91,11 +92,11 @@ public class CustomDialog extends Stage {
         setScene(new Scene(root, null));
     }
 
-    private Button createButtonWhenUserLogined(Rectangle bg){
+    private Button createButtonWhenUserLogined(Rectangle bg) {
         Button btn = new Button("OK");
         btn.setTranslateX(bg.getWidth() - 75);
         btn.setTranslateY(bg.getHeight() - 50);
-        btn.setOnAction(e-> callMainMenu());
+        btn.setOnAction(e -> callMainMenu());
         btn.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
         return btn;
     }
@@ -119,7 +120,7 @@ public class CustomDialog extends Stage {
         btn.setTranslateX(bg.getWidth() - 75);
         btn.setTranslateY(bg.getHeight() - 50);
         if (isOneRoundOfDuelEnded) {
-            btn.setOnAction(e -> callChangeCardsBetweenTwoRounds());
+            btn.setOnAction(e -> callChangeCardsBetweenTwoRounds(""));
         } else {
             btn.setOnAction(e -> callMainMenu());
         }
@@ -136,7 +137,7 @@ public class CustomDialog extends Stage {
         }
     }
 
-    private void callChangeCardsBetweenTwoRounds() {
+    private void callChangeCardsBetweenTwoRounds(String token) {
         closeDialog();
         AnchorPane pane = null;
         try {
@@ -144,10 +145,15 @@ public class CustomDialog extends Stage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String currentPlayerWhoChangesDeck = GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(0);
-        Deck activeDeck = GameManager.getChangeCardsBetweenTwoRoundsByIndex(0).getAllyPlayerDeck();
+        String currentPlayerWhoChangesDeck = LoginController.getOnlineUser().getName();
+        Deck activeDeck = null;
+        HashMap<String, Deck> allDecks = LoginController.getOnlineUser().getDecks();
+        for (Map.Entry<String, Deck> entry : allDecks.entrySet()) {
+            if (allDecks.get(entry.getKey()).getIsDeckActive())
+                activeDeck = entry.getValue();
+        }
         new ChangeCardsBetweenTwoRoundsController().showPage(pane, currentPlayerWhoChangesDeck,
-                activeDeck.getDeckname());
+            activeDeck.getDeckname(), token);
     }
 
     private Button createButton(Rectangle bg, boolean isRockPaperScissorController) {

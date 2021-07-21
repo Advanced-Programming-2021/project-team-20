@@ -8,14 +8,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.cardData.MonsterCardData.MonsterCard;
 import project.model.cardData.MonsterCardData.MonsterCardAttribute;
-import project.model.modelsforview.BattleFieldView;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.BattleFieldView;
+import project.client.modelsforview.CardView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,11 +27,43 @@ public class MoreCardInfoSection {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                int fakeTurn = GameManager.getDuelControllerByIndex(0).getFakeTurn();
+                int fakeTurn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getFakeTurn()"));
                 CardLocation cardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
                 boolean isForAlly = cardLocation.getRowOfCardLocation().toString().startsWith("ALLY") && (fakeTurn == 1) ||
                     cardLocation.getRowOfCardLocation().toString().startsWith("OPPO") && (fakeTurn == 2);
-
+                String token = DuelView.getToken();
+                int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
+                CardLocation realCardLocation = null;
+                if (belongingTurn == 2) {
+                    if (cardLocation.getRowOfCardLocation().toString().contains("HAND") ||
+                        cardLocation.getRowOfCardLocation().toString().contains("GRAVEYARD") ||
+                        cardLocation.getRowOfCardLocation().toString().contains("SPELL_FIELD") ||
+                        cardLocation.getRowOfCardLocation().toString().contains("DECK")) {
+                        RowOfCardLocation rowOfCardLocation = null;
+                        if (cardLocation.getRowOfCardLocation().toString().contains("ALLY")) {
+                            System.out.println("CASE 1");
+                            rowOfCardLocation = RowOfCardLocation.valueOf(cardLocation.getRowOfCardLocation().toString().replaceAll("ALLY", "OPPONENT"));
+                        } else if (cardLocation.getRowOfCardLocation().toString().contains("OPPONENT")) {
+                            System.out.println("CASE 2");
+                            rowOfCardLocation = RowOfCardLocation.valueOf(cardLocation.getRowOfCardLocation().toString().replaceAll("OPPONENT", "ALLY"));
+                        }
+                        realCardLocation = new CardLocation(rowOfCardLocation, cardLocation.getIndex());
+                    } else {
+                        RowOfCardLocation rowOfCardLocation = null;
+                        if (cardLocation.getRowOfCardLocation().toString().contains("ALLY")) {
+                            System.out.println("CASE 3");
+                            rowOfCardLocation = RowOfCardLocation.valueOf(cardLocation.getRowOfCardLocation().toString().replaceAll("ALLY", "OPPONENT"));
+                        } else if (cardLocation.getRowOfCardLocation().toString().contains("OPPONENT")) {
+                            System.out.println("CASE 4");
+                            rowOfCardLocation = RowOfCardLocation.valueOf(cardLocation.getRowOfCardLocation().toString().replaceAll("OPPONENT", "ALLY"));
+                        }
+                        System.out.println("CASE 5");
+                        realCardLocation = new CardLocation(rowOfCardLocation, 6 - cardLocation.getIndex());
+                    }
+                } else {
+                    realCardLocation = cardLocation;
+                }
+                System.out.println("FINALLYYYY: realCardLocation = "+realCardLocation.getRowOfCardLocation() + " "+realCardLocation.getIndex());
                 Rectangle cardImageForCardMoreInfo = DuelView.getCardImageForCardMoreInfo();
                 BattleFieldView battleFieldView = DuelView.getBattleFieldView();
                 CardLocation cardLocationSelecting = DuelView.getCardLocationSelecting();
@@ -126,12 +158,28 @@ public class MoreCardInfoSection {
                         cardNameForCardMoreInfo.setText(" " + cardView.getCard().getCardName());
 
                         if (cardLocationSelecting == null) {
-                            cardAttackForCardMoreInfo.setText(" ATK : " + MonsterCard.giveATKDEFConsideringEffects("attack", new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1), 0));
-                            cardDefenseForCardMoreInfo.setText(" DEF : " + MonsterCard.giveATKDEFConsideringEffects("defense", new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, 1), 0));
-
+                            JsonCreator.setFirstAdditionalString(realCardLocation.getRowOfCardLocation().toString().replaceAll("RowOfCardLocation.", ""));
+                            JsonCreator.setIntegerString(realCardLocation.getIndex() + "");
+                            String attackInput = JsonCreator.getResult("MonsterCard.giveATKDEFConsideringEffects(\"attack\", new CardLocation(rowOfCardLocation, index), token)");
+                            System.out.println("attack input = " + attackInput);
+                            cardAttackForCardMoreInfo.setText(" ATK : " + attackInput);
+                            JsonCreator.setIntegerString(realCardLocation.getIndex() + "");
+                            JsonCreator.setFirstAdditionalString(realCardLocation.getRowOfCardLocation().toString().replaceAll("RowOfCardLocation.", ""));
+                            cardDefenseForCardMoreInfo.setText(" DEF : " +
+                                JsonCreator.getResult("MonsterCard.giveATKDEFConsideringEffects(\"defense\", new CardLocation(rowOfCardLocation, index), token)"));
                         } else {
-                            cardAttackForCardMoreInfo.setText(" ATK : " + MonsterCard.giveATKDEFConsideringEffects("attack", cardLocationSelecting, 0));
-                            cardDefenseForCardMoreInfo.setText(" DEF : " + MonsterCard.giveATKDEFConsideringEffects("defense", cardLocationSelecting, 0));
+                            String rowString = realCardLocation.getRowOfCardLocation().toString();
+                            if (rowString.startsWith("RowOfCardLocation.")) {
+                                rowString = rowString.replaceAll("RowOfCardLocation.", "");
+                            }
+                            JsonCreator.setFirstAdditionalString(rowString);
+                            JsonCreator.setIntegerString(realCardLocation.getIndex() + "");
+                            String attackInput = JsonCreator.getResult("MonsterCard.giveATKDEFConsideringEffects(\"attack\", new CardLocation(rowOfCardLocation, index), token)");
+                            System.out.println("attack input = " + attackInput);
+                            cardAttackForCardMoreInfo.setText(" ATK : " + attackInput);
+                            String defenseInput = JsonCreator.getResult("MonsterCard.giveATKDEFConsideringEffects(\"defense\", new CardLocation(rowOfCardLocation, index), token)");
+                            System.out.println("defense input = " + defenseInput);
+                            cardDefenseForCardMoreInfo.setText(" DEF : " + defenseInput);
 
                         }
                         cardLevelForCardMoreInfo.setText(" LVL: " + ((MonsterCard) cardView.getCard()).getLevel());

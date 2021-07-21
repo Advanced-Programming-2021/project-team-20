@@ -1,6 +1,7 @@
 package project.server.controller.duel.GamePackage.ActionConductors;
 
 import project.model.SpellEffectEnums.ContinuousSpellCardEffect;
+import project.model.cardData.MonsterCardData.MonsterCard;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.GamePhaseControllers.PhaseController;
@@ -34,7 +35,7 @@ public class SendCardToGraveyardConductor {
             } else {
                 graveyardToSendCardTo = 2;
             }
-            duelBoard.destroyEquipSpellsRelatedToThisCard(targetingCardLocation, graveyardToSendCardTo);
+            duelBoard.destroyEquipSpellsRelatedToThisCard(targetingCardLocation, graveyardToSendCardTo, token);
             Card card = duelBoard.getCardByCardLocation(targetingCardLocation);
             if (Card.isCardAMonster(card)) {
                 checkIfPlayerShouldDrawACard(graveyardToSendCardTo, token);
@@ -45,12 +46,11 @@ public class SendCardToGraveyardConductor {
             }
             Card removedCard = removeCardAndGetRemovedCard(targetingCardLocation, token);
             duelBoard.addCardToGraveyard(removedCard, graveyardToSendCardTo);
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
-                + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
+                + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
             duelBoard.refreshCharacteristicsOfACardSentToGraveyard(removedCard);
         }
     }
-
     public static String checkIfPlayerShouldDrawACard(int graveyardToSendCardTo, String token) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> spellCards;

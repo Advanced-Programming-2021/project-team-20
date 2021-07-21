@@ -7,7 +7,7 @@ import project.model.ActionType;
 import project.server.controller.duel.CardEffects.*;
 import project.server.controller.duel.GamePackage.*;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.*;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.TrapCardData.TrapCard;
@@ -56,9 +56,9 @@ public class ChainController {
     public String canChainingOccur(String token, int turn, ActionType allyActionType, ActionType opponentActionType) {
         MessagesFromEffectToControllers messagesFromEffectToControllers = null;
         if (turn == 1) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(allyActionType, 1, 0);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(allyActionType, 1, 0, token);
         } else if (turn == 2) {
-            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(opponentActionType, 2, 0);
+            messagesFromEffectToControllers = Effect.canSpellTrapCardBeActivatedInChain(opponentActionType, 2, 0, token);
         }
         return applyEffectsIfChainingWasPossible(messagesFromEffectToControllers, token);
     }

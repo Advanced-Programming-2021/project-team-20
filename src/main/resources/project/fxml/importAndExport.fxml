@@ -138,7 +138,7 @@
          <font>
             <Font name="System Bold Italic" size="25.0" />
          </font>
-      </Label>
+      </Label>     
    </children>
    <styleClass>
       <String fx:value="chart-plot-background2" />

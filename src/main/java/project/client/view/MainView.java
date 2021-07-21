@@ -1,8 +1,5 @@
 package project.client.view;
 
-import java.io.IOException;
-import java.net.URL;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import project.ServerConnection;
-import project.server.controller.non_duel.storage.Storage;
+import project.client.CardsStorage;
+import project.client.ServerConnection;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MainView extends Application {
     private static Stage stage;
@@ -28,37 +28,22 @@ public class MainView extends Application {
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.show();
-
-
     }
 
     public static void main(String[] args) throws Exception {
-        // ServerConnection.initializeNetwork();
-        Storage storage = new Storage();
+        ServerConnection.initializeNetwork();
+        CardsStorage storage = new CardsStorage();
         storage.startProgram();
-        // Storage.addCardToNewCardsCrated(Storage.getCardByName("Command Knight"));
         UIStorage.createPreliminaryToStartProgram();
-        // LoginController.setOnlineUser(Storage.getUserByName("JustMonster"));
         launch(args);
-        storage.endProgram();
+        String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
+        ServerConnection.sendDataToServerAndReceiveResult(logout);
     }
 
     public void changeView(String fxml) throws IOException {
         root = FXMLLoader.load(getClass().getResource(fxml));
         stage.getScene().setRoot(root);
         createFadeTransition(root);
-        // FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
-        // fadeTransition.setNode(root);
-        // fadeTransition.setFromValue(0);
-        // fadeTransition.setToValue(1);
-        // fadeTransition.play();
-        // root.translateYProperty().set(root.getHeight());
-        // Timeline timeline = new Timeline();
-        // KeyValue keyValue = new KeyValue(root.translateYProperty(), 0,
-        // Interpolator.EASE_IN);
-        // KeyFrame keyFrame = new KeyFrame(Duration.millis(1000), keyValue);
-        // timeline.getKeyFrames().add(keyFrame );
-        // timeline.play();
     }
 
     private static void createFadeTransition(Parent root) {

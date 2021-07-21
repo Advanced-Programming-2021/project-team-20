@@ -19,33 +19,6 @@ import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 
 public class GameManager {
-    public static ArrayList<DuelController> duelControllerList = new ArrayList<>();
-    public static ArrayList<DuelBoard> duelBoardList = new ArrayList<>();
-    public static ArrayList<ActivateSpellTrapController> activateSpellTrapControllers = new ArrayList<>();
-    public static ArrayList<ActivateMonsterController> activateMonsterControllers = new ArrayList<>();
-    public static ArrayList<AttackMonsterToMonsterController> attackMonsterToMonsterControllers = new ArrayList<>();
-    public static ArrayList<AttackMonsterToMonsterConductor> attackMonsterToMonsterConductors = new ArrayList<>();
-    public static ArrayList<BattlePhaseController> battlePhaseControllers = new ArrayList<>();
-    public static ArrayList<ChainController> chainControllers = new ArrayList<>();
-    public static ArrayList<ChangeCardPositionController> changeCardPositionControllers = new ArrayList<>();
-    public static ArrayList<DirectAttackController> directAttackControllers = new ArrayList<>();
-    public static ArrayList<ContinuousMonsterEffectController> continuousMonsterEffectControllers = new ArrayList<>();
-    // public static ArrayList<MainPhaseController> mainPhaseControllers = new
-    // ArrayList<>();
-    public static ArrayList<NormalSummonController> normalSummonControllers = new ArrayList<>();
-    public static ArrayList<FlipSummonController> flipSummonControllers = new ArrayList<>();
-    public static ArrayList<SpecialSummonController> specialSummonControllers = new ArrayList<>();
-    public static ArrayList<TributeSummonController> tributeSummonControllers = new ArrayList<>();
-    public static ArrayList<PhaseController> phaseControllers = new ArrayList<>();
-    public static ArrayList<SelectCardController> selectCardControllers = new ArrayList<>();
-    public static ArrayList<SetCardController> setCardControllers = new ArrayList<>();
-    public static ArrayList<SummonSetCommonClass> summonSetCommonClasses = new ArrayList<>();
-    public static ArrayList<ArrayList<Action>> actions = new ArrayList<>();
-    private static ArrayList<SetTurnForGame> setTurnForGames = new ArrayList<>();
-    private static ArrayList<ChangeCardsBetweenTwoRounds> changeCardsBetweenTwoRounds = new ArrayList<>();
-    public static ArrayList<ArrayList<Action>> uninterruptedActions = new ArrayList<>();
-    public static ArrayList<AI> ais = new ArrayList<>();
-
 
     private static HashMap<DoubleToken, DuelController> duelControllerHashMap = new HashMap<>();
     private static HashMap<DoubleToken, DuelBoard> duelBoardHashMap = new HashMap<>();
@@ -76,35 +49,12 @@ public class GameManager {
                             ArrayList<Card> firstPlayerSideDeck, Deck secondPlayerActiveDeck, ArrayList<Card> secondPlayerMainDeck,
                             ArrayList<Card> secondPlayerSideDeck, String firstPlayerUsername, String secondPlayerUsername,
                             int numberOfRounds, String firstUserToken, String secondUserToken) {
-        duelControllerList.add(new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));
-        duelBoardList.add(new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
-        activateSpellTrapControllers.add(new ActivateSpellTrapController());
-        activateMonsterControllers.add(new ActivateMonsterController());
-        attackMonsterToMonsterControllers.add(new AttackMonsterToMonsterController());
-        attackMonsterToMonsterConductors.add(new AttackMonsterToMonsterConductor());
-        battlePhaseControllers.add(new BattlePhaseController());
-        chainControllers.add(new ChainController());
-        changeCardPositionControllers.add(new ChangeCardPositionController());
-        directAttackControllers.add(new DirectAttackController());
-        continuousMonsterEffectControllers.add(new ContinuousMonsterEffectController());
-        // mainPhaseControllers.add(new MainPhaseController());
-        normalSummonControllers.add(new NormalSummonController());
-        flipSummonControllers.add(new FlipSummonController());
-        specialSummonControllers.add(new SpecialSummonController());
-        tributeSummonControllers.add(new TributeSummonController());
-        selectCardControllers.add(new SelectCardController());
-        setCardControllers.add(new SetCardController());
-        summonSetCommonClasses.add(new SummonSetCommonClass());
-        phaseControllers.add(new PhaseController());
-        actions.add(new ArrayList<>());
-        uninterruptedActions.add(new ArrayList<>());
-        changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
-        setTurnForGames.add(new SetTurnForGame());
-        ais.add(new AI());
-
         DoubleToken doubleToken = new DoubleToken(firstUserToken, secondUserToken);
 
-        duelControllerHashMap.put(doubleToken, new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds));
+//        new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds, firstUserToken, secondUserToken);
+
+        duelControllerHashMap.put(doubleToken, new DuelController(firstPlayerUsername, secondPlayerUsername, numberOfRounds, firstUserToken, secondUserToken));
+        // duelControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(firstUserToken)).startDuel(firstUserToken);
         duelBoardHashMap.put(doubleToken, new DuelBoard(firstPlayerMainDeck, secondPlayerMainDeck));
         activateSpellTrapControllerHashMap.put(doubleToken, new ActivateSpellTrapController());
         activateMonsterControllerHashMap.put(doubleToken, new ActivateMonsterController());
@@ -125,135 +75,38 @@ public class GameManager {
         phaseControllerHashMap.put(doubleToken, new PhaseController());
         actionsHashMap.put(doubleToken, new ArrayList<>());
         uninterruptedActionsHashMap.put(doubleToken, new ArrayList<>());
-        changeCardsBetweenTwoRoundsHashMap.put(doubleToken, new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
-        setTurnForGameHashMap.put(doubleToken, new SetTurnForGame());
-        aiHashMap.put(doubleToken, new AI());
+        changeCardsBetweenTwoRoundsHashMap.put(doubleToken, new ChangeCardsBetweenTwoRounds(firstUserToken, firstPlayerActiveDeck, secondUserToken, secondPlayerActiveDeck, secondPlayerUsername.equals("AI")));
+        // setTurnForGameHashMap.put(doubleToken, new SetTurnForGame());
+       aiHashMap.put(doubleToken, new AI(secondUserToken));
 
     }
 
-    public static void removeClassesWhenGameIsOver(int index) {
-        duelControllerList.remove(index);
-        duelBoardList.remove(index);
-        activateSpellTrapControllers.remove(index);
-        activateMonsterControllers.remove(index);
-        attackMonsterToMonsterControllers.remove(index);
-        attackMonsterToMonsterConductors.remove(index);
-        battlePhaseControllers.remove(index);
-        chainControllers.remove(index);
-        changeCardPositionControllers.remove(index);
-        directAttackControllers.remove(index);
-        continuousMonsterEffectControllers.remove(index);
+    public static void removeClassesWhenGameIsOver(String token) {
+        duelControllerHashMap.remove(token);
+        duelBoardHashMap.remove(token);
+        activateSpellTrapControllerHashMap.remove(token);
+        activateMonsterControllerHashMap.remove(token);
+        attackMonsterToMonsterControllerHashMap.remove(token);
+        attackMonsterToMonsterConductorHashMap.remove(token);
+        battlePhaseControllerHashMap.remove(token);
+        chainControllerHashMap.remove(token);
+        changeCardPositionControllerHashMap.remove(token);
+        directAttackControllerHashMap.remove(token);
+        continuousMonsterEffectControllerHashMap.remove(token);
         // mainPhaseControllers.remove(index);
-        normalSummonControllers.remove(index);
-        flipSummonControllers.remove(index);
-        specialSummonControllers.remove(index);
-        tributeSummonControllers.remove(index);
-        selectCardControllers.remove(index);
-        setCardControllers.remove(index);
-        summonSetCommonClasses.remove(index);
-        phaseControllers.remove(index);
-        actions.remove(index);
-        uninterruptedActions.remove(index);
-        changeCardsBetweenTwoRounds.remove(index);
-        setTurnForGames.remove(index);
-        ais.remove(index);
-    }
-
-    public static DuelController getDuelControllerByIndex(int index) {
-        return duelControllerList.get(index);
-
-    }
-
-    public static DuelBoard getDuelBoardByIndex(int index) {
-        return duelBoardList.get(index);
-    }
-
-    public static ActivateSpellTrapController getActivateSpellTrapControllerByIndex(int index) {
-        return activateSpellTrapControllers.get(index);
-    }
-
-    public static ActivateMonsterController getActivateMonsterControllerByIndex(int index) {
-        return activateMonsterControllers.get(index);
-    }
-
-    public static AttackMonsterToMonsterController getAttackMonsterToMonsterControllerByIndex(int index) {
-        return attackMonsterToMonsterControllers.get(index);
-    }
-
-    public static AttackMonsterToMonsterConductor getAttackMonsterToMonsterConductorsByIndex(int index) {
-        return attackMonsterToMonsterConductors.get(index);
-    }
-
-    public static BattlePhaseController battlePhaseController(int index) {
-        return battlePhaseControllers.get(index);
-    }
-
-    public static ChainController getChainControllerByIndex(int index) {
-        return chainControllers.get(index);
-    }
-
-    public static ChangeCardPositionController getChangeCardPositionController(int index) {
-        return changeCardPositionControllers.get(index);
-    }
-
-    public static DirectAttackController getDirectAttackControllerByIndex(int index) {
-        return directAttackControllers.get(index);
-    }
-
-    public static FlipSummonController getFlipSummonControllerByIndex(int index) {
-        return flipSummonControllers.get(index);
-    }
-
-    public static ContinuousMonsterEffectController getContinuousMonsterEffectControllersByIndex(int index) {
-        return continuousMonsterEffectControllers.get(index);
-    }
-
-    public static NormalSummonController getNormalSummonControllerByIndex(int index) {
-        return normalSummonControllers.get(index);
-    }
-
-    public static SpecialSummonController getSpecialSummonControllerByIndex(int index) {
-        return specialSummonControllers.get(index);
-    }
-
-    public static TributeSummonController getTributeSummonControllerByIndex(int index) {
-        return tributeSummonControllers.get(index);
-    }
-
-    public static SelectCardController getSelectCardControllerByIndex(int index) {
-        return selectCardControllers.get(index);
-    }
-
-    public static SetCardController getSetCardControllerByIndex(int index) {
-        return setCardControllers.get(index);
-    }
-
-    public static ArrayList<Action> getActionsByIndex(int index) {
-        return actions.get(index);
-    }
-
-    public static ArrayList<Action> getUninterruptedActionsByIndex(int index) {
-        return uninterruptedActions.get(index);
-    }
-
-    public static AI getAIByIndex(int index) {
-        return ais.get(index);
-    }
-
-    public static SummonSetCommonClass getSummonSetCommonClassByIndex(int index) {
-        return summonSetCommonClasses.get(index);
-    }
-
-    public static PhaseController getPhaseControllerByIndex(int index) {
-        return phaseControllers.get(index);
-    }
-
-    public static SetTurnForGame getSetTurnForGamesByIndex(int index) {
-        return setTurnForGames.get(index);
-    }
-
-    public static ChangeCardsBetweenTwoRounds getChangeCardsBetweenTwoRoundsByIndex(int index) {
-        return changeCardsBetweenTwoRounds.get(index);
+        normalSummonControllerHashMap.remove(token);
+        flipSummonControllerHashMap.remove(token);
+        specialSummonControllerHashMap.remove(token);
+        tributeSummonControllerHashMap.remove(token);
+        selectCardControllerHashMap.remove(token);
+        setCardControllerHashMap.remove(token);
+        summonSetCommonClassHashMap.remove(token);
+        phaseControllerHashMap.remove(token);
+        actionsHashMap.remove(token);
+        uninterruptedActionsHashMap.remove(token);
+        changeCardsBetweenTwoRoundsHashMap.remove(token);
+        setTurnForGameHashMap.remove(token);
+        aiHashMap.remove(token);
     }
 
 
@@ -282,7 +135,7 @@ public class GameManager {
         return attackMonsterToMonsterConductorHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
-    public static BattlePhaseController battlePhaseController(String token) {
+    public static BattlePhaseController getBattlePhaseControllerByIndex(String token) {
         return battlePhaseControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
@@ -303,7 +156,7 @@ public class GameManager {
     }
 
     public static ContinuousMonsterEffectController getContinuousMonsterEffectControllersByIndex(String token) {
-        return continuousMonsterEffectControllerHashMap.get(token);
+        return continuousMonsterEffectControllerHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
     public static NormalSummonController getNormalSummonControllerByIndex(String token) {
@@ -354,146 +207,258 @@ public class GameManager {
         return changeCardsBetweenTwoRoundsHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
     }
 
-    public static void clearAllVariablesOfThisIndex(int index) {
-        duelControllerList.get(index).clearAllVariablesOfThisClass();
-        duelBoardList.get(index).clearAllVariablesOfThisClass();
-        activateSpellTrapControllers.get(index).clearAllVariablesOfThisClass();
-        activateMonsterControllers.get(index).clearAllVariablesOfThisClass();
-        attackMonsterToMonsterControllers.get(index).clearAllVariablesOfThisClass();
-        attackMonsterToMonsterConductors.get(index).clearAllVariablesOfThisClass();
-        battlePhaseControllers.get(index).clearAllVariablesOfThisClass();
-        chainControllers.get(index).clearAllVariablesOfThisClass();
-        changeCardPositionControllers.get(index).clearAllVariablesOfThisClass();
-        directAttackControllers.get(index).clearAllVariablesOfThisClass();
+    public static void clearAllVariablesOfThisIndex(String token) {
+        getDuelControllerByIndex(token).clearAllVariablesOfThisClass();
+        getDuelBoardByIndex(token).clearAllVariablesOfThisClass();
+        getActivateSpellTrapControllerByIndex(token).clearAllVariablesOfThisClass();
+        getActivateMonsterControllerByIndex(token).clearAllVariablesOfThisClass();
+        getAttackMonsterToMonsterControllerByIndex(token).clearAllVariablesOfThisClass();
+        getAttackMonsterToMonsterConductorsByIndex(token).clearAllVariablesOfThisClass();
+        getBattlePhaseControllerByIndex(token).clearAllVariablesOfThisClass();
+        getChainControllerByIndex(token).clearAllVariablesOfThisClass();
+        getChangeCardPositionController(token).clearAllVariablesOfThisClass();
+        getDirectAttackControllerByIndex(token).clearAllVariablesOfThisClass();
         // mainPhaseControllers.add(new MainPhaseController());
-        normalSummonControllers.get(index).clearAllVariablesOfThisClass();
-        flipSummonControllers.get(index).clearAllVariablesOfThisClass();
-        specialSummonControllers.get(index).clearAllVariablesOfThisClass();
-        tributeSummonControllers.get(index).clearAllVariablesOfThisClass();
-        selectCardControllers.get(index).clearAllVariablesOfThisClass();
-        setCardControllers.get(index).clearAllVariablesOfThisClass();
-        summonSetCommonClasses.get(index).clearAllVariablesOfThisClass();
-        phaseControllers.get(index).clearAllVariablesOfThisClass();
-        actions.get(index).clear();
-        uninterruptedActions.get(index).clear();
-        //changeCardsBetweenTwoRounds.add(new ChangeCardsBetweenTwoRounds(firstPlayerActiveDeck, secondPlayerActiveDeck));
+        getNormalSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getFlipSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSpecialSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getTributeSummonControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSelectCardControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSetCardControllerByIndex(token).clearAllVariablesOfThisClass();
+        getSummonSetCommonClassByIndex(token).clearAllVariablesOfThisClass();
+        getPhaseControllerByIndex(token).clearAllVariablesOfThisClass();
+        getActionsByIndex(token).clear();
+        getUninterruptedActionsByIndex(token).clear();
+        getChangeCardsBetweenTwoRoundsByIndex(token).resetFieldsAfterOneRoundOfDuel();
         //setTurnForGames.add(new SetTurnForGame());
     }
 
 
-    private String superAlmightyChangesString = "";
-    private String availableCardLocationForUseForClient = "";
-    private String changesInLifePointsToBeGivenToClient = "";
+    private HashMap<DoubleToken, String> superAlmightyChangesStringHashMap = new HashMap<>();
+    private HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
+    private HashMap<DoubleToken, String> changesInLifePointsToBeGivenToClientHashMap = new HashMap<>();
+    // private String superAlmightyChangesString = "";
+    // private String availableCardLocationForUseForClient = "";
+    // private String changesInLifePointsToBeGivenToClient = "";
+    private String whatUsersSay = "";
+    private HashMap<DoubleToken, String> whatUsersSayHashMap = new HashMap<>();
+    private HashMap<DoubleToken, String> wholeReportToClientHashMap = new HashMap<>();
 
 
-    public String getChangesInLifePointsToBeGivenToClient() {
-        return changesInLifePointsToBeGivenToClient;
-    }
-
-    public void addStringToChangesInLifePointsToBeGivenToClient(String string) {
-        changesInLifePointsToBeGivenToClient += string;
-        changesInLifePointsToBeGivenToClient += "\n";
+    public void addStringToChangesInLifePointsToBeGivenToClient(String string, String token) {
+        String currentString = changesInLifePointsToBeGivenToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        currentString += string;
+        currentString += "\n";
+        changesInLifePointsToBeGivenToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
         System.out.println("If you will allow me changesInLifePoints is adding\n" + string + "\nto wholeReport");
-        wholeReportToClient += "&";
-        wholeReportToClient += string;
-        wholeReportToClient += "\n";
+        currentString = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        currentString += "&";
+        currentString += string;
+        currentString += "\n";
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
     }
 
-    public void clearChangesInLifePointsToBeGivenToClient() {
-        changesInLifePointsToBeGivenToClient = "";
-    }
 
-    public String getSuperAlmightyChangesString() {
-        return superAlmightyChangesString;
-    }
-
-    public void addStringToSuperAlmightyString(String string) {
+    public void addStringToSuperAlmightyString(String string, String token) {
+        String superAlmightyChangesString = superAlmightyChangesStringHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         superAlmightyChangesString += string;
         superAlmightyChangesString += "\n";
+        superAlmightyChangesStringHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), superAlmightyChangesString);
         System.out.println("If you will allow me superAlmightyString is adding\n" + string + "\nto wholeReport");
+        String wholeReportToClient = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
         wholeReportToClient += string;
         wholeReportToClient += "\n";
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), wholeReportToClient);
     }
 
-    public void clearSuperAlmightyString() {
-        superAlmightyChangesString = "";
+
+    // private HashMap<DoubleToken, String> availableCardLocationForUseForClientHashMap = new HashMap<>();
+
+    public String getAvailableCardLocationForUseForClient(String token) {
+        String[] lines = availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n");
+        System.out.println("giveAvailableCardLocationForUseToClient: ");
+        System.out.println("String[] lines");
+        for (int i = 0; i < lines.length; i++) {
+            System.out.println("lines[" + i + "]= " + lines[i]);
+        }
+        int linesRead = DoubleToken.getDoubleTokenByOneToken(token).getLinesReadByToken(token);
+        System.out.println("linesRead = " + linesRead);
+        String output = "";
+        output += lines[linesRead];
+        System.out.println("output is now= " + output);
+        output += "\n";
+        output += lines[linesRead + 1];
+        output += "\n";
+        System.out.println("output is finally= " + output);
+        return output;
     }
 
-    public String getAvailableCardLocationForUseForClient() {
-        return availableCardLocationForUseForClient;
-    }
-
-    public void addStringToAvailableCardLocationForUseForClient(CardLocation string) {
+    public void addStringToAvailableCardLocationForUseForClient(CardLocation string, String token) {
         if (string != null) {
             System.out.println("@@@@@@@@@@@@@@Available Card Location is " + string.getRowOfCardLocation() + " "
                 + string.getIndex());
-            availableCardLocationForUseForClient += string.getRowOfCardLocation();
-            availableCardLocationForUseForClient += "\n";
-            availableCardLocationForUseForClient += string.getIndex();
-            availableCardLocationForUseForClient += "\n";
+            String currentString = availableCardLocationForUseForClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+            currentString += string.getRowOfCardLocation();
+            currentString += "\n";
+            currentString += string.getIndex();
+            currentString += "\n";
+            availableCardLocationForUseForClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
         }
     }
 
-    public void clearAvailableCardLocationForUseForClient() {
-        int timesSeenNextLine = 0;
-        while (timesSeenNextLine < 2) {
-            if (availableCardLocationForUseForClient.charAt(0) == '\n') {
-                timesSeenNextLine++;
-            }
-            availableCardLocationForUseForClient = availableCardLocationForUseForClient.substring(1);
-        }
-
-        // availableCardLocationForUseForClient = "";
+    public void clearAvailableCardLocationForUseForClient(String token) {
+        DoubleToken doubleToken = DoubleToken.getDoubleTokenByOneToken(token);
+        doubleToken.setLinesReadByToken(token, doubleToken.getLinesReadByToken(token) + 2);
     }
 
 
-    private String whatUsersSay = "";
-
-
-    public void addStringToWhatUsersSay(String string) {
-        whatUsersSay += string;
-        whatUsersSay += "\n";
+    public void addStringToWhatUsersSay(String string, String token) {
+        String currentString = whatUsersSayHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        currentString += string;
+        currentString += "\n";
+        //whatUsersSayHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+        whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
         System.out.println("If you will allow me whatUsersSay is adding\n" + string + "\nto wholeReport");
-        wholeReportToClient += string;
-        wholeReportToClient += "\n";
+        currentString = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        currentString += string;
+        currentString += "\n";
+        //wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
+        //wholeReportToClient += string;
+        //wholeReportToClient += "\n";
     }
 
-    public void clearWhatUsersSay() {
-        whatUsersSay = "";
+
+    public String getWholeReportToClient(String token) {
+        String[] lines = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token)).split("\n");
+        System.out.println("getWholeReportToClient: ");
+        System.out.println("String[] lines");
+        for (int i = 0; i < lines.length; i++) {
+            System.out.println("lines[" + i + "]= " + lines[i]);
+        }
+        int linesRead = DoubleToken.getDoubleTokenByOneToken(token).getLinesReadFromWholeReportToClientByToken(token);
+        System.out.println("linesRead = " + linesRead);
+        String output = "";
+        // int newLinesReading = 0;
+        for (int i = 0; i < lines.length - linesRead; i++) {
+            System.out.println("Adding Line!: " + lines[linesRead + i]);
+            output += lines[linesRead + i];
+            output += "\n";
+        }
+        return output;
     }
 
-    private String wholeReportToClient = "";
-
-    public String getWholeReportToClient() {
-        return wholeReportToClient;
+    public void addStringToWholeReportToClient(String string, String token) {
+        String currentString = wholeReportToClientHashMap.get(DoubleToken.getDoubleTokenByOneToken(token));
+        currentString += string;
+        currentString += "\n";
+        //wholeReportToClientHashMap.remove(DoubleToken.getDoubleTokenByOneToken(token));
+        wholeReportToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), currentString);
     }
 
-    public void addStringToWholeReportToClient(String string) {
-        wholeReportToClient += string;
-        wholeReportToClient += "\n";
+    public void clearChangesInLifePointsToBeGivenToClient(String token) {
+        changesInLifePointsToBeGivenToClientHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+        //changesInLifePointsToBeGivenToClient = "";
     }
 
-    public void clearWholeReportToClient() {
+    public void clearSuperAlmightyString(String token) {
+        superAlmightyChangesStringHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+    }
+
+    public void clearWhatUsersSay(String token) {
+        whatUsersSayHashMap.replace(DoubleToken.getDoubleTokenByOneToken(token), "");
+    }
+
+    public void clearWholeReportToClient(String token, boolean isBeingCalledAtTheRunningTime) {
         // maybe first method should be cleared sooner, in its original function
-        // clearAvailableCardLocationForUseForClient();
-        clearChangesInLifePointsToBeGivenToClient();
-        clearSuperAlmightyString();
-        wholeReportToClient = "";
+        clearChangesInLifePointsToBeGivenToClient(token);
+        clearSuperAlmightyString(token);
+        DoubleToken doubleToken = DoubleToken.getDoubleTokenByOneToken(token);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nclearing whole report from client " +
+            (wholeReportToClientHashMap.get(doubleToken).split("\n").length));
+        if (!isBeingCalledAtTheRunningTime) {
+            doubleToken.setLinesReadFromWholeReportToClientByToken(token, wholeReportToClientHashMap.get(doubleToken).split("\n").length);
+        }
     }
 
+    public void addDoubleTokenToSuperAlmightyChangesStringHashMap(DoubleToken doubleToken) {
+        superAlmightyChangesStringHashMap.put(doubleToken, "");
+    }
 
+    public void addDoubleTokenToAvailableCardLocationForUseForClientHashMap(DoubleToken doubleToken) {
+        availableCardLocationForUseForClientHashMap.put(doubleToken, "");
+    }
+
+    public void addDoubleTokenToChangesInLifePointsToBeGivenToClientHashMap(DoubleToken doubleToken) {
+        changesInLifePointsToBeGivenToClientHashMap.put(doubleToken, "");
+    }
+
+    public void addDoubleTokenToWhatUsersSayHashMap(DoubleToken doubleToken) {
+        whatUsersSayHashMap.put(doubleToken, "");
+    }
+
+    public void addDoubleTokenToWholeReportToClientHashMap(DoubleToken doubleToken) {
+        wholeReportToClientHashMap.put(doubleToken, "");
+    }
 }
 
 
-class DoubleToken{
+class DoubleToken {
     private String firstPlayerToken;
     private String secondPlayerToken;
+    private int firstLinesRead;
+    private int secondLinesRead;
     private static ArrayList<DoubleToken> doubleTokens = new ArrayList<>();
+    private int firstLinesReadFromWholeReportToClient;
+    private int secondLinesReadFromWholeReportToClient;
+    //actually minus one
 
-    public DoubleToken(String firstPlayerToken, String secondPlayerToken){
+    public DoubleToken(String firstPlayerToken, String secondPlayerToken) {
         this.firstPlayerToken = firstPlayerToken;
         this.secondPlayerToken = secondPlayerToken;
+        this.firstLinesRead = 0;
+        this.secondLinesRead = 0;
+        this.firstLinesReadFromWholeReportToClient = 0;
+        this.secondLinesReadFromWholeReportToClient = 0;
         doubleTokens.add(this);
+        ClientMessageReceiver.addDoubleTokenToIndirectMessages(this);
+        DuelStarter.getGameManager().addDoubleTokenToSuperAlmightyChangesStringHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToAvailableCardLocationForUseForClientHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToChangesInLifePointsToBeGivenToClientHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToWhatUsersSayHashMap(this);
+        DuelStarter.getGameManager().addDoubleTokenToWholeReportToClientHashMap(this);
+    }
+
+    public int getLinesReadByToken(String token) {
+        if (firstPlayerToken.equals(token)) {
+            return firstLinesRead;
+        } else {
+            return secondLinesRead;
+        }
+    }
+
+    public void setLinesReadByToken(String token, int linesRead) {
+        if (firstPlayerToken.equals(token)) {
+            this.firstLinesRead = linesRead;
+        } else {
+            this.secondLinesRead = linesRead;
+        }
+    }
+
+    public int getLinesReadFromWholeReportToClientByToken(String token) {
+        if (firstPlayerToken.equals(token)) {
+            return firstLinesReadFromWholeReportToClient;
+        } else {
+            return secondLinesReadFromWholeReportToClient;
+        }
+    }
+
+    public void setLinesReadFromWholeReportToClientByToken(String token, int linesRead) {
+        if (firstPlayerToken.equals(token)) {
+            this.firstLinesReadFromWholeReportToClient = linesRead;
+        } else {
+            this.secondLinesReadFromWholeReportToClient = linesRead;
+        }
     }
 
     public String getFirstPlayerToken() {
@@ -503,9 +468,10 @@ class DoubleToken{
     public String getSecondPlayerToken() {
         return secondPlayerToken;
     }
-    public static DoubleToken getDoubleTokenByOneToken(String token){
-        for (int i = 0; i < doubleTokens.size(); i++){
-            if (doubleTokens.get(i).getFirstPlayerToken().equals(token) || doubleTokens.get(i).getSecondPlayerToken().equals(token)){
+
+    public static DoubleToken getDoubleTokenByOneToken(String token) {
+        for (int i = 0; i < doubleTokens.size(); i++) {
+            if (doubleTokens.get(i).getFirstPlayerToken().equals(token) || doubleTokens.get(i).getSecondPlayerToken().equals(token)) {
                 return doubleTokens.get(i);
             }
         }

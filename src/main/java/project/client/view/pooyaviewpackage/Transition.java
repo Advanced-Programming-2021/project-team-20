@@ -4,23 +4,14 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
-import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
-import project.model.modelsforview.CardView;
+import project.client.modelsforview.CardView;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Transition {
@@ -61,9 +52,11 @@ public class Transition {
             translate.setAutoReverse(true);
             parallelTransition.getChildren().add(translate);
         }
-        int currentTurn = GameManager.getDuelControllerByIndex(0).getTurn();
-        System.out.println("I want to add card to hand and turn = "+turn+" currentTurn = "+currentTurn);
-        if (turn == currentTurn || GameManager.getDuelControllerByIndex(0).getPlayingUsers().get(1).equals("AI")){
+        String token = DuelView.getToken();
+        int currentTurn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
+        System.out.println("I want to add card to hand and turn = " + turn + " currentTurn = " + currentTurn);
+
+        if (turn == 1) {
             cardView.setCanBeSeen(true);
         } else {
             cardView.setCanBeSeen(false);
@@ -139,6 +132,7 @@ public class Transition {
             DuelView.getControllerForView().changeLabelOfCardForSendingSpellToSpellZone(cardView);
             TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToSpellZone(cardView, sideOfFinalDestination);
             parallelTransition.getChildren().add(translateTransition);
+            cardView.setCanBeSeen(true);
             ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(initialSide);
             for (int i = 0; i < translateTransitions.size(); i++) {
                 parallelTransition.getChildren().add(translateTransitions.get(i));
@@ -185,7 +179,7 @@ public class Transition {
             ParallelTransition parallelTransition = new ParallelTransition();
             parallelTransition.getChildren().add(troubleFlipTransition.getStHideFront());
             parallelTransition.getChildren().add(rotateTransition);
-            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination);
+            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination, DuelView.getToken());
             parallelTransition.getChildren().add(translateTransition);
             DuelView.getControllerForView().changeLabelOfCardForSendingMonsterToMonsterZone(cardView);
             ArrayList<TranslateTransition> translateTransitions = giveTranslateTransitionForCardDecreasingInHand(initialSide);
@@ -203,7 +197,7 @@ public class Transition {
         CardLocation initialCardLocation = DuelView.getControllerForView().giveCardLocationByCoordinateInView(null, cardView);
         if (initialCardLocation != null) {
             ParallelTransition parallelTransition = new ParallelTransition();
-            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination);
+            TranslateTransition translateTransition = DuelView.getControllerForView().sendCardToMonsterZone(cardView, sideOfFinalDestination, DuelView.getToken());
             parallelTransition.getChildren().add(translateTransition);
             if (cardPosition.equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                 RotateTransition rotateTransition = rotateCardNintyDegrees(cardView);

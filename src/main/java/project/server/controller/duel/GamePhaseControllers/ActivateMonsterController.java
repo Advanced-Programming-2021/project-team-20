@@ -4,7 +4,7 @@ import project.model.MonsterEffectEnums.OptionalMonsterEffect;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.RowOfCardLocation;
@@ -40,11 +40,11 @@ public class ActivateMonsterController extends ChainController {
         return isClassWaitingForUserToChooseMonsterFromOpponentGraveyard;
     }
 
-    public String activateMonsterEffectInputAnalysis(String string) {
+    public String activateMonsterEffectInputAnalysis(String string, String token) {
         String inputRegex = "(?<=\\n|^)activate[\\s]+effect(?=\\n|$)";
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
-            return startChecking(0);
+            return startChecking(token);
         }
         return null;
     }
@@ -252,7 +252,7 @@ public class ActivateMonsterController extends ChainController {
                     Card cardToBeAddedToHand = removeCardAndGetRemovedCard(cardLocation, token);
                     duelBoard.addCardToHand(cardToBeAddedToHand, activateMonsterTurn);
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                        + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE");
+                        + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE", token);
 
                     isClassWaitingForUserToChooseMonsterFromGraveyard = false;
                     MonsterCard mainMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(mainMonsterCardLocation);
@@ -280,7 +280,7 @@ public class ActivateMonsterController extends ChainController {
                 Card cardToBeAddedToHand = removeCardAndGetRemovedCard(cardLocation, token);
                 duelBoard.addCardToHand(cardToBeAddedToHand, activateMonsterTurn);
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-                    + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE");
+                    + " " + cardLocation.getIndex() + " is being added to hand zone " + activateMonsterTurn + " and should finally be NO_CHANGE", token);
 
                 isClassWaitingForUserToChooseMonsterFromOpponentGraveyard = false;
                 MonsterCard mainMonsterCard = (MonsterCard) duelBoard.getCardByCardLocation(mainMonsterCardLocation);
@@ -336,8 +336,8 @@ public class ActivateMonsterController extends ChainController {
             Card card = removeCardAndGetRemovedCard(targetingCardLocation, token);
             duelBoard.addCardToGraveyard(card, graveyardToSendCardTo);
 
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
-                + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + targetingCardLocation.getRowOfCardLocation()
+                + " " + targetingCardLocation.getIndex() + " is being added to graveyard zone " + graveyardToSendCardTo + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
 
 
 

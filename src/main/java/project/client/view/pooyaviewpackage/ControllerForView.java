@@ -8,16 +8,16 @@ import javafx.geometry.Bounds;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-import project.server.controller.duel.PreliminaryPackage.GameManager;
+//import project.server.controller.duel.PreliminaryPackage.GameManager;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardType;
 import project.model.cardData.General.RowOfCardLocation;
 import project.model.cardData.SpellCardData.SpellCard;
 import project.model.cardData.SpellCardData.SpellCardValue;
-import project.model.modelsforview.CardView;
-import project.model.modelsforview.TwoDimensionalPoint;
-import project.model.modelsforview.ViewLittleInformation;
+import project.client.modelsforview.CardView;
+import project.client.modelsforview.TwoDimensionalPoint;
+import project.client.modelsforview.ViewLittleInformation;
 
 import java.util.ArrayList;
 
@@ -81,32 +81,15 @@ public class ControllerForView {
         if (cardViewAnalyzing != null) {
             //         System.out.println("cardViewAnalyzing is " + cardViewAnalyzing.getCard().getCardName());
         }
-
-        //     for (int i = 0; i < cardsInMyHand.size(); i++) {
-        //         System.out.println(cardsInMyHand.get(i).getCard().getCardName() + " da I'm here");
-        //     }
         if (cardViewAnalyzing != null) {
             if (giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE).contains(cardViewAnalyzing)) {
-                //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                 return new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.ALLY_HAND_ZONE) + 1);
-                //} else {
-                //    return new CardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.OPPONENT_HAND_ZONE) + 1);
-                //}
             }
             if (giveCardViewWithThisLabel(RowOfCardLocation.ALLY_GRAVEYARD_ZONE).contains(cardViewAnalyzing)) {
-                //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                 return new CardLocation(RowOfCardLocation.ALLY_GRAVEYARD_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.ALLY_GRAVEYARD_ZONE) + 1);
-                //} else {
-                //    return new CardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE) + 1);
-                //}
             }
             if (giveCardViewWithThisLabel(RowOfCardLocation.ALLY_DECK_ZONE).contains(cardViewAnalyzing)) {
-                //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
-                //         System.out.println("this card is in graphic deck " + cardViewAnalyzing.getCard().getCardName() + " with index = " + (getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.ALLY_DECK_ZONE) + 1));
                 return new CardLocation(RowOfCardLocation.ALLY_DECK_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.ALLY_DECK_ZONE) + 1);
-                //} else {
-                //    return new CardLocation(RowOfCardLocation.OPPONENT_DECK_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.OPPONENT_DECK_ZONE) + 1);
-                //}
             }
             if (giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE).contains(cardViewAnalyzing)) {
                 //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
@@ -118,9 +101,6 @@ public class ControllerForView {
             if (giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE).contains(cardViewAnalyzing)) {
                 //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                 return new CardLocation(RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.OPPONENT_GRAVEYARD_ZONE) + 1);
-                //} else {
-                //    return new CardLocation(RowOfCardLocation.ALLY_GRAVEYARD_ZONE, getIndexOfANodeInGroup(cardViewAnalyzing, RowOfCardLocation.ALLY_GRAVEYARD_ZONE) + 1);
-                //}
             }
             if (giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE).contains(cardViewAnalyzing)) {
                 //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
@@ -131,14 +111,10 @@ public class ControllerForView {
             }
         }
 
-        //     System.out.println("I am so sorry, this is not good");
         double upperLeftXOfBattleField = DuelView.getBattleFieldView().getUpperLeftX();
         double upperLeftYOfBattleField = DuelView.getBattleFieldView().getUpperLeftY();
         double upperRightXOfBattleField = upperLeftXOfBattleField + DuelView.getBattleFieldView().getWidth();
         double lowerLeftYOfBattleField = upperLeftYOfBattleField + DuelView.getBattleFieldView().getHeight();
-        //     System.out.println("upperLeftXOfBattleField is " + upperLeftXOfBattleField);
-        //     System.out.println("upperRightXOfBattleField is " + upperRightXOfBattleField);
-        //     System.out.println("upperLeftYOfBattleField" + upperLeftYOfBattleField);
         ArrayList<CardView> cardsInMyHand = giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
         if (y - upperLeftYOfBattleField >= 617.1 && y - upperLeftYOfBattleField <= 617.1 + CardView.getCardHeight()) {
             for (int i = 0; i < cardsInMyHand.size(); i++) {
@@ -163,11 +139,6 @@ public class ControllerForView {
                 }
             }
         }
-        //       translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7 - cardView.getUpperLeftX());
-        //       translateTransition.setToY(506 - cardView.getUpperLeftY());
-        //   } else {
-        //       translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + 40 - cardView.getUpperLeftX());
-        //       translateTransition.setToY(494 - CardView.getCardHeight() - cardView.getUpperLeftY());
         if (x - DuelView.getBattleFieldView().getUpperLeftX() - DuelView.getBattleFieldView().getWidth() + CardView.getCardWidth() + 7 >= 0 &&
             x - DuelView.getBattleFieldView().getUpperLeftX() - DuelView.getBattleFieldView().getWidth() + CardView.getCardWidth() + 7 <= CardView.getCardWidth() &&
             y - 506 >= 0 && y - 506 <= CardView.getCardHeight()) {
@@ -189,14 +160,7 @@ public class ControllerForView {
             y - 510 + 20 + 2 * CardView.getCardHeight() - CardView.getCardHeight() >= 0 && y - 510 + 20 + 2 * CardView.getCardHeight() - CardView.getCardHeight() <= CardView.getCardHeight()) {
             return new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1);
         }
-
-//            double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
-//        double yTranslation = 510 - 20 - 2 * CardView.getCardHeight() - cardView.getUpperLeftY();
-//
-//
-//        translateTransition.setToX(xTranslation + 6 * CardView.getCardWidth() + 20);
-//        translateTransition.setToY(yTranslation + CardView.getCardHeight());
-
+        int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
         if (x - upperLeftXOfBattleField >= 146.4 && x - upperRightXOfBattleField <= -116.4) {
             //         System.out.println("going inside");
             if (y - upperLeftYOfBattleField >= 131 && y - upperLeftYOfBattleField <= 227) {
@@ -206,7 +170,11 @@ public class ControllerForView {
                     if (x - upperLeftXOfBattleField > 140 + 45 + CardView.getCardWidth() * i && x - upperLeftXOfBattleField < 140 + 45 + CardView.getCardWidth() * (i + 1)) {
                         // if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                         //                    System.out.println("HELL YEAH " + RowOfCardLocation.OPPONENT_SPELL_ZONE + " " + (i + 1));
+                        // if (belongingTurn == 1) {
                         return new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
+//                        } else {
+//                            return new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1);
+//                        }
                         //return new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false));
                         // } else {
                         //     return new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false));
@@ -220,7 +188,11 @@ public class ControllerForView {
                     if (x - upperLeftXOfBattleField > 140 + 45 + CardView.getCardWidth() * i && x - upperLeftXOfBattleField < 140 + 45 + CardView.getCardWidth() * (i + 1)) {
                         //   if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                         //                    System.out.println("HELL YEAH " + RowOfCardLocation.OPPONENT_MONSTER_ZONE + " " + (i + 1));
+                        //  if (belongingTurn == 1) {
                         return new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1);
+//                        } else {
+//                            return new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1);
+//                        }
                         //return new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false));
                         //   } else {
                         //      return new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, false));
@@ -234,7 +206,11 @@ public class ControllerForView {
                     if (x - upperLeftXOfBattleField > 140 + 45 + CardView.getCardWidth() * i && x - upperLeftXOfBattleField < 140 + 45 + CardView.getCardWidth() * (i + 1)) {
                         // if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                         //                    System.out.println("HELL YEAH " + RowOfCardLocation.ALLY_MONSTER_ZONE + " " + (i + 1));
+                        //  if (belongingTurn == 1) {
                         return new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, i + 1);
+//                        } else {
+//                            return new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, i + 1);
+//                        }
                         //return new CardLocation(RowOfCardLocation.ALLY_MONSTER_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true));
                         // } else {
                         //     return new CardLocation(RowOfCardLocation.OPPONENT_MONSTER_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true));
@@ -247,7 +223,11 @@ public class ControllerForView {
                     if (x - upperLeftXOfBattleField > 140 + 45 + CardView.getCardWidth() * i && x - upperLeftXOfBattleField < 140 + 45 + CardView.getCardWidth() * (i + 1)) {
                         //if (GameManager.getDuelControllerByIndex(0).getFakeTurn() == 1) {
                         //                     System.out.println("HELL YEAH " + RowOfCardLocation.ALLY_SPELL_ZONE + " " + (i + 1));
+                        //if (belongingTurn == 1) {
                         return new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1);
+//                        } else {
+//                            return new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
+//                        }
                         //return new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true));
                         //} else {
                         //    return new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, Utility.changeArrayIndexFromOneToFiveToYuGiOhIndex(i + 1, true));
@@ -262,14 +242,14 @@ public class ControllerForView {
     }
 
     public CardView getCardViewByCardLocation(CardLocation cardLocation) {
-        System.out.println("The requested cardLocation is "+cardLocation.getRowOfCardLocation()+" "+cardLocation.getIndex());
+        System.out.println("The requested cardLocation is " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex());
         ArrayList<CardView> cardViews = giveCardViewWithThisLabel(cardLocation.getRowOfCardLocation());
         for (int i = 0; i < cardViews.size(); i++) {
             if (cardViews.get(i) == null) {
                 System.out.println("\nTHIS IS AN INTERESTNG REPORT " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex() + " is null");
             }
             CardLocation thisCardLocation = giveCardLocationByCoordinateInView(null, cardViews.get(i));
-          //  System.out.println("\nTHIS IS AN wonderful REPORT " + thisCardLocation.getRowOfCardLocation() + " " + thisCardLocation.getIndex() + " is null");
+            //  System.out.println("\nTHIS IS AN wonderful REPORT " + thisCardLocation.getRowOfCardLocation() + " " + thisCardLocation.getIndex() + " is null");
             if (thisCardLocation != null && thisCardLocation.getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && thisCardLocation.getIndex() == cardLocation.getIndex()) {
                 return cardViews.get(i);
             }
@@ -277,7 +257,7 @@ public class ControllerForView {
         System.out.println("card o locasion " + cardLocation.getRowOfCardLocation() + " " + cardLocation.getIndex());
         cardViews = giveCardViewWithThisLabel(cardLocation.getRowOfCardLocation());
         for (int i = 0; i < cardViews.size(); i++) {
-            System.out.println("qwerty here! "+cardViews.get(i).getCard().getCardName()+" at index = "+i);
+            System.out.println("qwerty here! " + cardViews.get(i).getCard().getCardName() + " at index = " + i);
             //CardLocation thisCardLocation = giveCardLocationByCoordinateInView(null, cardViews.get(i));
             //if (thisCardLocation != null && thisCardLocation.getRowOfCardLocation().equals(cardLocation.getRowOfCardLocation()) && thisCardLocation.getIndex() == cardLocation.getIndex()) {
             //    return cardViews.get(i);
@@ -308,7 +288,7 @@ public class ControllerForView {
 
     public void giveCardsAtTheBeginningOfGame() {
         DuelView.printChildrenInGroups();
-        ArrayList<Card> allyCardsInHand = GameManager.getDuelBoardByIndex(0).getAllyCardsInHand();
+        ArrayList<Card> allyCardsInHand = DuelView.getAllyCardsInHand();
         for (int i = 0; i < allyCardsInHand.size(); i++) {
             System.out.println(allyCardsInHand.get(i).getCardName() + " sfdsfd");
         }
@@ -328,7 +308,7 @@ public class ControllerForView {
             allyParallelTransition.getChildren().add(translate);
         }
         allyParallelTransition.play();
-        ArrayList<Card> opponentCardsInHand = GameManager.getDuelBoardByIndex(0).getOpponentCardsInHand();
+        ArrayList<Card> opponentCardsInHand = DuelView.getOpponentCardsInHand();
         ParallelTransition opponentParallelTransition = new ParallelTransition();
         for (int i = 0; i < opponentCardsInHand.size(); i++) {
             ArrayList<CardView> cardViews = giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE);
@@ -450,25 +430,32 @@ public class ControllerForView {
         }
     }
 
-    public TranslateTransition sendCardToMonsterZone(CardView cardView, int turn) {
+    public TranslateTransition sendCardToMonsterZone(CardView cardView, int turn, String token) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(500), cardView);
+        String cardLocation = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(token)");
+        int index = Integer.parseInt((cardLocation.split("\n"))[1]);
+        int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
+        if (belongingTurn == 2) {
+            index = 4 - index;
+        }
         if (turn == 1) {
-            if (DuelView.getCardLocationToSendCardTo() == null) {
-                DuelView.setCardLocationToSendCardTo(GameManager.getDuelBoardByIndex(0).giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true));
-                System.out.println("YOU ARE EXCLUSIVELY DOOMED CAUSE CARD LOCATION TO SEND CARD TO IS NULL");
-            }
-            String cardLocation = GameManager.getDuelControllerByIndex(0).getAvailableCardLocationForUseForClient();
+//            if (DuelView.getCardLocationToSendCardTo() == null) {
+//                String cardLocationString = JsonCreator.getResult("GameManager.getDuelBoardByIndex(token).giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_MONSTER_ZONE, true)");
+//                DuelView.setCardLocationToSendCardTo(new CardLocation());
+//                System.out.println("YOU ARE EXCLUSIVELY DOOMED CAUSE CARD LOCATION TO SEND CARD TO IS NULL");
+//            }
+
             // System.out.println(cardLocation+" POUPOLl");
-            translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + Integer.parseInt((cardLocation.split("\n"))[1]) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX());
+            translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + index * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX());
             translateTransition.setToY(510 - cardView.getUpperLeftY());
         } else {
-            String cardLocation = GameManager.getDuelControllerByIndex(0).getAvailableCardLocationForUseForClient();
             //System.out.println(cardLocation+" POUPOLL");
-            translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + Integer.parseInt((cardLocation.split("\n"))[1]) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX());
+            translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + index * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX());
             translateTransition.setToY(510 - 20 - CardView.getCardHeight() - cardView.getUpperLeftY());
             cardView.setShouldBeSeen180DegreesReversed(true);
         }
-        GameManager.getDuelControllerByIndex(0).clearAvailableCardLocationForUseForClient();
+        JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).clearAvailableCardLocationForUseForClient(token)");
+        cardView.setCanBeSeen(true);
         translateTransition.setCycleCount(1);
         translateTransition.setAutoReverse(true);
         return translateTransition;
@@ -500,7 +487,8 @@ public class ControllerForView {
 
     public TranslateTransition sendCardToGraveyardZone(CardView cardView, int turn, double time, boolean isSpecial) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(time), cardView);
-        if (turn == 0 && GameManager.getDuelControllerByIndex(0).getTurn() == 1 || turn == 1) {
+        int nowTurn = Integer.parseInt(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getTurn()"));
+        if (turn == 0 && nowTurn == 1 || turn == 1) {
             translateTransition.setToX(DuelView.getBattleFieldView().getUpperLeftX() + DuelView.getBattleFieldView().getWidth() - CardView.getCardWidth() - 7 - cardView.getUpperLeftX());
             translateTransition.setToY(506 - cardView.getUpperLeftY());
         } else {
@@ -510,7 +498,7 @@ public class ControllerForView {
         }
         translateTransition.setCycleCount(1);
         translateTransition.setAutoReverse(true);
-        if (isSpecial){
+        if (isSpecial) {
             translateTransition.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
@@ -523,9 +511,16 @@ public class ControllerForView {
 
     public TranslateTransition sendCardToSpellZone(CardView cardView, int turn) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(500), cardView);
+        String token = DuelView.getToken();
+        String cardLocation = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(token)");
+        int index = Integer.parseInt((cardLocation.split("\n"))[1]);
+        int belongingTurn = Integer.parseInt(JsonCreator.getResult("give my actual turn"));
+        if (belongingTurn == 2) {
+            index = 4 - index;
+        }
         if (turn == 1) {
-            String cardLocation = GameManager.getDuelControllerByIndex(0).getAvailableCardLocationForUseForClient();
-            double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
+
+            double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + index * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
             double yTranslation = 510 + CardView.getCardHeight() - cardView.getUpperLeftY();
             if (cardView.getCard().getCardType().equals(CardType.SPELL) && ((SpellCard) cardView.getCard()).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 translateTransition.setToX(xTranslation - CardView.getCardWidth() - 20);
@@ -535,8 +530,7 @@ public class ControllerForView {
                 translateTransition.setToY(yTranslation);
             }
         } else {
-            String cardLocation = GameManager.getDuelControllerByIndex(0).getAvailableCardLocationForUseForClient();
-            double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + (Integer.parseInt((cardLocation.split("\n"))[1])) * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
+            double xTranslation = DuelView.getBattleFieldView().getUpperLeftX() + index * (CardView.getCardWidth() + 20.5) + 147.6 - cardView.getUpperLeftX();
             double yTranslation = 510 - 20 - 2 * CardView.getCardHeight() - cardView.getUpperLeftY();
             if (cardView.getCard().getCardType().equals(CardType.SPELL) && ((SpellCard) cardView.getCard()).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 translateTransition.setToX(xTranslation + 6 * CardView.getCardWidth() + 20);
@@ -547,30 +541,30 @@ public class ControllerForView {
             }
             cardView.setShouldBeSeen180DegreesReversed(true);
         }
-        GameManager.getDuelControllerByIndex(0).clearAvailableCardLocationForUseForClient();
+        JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).clearAvailableCardLocationForUseForClient(token)");
         translateTransition.setCycleCount(1);
         translateTransition.setAutoReverse(true);
         return translateTransition;
     }
 
-    private void changeVisibilityOfCardsWhenTurnsChange() {
-        ArrayList<CardView> allyCardsInHand = giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
-        ArrayList<CardView> opponentCardsInHand = giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
-        int turn = GameManager.getDuelControllerByIndex(0).getTurn();
-        for (int i = 0; i < allyCardsInHand.size(); i++) {
-            if (turn == 1) {
-                allyCardsInHand.get(i).setCanBeSeen(true);
-            } else {
-                allyCardsInHand.get(i).setCanBeSeen(false);
-            }
-        }
-        for (int i = 0; i < opponentCardsInHand.size(); i++) {
-            if (turn == 1) {
-                opponentCardsInHand.get(i).setCanBeSeen(false);
-            } else {
-                opponentCardsInHand.get(i).setCanBeSeen(true);
-            }
-        }
-    }
+//    private void changeVisibilityOfCardsWhenTurnsChange() {
+//        ArrayList<CardView> allyCardsInHand = giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
+//        ArrayList<CardView> opponentCardsInHand = giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
+//        int turn = GameManager.getDuelControllerByIndex(DuelView.getToken()).getTurn();
+//        for (int i = 0; i < allyCardsInHand.size(); i++) {
+//            if (turn == 1) {
+//                allyCardsInHand.get(i).setCanBeSeen(true);
+//            } else {
+//                allyCardsInHand.get(i).setCanBeSeen(false);
+//            }
+//        }
+//        for (int i = 0; i < opponentCardsInHand.size(); i++) {
+//            if (turn == 1) {
+//                opponentCardsInHand.get(i).setCanBeSeen(false);
+//            } else {
+//                opponentCardsInHand.get(i).setCanBeSeen(true);
+//            }
+//        }
+//    }
 
 }

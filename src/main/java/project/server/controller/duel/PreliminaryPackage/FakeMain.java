@@ -25,12 +25,14 @@ public class FakeMain {
         ArrayList<Card> secondPlayerDeck = new ArrayList<>();
         addCardsToFirstPlayer(firstPlayerDeck);
         addCardsToSecondPlayer(secondPlayerDeck);
+        String token = "";
        // gameManager.addANewGame(firstPlayerDeck, null, secondPlayerDeck, null, "zenos", "ai", 1);
-        DuelController duelController = GameManager.getDuelControllerByIndex(0);
-        duelController.startDuel(0);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
+
+        duelController.startDuel(token);
         //System.out.println(duelController.startDuel(0));
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-        System.out.println(duelBoard.showDuelBoard(0));
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        System.out.println(duelBoard.showDuelBoard(token));
         boolean continueInput = true;
         String input;
         while (continueInput) {
@@ -38,7 +40,7 @@ public class FakeMain {
             if (input.equals("end")) {
                 continueInput = false;
             } else {
-                System.out.print(duelController.getInput(input, true));
+                System.out.print(duelController.getInput(input, true, token));
             }
         }
     }
@@ -55,12 +57,13 @@ public class FakeMain {
         ArrayList<Card> secondPlayerDeck = new ArrayList<>();
         addCardsToFirstPlayer(firstPlayerDeck);
         addCardsToSecondPlayer(secondPlayerDeck);
-        gameManager.addANewGame(null, firstPlayerDeck, null, null, secondPlayerDeck, null, "zenos", "AI", 1);
-        DuelController duelController = GameManager.getDuelControllerByIndex(0);
-        duelController.startDuel(0);
+        String token = "";
+        gameManager.addANewGame(null, firstPlayerDeck, null, null, secondPlayerDeck, null, "zenos", "AI", 1, token, token);
+        DuelController duelController = GameManager.getDuelControllerByIndex(token);
+        duelController.startDuel(token);
         // System.out.println(duelController.startDuel(0));
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(0);
-        System.out.println(duelBoard.showDuelBoard(0));
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        System.out.println(duelBoard.showDuelBoard(token));
         boolean continueInput = true;
         String input;
     }

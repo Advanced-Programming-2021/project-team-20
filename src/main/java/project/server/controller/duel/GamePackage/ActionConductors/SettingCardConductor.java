@@ -27,10 +27,10 @@ public class SettingCardConductor {
         SettingCardConductor.isActionCanceled = isActionCanceled;
     }
 
-    public static String conductNormalSettingActionUninterruptedAction(int index, int numberInListOfActions) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+    public static String conductNormalSettingActionUninterruptedAction(String token, int numberInListOfActions) {
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(token);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         ArrayList<Card> cardsToBeTributed = new ArrayList<>();
         int turn = 0;
         CardLocation superFinalCardLocation = null;
@@ -47,7 +47,7 @@ public class SettingCardConductor {
             Card card = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
             if (Card.isCardASpell(card) && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 uninterruptedAction.setFinalMainCardLocation(new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1));
-                sendUseLessSpellFieldCardToGraveyard(index, 1);
+                sendUseLessSpellFieldCardToGraveyard(token, 1);
             } else {
                 superFinalCardLocation = new CardLocation(
                     duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.ALLY_SPELL_ZONE, true)
@@ -69,7 +69,7 @@ public class SettingCardConductor {
             Card card = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
             if (Card.isCardASpell(card) && ((SpellCard) card).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 uninterruptedAction.setFinalMainCardLocation(new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1));
-                sendUseLessSpellFieldCardToGraveyard(index, 2);
+                sendUseLessSpellFieldCardToGraveyard(token, 2);
             } else {
                 superFinalCardLocation = new CardLocation(
                     duelBoard.giveAvailableCardLocationForUse(RowOfCardLocation.OPPONENT_SPELL_ZONE, false)
@@ -84,35 +84,35 @@ public class SettingCardConductor {
             cardsToBeTributed.add(duelBoard.getCardByCardLocation(uninterruptedAction.getSpendingCards().get(i)));
             duelBoard.removeCardByCardLocation(uninterruptedAction.getSpendingCards().get(i));
             duelBoard.addCardToGraveyard(cardsToBeTributed.get(i), turn);
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getSpendingCards().get(i).getRowOfCardLocation()
-                + " " + uninterruptedAction.getSpendingCards().get(i).getIndex() + " is being added to graveyard zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ");
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getSpendingCards().get(i).getRowOfCardLocation()
+                + " " + uninterruptedAction.getSpendingCards().get(i).getIndex() + " is being added to graveyard zone " + turn + " and should finally be FACE_UP_ATTACK_POSITION or FACE_UP_ACTIVATED_POSITION ", token);
 
         }
         Card mainCard = duelBoard.getCardByCardLocation(uninterruptedAction.getMainCardLocation());
         if (Card.isCardATrap(mainCard)) {
-            ((TrapCard) mainCard).setTurnCardWasSet(GameManager.getDuelControllerByIndex(index).getTotalTurnsUntilNow());
+            ((TrapCard) mainCard).setTurnCardWasSet(GameManager.getDuelControllerByIndex(token).getTotalTurnsUntilNow());
         }
         duelBoard.removeCardByCardLocation(uninterruptedAction.getMainCardLocation());
         if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_MONSTER)
             || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_MONSTER)) {
-            duelBoard.addCardToMonsterZone(mainCard, turn);
-            GameManager.getDuelControllerByIndex(index).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_DOWN_MONSTER_SET_POSITION");
+            duelBoard.addCardToMonsterZone(mainCard, turn, token);
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
+                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to monster zone " + turn + " and should finally be FACE_DOWN_MONSTER_SET_POSITION", token);
 
             mainCard.setCardPosition(CardPosition.FACE_DOWN_MONSTER_SET_POSITION);
-            GameManager.getDuelControllerByIndex(index).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
+            GameManager.getDuelControllerByIndex(token).setCanUserSummonOrSetMonsters(uninterruptedAction.getActionTurn(), false);
         } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_SETTING_SPELL_OR_TRAP_CARD)
             || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_SETTING_SPELL_OR_TRAP_CARD)) {
-            duelBoard.addCardToSpellZone(mainCard, turn);
-            GameManager.getDuelControllerByIndex(0).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
-                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to spell zone " + turn + " and should finally be FACE_DOWN_SPELL_SET_POSITION");
+            duelBoard.addCardToSpellZone(mainCard, turn, token);
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + uninterruptedAction.getMainCardLocation().getRowOfCardLocation()
+                + " " + uninterruptedAction.getMainCardLocation().getIndex() + " is being added to spell zone " + turn + " and should finally be FACE_DOWN_SPELL_SET_POSITION", token);
             mainCard.setCardPosition(CardPosition.FACE_DOWN_SPELL_SET_POSITION);
         }
         return "set successfully";
     }
 
-    private static void sendUseLessSpellFieldCardToGraveyard(int index, int turn) {
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+    private static void sendUseLessSpellFieldCardToGraveyard(String token, int turn) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         CardLocation possibleCardLocation;
         if (turn == 1) {
             possibleCardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1);
@@ -121,16 +121,16 @@ public class SettingCardConductor {
         }
         Card possibleCard = duelBoard.getCardByCardLocation(possibleCardLocation);
         if (Card.isCardASpell(possibleCard)) {
-            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(possibleCardLocation, index);
+            SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(possibleCardLocation, token);
         }
     }
 
-    public static String conductNormalSettingAction(int index, int numberInListOfActions) {
-        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(index);
+    public static String conductNormalSettingAction(String token, int numberInListOfActions) {
+        ArrayList<Action> uninterruptedActions = GameManager.getUninterruptedActionsByIndex(token);
         Action uninterruptedAction = uninterruptedActions.get(numberInListOfActions);
-        ArrayList<Action> actions = GameManager.getActionsByIndex(index);
+        ArrayList<Action> actions = GameManager.getActionsByIndex(token);
         Action action = actions.get(numberInListOfActions);
-        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(index);
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         if (!action.isActionCanceled()) {
             CardLocation mainCardLocation = uninterruptedAction.getFinalMainCardLocation();
             Card mainCard = duelBoard.getCardByCardLocation(mainCardLocation);

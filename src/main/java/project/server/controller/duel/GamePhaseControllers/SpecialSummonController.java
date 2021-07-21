@@ -5,7 +5,7 @@ import project.model.ActionType;
 import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
@@ -191,7 +191,7 @@ public class SpecialSummonController extends SummonSetCommonClass {
                 output += canChainingOccur;
                 return output;
             }
-            return output + Action.conductAllActions(0);
+            return output + Action.conductAllActions(token);
         }
         return "invalid input\nplease enter attacking or defensive";
     }

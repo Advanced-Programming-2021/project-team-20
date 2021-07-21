@@ -1,18 +1,18 @@
 package project.client.view;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import project.client.ServerConnection;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
 
@@ -30,6 +30,9 @@ public class MainMenuController implements Initializable {
     Button deckbtn;
     @FXML
     Button duelbtn;
+    @FXML
+    Button chatRoombtn;
+
     public static MediaPlayer backgroundMusic;
     public MediaView mediaView;
 
@@ -77,7 +80,17 @@ public class MainMenuController implements Initializable {
         new ImportAndExportController().createSceneAndCardPictures(pane);
     }
 
+    public void goToChatRoomPage() {
+        try {
+            new MainView().changeView("/project/fxml/chatRoomPage.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void backToLoginPage() {
+        String logout = "{\"type\":\"logout\",\"token\":\"" + LoginController.getToken() + "\"}";
+        ServerConnection.sendDataToServerAndReceiveResult(logout);
         try {
             new MainView().changeView("/project/fxml/loginPage.fxml");
         } catch (IOException e) {
@@ -104,6 +117,15 @@ public class MainMenuController implements Initializable {
     public void example(ActionEvent actionEvent) {
         try {
             new MainView().changeView("/project/fxml/cardCreatorPage.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void gotoAuction(ActionEvent actionEvent) {
+        AnchorPane pane = null;
+        try {
+            new MainView().changeView("/project/fxml/auctionPage.fxml");
         } catch (IOException e) {
             e.printStackTrace();
         }

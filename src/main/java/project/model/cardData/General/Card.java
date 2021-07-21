@@ -19,6 +19,8 @@ public class Card {
     protected int numberOfAllowedUsages;
     protected int cardPrice;
     protected Image image;
+    protected int numberOfCardsInShop;
+    protected boolean isShopAllowed;
 
     public Card(String cardName, CardType cardType, String cardDescription, CardPosition cardPosition,
                 int numberOfAllowedUsages, int cardPrice, Image image) {
@@ -34,6 +36,32 @@ public class Card {
         this.numberOfAllowedUsages = numberOfAllowedUsages;
         this.cardPrice = cardPrice;
         this.image = image;
+        this.isShopAllowed = true;
+        this.numberOfCardsInShop = 15;
+    }
+
+    public int getNumberOfCardsInShop() {
+        return this.numberOfCardsInShop;
+    }
+
+    public void increaseNumberOfCardsInShop() {
+        this.numberOfCardsInShop++;
+    }
+
+    public void decreaseNumberOfCardsInShop() {
+        this.numberOfCardsInShop--;
+    }
+
+    public void setNumberOfCardsInShop(int numberOfCardsInShop) {
+        this.numberOfCardsInShop = numberOfCardsInShop;
+    }
+
+    public void setShopAllowed(boolean booleanForShop) {
+        this.isShopAllowed = booleanForShop;
+    }
+
+    public boolean getIsShopAllowed() {
+        return this.isShopAllowed;
     }
 
     public Image getImage() {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import project.model.cardData.General.Card;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +20,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import project.server.controller.non_duel.deckCommands.DeckCommands;
+import project.client.CardsStorage;
+import project.client.DeserializeInformationFromServer;
+import project.client.ServerConnection;
+import project.client.ToGsonFormatToSendDataToServer;
 import project.model.Deck;
-import javafx.application.Platform;
+import project.model.cardData.General.CardType;
 
 public class WholeDeckPageMenuController implements Initializable {
 
@@ -46,7 +50,6 @@ public class WholeDeckPageMenuController implements Initializable {
     private static HashMap<String, Label> labelsToShowInformationOfDeck;
     private static List<List<Deck>> decksInDifferentPages;
     private static AnchorPane anchorPane;
-    private DeckCommands deckCommands = new DeckCommands();
     private static String chosenDeck = new String();
     private int currentPageToShowDecks = 0;
     private static Button equalToNextPagebtn;
@@ -54,9 +57,6 @@ public class WholeDeckPageMenuController implements Initializable {
     private static Button equalToDeleteDeckbtn;
     private static Button equalToEditDeckbtn;
     private static Label equalDeckNameLabel;
-    private Thread thread;
-    private boolean isEnteredMouse = false;
-    private Long firstTimeMouseEnteredRectangle = 0l;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -77,19 +77,6 @@ public class WholeDeckPageMenuController implements Initializable {
         addRectangleOfDecksToPage();
         addInformationLabelOfDeckToPane();
         createNewPage();
-        thread = new Thread(() -> {
-            while (true) {
-                if (System.currentTimeMillis() - firstTimeMouseEnteredRectangle > 5000) {
-                    showCardsInDeck();
-                    break;
-                }
-                try {
-                    thread.sleep(1000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         setEffectsOfEditAndDeleteButtons();
         setEffectOfpreviousAndnextDecksbtn();
         MainView.changeScene(pane);
@@ -108,15 +95,6 @@ public class WholeDeckPageMenuController implements Initializable {
         fourRectangleToShowDecks = UIStorage.getFourRectangleToShowDecks();
         for (int i = 0; i < fourRectangleToShowDecks.size(); i++) {
             int index = i;
-        //    myThread[i] = new MyThread(fourRectangleToShowDecks.get(index).getId() + "dadasd");
-            fourRectangleToShowDecks.get(i).setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent arg0) {
-                    firstTimeMouseEnteredRectangle = System.currentTimeMillis();
-               //     myThread[index].start();
-                }
-            });
-
             fourRectangleToShowDecks.get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent t) {
@@ -125,14 +103,7 @@ public class WholeDeckPageMenuController implements Initializable {
                     equalDeckNameLabel.setText(chosenDeck);
                 }
             });
-            fourRectangleToShowDecks.get(i).setOnMouseExited(MouseEvent -> {
-            //    myThread[index].stop(); // stopping thread t1
-            });
         }
-    }
-
-    private void showCardsInDeck() {
-        System.out.println("x");
     }
 
     private void addRectangleOfDecksToPage() {
@@ -162,7 +133,18 @@ public class WholeDeckPageMenuController implements Initializable {
     }
 
     public void deleteDeck() {
-        deckCommands.deleteDeck(chosenDeck, LoginController.getOnlineUser().getName());
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("deleteDeck", "deckName",
+                chosenDeck);
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer
+                .deserializeForOnlyTypeAndMessage(resultOfServer);
+        showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+        if (!deserializeResult.get("type").equals("Successful")) {
+            return;
+        }
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            new MainMenuController().backToLoginPage();
+        }
         if (decksInDifferentPages.get(currentPageToShowDecks).size() == 1) {
             if (currentPageToShowDecks != 0) {
                 decksInDifferentPages.remove(currentPageToShowDecks);
@@ -179,12 +161,12 @@ public class WholeDeckPageMenuController implements Initializable {
             }
             editDecksInDifferentPageWhenDeckDeleted();
         }
+        LoginController.getOnlineUser().deleteDeck(chosenDeck);
         chosenDeck = "";
         equalDeckNameLabel.setText("");
         createNewPage();
         setEffectOfpreviousAndnextDecksbtn();
         setEffectsOfEditAndDeleteButtons();
-        showAlert("DECK DELETED SUCCESSFULLY!", "SUCCESSFUL");
     }
 
     private void editDecksInDifferentPageWhenDeckDeleted() {
@@ -213,19 +195,26 @@ public class WholeDeckPageMenuController implements Initializable {
 
     public void createNewDeck() {
         String createdDeckName = createdDeckNameField.getText();
-        String result = deckCommands.createDeck(createdDeckName, LoginController.getOnlineUser().getName());
-        if (createdDeckName.equals("")) {
-            showAlert("ENTER DECK NAME", "ERROR");
-            return;
-        }
-        if (result.equals("deck already exists")) {
-            showAlert("DECK ALREADY EXISTS", "ERROR");
+        String sendDataToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("createDeck", "deckName",
+                createdDeckName);
+        String resultOfServer = (String) ServerConnection.sendDataToServerAndReceiveResult(sendDataToServer);
+        HashMap<String, String> deserializeResult = DeserializeInformationFromServer
+                .deserializeForOnlyTypeAndMessage(resultOfServer);
+        showAlert(deserializeResult.get("message"), deserializeResult.get("type"));
+        if (deserializeResult.get("type").equals("Error")) {
             createdDeckNameField.setText("");
             return;
         }
-        showAlert("DECK CREATED SUCCESSFULLY!", "SUCCESSFUL");
+        if (deserializeResult.get("message").equals("Connection Disconnected")) {
+            new MainMenuController().backToLoginPage();
+        }
+
+        Deck deck = new Deck(createdDeckName);
+        LoginController.getOnlineUser().addDeckToAllDecks(createdDeckName, deck);
+
+        LoginController.getOnlineUser().addDeckToAllDecks(createdDeckName, deck);
+
         createdDeckNameField.setText("");
-        Deck deck = LoginController.getOnlineUser().getDecks().get(createdDeckName);
         if (decksInDifferentPages.get(decksInDifferentPages.size() - 1).size() == 4) {
             List<Deck> anotherDeckPage = new ArrayList<>();
             anotherDeckPage.add(deck);
@@ -296,9 +285,7 @@ public class WholeDeckPageMenuController implements Initializable {
                 } else {
                     fourRectangleToShowDecks.get(i * 2 + j)
                             .setId(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname());
-                    HashMap<String, Integer> sizeOfEachPart = deckCommands.getNumberOfEachTypeOfCardsInDeck(
-                            decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getDeckname(),
-                            LoginController.getOnlineUser().getName());
+                    HashMap<String, Integer> sizeOfEachPart = getNumberOfEachTypeOfCardsInDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j));
                     labelsToShowInformationOfDeck.get("mainDeck" + i + "" + j)
                             .setText(sizeOfEachPart.get("mainDeckSize") + "");
                     setImageOfDeck(decksInDifferentPages.get(currentPageToShowDecks).get(2 * i + j).getIsDeckActive(),
@@ -351,6 +338,33 @@ public class WholeDeckPageMenuController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static HashMap<String, Integer> getNumberOfEachTypeOfCardsInDeck(Deck deck) {
+        int numberOfMonsterCards = 0;
+        int numberOfSpellCards = 0;
+        int numberOfTrapCards = 0;
+        List<String> mainDeckCards = deck.getMainDeck();
+
+        HashMap<String, Integer> sizeOfEachPart = new HashMap<>();
+        sizeOfEachPart.put("mainDeckSize", mainDeckCards.size());
+        sizeOfEachPart.put("sideDeckSize", deck.getSizeOfSideDeck());
+        for (int i = 0; i < mainDeckCards.size(); i++) {
+            Card card = CardsStorage.getCardByName(mainDeckCards.get(i));
+            if (card.getCardType().equals(CardType.MONSTER)) {
+                numberOfMonsterCards++;
+            } else {
+                if (card.getCardType().equals(CardType.SPELL)) {
+                    numberOfSpellCards++;
+                } else {
+                    numberOfTrapCards++;
+                }
+            }
+        }
+        sizeOfEachPart.put("monstersSize", numberOfMonsterCards);
+        sizeOfEachPart.put("spellsSize", numberOfSpellCards);
+        sizeOfEachPart.put("trapsSize", numberOfTrapCards);
+        return sizeOfEachPart;
     }
 
     public static void setAnchorPane(AnchorPane anchorPane) {

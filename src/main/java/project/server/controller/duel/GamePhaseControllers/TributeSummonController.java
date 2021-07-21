@@ -3,7 +3,7 @@ package project.server.controller.duel.GamePhaseControllers;
 import project.server.controller.duel.GamePackage.Action;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.ActionType;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
@@ -37,7 +37,7 @@ public class TributeSummonController extends ChainController {
         Matcher matcher = Utility.getCommandMatcher(string, inputRegex);
         if (Utility.isMatcherCorrectWithoutErrorPrinting(matcher)) {
             NormalSummonController normalSummonController = GameManager.getNormalSummonControllerByIndex(token);
-            String resultOfChecking = normalSummonController.normalSummonInputAnalysis("normal summon", "tribute summon");
+            String resultOfChecking = normalSummonController.normalSummonInputAnalysis("normal summon", "tribute summon", token);
             if (resultOfChecking.startsWith("you can't") || resultOfChecking.startsWith("there are")) {
                 return resultOfChecking;
             }

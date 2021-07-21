@@ -41,8 +41,8 @@ public class ActivateSpellConductor {
             duelBoard.removeCardByCardLocation(mainSpellCardLocation);
             int actionTurn = uninterruptedAction.getActionTurn();
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + mainSpellCardLocation.getRowOfCardLocation()
-                + " " + mainSpellCardLocation.getIndex() + " is being added to spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION");
-            duelBoard.addCardToSpellZone(mainSpellCard, actionTurn);
+                + " " + mainSpellCardLocation.getIndex() + " is being added to spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION", token);
+            duelBoard.addCardToSpellZone(mainSpellCard, actionTurn, token);
         } else if (rowOfMainSpellCardLocation.equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
             if (((SpellCard) mainSpellCard).getSpellCardValue().equals(SpellCardValue.FIELD)) {
                 CardLocation finalCardLocationOfFieldSpellCard = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1);
@@ -57,11 +57,11 @@ public class ActivateSpellConductor {
             duelBoard.removeCardByCardLocation(mainSpellCardLocation);
             int actionTurn = uninterruptedAction.getActionTurn();
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + mainSpellCardLocation.getRowOfCardLocation()
-                + " " + mainSpellCardLocation.getIndex() + " is being added to spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION");
-            duelBoard.addCardToSpellZone(mainSpellCard, actionTurn);
+                + " " + mainSpellCardLocation.getIndex() + " is being added to spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION", token);
+            duelBoard.addCardToSpellZone(mainSpellCard, actionTurn, token);
         } else {
             GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + mainSpellCardLocation.getRowOfCardLocation()
-                + " " + mainSpellCardLocation.getIndex() + " is being stayed at spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION");
+                + " " + mainSpellCardLocation.getIndex() + " is being stayed at spell zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ACTIVATED_POSITION", token);
         }
         // GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
         //if none of the above two ifs occur, then the card was set and we dont need to change location of spell card
@@ -146,6 +146,20 @@ public class ActivateSpellConductor {
             Action previousAction = GameManager.getUninterruptedActionsByIndex(token).get(numberInListOfActions - 1);
             previousAction.setDamageInflictionIsPossible(false);
         }
+        if (quickSpellEffects.contains(QuickSpellEffect.TARGET_FACE_UP_MONSTER_WILL_HAVE_HALF_ATTACK_UNTIL_THE_END_OF_THIS_TURN)) {
+            ArrayList<CardLocation> targetingCards = uninterruptedAction.getTargetingCards();
+            Card card = GameManager.getDuelBoardByIndex(token).getCardByCardLocation(targetingCards.get(0));
+            if (Card.isCardAMonster(card)) {
+                ((MonsterCard) card).setShouldATKBeHalvedOnlyThisTurn(true);
+            }
+        }
+        if (quickSpellEffects.contains(QuickSpellEffect.TARGET_FACE_UP_MONSTER_WILL_GAIN_700_ATTACK_UNTIL_THE_END_OF_THIS_TURN)) {
+            ArrayList<CardLocation> targetingCards = uninterruptedAction.getTargetingCards();
+            Card card = GameManager.getDuelBoardByIndex(token).getCardByCardLocation(targetingCards.get(0));
+            if (Card.isCardAMonster(card)) {
+                ((MonsterCard) card).setShouldATKBeIncreasedOnlyThisTurn(true);
+            }
+        }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.CONTROL_ONE_OF_OPPONENTS_MONSTERS_UNTIL_END_PHASE)) {
             ArrayList<CardLocation> cardsToTakeControlOf = uninterruptedAction.getCardsToTakeControlOf();
             takeControlOfCard(cardsToTakeControlOf.get(cardsToTakeControlOf.size() - 1), token);
@@ -163,8 +177,8 @@ public class ActivateSpellConductor {
             addCardToHand(cardsToBeChosenFromDeckAndAddedToHand.get(cardsToBeChosenFromDeckAndAddedToHand.size() - 1), token);
         }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.DRAW_2_CARDS)) {
-            drawCard(token);
-            drawCard(token);
+            drawCard(token, GameManager.getDuelControllerByIndex(token).getFakeTurn());
+            drawCard(token, GameManager.getDuelControllerByIndex(token).getFakeTurn());
         }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_OF_OPPONENTS_SPELL_AND_TRAP_CARDS)) {
             destroyAllOfOpponentsSpellAndTrapCards(token);
@@ -174,6 +188,17 @@ public class ActivateSpellConductor {
         }
         if (normalSpellCardEffects.contains(NormalSpellCardEffect.DESTROY_ALL_MONSTERS_ON_THE_FIELD)) {
             destroyAllMonsterCardsInTheField(token);
+        }
+        if (normalSpellCardEffects.contains(NormalSpellCardEffect.ALL_SPELL_TRAPS_IN_FIELD_GO_TO_RESPECTIVE_HANDS)) {
+            returnAllSpellTrapsToRespectiveHands(token, uninterruptedAction);
+        }
+        if (normalSpellCardEffects.contains(NormalSpellCardEffect.BOTH_PLAYERS_DISCARD_ALL_CARDS_FROM_HAND_AND_DRAW_CARDS_EQUAL_TO_THROWN_AWAY_CARDS)) {
+            bothPlayersDiscardCardsAndDrawAsManyThrownAway(token);
+        }
+        if (normalSpellCardEffects.contains(NormalSpellCardEffect.SPECIAL_SUMMON_ONE_LEVEL_5_OR_HIGHER_NORMAL_MONSTER_FROM_YOUR_HAND)) {
+            ArrayList<CardLocation> cardsToBeSpecialSummoned = uninterruptedAction.getCardsToBeSpecialSummoned();
+            ArrayList<CardPosition> cardsInFaceUpAttackPositionOrDefensePosition = uninterruptedAction.getCardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition();
+            specialSummonCard(cardsToBeSpecialSummoned.get(cardsToBeSpecialSummoned.size() - 1), cardsInFaceUpAttackPositionOrDefensePosition.get(cardsInFaceUpAttackPositionOrDefensePosition.size() - 1), token);
         }
         if (equipSpellExtendedEffects.size() > 0) {
             ArrayList<CardLocation> cardsToBeChosenToApplyEquipSpellTo = uninterruptedAction.getCardsToBeChosenToApplyEquipSpellTo();
@@ -198,6 +223,78 @@ public class ActivateSpellConductor {
         return "spell activated";
     }
 
+
+    private static void returnAllSpellTrapsToRespectiveHands(String token, Action uninterruptedAction) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        CardLocation cardLocation;
+        Card card;
+        for (int i = 0; i < 5; i++) {
+            cardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1);
+            card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null && uninterruptedAction.getFinalMainCardLocation() != cardLocation) {
+                SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
+                duelBoard.addCardToHand(card, 1);
+                GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
+                    + " " + cardLocation.getIndex() + " is being added to hand zone " + 1 + " and should finally be NO_CHANGE", token);
+            }
+        }
+        cardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_FIELD_ZONE, 1);
+        card = duelBoard.getCardByCardLocation(cardLocation);
+        if (card != null) {
+            SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
+            duelBoard.addCardToHand(card, 1);
+            GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
+                + " " + cardLocation.getIndex() + " is being added to hand zone " + 1 + " and should finally be NO_CHANGE", token);
+        }
+        for (int i = 0; i < 5; i++) {
+            cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_ZONE, i + 1);
+            card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null && uninterruptedAction.getFinalMainCardLocation() != cardLocation) {
+                SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
+                duelBoard.addCardToHand(card, 2);
+                GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
+                    + " " + cardLocation.getIndex() + " is being added to hand zone " + 2 + " and should finally be NO_CHANGE", token);
+
+            }
+        }
+        cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_SPELL_FIELD_ZONE, 1);
+        card = duelBoard.getCardByCardLocation(cardLocation);
+        if (card != null) {
+            SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
+            duelBoard.addCardToHand(card, 2);
+        }
+        GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
+            + " " + cardLocation.getIndex() + " is being added to hand zone " + 2 + " and should finally be NO_CHANGE", token);
+    }
+
+    private static void bothPlayersDiscardCardsAndDrawAsManyThrownAway(String token) {
+        DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
+        CardLocation cardLocation;
+        Card card;
+        int allySize = duelBoard.getAllyCardsInHand().size();
+        for (int i = 0; i < allySize; i++) {
+            cardLocation = new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, i + 1);
+            card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null) {
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, token);
+            }
+        }
+        int opponentSize = duelBoard.getOpponentCardsInHand().size();
+        for (int i = 0; i < opponentSize; i++) {
+            cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, i + 1);
+            card = duelBoard.getCardByCardLocation(cardLocation);
+            if (card != null) {
+                SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, token);
+            }
+        }
+        for (int i = 0; i < allySize; i++) {
+            drawCard(token, 1);
+        }
+        for (int i = 0; i < opponentSize; i++) {
+            drawCard(token, 2);
+        }
+    }
+
     public static void ritualSummonMonster(Action uninterruptedAction, String token) {
         ArrayList<CardLocation> cardsToBeRitualSummoned = uninterruptedAction.getCardsToBeRitualSummoned();
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
@@ -209,11 +306,11 @@ public class ActivateSpellConductor {
             correctCardLocationOfRitualMonster = new CardLocation(initialCardLocationOfRitualMonster.getRowOfCardLocation(), initialCardLocationOfRitualMonster.getIndex());
         }
         Card card = duelBoard.removeCardByCardLocation(correctCardLocationOfRitualMonster);
-        duelBoard.addCardToMonsterZone(card, uninterruptedAction.getActionTurn());
+        duelBoard.addCardToMonsterZone(card, uninterruptedAction.getActionTurn(), token);
         card.setCardPosition(uninterruptedAction.getCardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition().get(0));
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + correctCardLocationOfRitualMonster.getRowOfCardLocation()
             + " " + correctCardLocationOfRitualMonster.getIndex() + " is being added to monster zone " + uninterruptedAction.getActionTurn() + " and should finally be "
-            + uninterruptedAction.getCardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition().get(0));
+            + uninterruptedAction.getCardsToBeSpecialSummonedInFaceUpAttackPositionOrDefensePosition().get(0), token);
         uninterruptedAction.setSecondCardInHandAfterFirstCardInHand(false);
     }
 
@@ -235,10 +332,10 @@ public class ActivateSpellConductor {
             takenControlledOfCardLocation = superFinalCardLocation;
         }
         // GameManager.getDuelControllerByIndex(index).addStringToAvailableCardLocationForUseForClient(superFinalCardLocation);
-        duelBoard.addCardToMonsterZone(card, turn);
+        duelBoard.addCardToMonsterZone(card, turn, token);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
             + " " + cardLocation.getIndex() + " is being added to monster zone " + turn + " and should finally be "
-            + "NO_CHANGE");
+            + "NO_CHANGE", token);
         duelBoard.addCardLocationToCardLocationsToBeTakenBackInEndPhase(takenControlledOfCardLocation);
     }
 
@@ -264,7 +361,7 @@ public class ActivateSpellConductor {
 
     public static void sendCardsFromSensitiveArrayListToGraveyard(ArrayList<CardLocation> cardsToBeChosenFromDeckAndSentToGraveyard, String token) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
-        duelBoard.sendCardsFromSensitiveArrayListToGraveyard(cardsToBeChosenFromDeckAndSentToGraveyard);
+        duelBoard.sendCardsFromSensitiveArrayListToGraveyard(cardsToBeChosenFromDeckAndSentToGraveyard, token);
     }
 
     public static String give500LifePointsToPlayerOwningACardOfThisEffect(String token, CardLocation spellCardBeingActivated) {
@@ -280,7 +377,7 @@ public class ActivateSpellConductor {
                 SpellCard spellCard = (SpellCard) card;
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS) && spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                    duelController.increaseLifePoints(500, 1);
+                    duelController.increaseLifePoints(500, 1, token);
                     output += ("500 life points is added to player " + duelController.getPlayingUsernameByTurn(1) + "\n");
                 }
             }
@@ -292,7 +389,7 @@ public class ActivateSpellConductor {
                 SpellCard spellCard = (SpellCard) card;
                 ArrayList<ContinuousSpellCardEffect> continuousSpellCardEffects = spellCard.getContinuousSpellCardEffects();
                 if (continuousSpellCardEffects.contains(ContinuousSpellCardEffect.IF_A_SPELL_IS_ACTIVATED_OWNER_GAINS_500_LIFE_POINTS) && spellCard.getCardPosition().equals(CardPosition.FACE_UP_ACTIVATED_POSITION)) {
-                    duelController.increaseLifePoints(500, 2);
+                    duelController.increaseLifePoints(500, 2, token);
                     output += ("500 life points is added to player " + duelController.getPlayingUsernameByTurn(2) + "\n");
 
                 }
@@ -305,10 +402,10 @@ public class ActivateSpellConductor {
         int fakeTurn = GameManager.getDuelControllerByIndex(token).getFakeTurn();
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         Card card = SendCardToGraveyardConductor.removeCardAndGetRemovedCard(monsterCardLocation, token);
-        duelBoard.addCardToMonsterZone(card, fakeTurn);
+        duelBoard.addCardToMonsterZone(card, fakeTurn, token);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + monsterCardLocation.getRowOfCardLocation()
             + " " + monsterCardLocation.getIndex() + " is being added to monster zone " + fakeTurn + " and should finally be "
-            + cardPosition);
+            + cardPosition, token);
         card.setCardPosition(cardPosition);
     }
 
@@ -318,12 +415,10 @@ public class ActivateSpellConductor {
         Card card = SendCardToGraveyardConductor.removeCardAndGetRemovedCard(cardLocation, token);
         duelBoard.addCardToHand(card, fakeTurn);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-            + " " + cardLocation.getIndex() + " is being added to hand zone " + fakeTurn + " and should finally be NO_CHANGE");
-
+            + " " + cardLocation.getIndex() + " is being added to hand zone " + fakeTurn + " and should finally be NO_CHANGE", token);
     }
 
-    public static void drawCard(String token) {
-        int fakeTurn = GameManager.getDuelControllerByIndex(token).getFakeTurn();
+    public static void drawCard(String token, int fakeTurn) {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         CardLocation cardLocation;
         if (fakeTurn == 1) {
@@ -335,7 +430,7 @@ public class ActivateSpellConductor {
         duelBoard.removeCardByCardLocation(cardLocation);
         duelBoard.addCardToHand(card, fakeTurn);
         GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + cardLocation.getRowOfCardLocation()
-            + " " + cardLocation.getIndex() + " is being added to hand zone " + fakeTurn + " and should finally be NO_CHANGE");
+            + " " + cardLocation.getIndex() + " is being added to hand zone " + fakeTurn + " and should finally be NO_CHANGE", token);
 
     }
 

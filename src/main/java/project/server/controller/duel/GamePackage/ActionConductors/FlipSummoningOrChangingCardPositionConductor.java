@@ -3,7 +3,6 @@ package project.server.controller.duel.GamePackage.ActionConductors;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import project.model.MonsterEffectEnums.BeingAttackedEffect;
 import project.model.MonsterEffectEnums.FlipEffect;
 import project.server.controller.duel.GamePackage.Action;
 import project.model.ActionType;
@@ -11,7 +10,7 @@ import project.server.controller.duel.GamePackage.DuelBoard;
 import project.server.controller.duel.GamePackage.DuelController;
 import project.server.controller.duel.GamePhaseControllers.SelectCardController;
 import project.server.controller.duel.PreliminaryPackage.GameManager;
-import project.server.controller.duel.Utility.Utility;
+import project.model.Utility.Utility;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.CardPosition;
@@ -45,17 +44,17 @@ public class FlipSummoningOrChangingCardPositionConductor {
             if (uninterruptedAction.getActionType().equals(ActionType.ALLY_FLIP_SUMMONING_MONSTER) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_FLIP_SUMMONING_MONSTER)) {
                 monsterCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
                 GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + monsterCardToBeFlippedOrPositionChanged.getRowOfCardLocation()
-                    + " " + monsterCardToBeFlippedOrPositionChanged.getIndex() + " is being stayed at monster zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ATTACK_POSITION");
+                    + " " + monsterCardToBeFlippedOrPositionChanged.getIndex() + " is being stayed at monster zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ATTACK_POSITION", token);
                 return "flip summoned successfully";
             } else if (uninterruptedAction.getActionType().equals(ActionType.ALLY_CHANGING_MONSTER_CARD_POSITION) || uninterruptedAction.getActionType().equals(ActionType.OPPONENT_CHANGING_MONSTER_CARD_POSITION)) {
                 if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_ATTACK_POSITION)) {
                     monsterCard.setCardPosition(CardPosition.FACE_UP_DEFENSE_POSITION);
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + monsterCardToBeFlippedOrPositionChanged.getRowOfCardLocation()
-                        + " " + monsterCardToBeFlippedOrPositionChanged.getIndex() + " is being stayed at monster zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_DEFENSE_POSITION");
+                        + " " + monsterCardToBeFlippedOrPositionChanged.getIndex() + " is being stayed at monster zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_DEFENSE_POSITION", token);
                 } else if (monsterCard.getCardPosition().equals(CardPosition.FACE_UP_DEFENSE_POSITION)) {
                     monsterCard.setCardPosition(CardPosition.FACE_UP_ATTACK_POSITION);
                     GameManager.getDuelControllerByIndex(token).addStringToSuperAlmightyString("mainCardLocation " + monsterCardToBeFlippedOrPositionChanged.getRowOfCardLocation()
-                        + " " + monsterCardToBeFlippedOrPositionChanged.getIndex() + " is being stayed at monster zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ATTACK_POSITION");
+                        + " " + monsterCardToBeFlippedOrPositionChanged.getIndex() + " is being stayed at monster zone " + uninterruptedAction.getActionTurn() + " and should finally be FACE_UP_ATTACK_POSITION", token);
                 }
                 return "monster card position changed successfully";
             }
