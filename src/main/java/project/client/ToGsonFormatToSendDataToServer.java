@@ -161,4 +161,12 @@ public class ToGsonFormatToSendDataToServer {
         jsonObject.addProperty("type", "refreshAuction");
         return jsonObject.toString();
     }
+
+    public static String getInformationOfAuction(String auctionCode) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "getInformationOfAuction");
+        jsonObject.addProperty("token", LoginController.getToken());
+        jsonObject.addProperty("auctionCode", auctionCode);
+        return jsonObject.toString();
+    }
 }

@@ -118,6 +118,7 @@ public class DeserializeInformationFromServer {
         }
         return information;
     }
+
 //    public static HashMap<String, String> deserializeForBuyCard(String informationOfServer) {
 //        HashMap<String, String> information = new HashMap<>();
 //        JsonParser jsonParser = new JsonParser();

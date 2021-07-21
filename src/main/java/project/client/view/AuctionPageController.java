@@ -6,12 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.client.CardsStorage;
+import project.client.DeserializeInformationFromServer;
 import project.client.ServerConnection;
 import project.client.ToGsonFormatToSendDataToServer;
 import project.client.view.Components.AuctionToShow;
+import project.model.cardData.General.Card;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -107,6 +111,31 @@ public class AuctionPageController implements Initializable {
             String token = LoginController.getToken();
             String dataToSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatAuction(token, cardName, initialPrice);
             String answerOfServer = ServerConnection.sendDataToServerAndReceiveResult(dataToSendToServer);
+            HashMap<String, String> desreializedAnswer = DeserializeInformationFromServer.deserializeForOnlyTypeAndMessage(answerOfServer);
+
+            String type = desreializedAnswer.get("type");
+            String message = desreializedAnswer.get("message");
+            if (type.equals("SUCCESSFUL")) {
+                new Thread(() -> {
+                    String auctionCode = message;
+                    String cardNameToDelete = cardName;
+                        try {
+                            Thread.sleep(61000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        String dataToSend = ToGsonFormatToSendDataToServer.getInformationOfAuction(message);
+                        String answer = ServerConnection.sendDataToServerAndReceiveResult(dataToSend);
+                        if (answer.equals("SUCCESSFUL")) {
+                            System.out.println("OK for auction successful!!");
+                            LoginController.getOnlineUser().deleteCardFromAllUselessCards(cardName);
+                            Card card = CardsStorage.getCardByName(cardName);
+                            LoginController.getOnlineUser().setMoney(LoginController.getOnlineUser().getMoney() + card.getCardPrice());
+                        }
+                }).start();
+            }
+            CustomDialog customDialog = new CustomDialog(type, message);
+            customDialog.openDialog();
         }
     }
 
@@ -117,7 +146,6 @@ public class AuctionPageController implements Initializable {
 
     public void refreshTable(String whatServerGave) {
         System.out.println(whatServerGave);
-//        if (staticTableView == null) staticTableView = new TableView();
         staticTableView.getItems().clear();
 
         String allPeople = whatServerGave;
@@ -133,8 +161,7 @@ public class AuctionPageController implements Initializable {
             String isActivated = allPeopleSplited[i * 7 + 5];
             String timeLeftAsSeconds = allPeopleSplited[i * 7 + 6];
             auctionsToShows[i] = new AuctionToShow(auctionCode, cardName, auctionCreatorName, bestBuyerName, price, isActivated, timeLeftAsSeconds);
-//            System.out.println(auctionsToShows[i].getAuctionCode() + "==Code");
-//            System.out.println(auctionsToShows[i].getCardName() + "==namecard");
+
         }
 
 
@@ -165,7 +192,5 @@ public class AuctionPageController implements Initializable {
     }
 
 
-//    private static void continueCreatingTable(){
-//
-//    }
+
 }

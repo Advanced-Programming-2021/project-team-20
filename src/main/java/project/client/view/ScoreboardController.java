@@ -48,8 +48,7 @@ public class ScoreboardController implements Initializable {
         usernameColumnmessageForOnlineUsers.setStyle("-fx-alignment: CENTER;");
         usernameColumnmessageForOnlineUsers.setMinWidth(600);
     }
-//    private TableView tableView;
-//    private TableView tableViewForOnlineUsers;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,16 +61,8 @@ public class ScoreboardController implements Initializable {
     }
 
     public void fillLabelAutomatically(String answer1, String answer2) {
-//        String message = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformation();
-//        anchor1.getChildren().removeAll(tableView2, tableViewForOnlineUsers2);
-
         staticTable.getItems().clear();
         tableViewForOnlineUsers2.getItems().clear();
-//        tableView2.getItems().clear();
-//        tableViewForOnlineUsers2.getItems().clear();
-
-//        tableViewForOnlineUsers2 = new TableView();
-//        tableView2 = new TableView<>();
 
         String allPeople = answer1;
         System.out.println(answer1);
@@ -104,8 +95,6 @@ public class ScoreboardController implements Initializable {
         customiseFactory((TableColumn<Person, String>) staticTable.getColumns().get(1), userNickname);
 
 
-        //Show OnlineUsers
-//        String messageForOnlineUsers = ToGsonFormatToSendDataToServer.toGsonFormatGetScoreboardInformationOfONlineUsers();
         String allPeoplemessageForOnlineUsers = answer2;
         System.out.println(answer2);
         String[] allPeopleSplitedmessageForOnlineUsers = allPeoplemessageForOnlineUsers.split(",");
@@ -127,8 +116,7 @@ public class ScoreboardController implements Initializable {
             tableViewForOnlineUsers2.getColumns().addAll(usernameColumnmessageForOnlineUsers);
         }
 
-//        anchor1.getChildren().add(tableView2);
-//        anchor1.getChildren().add(tableViewForOnlineUsers2);
+
     }
 
     public void returnToMainMenu(ActionEvent actionEvent) {

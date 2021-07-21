@@ -346,6 +346,34 @@ public class Shop {
         }
 
         Auction auction = new Auction(username, initialPrice, cardName);
-        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", "SUCCESSFUL");
+        return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", String.valueOf(auction.getAuctionCode()));
+    }
+
+    public static String getAuctionInfo(JsonObject details) {
+        String auctionCode = "";
+        String token = "";
+        try {
+            token = details.get("token").getAsString();
+            auctionCode = details.get("auctionCode").getAsString();
+        } catch (Exception a) {
+            return ServerController.getBadRequestFormat();
+        }
+        user = ServerController.getUserByTokenAndRefreshLastConnectionTime(token);
+        if (user == null) {
+            return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("ERROR", "INVALID TOKEN");
+        }
+        String cardName = Auction.getCardNameByAuctionCode(Integer.parseInt(auctionCode));
+        String buyerName = Auction.getBuyerNameByAuctionCode(auctionCode);
+        if (cardName == null) {
+            return ServerController.getBadRequestFormat();
+        }
+        if (buyerName.equals("null")) {
+            return "FAILED";
+        }
+        user.setMoney(user.getMoney() + Storage.getCardByName(cardName).getCardPrice());
+        user.deleteCardFromAllUselessCards(cardName);
+        User buyerUser = Storage.getUserByName(buyerName);
+        buyerUser.addCardToAllUselessCards(cardName);
+        return "SUCCESSFUL";
     }
 }
