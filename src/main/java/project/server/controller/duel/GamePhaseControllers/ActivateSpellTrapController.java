@@ -536,6 +536,7 @@ public class ActivateSpellTrapController extends ChainController {
                 }
             }
         } else if (message.startsWith("please choose a level 5 or higher normal monster from")) {
+            System.out.println("\n\n\ncard name chosen for special summoning 8is "+ card.getCardName());
             if (fakeTurn == 1 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.ALLY_HAND_ZONE)
                 || fakeTurn == 2 && !cardLocation.getRowOfCardLocation().equals(RowOfCardLocation.OPPONENT_HAND_ZONE)) {
                 return "invalid selection\nplease try again";

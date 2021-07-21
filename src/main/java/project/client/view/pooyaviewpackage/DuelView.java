@@ -1,5 +1,8 @@
 package project.client.view.pooyaviewpackage;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -32,6 +35,8 @@ import project.model.cardData.General.Card;
 import project.client.modelsforview.*;
 import project.client.view.CustomDialog;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -861,7 +866,7 @@ public class DuelView {
                             System.out.println("cloudnt find first match");
                         }
                         if (shouldPrepareAICard) {
-                            updatePrivacyForCardsForAI();
+                            //updatePrivacyForCardsForAI();
                             Media media = new Media(DuelView.class.getResource(supremeKingDrawingCardAtTheBeginningOfTurn).toExternalForm());
                             MediaPlayer mediaPlayer = new MediaPlayer(media);
                             MediaView mediaView = new MediaView(mediaPlayer);
@@ -945,8 +950,14 @@ public class DuelView {
         String firstNickname = LoginController.getOnlineUser().getNickname();
         String secondNickname = JsonCreator.getResult("give my opponent nickname");
         Image firstPlayerImage = LoginController.getOnlineUser().getImage();
-        Image secondPlayerImage = CardsStorage.getCardByName("Mirror Force").getImage();
-
+        String dataSendToServer = ToGsonFormatToSendDataToServer.toGsonFormatWithOneRequest("getImage", "userName", secondUsername);
+        String messageFromServer = ServerConnection.sendDataToServerAndReceiveResult(dataSendToServer);
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(messageFromServer);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        //userImageCircle.setFill(new ImagePattern());
+        //Image secondPlayerImage = CardsStorage.getCardByName("Mirror Force").getImage();
+        Image secondPlayerImage = createImage(jsonObject.get("imagePath").getAsString());
 
         firstPlayerUsernameLabel = new Label("Username: " + firstUsername);
         secondPlayerUsernameLabel = new Label("Username: " + secondUsername);
@@ -1001,11 +1012,11 @@ public class DuelView {
             xHelperForCardViewConstructor = battleFieldView.getUpperLeftX() + 40;
             yHelperForCardViewConstructor = battleFieldView.getUpperLeftY() + 108;
             CardView cardView;
-            if (areWePlayingWithAI) {
-                cardView = new CardView(currentCardForView, true, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
-            } else {
+//            if (areWePlayingWithAI) {
+//                cardView = new CardView(currentCardForView, true, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
+//            } else {
                 cardView = new CardView(currentCardForView, false, RowOfCardLocation.OPPONENT_DECK_ZONE, this);
-            }
+         //   }
             cardView.applyClickingAbilitiesToCardView(this);
             cardView.applyDragDetectingAbilityToCardView();
             // System.out.println("preparing " + cardView.getCard().getCardName());
@@ -1035,19 +1046,28 @@ public class DuelView {
 //            }
 //        }
 //    }
+private Image createImage(String imagePath) {
+    InputStream stream = null;
+    try {
+        stream = new FileInputStream(imagePath);
+        return new Image(stream);
+    } catch (Exception e) {
 
-    public void updatePrivacyForCardsForAI() {
-        ArrayList<CardView> allyCardViews = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
-        ArrayList<CardView> opponentCardViewsINHand = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
-        ArrayList<CardView> opponentCardViewsInDeck = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE);
-        for (int i = 0; i < allyCardViews.size(); i++) {
-            allyCardViews.get(i).setCanBeSeen(false);
-        }
-        for (int i = 0; i < opponentCardViewsINHand.size(); i++) {
-            opponentCardViewsINHand.get(i).setCanBeSeen(true);
-        }
-        opponentCardViewsInDeck.get(0).setCanBeSeen(true);
     }
+    return null;
+}
+//    public void updatePrivacyForCardsForAI() {
+//        ArrayList<CardView> allyCardViews = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.ALLY_HAND_ZONE);
+//        ArrayList<CardView> opponentCardViewsINHand = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_HAND_ZONE);
+//        ArrayList<CardView> opponentCardViewsInDeck = controllerForView.giveCardViewWithThisLabel(RowOfCardLocation.OPPONENT_DECK_ZONE);
+//        for (int i = 0; i < allyCardViews.size(); i++) {
+//            allyCardViews.get(i).setCanBeSeen(false);
+//        }
+//        for (int i = 0; i < opponentCardViewsINHand.size(); i++) {
+//            opponentCardViewsINHand.get(i).setCanBeSeen(true);
+//        }
+//        opponentCardViewsInDeck.get(0).setCanBeSeen(true);
+//    }
 
     public void conductPhaseChanging(String output) {
         advancedCardMovingController.advanceForwardBattleField();

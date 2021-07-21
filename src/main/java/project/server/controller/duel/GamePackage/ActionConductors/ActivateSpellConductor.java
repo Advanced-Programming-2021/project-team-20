@@ -228,6 +228,9 @@ public class ActivateSpellConductor {
         DuelBoard duelBoard = GameManager.getDuelBoardByIndex(token);
         CardLocation cardLocation;
         Card card;
+        System.out.println("this is the location of activating spell");
+        System.out.println(uninterruptedAction.getFinalMainCardLocation().getIndex());
+        System.out.println(uninterruptedAction.getFinalMainCardLocation().getRowOfCardLocation());
         for (int i = 0; i < 5; i++) {
             cardLocation = new CardLocation(RowOfCardLocation.ALLY_SPELL_ZONE, i + 1);
             card = duelBoard.getCardByCardLocation(cardLocation);
@@ -273,19 +276,19 @@ public class ActivateSpellConductor {
         Card card;
         int allySize = duelBoard.getAllyCardsInHand().size();
         for (int i = 0; i < allySize; i++) {
-            cardLocation = new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, i + 1);
+            cardLocation = new CardLocation(RowOfCardLocation.ALLY_HAND_ZONE, allySize - i);
             card = duelBoard.getCardByCardLocation(cardLocation);
             if (card != null) {
-                System.out.println("card name in ally size "+i+" is "+card.getCardName());
+                System.out.println("card name in ally size " + i + " is " + card.getCardName());
                 SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, token);
             }
         }
         int opponentSize = duelBoard.getOpponentCardsInHand().size();
         for (int i = 0; i < opponentSize; i++) {
-            cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, i + 1);
+            cardLocation = new CardLocation(RowOfCardLocation.OPPONENT_HAND_ZONE, opponentSize - i);
             card = duelBoard.getCardByCardLocation(cardLocation);
             if (card != null) {
-                System.out.println("card name in opponent size "+i+" is "+card.getCardName());
+                System.out.println("card name in opponent size " + i + " is " + card.getCardName());
                 SendCardToGraveyardConductor.sendCardToGraveyardAfterRemoving(cardLocation, token);
             }
         }
