@@ -205,7 +205,7 @@ public class ActivateTrapConductor {
             cancelPreviousAction(action);
         }
         if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.END_BATTLE_PHASE) && isPreviousUninterruptedActionMonsterAttacking) {
-            endBattlePhase(token);
+            endBattlePhase(token, thisUninterruptedAction);
         }
         if (monsterAttackingTrapCardEffects.contains(MonsterAttackingTrapCardEffect.GAIN_HP_EQUAL_TO_MONSTERS_ATK) && isPreviousUninterruptedActionMonsterAttacking) {
             gainHPEqualToMonsterAttack(token, uninterruptedAction, thisUninterruptedAction);
@@ -461,7 +461,7 @@ public class ActivateTrapConductor {
         }
     }
 
-    public static void endBattlePhase(String token) {
+    public static void endBattlePhase(String token, Action thisUninterruptedAction) {
         PhaseController phaseController = GameManager.getPhaseControllerByIndex(token);
         if (phaseController.getPhaseInGame().equals(PhaseInGame.ALLY_BATTLE_PHASE)) {
             phaseController.setPhaseInGame(PhaseInGame.ALLY_MAIN_PHASE_2);
@@ -469,6 +469,8 @@ public class ActivateTrapConductor {
         if (phaseController.getPhaseInGame().equals(PhaseInGame.OPPONENT_BATTLE_PHASE)) {
             phaseController.setPhaseInGame(PhaseInGame.OPPONENT_MAIN_PHASE_2);
         }
+        int actionTurn = thisUninterruptedAction.getActionTurn();
+        GameManager.getDuelControllerByIndex(token).addStringToWhatUsersSay("*user" + (3-actionTurn) + ": next phase*", token);
     }
 
     public static void discardCard(String token, int numberInListOfActions) {

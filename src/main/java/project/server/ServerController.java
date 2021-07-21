@@ -78,37 +78,36 @@ public class ServerController {
     }
 
     private static void getAuctionInputAndProcess(DataInputStream dataInputStream, DataOutputStream dataOutputStream) throws IOException {
-            while (true) {
-                String input = dataInputStream.readUTF();
-                System.out.println("=============================================");
-                System.out.println("message from client: " + input);
+        while (true) {
+            String input = dataInputStream.readUTF();
+            System.out.println("=============================================");
+            System.out.println("message from client: " + input);
 
-                String result = null;
+            String result = null;
 
-                JsonParser parser = new JsonParser();
-                JsonElement rootNode = parser.parse(input);
-                try {
-                    if (rootNode.isJsonObject()) {
-                        JsonObject details = rootNode.getAsJsonObject();
-                        String type = details.get("type").getAsString();
-                        if (type.equals("refreshAuction")) {
-                            result = Auction.getAllAuctions();
-                        }
-                        else {
-                            result = type;
-                        }
+            JsonParser parser = new JsonParser();
+            JsonElement rootNode = parser.parse(input);
+            try {
+                if (rootNode.isJsonObject()) {
+                    JsonObject details = rootNode.getAsJsonObject();
+                    String type = details.get("type").getAsString();
+                    if (type.equals("refreshAuction")) {
+                        result = Auction.getAllAuctions();
                     } else {
-                        result = "ERROR";
+                        result = type;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
                     result = "ERROR";
                 }
-
-                System.out.println("message send to client: " + result);
-                dataOutputStream.writeUTF(result);
-                dataOutputStream.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+                result = "ERROR";
             }
+
+            System.out.println("message send to client: " + result);
+            dataOutputStream.writeUTF(result);
+            dataOutputStream.flush();
+        }
     }
 
     private static void deleteClientsThatLoseConnections() {
@@ -188,14 +187,17 @@ public class ServerController {
             JsonElement rootNode = parser.parse(inputs[i]);
             try {
                 if (rootNode.isJsonObject()) {
+//                    System.out.println("rootNode was a jsonObject: " + inputs[i]);
                     JsonObject details = rootNode.getAsJsonObject();
                     String type = details.get("type").getAsString();
                     output += findCommand(type, details);
                 } else {
+//                    System.out.println("rootNode was not a jsonObject: " + inputs[i]);
                     output += badRequestFormat;
                 }
                 output += "\n";
             } catch (Exception e) {
+//                System.out.println("an exception occured: " + inputs[i]);
                 output += badRequestFormat;
                 output += "\n";
             }

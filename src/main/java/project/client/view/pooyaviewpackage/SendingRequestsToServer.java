@@ -30,11 +30,16 @@ public class SendingRequestsToServer {
 
     public void conductSwitchingTurnsForSummoningBeingCarefulForAI(String output, String typeOfErrorMessage) {
         if (output.startsWith("please wait until")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Processing Message");
-            alert.setContentText(output);
-            alert.showAndWait();
+            Boolean bool = Boolean.parseBoolean(JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).isAIPlaying()"));
+            if (bool) {
+                DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText("Processing Message");
+                alert.setContentText(output);
+                alert.showAndWait();
+            }
         } else {
             if (output.contains("successfully")) {
                 DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
@@ -116,7 +121,7 @@ public class SendingRequestsToServer {
         System.out.println("&" + output);
         output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"activate effect\", true, token)");
         System.out.println("*" + output);
-        if (output.contains("activated")) {
+        if (output.contains("activated") || output.contains("please wait")) {
             DuelView.getAdvancedCardMovingController().advanceForwardBattleField();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

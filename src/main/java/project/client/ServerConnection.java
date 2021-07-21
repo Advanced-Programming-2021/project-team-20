@@ -78,13 +78,6 @@ public class ServerConnection {
         }
     }
 
-    private static String whatToWrite = "Is it my turn?";
-
-
-    private static synchronized void setWhatToWrite(String string) {
-        whatToWrite = string;
-    }
-
 
     public static void scoreboardAutoRefresh(ScoreboardController scoreboardController) {
         writingThirdThread = new Thread(() -> {
@@ -129,6 +122,7 @@ public class ServerConnection {
     public static void startAuction() {
         shouldContinueAuctionRefresh = true;
     }
+
     public static void auctionAutoRefresh(AuctionPageController auctionPageController) {
         writingFourthThread = new Thread(() -> {
             try {
@@ -175,6 +169,12 @@ public class ServerConnection {
         return jsonObject.toString();
     }
 
+    private static String whatToWrite = "Is it my turn?";
+
+    private static synchronized void setWhatToWrite(String string) {
+        whatToWrite = string;
+    }
+
     public static void receiveDataFromServerAndGiveResults() {
         Thread writingSecondThread = new Thread(() -> {
             try {
@@ -182,7 +182,7 @@ public class ServerConnection {
                 while (true) {
                     if (System.currentTimeMillis() - time > 1000) {
                         time = System.currentTimeMillis();
-                        //      System.out.println("what second thread client is sending to server: "+whatToWrite);
+                        //System.out.println("what second thread client is sending to server: " + whatToWrite);
                         secondDataOutputStream.writeUTF(getResultSecondTime(whatToWrite) + "\n");
                         secondDataOutputStream.flush();
                     }
@@ -196,7 +196,7 @@ public class ServerConnection {
             try {
                 while (true) {
                     String whatServerGave = secondDataInputStream.readUTF();
-                    // System.out.println("what server gave to second thread: *" + whatServerGave+"*");
+                    //System.out.println("what server gave to second thread: *" + whatServerGave + "*");
                     if (whatServerGave.contains("do you want to ") || whatServerGave.contains("now it will be")) {
                         Platform.runLater(new Runnable() {
                             @Override

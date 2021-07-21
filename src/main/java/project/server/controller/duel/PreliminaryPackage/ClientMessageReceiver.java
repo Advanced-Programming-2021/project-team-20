@@ -3,6 +3,7 @@ package project.server.controller.duel.PreliminaryPackage;
 import com.google.gson.JsonObject;
 import project.client.view.pooyaviewpackage.DuelView;
 import project.client.view.pooyaviewpackage.SendingRequestsToServer;
+import project.model.PhaseInGame;
 import project.model.cardData.General.Card;
 import project.model.cardData.General.CardLocation;
 import project.model.cardData.General.RowOfCardLocation;
@@ -162,11 +163,19 @@ public class ClientMessageReceiver {
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"next phase\", true, token)")) {
             DuelController duelController = GameManager.getDuelControllerByIndex(token);
             duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
+            PhaseInGame phaseInGame = GameManager.getPhaseControllerByIndex(token).getPhaseInGame();
+            System.out.println("I SEE NEXT PHASE HERE IS NOW " + phaseInGame);
+            boolean endOfTurnConfirmed = false;
+            if (phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_2) || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_2)) {
+                endOfTurnConfirmed = true;
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
+            }
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("next phase", true, token);
-            if (outputFromServer.contains("end phase")) {
-                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
-                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
-                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": next phase*", token);
+            phaseInGame = GameManager.getPhaseControllerByIndex(token).getPhaseInGame();
+            System.out.println("I SEE NEXT PHASE HERE IS NOW " + phaseInGame);
+            if ((phaseInGame.equals(PhaseInGame.ALLY_MAIN_PHASE_1) || phaseInGame.equals(PhaseInGame.OPPONENT_MAIN_PHASE_1)) && !duelController.isAIPlaying()) {
+                duelController.addStringToWhatUsersSay("*user" + (3 - duelController.getTurnByToken(token)) + ": next phase*", token);
+                duelController.addStringToWhatUsersSay("*user" + (3 - duelController.getTurnByToken(token)) + ": next phase*", token);
             }
         } else if (request.startsWith("GameManager.getPhaseControllerByIndex(token).getPhaseInGame()")) {
             outputFromServer = GameManager.getPhaseControllerByIndex(token).getPhaseInGame().toString();
@@ -176,37 +185,89 @@ public class ClientMessageReceiver {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getFakeTurn() + "";
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + miniString + \"--deck \" + (indexOfChosenCardInDeck+1), true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("select " + firstAdditionalString + "--deck " + integerString, true, token);
+            DuelController duelController = GameManager.getDuelControllerByIndex(token);
+            duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": " + "select " + firstAdditionalString + "--deck " + integerString + "*", token);
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + miniString + \"--graveyard \" + (indexOfChosenCardInGraveyard + 1), true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("select " + firstAdditionalString + "--graveyard " + integerString, true, token);
+            DuelController duelController = GameManager.getDuelControllerByIndex(token);
+            duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": " + "select " + firstAdditionalString + "--graveyard " + integerString + "*", token);
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("select " + firstAdditionalString, true, token);
+            if (outputFromServer.contains("card selected")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": " + "select " + firstAdditionalString + "*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"normal summon\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("normal summon", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": normal summon*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"tribute summon\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("tribute summon", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": tribute summon*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"special summon\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("special summon", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": special summon*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"show graveyard\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("show graveyard", true, token);
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"set\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("set", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": set*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"activate effect\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("activate effect", true, token);
+            if (outputFromServer.contains("successfully") || outputFromServer.contains("do you want")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": activate effect*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"attack \" + yugiohOpponentMonsterIndex, true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("attack " + integerString, true, token);
+            if (outputFromServer.contains("now it will") || outputFromServer.contains("destroyed")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": " + "attack " + integerString + "*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"attack direct\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("attack direct", true, token);
+            if (outputFromServer.contains("now it will") || outputFromServer.contains("receives")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": attack direct*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"flip-summon\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("flip-summon", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": flip-summon*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"set --position defense\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("set --position defense", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": set --position defense*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"set --position attack\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("set --position attack", true, token);
+            if (outputFromServer.contains("successfully")) {
+                DuelController duelController = GameManager.getDuelControllerByIndex(token);
+                duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": set --position attack*", token);
+            }
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"yes\", true, token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("yes", true, token);
+            DuelController duelController = GameManager.getDuelControllerByIndex(token);
+            duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": yes*", token);
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getInput(\"no\", true, token)")) {
             indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), "call your advance");
             outputFromServer = GameManager.getDuelControllerByIndex(token).getInput("no", true, token);
+            DuelController duelController = GameManager.getDuelControllerByIndex(token);
+            duelController.addStringToWhatUsersSay("*user" + duelController.getTurnByToken(token) + ": no*", token);
         } else if (request.startsWith("GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(token)")) {
             outputFromServer = GameManager.getDuelControllerByIndex(token).getAvailableCardLocationForUseForClient(token);
             System.out.println("AVAILABLE CARD LOCATION FOR USE COMING FROM SERVER =*" + outputFromServer + "*");
@@ -222,28 +283,52 @@ public class ClientMessageReceiver {
 
 
     private static String takeCareOfOutput(String outputFromServer, String token) {
-        String nowItWillBeString = "now it will be (\\S+)'s turn";
-        Pattern nowItWillBePattern = Pattern.compile(nowItWillBeString);
-        Matcher match = nowItWillBePattern.matcher(outputFromServer);
-        String nowItWillBeTurn = "";
-        System.out.println("WHOUUUUUUU");
-        boolean isTrue = false;
-        if (match.find()) {
-            nowItWillBeTurn = outputFromServer.substring(match.start(), match.end());
-            nowItWillBeString = "do you want to (.+)";
-            nowItWillBePattern = Pattern.compile(nowItWillBeString);
-            Matcher newmatch = nowItWillBePattern.matcher(outputFromServer);
-            if (newmatch.find()) {
-                indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), nowItWillBeTurn + "\n" + outputFromServer.substring(newmatch.start(), newmatch.end()));
+        if (GameManager.getDuelControllerByIndex(token).isAIPlaying()) {
+            String nowItWillBeString = "now it will be AI's turn";
+            Pattern nowItWillBePattern = Pattern.compile(nowItWillBeString);
+            Matcher match = nowItWillBePattern.matcher(outputFromServer);
+            String nowItWillBeTurn = "";
+            System.out.println("WHOUUUUUUU");
+            boolean isTrue = false;
+            if (match.find()) {
+                return "please wait until your input is being processed.";
+                // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
             } else {
-                indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), nowItWillBeTurn + "\n");
+//                nowItWillBeString = "now it will be (\\S+)'s turn";
+//                nowItWillBePattern = Pattern.compile(nowItWillBeString);
+//                match = nowItWillBePattern.matcher(outputFromServer);
+//                nowItWillBeTurn = "";
+//                System.out.println("WHOUUUUUUU");
+//                if (match.find()){
+//
+//                }
+//                indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), "call your advance");
+                return outputFromServer;
             }
-            isTrue = true;
-            return "please wait until your input is being processed.";
-            // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
         } else {
-            indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), "call your advance");
-            return outputFromServer;
+            String nowItWillBeString = "now it will be (\\S+)'s turn";
+            Pattern nowItWillBePattern = Pattern.compile(nowItWillBeString);
+            Matcher match = nowItWillBePattern.matcher(outputFromServer);
+            String nowItWillBeTurn = "";
+            System.out.println("WHOUUUUUUU");
+            boolean isTrue = false;
+            if (match.find()) {
+                nowItWillBeTurn = outputFromServer.substring(match.start(), match.end());
+                nowItWillBeString = "do you want to (.+)";
+                nowItWillBePattern = Pattern.compile(nowItWillBeString);
+                Matcher newmatch = nowItWillBePattern.matcher(outputFromServer);
+                if (newmatch.find()) {
+                    indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), nowItWillBeTurn + "\n" + outputFromServer.substring(newmatch.start(), newmatch.end()));
+                } else {
+                    indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), nowItWillBeTurn + "\n");
+                }
+                isTrue = true;
+                return "please wait until your input is being processed.";
+                // System.out.println("Found love at index "+ match.start() +" - "+ (match.end()-1));
+            } else {
+                indirectMessages.replace(DoubleToken.getDoubleTokenByOneToken(token), "call your advance");
+                return outputFromServer;
+            }
         }
     }
 }
