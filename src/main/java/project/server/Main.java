@@ -1,9 +1,8 @@
 package project.server;
-
-import java.util.Scanner;
-
 import project.server.controller.non_duel.storage.Storage;
 import project.server.controller.non_duel.storage.TweetStorage;
+
+import java.util.Scanner;
 
 public class Main {
     private static Storage storage = new Storage();
