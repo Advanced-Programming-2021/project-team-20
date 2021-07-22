@@ -346,6 +346,7 @@ public class Shop {
         }
 
         Auction auction = new Auction(username, initialPrice, cardName);
+        System.out.println("11111111111111111111111111\n1111111111111111111\n111111111111111\n11111111111\n1111111111\n111111111111n\n11111111n\n");
         return ToGsonFormatForSendInformationToClient.toGsonFormatForOnlyTypeAndMessage("SUCCESSFUL", String.valueOf(auction.getAuctionCode()));
     }
 

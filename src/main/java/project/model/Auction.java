@@ -1,10 +1,17 @@
 package project.model;
 
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.Document;
+
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.Iterator;
 
 public class Auction {
     private String auctionCreatorName;
@@ -26,7 +33,7 @@ public class Auction {
         this.cardName = cardName;
         this.timeLeftAsSeconds = 60;
 
-        writeInformationInSQLDataBase();
+        writeInformationInDataBase();
 //        try {
 //            FileWriter fileWriter = new FileWriter(
 //                addressOfStorage + "Auctions\\" + getAuctionCode() + ".json");
@@ -42,35 +49,65 @@ public class Auction {
 
     }
 
-    private void writeInformationInSQLDataBase() {
-        Connection c = null;
-        Statement stmt = null;
+    private void writeInformationInDataBase() {
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            String sql = "INSERT INTO COMPANY (auctionCode,cardName,auctionCreatorName,bestBuyerName,price,isActivated,timeLeftAsSeconds) " +
+//                "VALUES ('" + auctionCode + "', '" + cardName + "', '" + auctionCreatorName + "', '" +
+//                bestBuyerName + "', '" + price + "', '" + isActivated + "', '" + timeLeftAsSeconds + "');";
+//            stmt.executeUpdate(sql);
+//
+//
+//            stmt.close();
+//            c.commit();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Records created successfully");
 
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+//        auctionCreatorName
+//            price = initialPric
+//        bestBuyerName = "nu
+//        auctionCode = calcu
+//        isActivated = true;
+//        cardName = cardName
+//        timeLeftAsSeconds =
+        //TODO: MongoDB
+        System.out.println("\n\n\n\n\n\n\n\n\ntaaakkdkjdj\n\n\n\n\ng");
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            String sql = "INSERT INTO COMPANY (auctionCode,cardName,auctionCreatorName,bestBuyerName,price,isActivated,timeLeftAsSeconds) " +
-                "VALUES ('" + auctionCode + "', '" + cardName + "', '" + auctionCreatorName + "', '" +
-                bestBuyerName + "', '" + price + "', '" + isActivated + "', '" + timeLeftAsSeconds + "');";
-            stmt.executeUpdate(sql);
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
 
-
-            stmt.close();
-            c.commit();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Records created successfully");
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+        Document document = new Document("auctionCode", String.valueOf(auctionCode))
+            .append("cardName", cardName)
+            .append("auctionCreatorName", auctionCreatorName)
+            .append("bestBuyerName", bestBuyerName)
+            .append("price", String.valueOf(price))
+            .append("isActivated", String.valueOf(isActivated))
+            .append("timeLeftAsSeconds", String.valueOf(timeLeftAsSeconds));
+        //Inserting document into the collection
+        collection.insertOne(document);
+        System.out.println("Document inserted successfully");
 
     }
 
     public static String getCardNameByAuctionCode(int parseInt) {
+        //TODO: JSON and file
 //        FileReader fileReader = null;
 //        try {
 //            fileReader = new FileReader(addressOfStorage + "Auctions\\" + parseInt + ".json");
@@ -94,37 +131,68 @@ public class Auction {
 //            return details.get("cardName").getAsString();
 //        }
 //        return null;
-        Connection c = null;
-        Statement stmt = null;
-        String answer = "";
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//        String answer = "";
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+//
+//
+//            while ( rs.next() ) {
+//                String auctionCode = rs.getString("auctionCode");
+//                if (Integer.parseInt(auctionCode) == parseInt) {
+//                    answer = rs.getString("cardName");
+//                }
+//            }
+//            rs.close();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+//        return answer;
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+        System.out.println("Connected to the database successfully");
 
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
 
-            while ( rs.next() ) {
-                String auctionCode = rs.getString("auctionCode");
-                if (Integer.parseInt(auctionCode) == parseInt) {
-                    answer = rs.getString("cardName");
-                }
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+
+        // Getting the iterable object
+//        FindIterable<Document> iterDoc = collection.find();
+//        int i = 1;
+//        // Getting the iterator
+//        Iterator it = iterDoc.iterator();
+//        while (it.hasNext()) {
+//            Document document = (Document) it.next();
+//            if (document.get("auctionCode").equals(String.valueOf(parseInt))) {
+//                return (String) document.get("cardName");
+//            }
+//            i++;
+//        }
+        String answer = collection.distinct("cardName", Filters.eq("auctionCode",String.valueOf(parseInt)), String.class).first();
         return answer;
     }
 
     public static String getBuyerNameByAuctionCode(String auctionCode) {
+        //TODO: JSON
 //        FileReader fileReader = null;
 //        try {
 //            fileReader = new FileReader(addressOfStorage + "Auctions\\" + auctionCode + ".json");
@@ -148,33 +216,64 @@ public class Auction {
 //            return details.get("bestBuyerName").getAsString();
 //        }
 //        return null;
-        Connection c = null;
-        Statement stmt = null;
-        String answer = "";
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//        String answer = "";
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+//
+//
+//            while ( rs.next() ) {
+//                String auctionCode1 = rs.getString("auctionCode");
+//                if (auctionCode1.equals(auctionCode)) {
+//                    answer = rs.getString("bestBuyerName");
+//                }
+//            }
+//            rs.close();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+//        return answer;
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+        System.out.println("Connected to the database successfully");
 
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
 
-            while ( rs.next() ) {
-                String auctionCode1 = rs.getString("auctionCode");
-                if (auctionCode1.equals(auctionCode)) {
-                    answer = rs.getString("bestBuyerName");
-                }
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+
+        // Getting the iterable object
+//        FindIterable<Document> iterDoc = collection.find();
+//        int i = 1;
+//        // Getting the iterator
+//        Iterator it = iterDoc.iterator();
+//        while (it.hasNext()) {
+//            Document document = (Document) it.next();
+//            if (document.get("auctionCode").equals(auctionCode)) {
+//                return (String) document.get("bestBuyerName");
+//            }
+//            i++;
+//        }
+//        return null;
+        String answer = collection.distinct("bestBuyerName", Filters.eq("auctionCode", auctionCode), String.class).first();
         return answer;
     }
 
@@ -183,6 +282,7 @@ public class Auction {
     }
 
     public static int getPriceByCode(String auctionCode) {
+        //TODO: JSON
 //        FileReader fileReader = null;
 //        try {
 //            fileReader = new FileReader(addressOfStorage + "Auctions\\" + auctionCode + ".json");
@@ -206,37 +306,72 @@ public class Auction {
 //            return details.get("price").getAsInt();
 //        }
 //        return 0;
-        Connection c = null;
-        Statement stmt = null;
-        int answer = 0;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//        int answer = 0;
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+//
+//
+//            while ( rs.next() ) {
+//                String auctionCode1 = rs.getString("auctionCode");
+//                if (auctionCode1.equals(auctionCode)) {
+//                    answer = Integer.parseInt(rs.getString("price"));
+//                }
+//            }
+//            rs.close();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+//        return answer;
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+        System.out.println("Connected to the database successfully");
 
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
 
-            while ( rs.next() ) {
-                String auctionCode1 = rs.getString("auctionCode");
-                if (auctionCode1.equals(auctionCode)) {
-                    answer = Integer.parseInt(rs.getString("price"));
-                }
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
-        return answer;
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+
+        // Getting the iterable object
+        FindIterable<Document> iterDoc = collection.find();
+        int i = 1;
+        String answer = "";
+        // Getting the iterator
+//        Document document = collection.find(Filters.eq("auctionCode",auctionCode)).projection(include("bestBuyerName")).first();
+//        answer = document.getString("price");
+        answer = collection.distinct("price", Filters.eq("auctionCode",auctionCode), String.class).first();
+        System.out.println("PRICE:" + answer);
+//        Iterator it = iterDoc.iterator();
+//        while (it.hasNext()) {
+//            Document document = (Document) it.next();
+//            if (document.get("auctionCode").equals(auctionCode)) {
+//                answer = (String) document.get("price");
+//            }
+//            i++;
+//        }
+        return Integer.parseInt(answer);
     }
 
     public static void changeAuctionBuyerAndPrice(String auctionCode, String name, int suggestedPrice) {
+        //TODO: JSON
 //        FileReader fileReader = null;
 //        try {
 //            fileReader = new FileReader(addressOfStorage + "Auctions\\" + auctionCode + ".json");
@@ -287,50 +422,52 @@ public class Auction {
 //            e.printStackTrace();
 //            System.exit(0);
 //        }
-        Connection c = null;
-        Statement stmt = null;
-
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
-
-            stmt = c.createStatement();
-            String sql = "UPDATE COMPANY set bestBuyerName = '" + name + "' where auctionCode='" + auctionCode + "';";
-            stmt.executeUpdate(sql);
-            String sql2 = "UPDATE COMPANY set price = '" + suggestedPrice + "' where auctionCode='" + auctionCode + "';";
-            stmt.executeUpdate(sql2);
-            c.commit();
-
-//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
 //
-//            while ( rs.next() ) {
-//                int id = rs.getInt("id");
-//                String  name = rs.getString("name");
-//                int age  = rs.getInt("age");
-//                String  address = rs.getString("address");
-//                float salary = rs.getFloat("salary");
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
 //
-//                System.out.println( "ID = " + id );
-//                System.out.println( "NAME = " + name );
-//                System.out.println( "AGE = " + age );
-//                System.out.println( "ADDRESS = " + address );
-//                System.out.println( "SALARY = " + salary );
-//                System.out.println();
-//            }
-//            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
+//            stmt = c.createStatement();
+//            String sql = "UPDATE COMPANY set bestBuyerName = '" + name + "' where auctionCode='" + auctionCode + "';";
+//            stmt.executeUpdate(sql);
+//            String sql2 = "UPDATE COMPANY set price = '" + suggestedPrice + "' where auctionCode='" + auctionCode + "';";
+//            stmt.executeUpdate(sql2);
+//            c.commit();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
+
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb",
+            "password".toCharArray());
+        System.out.println("Connected to the database successfully");
+
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection myCollection selected successfully");
+        collection.updateOne(Filters.eq("auctionCode", auctionCode), Updates.set("bestBuyerName", name));
+        collection.updateOne(Filters.eq("auctionCode", auctionCode), Updates.set("price", String.valueOf(suggestedPrice)));
+        System.out.println("Document update successfully...");
+
 
     }
 
     public static String getIsActivated(String auctionCode) {
+        //TODO: JSON
 //        FileReader fileReader = null;
 //        try {
 //            fileReader = new FileReader(addressOfStorage + "Auctions\\" + auctionCode + ".json");
@@ -354,34 +491,66 @@ public class Auction {
 //            return details.get("isActivated").getAsString();
 //        }
 //        return null;
-        Connection c = null;
-        Statement stmt = null;
-        String answer = "";
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//        String answer = "";
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+//
+//
+//            while ( rs.next() ) {
+//                String auctionCode1 = rs.getString("auctionCode");
+//                if (auctionCode1.equals(auctionCode)) {
+//                    answer = rs.getString("isActivated");
+//                }
+//            }
+//            rs.close();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+//        return answer;
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+        System.out.println("Connected to the database successfully");
 
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
 
-            while ( rs.next() ) {
-                String auctionCode1 = rs.getString("auctionCode");
-                if (auctionCode1.equals(auctionCode)) {
-                    answer = rs.getString("isActivated");
-                }
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+
+        // Getting the iterable object
+//        FindIterable<Document> iterDoc = collection.find();
+//        int i = 1;
+//        // Getting the iterator
+//        Iterator it = iterDoc.iterator();
+//        while (it.hasNext()) {
+//            Document document = (Document) it.next();
+//            if (document.get("auctionCode").equals(auctionCode)) {
+//                return (String) document.get("isActivated");
+//            }
+//            i++;
+//        }
+//        return null;
+        String answer = collection.distinct("isActivated", Filters.eq("auctionCode", auctionCode), String.class).first();
         return answer;
+
     }
 
     private void startTimeDecreasing(Auction auction) {
@@ -400,6 +569,7 @@ public class Auction {
     }
 
     private static void decreaseTimeByOne(Auction auction, int i) {
+        //TODO: JSON and file
 //        try {
 //            FileWriter fileWriter = new FileWriter(
 //                addressOfStorage + "Auctions\\" + auction.getAuctionCode() + ".json");
@@ -409,30 +579,54 @@ public class Auction {
 //            e.printStackTrace();
 //            System.exit(0);
 //        }
-        Connection c = null;
-        Statement stmt = null;
 
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            String sql = "UPDATE COMPANY set timeLeftAsSeconds = '" + (auction.getTimeLeftAsSeconds() - 1) + "' where auctionCode='" + auction.getAuctionCode() + "';";
+//            stmt.executeUpdate(sql);
+//            if (i == 1) {
+//                String sql2 = "UPDATE COMPANY set isActivated = 'false' where auctionCode='" + auction.getAuctionCode() + "';";
+//                stmt.executeUpdate(sql2);
+//            }
+//            c.commit();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            String sql = "UPDATE COMPANY set timeLeftAsSeconds = '" + (auction.getTimeLeftAsSeconds() - 1) + "' where auctionCode='" + auction.getAuctionCode() + "';";
-            stmt.executeUpdate(sql);
-            if (i == 1) {
-                String sql2 = "UPDATE COMPANY set isActivated = 'false' where auctionCode='" + auction.getAuctionCode() + "';";
-                stmt.executeUpdate(sql2);
-            }
-            c.commit();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb",
+            "password".toCharArray());
+        System.out.println("Connected to the database successfully");
+
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection myCollection selected successfully");
+        String auctionCode = String.valueOf(auction.getAuctionCode());
+        int time = auction.getTimeLeftAsSeconds();
+        String newTime = String.valueOf(time - 1);
+        collection.updateOne(Filters.eq("auctionCode", auctionCode), Updates.set("timeLeftAsSeconds", newTime));
+        if (i == 1) {
+            collection.updateOne(Filters.eq("auctionCode", auctionCode), Updates.set("isActivated", "false"));
         }
-        System.out.println("Operation done successfully");
+        System.out.println("Document update successfully...");
     }
 
 //    private static String toGsonFormatForSecond(Auction auction) {
@@ -448,6 +642,7 @@ public class Auction {
 //    }
 
     private static int calculateAuctionCode() {
+        //TODO: JSON
 //        List<String> results = new ArrayList<String>();
 //        File[] files = new File("Resourses\\Server\\Auctions\\").listFiles();
 //
@@ -462,29 +657,56 @@ public class Auction {
 //            answer++;
 //        }
 //        return answer;
-        Connection c = null;
-        Statement stmt = null;
-        int count = 1;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//        int count = 1;
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+//            while ( rs.next() ) {
+//                count++;
+//            }
+//            rs.close();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+//        return count;
+        //TODO: MongoDB
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
 
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
-            while ( rs.next() ) {
-                count++;
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+        System.out.println("Connected to the database successfully");
+
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
+
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+        // Getting the iterable object
+        FindIterable<Document> iterDoc = collection.find();
+        int i = 1;
+        // Getting the iterator
+        Iterator it = iterDoc.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+            System.out.println("101010");
+            i++;
         }
-        System.out.println("Operation done successfully");
-        return count;
+//        System.out.println(i + "1\n1\n1\n1\n1\n1\n1n1\n");
+        return i;
     }
 
 //    private String toGsonFormat(Auction auction) {
@@ -534,6 +756,7 @@ public class Auction {
     }
 
     public static String getAllAuctions() throws IOException {
+        //TODO: JSON
 //        String answer = "";
 //
 //        List<String> allFileNames = new ArrayList<String>();
@@ -575,43 +798,92 @@ public class Auction {
 //            }
 //        }
 //        return answer;
-        Connection c = null;
-        Statement stmt = null;
+        //TODO: SQL
+//        Connection c = null;
+//        Statement stmt = null;
+//        String answer = "";
+//        try {
+//            Class.forName("org.sqlite.JDBC");
+//            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
+//            c.setAutoCommit(false);
+//            System.out.println("Opened database successfully");
+//
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+//
+//
+//            while ( rs.next() ) {
+//                answer += rs.getString("auctionCode");
+//                answer += ",";
+//                answer += rs.getString("cardName");
+//                answer += ",";
+//                answer += rs.getString("auctionCreatorName");
+//                answer += ",";
+//                answer += rs.getString("bestBuyerName");
+//                answer += ",";
+//                answer += rs.getString("price");
+//                answer += ",";
+//                answer += rs.getString("isActivated");
+//                answer += ",";
+//                answer += rs.getString("timeLeftAsSeconds");
+//                answer += ",";
+//            }
+//            rs.close();
+//            stmt.close();
+//            c.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//            System.exit(0);
+//        }
+//        System.out.println("Operation done successfully");
+//        return answer;
+        //TODO: MongoDB
+
+        // Creating a Mongo client
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
+
+        // Creating Credentials
+        MongoCredential credential;
+        credential = MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+        System.out.println("Connected to the database successfully");
+
+        // Accessing the database
+        MongoDatabase database = mongo.getDatabase("myDb");
+
+        // Retrieving a collection
+        MongoCollection<Document> collection = database.getCollection("sampleCollection");
+        System.out.println("Collection sampleCollection selected successfully");
+
+        // Getting the iterable object
+//        FindIterable<Document> iterDoc = collection.find();
+//        int i = 1;
+//        // Getting the iterator
+//        Iterator it = iterDoc.iterator();
+//        while (it.hasNext()) {
+//            System.out.println(it.next());
+//            i++;
+//        }
+
         String answer = "";
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:Resourses\\Server\\Auctions\\test.db");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+        int currentNumberOfAuctions = getNumberOfAllAuctons();
+        for (int i = 1; i <= currentNumberOfAuctions; i++) {
+            String auctionCodeString = String.valueOf(i);
+            answer += collection.distinct("auctionCode", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
+            answer += collection.distinct("cardName", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
+            answer += collection.distinct("auctionCreatorName", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
+            answer += collection.distinct("bestBuyerName", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
+            answer += collection.distinct("price", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
+            answer += collection.distinct("isActivated", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
+            answer += collection.distinct("timeLeftAsSeconds", Filters.eq("auctionCode", auctionCodeString), String.class).first();
+            answer += ",";
 
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
-
-
-            while ( rs.next() ) {
-                answer += rs.getString("auctionCode");
-                answer += ",";
-                answer += rs.getString("cardName");
-                answer += ",";
-                answer += rs.getString("auctionCreatorName");
-                answer += ",";
-                answer += rs.getString("bestBuyerName");
-                answer += ",";
-                answer += rs.getString("price");
-                answer += ",";
-                answer += rs.getString("isActivated");
-                answer += ",";
-                answer += rs.getString("timeLeftAsSeconds");
-                answer += ",";
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
         }
-        System.out.println("Operation done successfully");
         return answer;
     }
 }

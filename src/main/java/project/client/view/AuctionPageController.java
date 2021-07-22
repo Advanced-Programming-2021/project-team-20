@@ -153,6 +153,7 @@ public class AuctionPageController implements Initializable {
             String type = desreializedAnswer.get("type");
             String message = desreializedAnswer.get("message");
             if (type.equals("SUCCESSFUL")) {
+                System.out.println("1");
                 LoginController.getOnlineUser().setMoney(LoginController.getOnlineUser().getMoney() - CardsStorage.getCardByName(message).getCardPrice());
                 new Thread(() -> {
                     try {
@@ -170,6 +171,9 @@ public class AuctionPageController implements Initializable {
                         LoginController.getOnlineUser().setMoney(LoginController.getOnlineUser().getMoney() + CardsStorage.getCardByName(message).getCardPrice());
                     }
                 }).start();
+            }
+            else {
+                System.out.println("2");
             }
             CustomDialog customDialog = new CustomDialog(type, message);
             customDialog.openDialog();

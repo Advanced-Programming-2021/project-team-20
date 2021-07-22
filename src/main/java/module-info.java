@@ -6,6 +6,7 @@ module PhaseOneProject {
     requires javafx.media;
     requires java.sql;
     requires java.desktop;
+    requires mongo.java.driver;
 
 
     opens project.server to javafx.fxml;
