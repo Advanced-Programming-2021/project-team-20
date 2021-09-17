@@ -14,9 +14,9 @@ import java.util.regex.Pattern;
 public class SendingRequestsToServer {
 
     public void sendNormalSummoningRequestToServer(CardView cardView, CardLocation cardLocationSelecting, DuelView duelView) {
-        System.out.println();
-        System.out.println();
-        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
+//        System.out.println();
+//        System.out.println();
+//        System.out.println("select " + giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String token = DuelView.getToken();
         JsonCreator.setFirstAdditionalString(giveStringToGiveToServerByCardLocation(cardLocationSelecting));
         String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + giveStringToGiveToServerByCardLocation(cardLocationSelecting), true, token)");

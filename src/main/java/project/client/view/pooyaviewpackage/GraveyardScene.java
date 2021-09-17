@@ -54,11 +54,11 @@ public class GraveyardScene extends Application {
             while (hope) {
                 String indexString = index + ". (.+):(.+)";
                 Pattern indexPattern = Pattern.compile(indexString);
-                System.out.println("graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)) " + graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)));
+                //System.out.println("graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)) " + graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 2)));
                 Matcher indexMatch = indexPattern.matcher(graveyardMatch.group((DuelView.isIsAllySeeingGraveyard() ? 1 : 3)));
                 if (indexMatch.find()) {
                     cardNames.add(indexMatch.group(1));
-                    System.out.println(indexMatch.group(1) + " is in graveyard and second is " + indexMatch.group(2));
+                    //System.out.println(indexMatch.group(1) + " is in graveyard and second is " + indexMatch.group(2));
                 } else {
                 hope = false;}
                 index++;
@@ -97,7 +97,7 @@ public class GraveyardScene extends Application {
                                     JsonCreator.setFirstAdditionalString(miniString);
                                     JsonCreator.setIntegerString((indexOfChosenCardInGraveyard+1)+"");
                                     String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + miniString + \"--graveyard \" + (indexOfChosenCardInGraveyard + 1), true, token)");
-                                    System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
+                                    //System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
                                     if (output.contains("this card cannot be") || output.contains("this is not a")
                                         || output.contains("this monster is not") || output.contains("please try")) {
                                         Alert alert = new Alert(Alert.AlertType.INFORMATION);

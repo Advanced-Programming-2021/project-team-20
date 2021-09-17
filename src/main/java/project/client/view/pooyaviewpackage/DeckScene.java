@@ -52,7 +52,7 @@ public class DeckScene extends Application {
             Matcher indexMatch = indexPattern.matcher(wholeDeckString);
             if (indexMatch.find()) {
                 cardNames.add(indexMatch.group(1));
-                System.out.println(indexMatch.group(1) + " is in deck");
+                //System.out.println(indexMatch.group(1) + " is in deck");
             } else {
                 hope = false;
             }
@@ -91,11 +91,11 @@ public class DeckScene extends Application {
                             if (isClassWaitingForUserToChooseCardFromDeck) {
                                 String token = DuelView.getToken();
                                 String miniString = "";
-                                System.out.println("sending to server " + "select " + miniString + "--deck " + indexOfChosenCardInDeck);
+                                //System.out.println("sending to server " + "select " + miniString + "--deck " + indexOfChosenCardInDeck);
                                 JsonCreator.setFirstAdditionalString(miniString);
                                 JsonCreator.setIntegerString((indexOfChosenCardInDeck + 1) + "");
                                 String output = JsonCreator.getResult("GameManager.getDuelControllerByIndex(token).getInput(\"select \" + miniString + \"--deck \" + (indexOfChosenCardInDeck+1), true, token)");
-                                System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
+                                //System.out.println("THIS OUTPUT IF FOR CHOOSING CARD FROM GRAVEYARD " + output);
                                 if (output.contains("this card cannot be") || output.contains("this is not a")
                                     || output.contains("this monster is not") || output.contains("invalid")
                                     || output.contains("select another") || output.contains("please try")) {
